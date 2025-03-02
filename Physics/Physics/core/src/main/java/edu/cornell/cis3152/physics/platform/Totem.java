@@ -4,14 +4,22 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
 public class Totem extends Enemy {
+    private Fixture fixture;
     public Totem(int id, Vector2 pos, Body body) {
         super(id, pos, body);
+        this.fixture = body.getFixtureList().first();
     }
 
     // reacting to light
     @Override
     public void in_light(){
-        // turns solid
+        stop();
+        fixture.setSensor(false); // yes collisions
+    }
+
+    @Override
+    public void out_of_light(){
+        fixture.setSensor(true); // no collisions
     }
 
 

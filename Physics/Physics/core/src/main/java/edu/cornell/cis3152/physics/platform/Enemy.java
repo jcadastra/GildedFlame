@@ -47,7 +47,7 @@ public class Enemy {
     public void update(){
         switch (state) {
             case OUT_OF_LIGHT:
-                move();
+                out_of_light();
                 break;
             case IN_LIGHT:
                 in_light();
@@ -60,7 +60,7 @@ public class Enemy {
         }
     }
 
-    public void move(){
+    public void out_of_light(){
         position.x += MOVE_SPEED;
     }
 
@@ -80,6 +80,6 @@ public class Enemy {
 
     public void attracted(){
     }
-
+    public void stop() { body.setLinearVelocity(0, 0); }
 
 }
