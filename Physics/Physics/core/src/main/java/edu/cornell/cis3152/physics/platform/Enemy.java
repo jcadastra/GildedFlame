@@ -2,10 +2,17 @@ package edu.cornell.cis3152.physics.platform;
 
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.audio.*;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.JsonValue;
+import edu.cornell.gdiac.assets.ParserUtils;
+import edu.cornell.gdiac.graphics.SpriteBatch;
+import edu.cornell.gdiac.graphics.Texture2D;
+import edu.cornell.gdiac.math.Path2;
+import edu.cornell.gdiac.math.PathFactory;
+import edu.cornell.gdiac.physics2.*;
 
-public class Enemy {
+public class Enemy extends ObstacleSprite {
 
     private static int MOVE_SPEED;
 
@@ -14,7 +21,12 @@ public class Enemy {
     private Vector2 position;
 
     private EnemyState state;
+    private Color spriteColor = Color.WHITE;
+    private TextureRegion sprite;
     private Body body;
+    private float width;
+    private float height;
+    private SpriteBatch batch;
 
     public enum EnemyState {
 
@@ -27,11 +39,15 @@ public class Enemy {
 
 //    }
 
-    public Enemy(int id, Vector2 position, Body body){
+    public Enemy(int id, Vector2 position, Body body, float width, float height, SpriteBatch batch){
         this.id = id;
         this.position = position;
         this.state = EnemyState.OUT_OF_LIGHT;
         this.body = body;
+        this.width = width;
+        this.height = height;
+        this.batch = batch;
+        obstacle = new BoxObstacle(position.x, position.y, width, height);
     }
 
     public int getId() { return id; }
@@ -82,4 +98,10 @@ public class Enemy {
     }
     public void stop() { body.setLinearVelocity(0, 0); }
 
+    @Override
+    public void draw(SpriteBatch batch) {
+        batch.setColor(spriteColor);
+        super.draw(batch);
+        batch.setColor(Color.WHITE);
+    }
 }

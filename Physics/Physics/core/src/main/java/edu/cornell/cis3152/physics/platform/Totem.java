@@ -5,8 +5,8 @@ import com.badlogic.gdx.physics.box2d.*;
 
 public class Totem extends Enemy {
     private Fixture fixture;
-    public Totem(int id, Vector2 pos, Body body) {
-        super(id, pos, body);
+    public Totem(int id, Vector2 pos, Body body, float width, float height, SpriteBatch batch) {
+        super(id, pos, body, width, height, batch);
         this.fixture = body.getFixtureList().first();
     }
 
