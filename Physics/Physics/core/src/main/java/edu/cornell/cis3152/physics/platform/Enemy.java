@@ -26,6 +26,8 @@ public class Enemy extends ObstacleSprite {
     private float width;
     private float height;
     private SpriteBatch batch;
+    private final Affine2 flipCache = new Affine2();
+    private boolean faceRight;
 
     public enum EnemyState {
 
@@ -47,6 +49,7 @@ public class Enemy extends ObstacleSprite {
         this.height = height;
         this.batch = batch;
         obstacle = new BoxObstacle(position.x, position.y, width, height);
+        faceRight = true;
     }
 
     public int getId() { return id; }
@@ -99,6 +102,11 @@ public class Enemy extends ObstacleSprite {
 
     @Override
     public void draw(SpriteBatch batch) {
+        if (faceRight) {
+            flipCache.setToScaling( 1,1 );
+        } else {
+            flipCache.setToScaling( -1,1 );
+        }
         batch.setColor(spriteColor);
         super.draw(batch);
         batch.setColor(Color.WHITE);
