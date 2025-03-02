@@ -22,7 +22,6 @@ public class Enemy extends ObstacleSprite {
 
     private EnemyState state;
     private Color spriteColor = Color.WHITE;
-    private TextureRegion sprite;
     private Body body;
     private float width;
     private float height;
