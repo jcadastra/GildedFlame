@@ -5,6 +5,8 @@ import com.badlogic.gdx.physics.box2d.*;
 
 public class Moth extends Enemy {
 
+    private Color spriteColor = Color.WHITE;
+
     public Moth(int id, Vector2 pos, Body body, float width, float height, SpriteBatch batch) {
         super(id, pos, body, width, height, batch);
     }
@@ -12,6 +14,7 @@ public class Moth extends Enemy {
     @Override
     public void in_light(){
         // turns angry - maybe just represent this with a different sprite color
+        spriteColor = Color.RED;
         draw(batch); // change sprite color
     }
 
