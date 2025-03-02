@@ -2,27 +2,36 @@ package edu.cornell.cis3152.physics.platform;
 
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.audio.*;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.JsonValue;
 
 public class Enemy {
 
-    private static float MOVE_SPEED;
+    private static int MOVE_SPEED;
 
     // Instance attributes
     private int id;
     private Vector2 position;
-    private int state;
-    // default is 0
-    // frozen is 1
+
+    private EnemyState state;
+    private Body body;
+
+    public enum EnemyState {
+
+        OUT_OF_LIGHT,
+        IN_LIGHT,
+        ATTRACTED,
+    }
 
 //    public static void setConstants(JsonValue constants){
 
 //    }
 
-    public Enemy(int id, float x, float y){
+    public Enemy(int id, Vector2 position, Body body){
         this.id = id;
-        position = new Vector2(x,y);
-        state = 0;
+        this.position = position;
+        this.state = EnemyState.OUT_OF_LIGHT;
+        this.body = body;
     }
 
     public int getId() { return id; }
@@ -32,15 +41,44 @@ public class Enemy {
     public void getY(float value) { position.y = value; }
     public Vector2 getPosition() { return position; }
 
-    public int getState() { return state; }
-    public void setState(int value) { state = value; }
+    public EnemyState getState() { return state; }
+    public void setState(EnemyState value) { state = value; }
 
     public void update(){
-        if (state == 0) {
-            // move
-        } else if (state == 1) {
-
+        switch (state) {
+            case OUT_OF_LIGHT:
+                move();
+                break;
+            case IN_LIGHT:
+                react();
+                break;
+            case ATTRACTED:
+                attracted();
+                break;
+            default:
+                break;
         }
+    }
+
+    public void move(){
+        position.x += MOVE_SPEED;
+    }
+
+    public void move_to(Vector2 target) {
+        int direction = MOVE_SPEED;
+        if (target.x < position.x) {
+            direction *= -1;
+        } else if (target.x == position.x) {
+            direction *= 0;
+        }
+        body.applyForceToCenter(new Vector2(direction, 0), true);
+    }
+
+    public void react(){
+
+    }
+
+    public void attracted(){
     }
 
 
