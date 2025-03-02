@@ -21,6 +21,10 @@ public class Torch extends ObstacleSprite {
     private Color sensorColor;
     private String sensorName;
 
+    private int pickUpTimer;
+    public boolean canBePickedUp() {return pickUpTimer == 0;}
+    public void resetPickUp() {pickUpTimer = data.getInt("pickupTimer");}
+
 //    /**Whether the torch is in player's hand*/
 //    private boolean isOnHand;
 //
@@ -94,7 +98,7 @@ public class Torch extends ObstacleSprite {
         // Ground sensor to represent our feet
         Body body = obstacle.getBody();
         Fixture sensorFixture = body.createFixture( sensorDef );
-        sensorName = "traci_sensor";
+//        sensorName = "traci_sensor";
         sensorFixture.setUserData(sensorName);
 
         // Finally, we need a debug outline
@@ -110,56 +114,27 @@ public class Torch extends ObstacleSprite {
      *
      * This method should be called after the force attribute is set.
      */
-    public void applyThrowForce() {
+    public void applyThrowForce(int direc) {
         if (!obstacle.isActive()) {
             return;
         }
 
         Vector2 pos = obstacle.getPosition();
-        Vector2 appliedForce = new Vector2();
-//        float vx = obstacle.getVX();
+        Vector2 appliedForce;
         Body body = obstacle.getBody();
-        appliedForce = new Vector2(data.get( "tossForce").getFloat(0), data.get( "tossForce").getFloat(1));
+        appliedForce = new Vector2(data.get( "tossForce").getFloat(0) * direc, data.get( "tossForce").getFloat(1));
         body.applyLinearImpulse(appliedForce,pos,true);
-//
-//        // Don't want to be moving. Damp out player motion
-//        if (getMovement() == 0f) {
-//            forceCache.set(-getDamping()*vx,0);
-//            body.applyForce(forceCache,pos,true);
-//        }
-//
-//        // Velocity too high, clamp it
-//        if (Math.abs(vx) >= getMaxSpeed()) {
-//            obstacle.setVX(Math.signum(vx)*getMaxSpeed());
-//        } else {
-//            forceCache.set(getMovement(),0);
-//            body.applyForce(forceCache,pos,true);
-//        }
-//
-//        // Jump!
-//        if (isJumping()) {
-//            forceCache.set(0, jump_force);
-//            body.applyLinearImpulse(forceCache,pos,true);
-//        }
     }
 
-    /**
-     * Updates the object's physics state (NOT GAME LOGIC).
-     *
-     * We use this method to reset cooldowns.
-     *
-     * @param dt    Number of seconds since last animation frame
-     */
+    public void disableCollision() {
+        obstacle.getBody().setActive(false);
+    }
 
-    /**
-     * Draws the physics object.
-     *
-     * This method is overridden from ObstacleSprite. We need to flip the
-     * texture back-and-forth depending on her facing. We do that by creating
-     * a reflection affine transform.
-     *
-     * @param batch The sprite batch to draw to
-     */
+    public void update() {
+        if (pickUpTimer != 0) {
+            pickUpTimer--;
+        }
+    }
 
     /**
      * Draws the outline of the physics object.

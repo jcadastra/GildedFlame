@@ -21,6 +21,8 @@ import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.physics.box2d.*;
 
+import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
+import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.ParserUtils;
 import edu.cornell.gdiac.graphics.SpriteBatch;
@@ -82,7 +84,6 @@ public class Traci extends ObstacleSprite {
 
     /** Whether the player has torch in hand */
     private boolean hasTorch;
-
     /** The outline of the sensor obstacle */
     private Path2 sensorOutline;
     /** The debug color for the sensor */
@@ -94,7 +95,6 @@ public class Traci extends ObstacleSprite {
     private final Vector2 forceCache = new Vector2();
     /** Cache for the affine flip */
     private final Affine2 flipCache = new Affine2();
-
 
     /**
      * Returns the left/right movement of this character.
@@ -379,6 +379,14 @@ public class Traci extends ObstacleSprite {
             forceCache.set(0, jump_force);
             body.applyLinearImpulse(forceCache,pos,true);
         }
+    }
+
+    public JointDef attachTorchToAvatar(World world, Torch t) {
+        WeldJointDef jointDef = new WeldJointDef();
+        Vector2 anchor = obstacle.getBody().getWorldCenter(); // Or choose a custom anchor point
+        jointDef.initialize(obstacle.getBody(), t.getObstacle().getBody(), anchor);
+        jointDef.collideConnected = false;
+        return jointDef;
     }
 
     /**

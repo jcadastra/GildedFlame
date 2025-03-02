@@ -20,6 +20,8 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.Joint;
+import com.badlogic.gdx.physics.box2d.JointDef;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.JsonValue;
@@ -31,6 +33,9 @@ import edu.cornell.gdiac.audio.SoundEffect;
 import edu.cornell.gdiac.audio.SoundEffectManager;
 import edu.cornell.gdiac.physics2.Obstacle;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
+
+import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
+import java.util.ArrayList;
 
 /**
  * The game scene for the platformer game.
@@ -67,6 +72,8 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
 
     /** Mark set to handle more sophisticated collision callbacks */
     protected ObjectSet<Fixture> sensorFixtures;
+    private JointDef pendingTorchJoint;
+    private Joint activeTorchJoint;
 
     /**
      * Creates and initialize a new instance of the platformer game
@@ -192,6 +199,7 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
      * @param dt    Number of seconds since last animation frame
      */
     public void update(float dt) {
+        torch.update();
         InputController input = InputController.getInstance();
 
         // Process actions in object model
@@ -206,7 +214,9 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
 
         if (input.getThrowing() && avatar.getHasTorch()) {
             avatar.setHasTorch(false);
-            torch.applyThrowForce();
+            world.destroyJoint(activeTorchJoint);
+            torch.applyThrowForce(avatar.isFacingRight() ? 1 : -1);
+            torch.resetPickUp();
         }
 
 
@@ -214,6 +224,11 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
         if (avatar.isJumping()) {
             SoundEffectManager sounds = SoundEffectManager.getInstance();
             sounds.play("jump", jumpSound, volume);
+        }
+
+        if (pendingTorchJoint != null) {
+            activeTorchJoint = world.createJoint(pendingTorchJoint);
+            pendingTorchJoint = null;
         }
     }
 
@@ -290,6 +305,11 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
             if ((bd1 == avatar && bd2.getName().equals( "goal" )) ||
                 (bd1.getName().equals("goal")  && bd2 == avatar)) {
                 setComplete(true);
+            }
+
+            if (bd1 == avatar && bd2 == torch && torch.canBePickedUp()) {
+                avatar.setHasTorch(true);
+                pendingTorchJoint = avatar.attachTorchToAvatar(world,torch);
             }
         } catch (Exception e) {
             e.printStackTrace();
