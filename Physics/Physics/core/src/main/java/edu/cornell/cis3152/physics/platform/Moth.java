@@ -9,15 +9,13 @@ public class Moth extends Enemy {
         super(id, pos, body);
     }
 
-    // reacting to light
     @Override
-    public void react(){
-
+    public void in_light(){
+        // turns angry - maybe just represent this with a different sprite color
     }
-
 
     @Override
     public void attracted(){
-//        move_to(AIController.lightPosition)
+        move_to(AIController.lightPosition);
     }
 }

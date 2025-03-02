@@ -50,7 +50,7 @@ public class Enemy {
                 move();
                 break;
             case IN_LIGHT:
-                react();
+                in_light();
                 break;
             case ATTRACTED:
                 attracted();
@@ -74,7 +74,7 @@ public class Enemy {
         body.applyForceToCenter(new Vector2(direction, 0), true);
     }
 
-    public void react(){
+    public void in_light(){
 
     }
 

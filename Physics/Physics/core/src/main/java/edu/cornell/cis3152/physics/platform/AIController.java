@@ -27,18 +27,20 @@ public class AIController {
 
     public AIController(List<Enemy> enemies, Vector2 lightPos){
         this.enemies = enemies;
-        this.lightPosition = lightPos;
+        lightPosition = lightPos;
     }
     public void update(){
         for (Enemy enemy : enemies){
-            if (isInLight(enemy)){
-
+            if (lightDistance(enemy) < LIGHT_RADIUS){
+                enemy.setState(Enemy.EnemyState.IN_LIGHT);
+            } else if (lightDistance(enemy) < CHASE_DIST && enemy instanceof Moth){
+                enemy.setState(Enemy.EnemyState.ATTRACTED);
             }
+            enemy.update();
         }
     }
 
-    public boolean isInLight(Enemy enemy){
-        float distance = enemy.getPosition().dst(lightPosition);
-        return distance < LIGHT_RADIUS;
+    public int lightDistance(Enemy enemy){
+        return (int) enemy.getPosition().dst(lightPosition);
     }
 }
