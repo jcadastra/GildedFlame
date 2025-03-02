@@ -77,6 +77,8 @@ public class InputController {
     private float horizontal;
     /** How much did we move vertically? */
     private float vertical;
+    /** Are we throwing? */
+    private boolean throwing;
     /** The crosshair position (for raddoll) */
     private Vector2 crosshair;
     /** The crosshair cache (for using as a return value) */
@@ -107,6 +109,13 @@ public class InputController {
      */
     public float getVertical() {
         return vertical;
+    }
+
+    /**
+     * Returns if the throw button was pressed
+     */
+    public boolean getThrowing() {
+        return throwing;
     }
 
     /**
@@ -326,6 +335,11 @@ public class InputController {
         }
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             vertical -= 1.0f;
+        }
+
+        throwing = secondary && throwing;
+        if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
+            throwing = true;
         }
 
         // Mouse results

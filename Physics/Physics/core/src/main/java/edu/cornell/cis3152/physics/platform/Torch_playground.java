@@ -148,7 +148,7 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
         avatar.createSensor();
 
         // Create Torch
-        texture = directory.getEntry( "platform-bullet", Texture.class );
+//        texture = directory.getEntry( "platform-bullet", Texture.class );
         torch = new Torch(units, constants.get("torch"));
         torch.setTexture(texture);
         addSprite(torch);
@@ -203,6 +203,12 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
         if (avatar.isShooting()) {
             createBullet();
         }
+
+        if (input.getThrowing() && avatar.getHasTorch()) {
+            avatar.setHasTorch(false);
+            torch.applyThrowForce();
+        }
+
 
         avatar.applyForce();
         if (avatar.isJumping()) {

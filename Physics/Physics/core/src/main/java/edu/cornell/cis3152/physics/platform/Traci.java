@@ -16,6 +16,7 @@
  */
 package edu.cornell.cis3152.physics.platform;
 
+import com.badlogic.gdx.graphics.TextureData.Factory;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.physics.box2d.*;
@@ -78,6 +79,9 @@ public class Traci extends ObstacleSprite {
     private boolean isGrounded;
     /** Whether we are actively shooting */
     private boolean isShooting;
+
+    /** Whether the player has torch in hand */
+    private boolean hasTorch;
 
     /** The outline of the sensor obstacle */
     private Path2 sensorOutline;
@@ -154,6 +158,19 @@ public class Traci extends ObstacleSprite {
      */
     public void setJumping(boolean value) {
         isJumping = value;
+    }
+    /**
+     * Returns true if Traci has torch.
+     */
+    public boolean getHasTorch() {
+        return hasTorch;
+    }
+
+    /**
+     * Sets whether Traci has torch.
+     */
+    public void setHasTorch(boolean value) {
+        hasTorch = value;
     }
 
     /**
@@ -276,6 +293,7 @@ public class Traci extends ObstacleSprite {
         isShooting = false;
         isJumping = false;
         faceRight = true;
+        hasTorch = false;
 
         shootCooldown = 0;
         jumpCooldown = 0;

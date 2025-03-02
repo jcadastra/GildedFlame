@@ -21,14 +21,14 @@ public class Torch extends ObstacleSprite {
     private Color sensorColor;
     private String sensorName;
 
-    /**Whether the torch is in player's hand*/
-    private boolean isOnHand;
-
-    /**Query whether torch is in player's hand or not*/
-    public boolean getOnHand() {return isOnHand;}
-
-    /**Set whether torch is in player's hand or not*/
-    public void setOnHand(boolean v) {isOnHand = v;}
+//    /**Whether the torch is in player's hand*/
+//    private boolean isOnHand;
+//
+//    /**Query whether torch is in player's hand or not*/
+//    public boolean getOnHand() {return isOnHand;}
+//
+//    /**Set whether torch is in player's hand or not*/
+//    public void setOnHand(boolean v) {isOnHand = v;}
 
     public Torch(float units, JsonValue data) {
         this.data = data;
@@ -49,16 +49,13 @@ public class Torch extends ObstacleSprite {
         obstacle.setDensity( data.getFloat( "density", 0 ) );
         obstacle.setFriction( data.getFloat( "friction", 0 ) );
         obstacle.setRestitution( data.getFloat( "restitution", 0 ) );
-        obstacle.setFixedRotation(true);
+//        obstacle.setFixedRotation(true);
         obstacle.setPhysicsUnits( units );
         obstacle.setUserData( this );
         obstacle.setName("torch");
 
         debug = ParserUtils.parseColor( debugInfo.get("avatar"),  Color.WHITE);
         sensorColor = ParserUtils.parseColor( debugInfo.get("sensor"),  Color.WHITE);
-
-        // Gameplay attributes
-        isOnHand = false;
 
         // Create a rectangular mesh for Traci. This is the same as for door,
         // since Traci is a rectangular image. But note that the capsule is
@@ -118,9 +115,12 @@ public class Torch extends ObstacleSprite {
             return;
         }
 
-//        Vector2 pos = obstacle.getPosition();
+        Vector2 pos = obstacle.getPosition();
+        Vector2 appliedForce = new Vector2();
 //        float vx = obstacle.getVX();
-//        Body body = obstacle.getBody();
+        Body body = obstacle.getBody();
+        appliedForce = new Vector2(data.get( "tossForce").getFloat(0), data.get( "tossForce").getFloat(1));
+        body.applyLinearImpulse(appliedForce,pos,true);
 //
 //        // Don't want to be moving. Damp out player motion
 //        if (getMovement() == 0f) {
