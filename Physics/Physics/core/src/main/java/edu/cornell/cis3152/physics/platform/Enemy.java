@@ -106,6 +106,7 @@ public class Enemy extends ObstacleSprite {
     public EnemyState getState() { return state; }
     public void setState(EnemyState value) { state = value; }
 
+
     public int getFreezeTimer() { return freezeTimer; }
 
     public void decrementFreezeTimer() { freezeTimer--; }
