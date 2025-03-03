@@ -53,6 +53,21 @@
         "tolerance" : 0.05
       }
     },
+  "totem" : {
+    "pos"       : [7.0, 2.0],
+    "dimension" : [1,1],
+    "size"      : 1,
+    "density"   : 0.5,
+    "sensor": {
+      "shrink" : 0.6,
+      "height" : 0.05
+    },
+    "debug" : {
+      "avatar" : "#ffff00ff",
+      "sensor" : "#ff0000ff",
+      "tolerance" : 0.05
+    }
+  },
     "bridge" : {
         "pos"     : [9.0, 3.8],
         "size"    : [1.0, 0.125],

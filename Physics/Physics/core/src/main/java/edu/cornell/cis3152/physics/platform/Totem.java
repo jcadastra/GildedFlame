@@ -2,26 +2,26 @@ package edu.cornell.cis3152.physics.platform;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.JsonValue;
+import edu.cornell.gdiac.graphics.SpriteBatch;
 
 public class Totem extends Enemy {
-    private Fixture fixture;
-    public Totem(int id, Vector2 pos, Body body, float width, float height, SpriteBatch batch) {
-        super(id, pos, body, width, height, batch);
-        this.fixture = body.getFixtureList().first();
+
+    public Totem(int id, float units, JsonValue value) {
+        super(id, units, value);
     }
 
     // reacting to light
     @Override
     public void in_light(){
         stop();
-        fixture.setSensor(false); // yes collisions
+        getFixture().setSensor(false); // yes collisions
     }
 
     @Override
     public void out_of_light(){
-        fixture.setSensor(true); // no collisions
+        obstacle.getBody().setLinearVelocity(new Vector2(getMoveSpeed(), obstacle.getBody().getLinearVelocity().y));
+//        getFixture().setSensor(true); // no collisions
     }
-
-
 
 }
