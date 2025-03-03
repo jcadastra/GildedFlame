@@ -18,13 +18,12 @@ public class Totem extends Enemy {
         decrementFreezeTimer();
         if (getFreezeTimer() != 0){
             stop();
-            System.out.println("Frozen: " +  getFreezeTimer());
+//            System.out.println("Frozen: " +  getFreezeTimer());
         } else {
-            System.out.println("Unfrozen");
+//            System.out.println("Unfrozen");
             setState(EnemyState.OUT_OF_LIGHT);
         }
-
-//        getFixture().setSensor(false); // yes collisions
+        // getFixture().setSensor(false); // yes collisions
     }
 
     @Override

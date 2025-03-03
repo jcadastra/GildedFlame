@@ -19,17 +19,22 @@ public class AIController {
      */
     private long ticks;
 
+
     private static final float LIGHT_RADIUS = 3;
 
     private List<Enemy> enemies;
     // CHANGE LATER
     public static Vector2 lightPosition;
+    public static Vector2 playerPosition;
 
-    public AIController(List<Enemy> enemies, Vector2 lightPos){
-        this.enemies = enemies;
-        lightPosition = lightPos;
+    public Traci traci;
+    public AIController(Torch_playground playground){
+        this.enemies = playground.getEnemies();
+        this.traci = playground.getAvatar();
     }
+
     public void update(){
+        playerPosition = traci.getLocation();
         for (Enemy enemy : enemies){
             if (lightDistance(enemy) < LIGHT_RADIUS){
                 enemy.setState(Enemy.EnemyState.IN_LIGHT);
@@ -41,6 +46,7 @@ public class AIController {
     }
 
     public int lightDistance(Enemy enemy){
-        return (int) Math.sqrt(Math.pow((enemy.getX() - lightPosition.x),2) + Math.pow((enemy.getY() - lightPosition.y), 2));
+//        return (int) Math.sqrt(Math.pow((enemy.getX() - lightPosition.x),2) + Math.pow((enemy.getY() - lightPosition.y), 2));
+        return (int) Math.sqrt(Math.pow((enemy.getX() - playerPosition.x),2) + Math.pow((enemy.getY() - playerPosition.y), 2));
     }
 }
