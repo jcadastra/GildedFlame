@@ -41,6 +41,6 @@ public class AIController {
     }
 
     public int lightDistance(Enemy enemy){
-        return (int) enemy.getPosition().dst(lightPosition);
+        return (int) Math.sqrt(Math.pow((enemy.getX() - lightPosition.x),2) + Math.pow((enemy.getY() - lightPosition.y), 2));
     }
 }
