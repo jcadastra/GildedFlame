@@ -137,7 +137,8 @@ public class GDXRoot extends Game implements ScreenListener {
 //            controllers[0] = new RocketScene(directory);
             controllers[0] = new og_platformer(directory);
             controllers[1] = new empty_layout1(directory);
-            controllers[2] = new empty_layout2(directory);
+            controllers[2] = new light_test(directory);
+//            controllers[2] = new empty_layout2(directory);
 //            controllers[2] = new RagdollScene(directory);
 //            controllers[3] = new PlatformScene(directory);
 
