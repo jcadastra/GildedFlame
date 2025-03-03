@@ -6,34 +6,31 @@ import com.badlogic.gdx.physics.box2d.*;
 
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.ParserUtils;
-import edu.cornell.gdiac.graphics.SpriteBatch;
-import edu.cornell.gdiac.graphics.Texture2D;
-import edu.cornell.gdiac.math.Path2;
-import edu.cornell.gdiac.math.PathFactory;
 import edu.cornell.gdiac.physics2.*;
 
 public class Torch extends ObstacleSprite {
 
+    /** Json file to avoid magic numbers */
     private final JsonValue data;
-    private final float width;
-    private final float height;
-    private Path2 sensorOutline;
-    private Color sensorColor;
-    private String sensorName;
 
+    /** width of torch */
+    private final float width;
+
+    /** height of torch */
+    private final float height;
+
+    /** timer to avoid too early double pickup of torch (can pickup when 0*/
     private int pickUpTimer;
     public boolean canBePickedUp() {return pickUpTimer == 0;}
     public void resetPickUp() {pickUpTimer = data.getInt("pickupTimer");}
 
-//    /**Whether the torch is in player's hand*/
-//    private boolean isOnHand;
-//
-//    /**Query whether torch is in player's hand or not*/
-//    public boolean getOnHand() {return isOnHand;}
-//
-//    /**Set whether torch is in player's hand or not*/
-//    public void setOnHand(boolean v) {isOnHand = v;}
-
+    /**
+     * Torch constructor, takes in the physics units and the json source
+     * inits a torch that can be thrown and has a light attached to it
+     *
+     * @param units physics units the world is defined in
+     * @param data json file location
+     */
     public Torch(float units, JsonValue data) {
         this.data = data;
         JsonValue debugInfo = data.get("debug");
@@ -59,7 +56,6 @@ public class Torch extends ObstacleSprite {
         obstacle.setName("torch");
 
         debug = ParserUtils.parseColor( debugInfo.get("avatar"),  Color.WHITE);
-        sensorColor = ParserUtils.parseColor( debugInfo.get("sensor"),  Color.WHITE);
 
         // Create a rectangular mesh for Traci. This is the same as for door,
         // since Traci is a rectangular image. But note that the capsule is
@@ -69,48 +65,7 @@ public class Torch extends ObstacleSprite {
     }
 
     /**
-     * Creates the sensor for Traci.
-     *
-     * We only allow the Traci to jump when she's on the ground. Double jumping
-     * is not allowed.
-     *
-     * To determine whether Traci is on the ground we create a thin sensor under
-     * her feet, which reports collisions with the world but has no collision
-     * response. This sensor is just a FIXTURE, it is not an obstacle. We will
-     * talk about the different between these later.
-     *
-     * Note this method is not part of the constructor. It can only be called
-     * once the physics obstacle has been activated.
-     */
-    public void createSensor() {
-        Vector2 sensorCenter = new Vector2(0, -height / 2);
-        FixtureDef sensorDef = new FixtureDef();
-        sensorDef.density = data.getFloat("density",0);
-        sensorDef.isSensor = true;
-
-        JsonValue sensorjv = data.get("sensor");
-        float w = sensorjv.getFloat("shrink",0)*width/2.0f;
-        float h = sensorjv.getFloat("height",0);
-        PolygonShape sensorShape = new PolygonShape();
-        sensorShape.setAsBox(w, h, sensorCenter, 0.0f);
-        sensorDef.shape = sensorShape;
-
-        // Ground sensor to represent our feet
-        Body body = obstacle.getBody();
-        Fixture sensorFixture = body.createFixture( sensorDef );
-//        sensorName = "traci_sensor";
-        sensorFixture.setUserData(sensorName);
-
-        // Finally, we need a debug outline
-        float u = obstacle.getPhysicsUnits();
-        PathFactory factory = new PathFactory();
-        sensorOutline = new Path2();
-        factory.makeRect( (sensorCenter.x-w/2)*u,(sensorCenter.y-h/2)*u, w*u, h*u,  sensorOutline);
-    }
-
-
-    /**
-     * Applies the force to the body of Traci
+     * Applies the force to the torch upon thrown
      *
      * This method should be called after the force attribute is set.
      */
@@ -124,47 +79,15 @@ public class Torch extends ObstacleSprite {
         Body body = obstacle.getBody();
         appliedForce = new Vector2(data.get( "tossForce").getFloat(0) * direc, data.get( "tossForce").getFloat(1));
         body.applyLinearImpulse(appliedForce,pos,true);
-    }
-
-    public void disableCollision() {
-        obstacle.getBody().setActive(false);
-    }
-
-    public void update() {
-        if (pickUpTimer != 0) {
-            pickUpTimer--;
-        }
+        body.applyAngularImpulse(data.getFloat("angular_force") * direc,true);
     }
 
     /**
-     * Draws the outline of the physics object.
-     *
-     * This method is overridden from ObstacleSprite. By default, that method
-     * only draws the outline of the main physics obstacle. We also want to
-     * draw the outline of the sensor, and in a different color. Since it
-     * is not an obstacle, we have to draw that by hand.
-     *
-     * @param batch The sprite batch to draw to
+     * In this case, only used to tick down the timer on the torck
      */
-    @Override
-    public void drawDebug(SpriteBatch batch) {
-        super.drawDebug( batch );
-
-        if (sensorOutline != null) {
-            batch.setTexture( Texture2D.getBlank() );
-            batch.setColor( sensorColor );
-
-            Vector2 p = obstacle.getPosition();
-            float a = obstacle.getAngle();
-            float u = obstacle.getPhysicsUnits();
-
-            // transform is an inherited cache variable
-            transform.idt();
-            transform.preRotate( (float) (a * 180.0f / Math.PI) );
-            transform.preTranslate( p.x * u, p.y * u );
-
-            //
-            batch.outline( sensorOutline, transform );
+    public void update() {
+        if (pickUpTimer != 0) {
+            pickUpTimer--;
         }
     }
 }
