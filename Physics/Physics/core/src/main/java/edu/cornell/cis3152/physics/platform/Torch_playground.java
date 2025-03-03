@@ -67,6 +67,11 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
     /** Reference to the character avatar */
     private Traci avatar;
     private Torch torch;
+
+    private Totem totem;
+
+    private Body body;
+    private int count;
     /** Reference to the goalDoor (for collision detection) */
     private Door goalDoor;
 
@@ -155,12 +160,23 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
         avatar.createSensor();
 
         // Create Torch
-//        texture = directory.getEntry( "platform-bullet", Texture.class );
-        torch = new Torch(units, constants.get("torch"));
-        torch.setTexture(texture);
-        addSprite(torch);
-        // Have to do after body is created
-        torch.createSensor();
+//        torch = new Torch(units, constants.get("torch"));
+//        torch.setTexture(texture);
+//        addSprite(torch);
+//        torch.createSensor();
+
+
+        // Create Torch
+        texture = directory.getEntry("rocket-crate02", Texture.class);
+        if (texture == null) {
+            System.out.println("🚨 Totem texture is NULL! Check asset path.");
+        } else {
+            System.out.println("✅ Totem texture loaded successfully.");
+        }
+        totem = new Totem(0, units, constants.get("totem"));
+        totem.setTexture(texture);
+        addSprite(totem);
+        totem.createSensor();
     }
 
     /**
@@ -199,7 +215,8 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
      * @param dt    Number of seconds since last animation frame
      */
     public void update(float dt) {
-        torch.update();
+//        torch.update();
+        totem.update();
         InputController input = InputController.getInstance();
 
         // Process actions in object model
@@ -211,13 +228,13 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
         if (avatar.isShooting()) {
             createBullet();
         }
-
-        if (input.getThrowing() && avatar.getHasTorch()) {
-            avatar.setHasTorch(false);
-            world.destroyJoint(activeTorchJoint);
-            torch.applyThrowForce(avatar.isFacingRight() ? 1 : -1);
-            torch.resetPickUp();
-        }
+//
+//        if (input.getThrowing() && avatar.getHasTorch()) {
+//            avatar.setHasTorch(false);
+//            world.destroyJoint(activeTorchJoint);
+//            torch.applyThrowForce(avatar.isFacingRight() ? 1 : -1);
+//            torch.resetPickUp();
+//        }
 
 
         avatar.applyForce();
@@ -225,11 +242,11 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
             SoundEffectManager sounds = SoundEffectManager.getInstance();
             sounds.play("jump", jumpSound, volume);
         }
-
-        if (pendingTorchJoint != null) {
-            activeTorchJoint = world.createJoint(pendingTorchJoint);
-            pendingTorchJoint = null;
-        }
+//
+//        if (pendingTorchJoint != null) {
+//            activeTorchJoint = world.createJoint(pendingTorchJoint);
+//            pendingTorchJoint = null;
+//        }
     }
 
     /**
@@ -307,10 +324,18 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
                 setComplete(true);
             }
 
-            if (bd1 == avatar && bd2 == torch && torch.canBePickedUp()) {
-                avatar.setHasTorch(true);
-                pendingTorchJoint = avatar.attachTorchToAvatar(world,torch);
-            }
+//            if (bd1 == avatar && bd2 == torch && torch.canBePickedUp()) {
+//                avatar.setHasTorch(true);
+//                pendingTorchJoint = avatar.attachTorchToAvatar(world,torch);
+//            }
+
+//            if ((bd1 instanceof Totem && bd2.getName().startsWith("wall")) ||
+//                (bd2 instanceof Totem && bd1.getName().startsWith("wall"))) {
+//                Totem totem = (bd1 instanceof Totem) ? (Totem) bd1 : (Totem) bd2;
+//                Body tBody = totem.getObstacle().getBody();
+//                Vector2 currentVelocity = tBody.getLinearVelocity();
+//                tBody.setLinearVelocity(new Vector2(-currentVelocity.x, currentVelocity.y));
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }

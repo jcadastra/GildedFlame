@@ -429,6 +429,7 @@ public class Traci extends ObstacleSprite {
         } else {
             flipCache.setToScaling( -1,1 );
         }
+//        System.out.println("Current position " + obstacle.getPosition().x + "," + obstacle.getPosition().y + ".");
         super.draw(batch,flipCache);
     }
 
