@@ -124,6 +124,7 @@ public class Traci extends ObstacleSprite {
         }
     }
 
+
     /**
      * Returns true if Traci is actively firing.
      *
@@ -164,6 +165,11 @@ public class Traci extends ObstacleSprite {
      */
     public boolean getHasTorch() {
         return hasTorch;
+    }
+
+
+    public Vector2 getLocation() {
+        return new Vector2(getObstacle().getX(), getObstacle().getY());
     }
 
     /**

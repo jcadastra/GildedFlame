@@ -39,7 +39,6 @@ public class Enemy extends ObstacleSprite {
     }
 
     public void changeDirection() {
-        System.out.println("changing direction");
         faceRight = !faceRight;
     }
     private Body body;
@@ -84,6 +83,7 @@ public class Enemy extends ObstacleSprite {
         obstacle.setRestitution( data.getFloat( "restitution", 0 ) );
 
         obstacle.setPhysicsUnits( units );
+        obstacle.setFixedRotation(true);
         obstacle.setUserData( this );
         obstacle.setName("enemy");
 
@@ -133,6 +133,11 @@ public class Enemy extends ObstacleSprite {
     }
 
     public void move_to(Vector2 target) {
+        Body body = obstacle.getBody();
+        if (body == null) {
+            return;
+        }
+        System.out.println(" MOVING TOWARDS " + target.x + "," + target.y + ".");
         int direction = MOVE_SPEED;
         if (target.x < x) {
             direction *= -1;
@@ -144,13 +149,16 @@ public class Enemy extends ObstacleSprite {
 
     public void move() {
         int direction;
-        if (isFacingRight()) {
+        Body body = obstacle.getBody();
+        if (body == null) {
+            return;
+        }
+        if (!isFacingRight()) {
             direction = MOVE_SPEED;
         } else {
             direction = -MOVE_SPEED;
         }
         obstacle.getBody().setLinearVelocity(new Vector2(direction, obstacle.getBody().getLinearVelocity().y));
-
     }
 
     public void in_light(){
@@ -164,7 +172,6 @@ public class Enemy extends ObstacleSprite {
     @Override
     public void draw(SpriteBatch batch) {
         super.draw(batch);
-//        System.out.println("Drawing totem at " + getX() + "," + getY() + ".");
     }
 
     public void createSensor() {

@@ -1,5 +1,4 @@
 package edu.cornell.cis3152.physics.platform;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -22,6 +21,12 @@ public class Moth extends Enemy {
 
     @Override
     public void attracted(){
-        move_to(AIController.lightPosition);
+        move_to(AIController.playerPosition);
+    }
+
+    @Override
+    public void out_of_light(){
+        move();
+        //        getFixture().setSensor(true); // no collisions
     }
 }

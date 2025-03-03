@@ -11,7 +11,7 @@
  * Version: 2/8/2025
  */
 package edu.cornell.cis3152.physics.platform;
-
+import java.util.List;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -66,11 +66,11 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
 
     /** Reference to the character avatar */
     private Traci avatar;
+    private Vector2 location;
     private Torch torch;
 
     private Totem totem;
     private Moth moth;
-
     private Body body;
     private int count;
     /** Reference to the goalDoor (for collision detection) */
@@ -80,7 +80,19 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
     protected ObjectSet<Fixture> sensorFixtures;
     private JointDef pendingTorchJoint;
     private Joint activeTorchJoint;
+    private List<Enemy> enemies;
 
+    public AIController aiController;
+
+    public List<Enemy> getEnemies(){
+        return enemies;
+    }
+
+    public Traci getAvatar() { return avatar; }
+
+    public Vector2 getPlayerLocation() {
+        return avatar.getObstacle().getPosition();
+    }
     /**
      * Creates and initialize a new instance of the platformer game
      *
@@ -96,6 +108,9 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
         fireSound = directory.getEntry( "platform-pew", SoundEffect.class );
         plopSound = directory.getEntry( "platform-plop", SoundEffect.class );
         volume = constants.getFloat("volume", 1.0f);
+        populateLevel();
+
+        aiController = new AIController(this);
     }
 
     /**
@@ -132,6 +147,7 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
 
         // Create ground pieces
         Texture texture = directory.getEntry( "shared-earth", Texture.class );
+        enemies = new ArrayList<>();
 
         Surface wall;
         String wname = "wall";
@@ -173,13 +189,15 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
         totem.setTexture(texture);
         addSprite(totem);
         totem.createSensor();
+        enemies.add(totem);
 
         // Moth
-//        texture = directory.getEntry("rocket-crate02", Texture.class);
-//        moth = new Moth(0, units, constants.get("moth"));
-//        moth.setTexture(texture);
-//        addSprite(moth);
-//        moth.createSensor();
+        texture = directory.getEntry("rocket-crate02", Texture.class);
+        moth = new Moth(0, units, constants.get("moth"));
+        moth.setTexture(texture);
+        addSprite(moth);
+        moth.createSensor();
+        enemies.add(moth);
     }
 
     /**
@@ -220,6 +238,7 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
     public void update(float dt) {
         torch.update();
         totem.update();
+        moth.update();
         InputController input = InputController.getInstance();
 
         // Process actions in object model
@@ -250,6 +269,7 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
             activeTorchJoint = world.createJoint(pendingTorchJoint);
             pendingTorchJoint = null;
         }
+        aiController.update();
     }
 
     /**
@@ -338,7 +358,8 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
                 enemy.changeDirection();
             }
 
-            if ((bd2 instanceof Totem && bd1 instanceof Moth)) {
+            if ((bd2 instanceof Totem && bd1 instanceof Moth) || (bd1 instanceof Totem && bd2 instanceof Moth)) {
+                System.out.println(" COLLISION ");
                 ((Enemy) bd2).changeDirection();
                 ((Enemy) bd1).changeDirection();
             }
@@ -346,6 +367,10 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
             if ((bd2 instanceof Torch && bd1 instanceof Totem)) {
                 totem.setState(Enemy.EnemyState.IN_LIGHT);
                 totem.resetFreeze();
+            }
+
+            if ((bd2 instanceof Torch && bd1 instanceof Moth)){
+                moth.setState(Enemy.EnemyState.ATTRACTED);
             }
 
 //            if ((bd2 == avatar && bd1 instanceof Totem)){
