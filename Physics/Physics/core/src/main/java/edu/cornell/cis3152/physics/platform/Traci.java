@@ -242,6 +242,12 @@ public class Traci extends ObstacleSprite {
     public boolean isFacingRight() {
         return faceRight;
     }
+    public Float getWidth() {
+        return width;
+    }
+    public Float getHeight() {
+        return height;
+    }
 
     /**
      * Creates a new Traci avatar with the given physics data
@@ -381,10 +387,20 @@ public class Traci extends ObstacleSprite {
         }
     }
 
-    public JointDef attachTorchToAvatar(World world, Torch t) {
+    public JointDef attachTorchToAvatar(Torch t) {
         WeldJointDef jointDef = new WeldJointDef();
-        Vector2 anchor = obstacle.getBody().getWorldCenter(); // Or choose a custom anchor point
+        Vector2 anchor = new Vector2(obstacle.getX(), obstacle.getY());
         jointDef.initialize(obstacle.getBody(), t.getObstacle().getBody(), anchor);
+        jointDef.collideConnected = false;
+        return jointDef;
+    }
+
+    public JointDef flipTorchJoint(World world, Body characterBody, Body torchBody) {
+        WeldJointDef jointDef = new WeldJointDef();
+        float flippedOffsetX = -1;
+        Vector2 newAnchor = new Vector2(characterBody.getPosition().x + flippedOffsetX, characterBody.getPosition().y + 9);
+
+        jointDef.initialize(characterBody, torchBody, newAnchor);
         jointDef.collideConnected = false;
         return jointDef;
     }
