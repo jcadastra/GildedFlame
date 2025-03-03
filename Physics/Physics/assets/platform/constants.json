@@ -33,6 +33,26 @@
             "tolerance" : 0.05
         }
     },
+    "torch" : {
+      "pos"       : [6.0, 3.0],
+      "dimensions": [0.4, 0.8],
+      "size"      : 1,
+      "force"     : 20.0,
+      "damping"   : 10.0,
+      "density"   : 0.5,
+      "friction"  : 2,
+      "tossForce" : [1, 1],
+      "pickUpTimer": 30,
+      "sensor": {
+        "shrink" : 0.6,
+        "height" : 0.05
+      },
+      "debug" : {
+        "avatar" : "#ffff00ff",
+        "sensor" : "#ff0000ff",
+        "tolerance" : 0.05
+      }
+    },
     "bridge" : {
         "pos"     : [9.0, 3.8],
         "size"    : [1.0, 0.125],
