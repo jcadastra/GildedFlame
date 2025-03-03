@@ -43,7 +43,7 @@
       "friction"  : 4,
       "tossForce" : [1, 1],
       "pickUpTimer": 30,
-      "angular_force":0.2,
+      "angular_force":0.1,
       "sensor": {
         "shrink" : 0.6,
         "height" : 0.05
