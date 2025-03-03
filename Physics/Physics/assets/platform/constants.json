@@ -42,7 +42,7 @@
       "density"   : 0.5,
       "friction"  : 4,
       "tossForce" : [1, 1],
-      "pickUpTimer": 30,
+      "pickUpTimer": 10,
       "angular_force":0.1,
       "sensor": {
         "shrink" : 0.6,
@@ -144,7 +144,7 @@
       ]
     },
     "light":{
-    "radius": 0.5,
+    "radius": 2,
       "pos": [6.0,6.0],
       "debug"      : "#ffffff",
       "friction"    : 0.0,

@@ -23,6 +23,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.JointDef;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.badlogic.gdx.physics.box2d.MassData;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.Null;
@@ -111,6 +112,11 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
     private Joint activeTorchJoint;
 
     /**
+     * Active joint for torch holding light
+     */
+    private Joint activeLightJoint;
+
+    /**
      * If torch is on the right of the avatar
      */
     private boolean torchOnRight;
@@ -194,10 +200,18 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
         // Have to do after body is created
         avatar.createSensor();
 
+        Light l = new Light(units, constants.get("light"));
+        l.setTexture(texture);
+        addSprite(l);
+        l.createSensor();
+
         // Create Torch
         torch = new Torch(units, constants.get("torch"));
         torch.setTexture(texture);
         addSprite(torch);
+//        l.getObstacle().setPosition(torch.getObstacle().getX(), torch.getObstacle().getY() + 20);
+        activeLightJoint = world.createJoint(torch.attachLight(l));
+//        System.out.println(l.getObstacle().getMass());
 //        torch.createSensor();
 
 

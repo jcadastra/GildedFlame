@@ -25,7 +25,7 @@ public class Light extends ObstacleSprite {
 
     private Vector2 position;
 
-    private Body body;
+//    private Body body;
     private LightState state;
     private Vector2 center;
 
@@ -86,7 +86,7 @@ public class Light extends ObstacleSprite {
         this.data = data;
         //this.id = (int)data.getFloat("id");
         System.out.println(units);
-        this.radius = data.getFloat("radius") * units;
+        this.radius = data.getFloat("radius");
         float x = data.get("pos").getFloat(0);
         float y = data.get("pos").getFloat(1);
         position = new Vector2 (x,y);
@@ -96,15 +96,17 @@ public class Light extends ObstacleSprite {
 //        this.body = body;
         this.state = LightState.LIGHT_ON;
         obstacle = new WheelObstacle(x,y,radius);
-        //obstacle.setDensity(0);
-        obstacle.setBodyType( BodyType.StaticBody );
+        obstacle.setDensity(0.0001f);
+        obstacle.setMass(0.0001f);
+        obstacle.setInertia(0.0001f);
+        obstacle.setBodyType( BodyType.DynamicBody );
         obstacle.setPhysicsUnits(units);
         obstacle.setFixedRotation(true);
         obstacle.setRestitution( 0 );
         obstacle.setPhysicsUnits( units );
         obstacle.setUserData( this );
         obstacle.setName("light");
-        obstacle.setDensity(data.getFloat("density",0));
+//        obstacle.setDensity(data.getFloat("density",0));
         obstacle.setFriction(data.getFloat("friction",0));
         obstacle.setRestitution(data.getFloat("restitution",0));
         mesh.set( -radius, -radius, 2 * radius, 2 * radius );

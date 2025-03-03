@@ -4,11 +4,16 @@ import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.physics.box2d.*;
 
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.ParserUtils;
 import edu.cornell.gdiac.physics2.*;
 
 public class Torch extends ObstacleSprite {
+
+    /** The light that the torch emits */
+    private Light internal_light;
 
     /** Json file to avoid magic numbers */
     private final JsonValue data;
@@ -55,6 +60,7 @@ public class Torch extends ObstacleSprite {
         obstacle.setPhysicsUnits( units );
         obstacle.setUserData( this );
         obstacle.setName("torch");
+        obstacle.setBodyType(BodyType.DynamicBody);
 
         debug = ParserUtils.parseColor( debugInfo.get("avatar"),  Color.WHITE);
 
@@ -90,5 +96,13 @@ public class Torch extends ObstacleSprite {
         if (pickUpTimer != 0) {
             pickUpTimer--;
         }
+    }
+
+    public JointDef attachLight(Light l) {
+        WeldJointDef jointDef = new WeldJointDef();
+        Vector2 anchor = new Vector2(obstacle.getX(), obstacle.getY());
+        jointDef.initialize(l.getObstacle().getBody(), obstacle.getBody(), anchor);
+        jointDef.collideConnected = false;
+        return jointDef;
     }
 }
