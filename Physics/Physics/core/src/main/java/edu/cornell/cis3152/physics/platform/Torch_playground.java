@@ -69,6 +69,7 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
     private Torch torch;
 
     private Totem totem;
+    private Moth moth;
 
     private Body body;
     private int count;
@@ -160,23 +161,25 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
         avatar.createSensor();
 
         // Create Torch
-//        torch = new Torch(units, constants.get("torch"));
-//        torch.setTexture(texture);
-//        addSprite(torch);
-//        torch.createSensor();
+        torch = new Torch(units, constants.get("torch"));
+        torch.setTexture(texture);
+        addSprite(torch);
+        torch.createSensor();
 
 
-        // Create Torch
-        texture = directory.getEntry("rocket-crate02", Texture.class);
-        if (texture == null) {
-            System.out.println("🚨 Totem texture is NULL! Check asset path.");
-        } else {
-            System.out.println("✅ Totem texture loaded successfully.");
-        }
+        // Totem
+        texture = directory.getEntry("rocket-crate01", Texture.class);
         totem = new Totem(0, units, constants.get("totem"));
         totem.setTexture(texture);
         addSprite(totem);
         totem.createSensor();
+
+        // Moth
+//        texture = directory.getEntry("rocket-crate02", Texture.class);
+//        moth = new Moth(0, units, constants.get("moth"));
+//        moth.setTexture(texture);
+//        addSprite(moth);
+//        moth.createSensor();
     }
 
     /**
@@ -215,7 +218,7 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
      * @param dt    Number of seconds since last animation frame
      */
     public void update(float dt) {
-//        torch.update();
+        torch.update();
         totem.update();
         InputController input = InputController.getInstance();
 
@@ -228,13 +231,13 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
         if (avatar.isShooting()) {
             createBullet();
         }
-//
-//        if (input.getThrowing() && avatar.getHasTorch()) {
-//            avatar.setHasTorch(false);
-//            world.destroyJoint(activeTorchJoint);
-//            torch.applyThrowForce(avatar.isFacingRight() ? 1 : -1);
-//            torch.resetPickUp();
-//        }
+
+        if (input.getThrowing() && avatar.getHasTorch()) {
+            avatar.setHasTorch(false);
+            world.destroyJoint(activeTorchJoint);
+            torch.applyThrowForce(avatar.isFacingRight() ? 1 : -1);
+            torch.resetPickUp();
+        }
 
 
         avatar.applyForce();
@@ -242,11 +245,11 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
             SoundEffectManager sounds = SoundEffectManager.getInstance();
             sounds.play("jump", jumpSound, volume);
         }
-//
-//        if (pendingTorchJoint != null) {
-//            activeTorchJoint = world.createJoint(pendingTorchJoint);
-//            pendingTorchJoint = null;
-//        }
+
+        if (pendingTorchJoint != null) {
+            activeTorchJoint = world.createJoint(pendingTorchJoint);
+            pendingTorchJoint = null;
+        }
     }
 
     /**
@@ -324,18 +327,34 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
                 setComplete(true);
             }
 
-//            if (bd1 == avatar && bd2 == torch && torch.canBePickedUp()) {
-//                avatar.setHasTorch(true);
-//                pendingTorchJoint = avatar.attachTorchToAvatar(world,torch);
+            if (bd1 == avatar && bd2 == torch && torch.canBePickedUp()) {
+                avatar.setHasTorch(true);
+                pendingTorchJoint = avatar.attachTorchToAvatar(world,torch);
+            }
+
+            if ((bd1 instanceof Enemy && bd2.getName().startsWith("wall")) ||
+                (bd2 instanceof Enemy && bd1.getName().startsWith("wall"))) {
+                Enemy enemy = (bd1 instanceof Enemy) ? (Enemy) bd1 : (Enemy) bd2;
+                enemy.changeDirection();
+            }
+
+            if ((bd2 instanceof Totem && bd1 instanceof Moth)) {
+                ((Enemy) bd2).changeDirection();
+                ((Enemy) bd1).changeDirection();
+            }
+
+            if ((bd2 instanceof Torch && bd1 instanceof Totem)) {
+                totem.setState(Enemy.EnemyState.IN_LIGHT);
+                totem.resetFreeze();
+            }
+
+//            if ((bd2 == avatar && bd1 instanceof Totem)){
+//                if (totem.getState() == Enemy.EnemyState.OUT_OF_LIGHT){
+//
+//                }
 //            }
 
-//            if ((bd1 instanceof Totem && bd2.getName().startsWith("wall")) ||
-//                (bd2 instanceof Totem && bd1.getName().startsWith("wall"))) {
-//                Totem totem = (bd1 instanceof Totem) ? (Totem) bd1 : (Totem) bd2;
-//                Body tBody = totem.getObstacle().getBody();
-//                Vector2 currentVelocity = tBody.getLinearVelocity();
-//                tBody.setLinearVelocity(new Vector2(-currentVelocity.x, currentVelocity.y));
-//            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -7,6 +7,7 @@ import edu.cornell.gdiac.graphics.SpriteBatch;
 
 public class Totem extends Enemy {
 
+
     public Totem(int id, float units, JsonValue value) {
         super(id, units, value);
     }
@@ -14,14 +15,22 @@ public class Totem extends Enemy {
     // reacting to light
     @Override
     public void in_light(){
-        stop();
-        getFixture().setSensor(false); // yes collisions
+        decrementFreezeTimer();
+        if (getFreezeTimer() != 0){
+            stop();
+            System.out.println("Frozen: " +  getFreezeTimer());
+        } else {
+            System.out.println("Unfrozen");
+            setState(EnemyState.OUT_OF_LIGHT);
+        }
+
+//        getFixture().setSensor(false); // yes collisions
     }
 
     @Override
     public void out_of_light(){
-        obstacle.getBody().setLinearVelocity(new Vector2(getMoveSpeed(), obstacle.getBody().getLinearVelocity().y));
-//        getFixture().setSensor(true); // no collisions
+        move();
+        //        getFixture().setSensor(true); // no collisions
     }
 
 }

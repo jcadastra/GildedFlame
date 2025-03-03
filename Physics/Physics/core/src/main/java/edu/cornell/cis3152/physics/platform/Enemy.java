@@ -14,18 +14,34 @@ import edu.cornell.gdiac.physics2.*;
 
 public class Enemy extends ObstacleSprite {
 
-    private static int MOVE_SPEED = 2;
+    private static int MOVE_SPEED = 6;
     private JsonValue data;
 
     private Path2 sensorOutline;
     private Color sensorColor;
     private String sensorName;
     // Instance attributes
+    /** Which direction is the character facing */
+    private boolean faceRight;
     private int id;
     private Vector2 position;
 
+    private int freezeTimer;
+
     private EnemyState state;
-    private Color spriteColor = Color.WHITE;
+    /**
+     * Returns true if this character is facing right
+     *
+     * @return true if this character is facing right
+     */
+    public boolean isFacingRight() {
+        return faceRight;
+    }
+
+    public void changeDirection() {
+        System.out.println("changing direction");
+        faceRight = !faceRight;
+    }
     private Body body;
     private float width;
     private float height;
@@ -50,6 +66,7 @@ public class Enemy extends ObstacleSprite {
         this.id = id;
         this.data = data;
         this.state = EnemyState.OUT_OF_LIGHT;
+        this.faceRight = true;
 
         float s = data.getFloat( "size" );
         float size = s*units;
@@ -66,11 +83,9 @@ public class Enemy extends ObstacleSprite {
         obstacle.setFriction( data.getFloat( "friction", 0 ) );
         obstacle.setRestitution( data.getFloat( "restitution", 0 ) );
 
-
-
         obstacle.setPhysicsUnits( units );
         obstacle.setUserData( this );
-        obstacle.setName("torch");
+        obstacle.setName("enemy");
 
 
         mesh.set(-size/2.0f,-size/2.0f,size,size);
@@ -90,6 +105,12 @@ public class Enemy extends ObstacleSprite {
 
     public EnemyState getState() { return state; }
     public void setState(EnemyState value) { state = value; }
+
+    public int getFreezeTimer() { return freezeTimer; }
+
+    public void decrementFreezeTimer() { freezeTimer--; }
+
+    public void resetFreeze() { freezeTimer = data.getInt("freezeTimer");}
 
     public void update(){
         switch (state) {
@@ -122,9 +143,14 @@ public class Enemy extends ObstacleSprite {
     }
 
     public void move() {
-        double randomValue = Math.random();
-        int direction = (randomValue >= 0.5) ? MOVE_SPEED : -MOVE_SPEED;
-        obstacle.getBody().applyForceToCenter(new Vector2(direction, 0), true);
+        int direction;
+        if (isFacingRight()) {
+            direction = MOVE_SPEED;
+        } else {
+            direction = -MOVE_SPEED;
+        }
+        obstacle.getBody().setLinearVelocity(new Vector2(direction, obstacle.getBody().getLinearVelocity().y));
+
     }
 
     public void in_light(){
@@ -133,7 +159,7 @@ public class Enemy extends ObstacleSprite {
 
     public void attracted(){
     }
-    public void stop() { body.setLinearVelocity(0, 0); }
+    public void stop() { obstacle.getBody().setLinearVelocity(0, 0); }
 
     @Override
     public void draw(SpriteBatch batch) {
