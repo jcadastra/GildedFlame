@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.audio.*;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.ParserUtils;
 import edu.cornell.gdiac.math.Path2;
@@ -30,8 +31,6 @@ public class Light extends ObstacleSprite {
 
     /*The number of stomps this light source can withstand*/
     private int damp;
-
-    //protected Obstacle obstacle;
 
     JsonValue data;
 
@@ -61,11 +60,6 @@ public class Light extends ObstacleSprite {
 
     public void setDamp(int damp) {this.damp = damp;}
 
-    @Override
-    public Obstacle getObstacle() {
-        return obstacle;
-    }
-
     /*
     * The light flickers.
     * */
@@ -91,7 +85,8 @@ public class Light extends ObstacleSprite {
         super();
         this.data = data;
         //this.id = (int)data.getFloat("id");
-        this.radius = data.getFloat("radius")*units;
+        System.out.println(units);
+        this.radius = data.getFloat("radius") * units;
         float x = data.get("pos").getFloat(0);
         float y = data.get("pos").getFloat(1);
         position = new Vector2 (x,y);
@@ -102,7 +97,7 @@ public class Light extends ObstacleSprite {
         this.state = LightState.LIGHT_ON;
         obstacle = new WheelObstacle(x,y,radius);
         //obstacle.setDensity(0);
-        obstacle.setBodyType( BodyDef.BodyType.DynamicBody );
+        obstacle.setBodyType( BodyType.StaticBody );
         obstacle.setPhysicsUnits(units);
         obstacle.setFixedRotation(true);
         obstacle.setRestitution( 0 );
@@ -131,15 +126,10 @@ public class Light extends ObstacleSprite {
     }
 
     @Override
-    public String getName(){
-        return obstacle.getName();
-    }
-
-    @Override
     public void drawDebug(SpriteBatch batch){
         if (this.obstacle != null) {
             this.obstacle.draw(batch, this.debug);
-            //System.out.println("Drawing light at " + getX() + ", " + getY());
+            System.out.println("Drawing light at " + getX() + ", " + getY());
         }
     }
 
@@ -149,31 +139,31 @@ public class Light extends ObstacleSprite {
     }
 
     public void createSensor(){
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = new CircleShape();
-        fixtureDef.shape.setRadius(radius);
-        fixtureDef.isSensor = true;
-
-        Vector2 sensorCenter = new Vector2(0, -radius / 2);
-        FixtureDef sensorDef = new FixtureDef();
-        sensorDef.density = data.getFloat("density",0);
-        sensorDef.isSensor = true;
-
-        CircleShape sensorShape = new CircleShape();
-        sensorShape.setRadius(radius);
-        sensorDef.shape = sensorShape;
-        // Ground sensor to represent our feet
-        Body body = obstacle.getBody();
-        Fixture sensorFixture = body.createFixture( sensorDef );
-        String sensorName = "traci_sensor";
-        sensorFixture.setUserData(sensorName);
-
-        // Finally, we need a debug outline
-        float u = obstacle.getPhysicsUnits();
-        PathFactory factory = new PathFactory();
-        Path2 sensorOutline = new Path2();
-        factory.makeRect( (sensorCenter.x-radius/2)*u,
-            (sensorCenter.y-radius/2)*u, radius*u, radius*u,  sensorOutline);
+//        FixtureDef fixtureDef = new FixtureDef();
+//        fixtureDef.shape = new CircleShape();
+//        fixtureDef.shape.setRadius(radius);
+//        fixtureDef.isSensor = true;
+//
+//        Vector2 sensorCenter = new Vector2(0, -radius / 2);
+//        FixtureDef sensorDef = new FixtureDef();
+//        sensorDef.density = data.getFloat("density",0);
+//        sensorDef.isSensor = true;
+//
+//        CircleShape sensorShape = new CircleShape();
+//        sensorShape.setRadius(radius);
+//        sensorDef.shape = sensorShape;
+//        // Ground sensor to represent our feet
+//        Body body = obstacle.getBody();
+//        Fixture sensorFixture = body.createFixture( sensorDef );
+//        String sensorName = "traci_sensor";
+//        sensorFixture.setUserData(sensorName);
+//
+//        // Finally, we need a debug outline
+//        float u = obstacle.getPhysicsUnits();
+//        PathFactory factory = new PathFactory();
+//        Path2 sensorOutline = new Path2();
+//        factory.makeRect( (sensorCenter.x-radius/2)*u,
+//            (sensorCenter.y-radius/2)*u, radius*u, radius*u,  sensorOutline);
     }
 
 }

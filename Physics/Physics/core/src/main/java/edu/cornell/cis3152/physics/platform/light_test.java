@@ -151,7 +151,7 @@ public class light_test extends PhysicsScene implements ContactListener {
         }
 
         if (!isFailure() && avatar.getObstacle().getY() < -1) {
-            setFailure(true);
+//            setFailure(true);
             return false;
         }
 
