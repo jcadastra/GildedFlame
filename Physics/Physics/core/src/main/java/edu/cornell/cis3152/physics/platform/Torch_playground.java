@@ -86,9 +86,13 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
      */
     private Traci avatar;
     private Torch torch;
-    /**
-     * Reference to the goalDoor (for collision detection)
-     */
+
+    private Totem totem;
+    private Moth moth;
+
+    private Body body;
+    private int count;
+    /** Reference to the goalDoor (for collision detection) */
     private Door goalDoor;
 
     /**
@@ -191,11 +195,25 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
         avatar.createSensor();
 
         // Create Torch
-//        texture = directory.getEntry( "platform-bullet", Texture.class );
         torch = new Torch(units, constants.get("torch"));
         torch.setTexture(texture);
         addSprite(torch);
-        // Have to do after body is created
+//        torch.createSensor();
+
+
+        // Totem
+        texture = directory.getEntry("rocket-crate01", Texture.class);
+        totem = new Totem(0, units, constants.get("totem"));
+        totem.setTexture(texture);
+        addSprite(totem);
+        totem.createSensor();
+
+        // Moth
+//        texture = directory.getEntry("rocket-crate02", Texture.class);
+//        moth = new Moth(0, units, constants.get("moth"));
+//        moth.setTexture(texture);
+//        addSprite(moth);
+//        moth.createSensor();
     }
 
     /**
@@ -232,6 +250,7 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
      */
     public void update(float dt) {
         torch.update();
+        totem.update();
         InputController input = InputController.getInstance();
 
         // Process actions in object model
@@ -361,6 +380,30 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
                 avatar.setHasTorch(true);
                 queueAddTorch = true;
             }
+
+            if ((bd1 instanceof Enemy && bd2.getName().startsWith("wall")) ||
+                (bd2 instanceof Enemy && bd1.getName().startsWith("wall"))) {
+                Enemy enemy = (bd1 instanceof Enemy) ? (Enemy) bd1 : (Enemy) bd2;
+                enemy.changeDirection();
+            }
+
+            if ((bd2 instanceof Totem && bd1 instanceof Moth)) {
+                ((Enemy) bd2).changeDirection();
+                ((Enemy) bd1).changeDirection();
+            }
+
+            if ((bd2 instanceof Torch && bd1 instanceof Totem)) {
+                totem.setState(Enemy.EnemyState.IN_LIGHT);
+                totem.resetFreeze();
+            }
+
+//            if ((bd2 == avatar && bd1 instanceof Totem)){
+//                if (totem.getState() == Enemy.EnemyState.OUT_OF_LIGHT){
+//
+//                }
+//            }
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
