@@ -44,8 +44,9 @@ public class Torch extends ObstacleSprite {
         // "inner" is the fraction of the original size for the capsule
         width = s*data.get("dimensions").getFloat(0);
         height = s*data.get("dimensions").getFloat(1);
-        obstacle = new CapsuleObstacle(x, y, width, height);
-        ((CapsuleObstacle)obstacle).setTolerance( debugInfo.getFloat("tolerance", 0.5f) );
+
+        obstacle = new BoxObstacle(x,y,width, height);
+//        ((CapsuleObstacle)obstacle).setTolerance( debugInfo.getFloat("tolerance", 0.5f) );
 
         obstacle.setDensity( data.getFloat( "density", 0 ) );
         obstacle.setFriction( data.getFloat( "friction", 0 ) );
