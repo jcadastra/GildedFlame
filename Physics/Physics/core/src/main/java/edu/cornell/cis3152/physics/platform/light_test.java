@@ -122,10 +122,16 @@ public class light_test extends PhysicsScene implements ContactListener {
 
         //Create Light
         texture = directory.getEntry("platform-bullet",Texture.class);
+        if (texture == null) {
+            System.out.println("Error: Light texture is null!");
+        }
+
         //texture.
         Light light = new Light(units, constants.get("light"));
         light.setTexture(texture);
         addSprite(light);
+        //System.out.println(sprites.getTail().getName());
+        light.createSensor();
     }
 
     /**
