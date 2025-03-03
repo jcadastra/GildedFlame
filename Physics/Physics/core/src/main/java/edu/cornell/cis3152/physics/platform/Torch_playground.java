@@ -209,7 +209,7 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
         torch = new Torch(units, constants.get("torch"));
         torch.setTexture(texture);
         addSprite(torch);
-//        l.getObstacle().setPosition(torch.getObstacle().getX(), torch.getObstacle().getY() + 20);
+        l.getObstacle().setPosition(torch.getObstacle().getPosition());
         activeLightJoint = world.createJoint(torch.attachLight(l));
 //        System.out.println(l.getObstacle().getMass());
 //        torch.createSensor();

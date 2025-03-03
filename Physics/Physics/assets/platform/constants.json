@@ -144,7 +144,7 @@
       ]
     },
     "light":{
-    "radius": 2,
+    "radius": 2.2,
       "pos": [6.0,6.0],
       "debug"      : "#ffffff",
       "friction"    : 0.0,

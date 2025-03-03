@@ -85,7 +85,6 @@ public class Light extends ObstacleSprite {
         super();
         this.data = data;
         //this.id = (int)data.getFloat("id");
-        System.out.println(units);
         this.radius = data.getFloat("radius");
         float x = data.get("pos").getFloat(0);
         float y = data.get("pos").getFloat(1);
@@ -100,11 +99,11 @@ public class Light extends ObstacleSprite {
         obstacle.setMass(0.0001f);
         obstacle.setInertia(0.0001f);
         obstacle.setBodyType( BodyType.DynamicBody );
-        obstacle.setPhysicsUnits(units);
-        obstacle.setFixedRotation(true);
+//        obstacle.setPhysicsUnits(units);
         obstacle.setRestitution( 0 );
         obstacle.setPhysicsUnits( units );
         obstacle.setUserData( this );
+        obstacle.setSensor(true);
         obstacle.setName("light");
 //        obstacle.setDensity(data.getFloat("density",0));
         obstacle.setFriction(data.getFloat("friction",0));
