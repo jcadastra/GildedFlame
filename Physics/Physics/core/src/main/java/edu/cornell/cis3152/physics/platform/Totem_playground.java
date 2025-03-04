@@ -11,22 +11,12 @@
  * Version: 2/8/2025
  */
 package edu.cornell.cis3152.physics.platform;
-import java.util.List;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Contact;
-import com.badlogic.gdx.physics.box2d.ContactImpulse;
-import com.badlogic.gdx.physics.box2d.ContactListener;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.Joint;
-import com.badlogic.gdx.physics.box2d.JointDef;
-import com.badlogic.gdx.physics.box2d.Manifold;
-import com.badlogic.gdx.physics.box2d.MassData;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.Null;
 import com.badlogic.gdx.utils.ObjectSet;
 import edu.cornell.cis3152.physics.InputController;
 import edu.cornell.cis3152.physics.PhysicsScene;
@@ -36,8 +26,8 @@ import edu.cornell.gdiac.audio.SoundEffectManager;
 import edu.cornell.gdiac.physics2.Obstacle;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
 
-import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The game scene for the platformer game.
@@ -46,7 +36,7 @@ import java.util.ArrayList;
  * work is done in the method for the ContactListener interface. That is the method that is called
  * upon collisions, giving us a chance to define a response.
  */
-public class Torch_playground extends PhysicsScene implements ContactListener {
+public class Totem_playground extends PhysicsScene implements ContactListener {
 
     /**
      * Texture asset for character avatar
@@ -112,7 +102,6 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
     private Joint activeTorchJoint;
     private List<Enemy> enemies;
 
-
     public List<Enemy> getEnemies(){
         return enemies;
     }
@@ -137,7 +126,7 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
      * <p>
      * The game has default gravity and other settings
      */
-    public Torch_playground(AssetDirectory directory) {
+    public Totem_playground(AssetDirectory directory) {
         super(directory, "platform");
         world.setContactListener(this);
         sensorFixtures = new ObjectSet<Fixture>();
@@ -404,9 +393,10 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
             }
 
             // See if we have landed on a platform.
-            if ((avatar.getSensorName().equals(fd2) && avatar != bd1 && (bd1.getName().equals("floor") || bd1 instanceof Totem) ||
-                (avatar.getSensorName().equals(fd1) && avatar != bd2 && (bd2.getName().equals("floor") || bd2 instanceof Totem)
-                )) ) {
+            if ((avatar.getSensorName().equals(fd2) && avatar != bd1 &&
+                (bd1.getName().equals("floor")) ||
+                (avatar.getSensorName().equals(fd1) && avatar != bd2 &&
+                    (bd2.getName().equals("floor"))))) {
                 avatar.setGrounded(true);
                 sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
             }
@@ -421,8 +411,6 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
                 avatar.setHasTorch(true);
                 queueAddTorch = true;
             }
-
-
 
             if ((bd1 instanceof Enemy && bd2.getName().startsWith("wall")) ||
                 (bd2 instanceof Enemy && bd1.getName().startsWith("wall"))) {
@@ -461,8 +449,6 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
                 moth.setState(Enemy.EnemyState.IN_LIGHT);
                 moth.resetAttackTimer();
             }
-
-
 
 
         } catch (Exception e) {
