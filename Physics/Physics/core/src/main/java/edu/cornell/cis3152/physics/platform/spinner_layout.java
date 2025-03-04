@@ -422,15 +422,9 @@ public class spinner_layout extends PhysicsScene implements ContactListener {
             }
 
             // See if we have landed on a platform.
-            if ((avatar.getSensorName().equals(fd2) && avatar != bd1 &&
-                (bd1.getName().equals("floor")) ||
-                (avatar.getSensorName().equals(fd1) && avatar != bd2 &&
-                    (bd2.getName().equals("floor"))))||
-                ((avatar.getSensorName().equals(fd2) && avatar != bd1 &&
-                    (bd1 instanceof  Totem) ||
-                    (avatar.getSensorName().equals(fd1) && avatar != bd2 &&
-                        (bd2 instanceof Totem))))
-            ) {
+            if ((avatar.getSensorName().equals(fd2) && avatar != bd1 && (bd1.getName().equals("floor") || (bd1 instanceof Enemy || bd1.getName().contains("barrier"))) ||
+                (avatar.getSensorName().equals(fd1) && avatar != bd2 && (bd2.getName().equals("floor") || (bd2 instanceof Enemy || bd2.getName().contains("barrier")))
+                )) ) {
                 avatar.setGrounded(true);
                 sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
             }
