@@ -15,21 +15,18 @@ public class Totem extends Enemy {
     // reacting to light
     @Override
     public void in_light(){
-        decrementFreezeTimer();
-        if (getFreezeTimer() != 0){
-            stop();
-//            System.out.println("Frozen: " +  getFreezeTimer());
-        } else {
-//            System.out.println("Unfrozen");
-            setState(EnemyState.OUT_OF_LIGHT);
-        }
-        // getFixture().setSensor(false); // yes collisions
+        stop();
+//        System.out.println("Frozen: " +  getFreezeTimer());
     }
 
     @Override
     public void out_of_light(){
-        move();
-        //        getFixture().setSensor(true); // no collisions
+
+        if (getFreezeTimer() == 0){
+            move();
+        } else {
+            decrementFreezeTimer();
+        }
     }
 
 }

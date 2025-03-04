@@ -239,13 +239,13 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
         totem.createSensor();
         enemies.add(totem);
 
-        // Moth
-        texture = directory.getEntry("rocket-crate02", Texture.class);
-        moth = new Moth(0, units, constants.get("moth"));
-        moth.setTexture(texture);
-        addSprite(moth);
-        moth.createSensor();
-        enemies.add(moth);
+        // Create Moth
+//        texture = directory.getEntry("rocket-crate02", Texture.class);
+//        moth = new Moth(0, units, constants.get("moth"));
+//        moth.setTexture(texture);
+//        addSprite(moth);
+//        moth.createSensor();
+//        enemies.add(moth);
     }
 
     /**
@@ -283,7 +283,7 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
     public void update(float dt) {
         torch.update();
         totem.update();
-        moth.update();
+//        moth.update();
         InputController input = InputController.getInstance();
 
         // Process actions in object model
@@ -422,25 +422,20 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
             }
 
             if ((bd2 instanceof Totem && bd1 instanceof Moth) || (bd1 instanceof Totem && bd2 instanceof Moth)) {
-                System.out.println(" COLLISION ");
                 ((Enemy) bd2).changeDirection();
                 ((Enemy) bd1).changeDirection();
             }
 
-            if ((bd2 instanceof Torch && bd1 instanceof Totem)) {
+            if ((bd2 instanceof Light && bd1 instanceof Totem)) {
+                Texture texture = directory.getEntry("rocket-totem04", Texture.class);
+                totem.setTexture(texture);
                 totem.setState(Enemy.EnemyState.IN_LIGHT);
                 totem.resetFreeze();
             }
 
-            if ((bd2 instanceof Torch && bd1 instanceof Moth)){
+            if ((bd2 instanceof Light && bd1 instanceof Moth)){
                 moth.setState(Enemy.EnemyState.ATTRACTED);
             }
-
-//            if ((bd2 == avatar && bd1 instanceof Totem)){
-//                if (totem.getState() == Enemy.EnemyState.OUT_OF_LIGHT){
-//
-//                }
-//            }
 
 
         } catch (Exception e) {
@@ -473,6 +468,12 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
             if (sensorFixtures.size == 0) {
                 avatar.setGrounded(false);
             }
+        }
+
+        if ((bd2 instanceof Light && bd1 instanceof Totem)) {
+            Texture texture = directory.getEntry("rocket-totem03", Texture.class);
+            totem.setTexture(texture);
+            totem.setState(Enemy.EnemyState.OUT_OF_LIGHT);
         }
     }
 

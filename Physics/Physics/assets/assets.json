@@ -48,19 +48,59 @@
                 }
             }
         },
-        "rocket-crate01": {
-            "file": "rocket/crate01.png",
+        "rocket-totem01": {
+            "file": "rocket/totem01.png",
             "mipmaps" : true,
             "minfilter": "linear mipmap linear",
             "magfilter": "linear mipmap linear"
         },
-        "rocket-crate02": {
-            "file" : "rocket/crate02.png",
+      "rocket-totem02": {
+        "file": "rocket/totem02.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+      "rocket-totem03": {
+        "file": "rocket/totem03.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+      "rocket-totem04": {
+        "file": "rocket/totem04.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+        "rocket-moth01": {
+            "file" : "rocket/moth01.png",
             "mipmaps" : true,
             "minfilter": "linear mipmap linear",
             "magfilter": "linear mipmap linear"
         },
-        "platform-traci"    : "platform/traci.png",
+      "rocket-moth02": {
+        "file" : "rocket/moth02.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+
+      "rocket-moth03": {
+        "file" : "rocket/moth03.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+
+      "rocket-moth04": {
+        "file" : "rocket/moth04.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+
+
+      "platform-traci"    : "platform/traci.png",
         "platform-rope"     : "platform/ropebridge.png",
         "platform-barrier"  : "platform/barrier.png",
         "platform-bullet"   : "platform/bullet.png",
