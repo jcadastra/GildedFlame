@@ -136,6 +136,9 @@ public class Light extends ObstacleSprite {
     @Override
     public void draw(SpriteBatch batch){
         super.draw(batch);
+        if (this.obstacle != null) {
+            this.obstacle.draw(batch, this.debug);
+        }
     }
 
     public void createSensor(){
