@@ -23,8 +23,6 @@ public class AIController {
     private static final float LIGHT_RADIUS = 3;
 
     private List<Enemy> enemies;
-    // CHANGE LATER
-    public static Vector2 lightPosition;
     public static Vector2 playerPosition;
 
     public Traci traci;
@@ -35,18 +33,5 @@ public class AIController {
 
     public void update(){
         playerPosition = traci.getLocation();
-        for (Enemy enemy : enemies){
-            if (lightDistance(enemy) < LIGHT_RADIUS){
-                enemy.setState(Enemy.EnemyState.IN_LIGHT);
-            } else if (lightDistance(enemy) < CHASE_DIST && enemy instanceof Moth){
-                enemy.setState(Enemy.EnemyState.ATTRACTED);
-            }
-            enemy.update();
-        }
-    }
-
-    public int lightDistance(Enemy enemy){
-//        return (int) Math.sqrt(Math.pow((enemy.getX() - lightPosition.x),2) + Math.pow((enemy.getY() - lightPosition.y), 2));
-        return (int) Math.sqrt(Math.pow((enemy.getX() - playerPosition.x),2) + Math.pow((enemy.getY() - playerPosition.y), 2));
     }
 }

@@ -14,13 +14,12 @@ import edu.cornell.gdiac.physics2.*;
 
 public class Enemy extends ObstacleSprite {
 
+    private static int MOVE_SPEED = 3;
     public static final int PLAYER = 0x00000001;
     public static final int WALL = 0x00000002;
     public static final int TORCH = 0x00000004;
     public static final int TOTEM = 0x00000008;
     public static final int MOTH = 0x00000010;
-
-    private static int MOVE_SPEED = 6;
     private JsonValue data;
 
     private Path2 sensorOutline;
@@ -33,6 +32,10 @@ public class Enemy extends ObstacleSprite {
     private Vector2 position;
 
     private int freezeTimer;
+
+    private int attackTimer;
+
+    private int attackAnimationTimer;
 
     public EnemyState state;
     /**
@@ -48,9 +51,9 @@ public class Enemy extends ObstacleSprite {
         System.out.println("changing direction");
         faceRight = !faceRight;
     }
+    private float width;
+    private float height;
     private Body body;
-    public float width;
-    public float height;
     private float x;
     private float y;
     public SpriteBatch batch;
@@ -62,12 +65,11 @@ public class Enemy extends ObstacleSprite {
 
         OUT_OF_LIGHT,
         IN_LIGHT,
-        ATTRACTED,
+
+        ANGRY,
+
+        ATTACK
     }
-
-//    public static void setConstants(JsonValue constants){
-
-//    }
 
     public Enemy(int id, float units, JsonValue data) {
         this.id = id;
@@ -91,6 +93,7 @@ public class Enemy extends ObstacleSprite {
         obstacle.setRestitution( data.getFloat( "restitution", 0 ) );
 
         obstacle.setPhysicsUnits( units );
+        obstacle.setFixedRotation(true);
         obstacle.setUserData( this );
         obstacle.setName("enemy");
 
@@ -106,6 +109,9 @@ public class Enemy extends ObstacleSprite {
     public void setY(float value) { y = value; }
 
     public int getMoveSpeed() { return MOVE_SPEED; }
+    public void setMoveSpeed(int value) { MOVE_SPEED = value; }
+
+    public void resetMoveSpeed() { MOVE_SPEED = 3; }
     public Fixture getFixture() {
         return obstacle.getBody().getFixtureList().first();
     }
@@ -120,6 +126,13 @@ public class Enemy extends ObstacleSprite {
 
     public void resetFreeze() { freezeTimer = data.getInt("freezeTimer");}
 
+
+    public int getAttackTimer() { return attackTimer; }
+
+    public void decrementAttackTimer() { attackTimer--; }
+
+    public void resetAttackTimer() { attackTimer = data.getInt("attackTimer");}
+
     public void update(){
         switch (state) {
             case OUT_OF_LIGHT:
@@ -128,8 +141,11 @@ public class Enemy extends ObstacleSprite {
             case IN_LIGHT:
                 in_light();
                 break;
-            case ATTRACTED:
-                attracted();
+            case ANGRY:
+                angry();
+                break;
+            case ATTACK:
+                attack();
                 break;
             default:
                 break;
@@ -141,6 +157,11 @@ public class Enemy extends ObstacleSprite {
     }
 
     public void move_to(Vector2 target) {
+        Body body = obstacle.getBody();
+        if (body == null) {
+            System.out.println("R");
+            return;
+        }
         int direction = MOVE_SPEED;
         if (target.x < x) {
             direction *= -1;
@@ -152,27 +173,31 @@ public class Enemy extends ObstacleSprite {
 
     public void move() {
         int direction;
-        if (isFacingRight()) {
+        Body body = obstacle.getBody();
+        if (body == null) {
+            return;
+        }
+        if (!isFacingRight()) {
             direction = MOVE_SPEED;
         } else {
             direction = -MOVE_SPEED;
         }
         obstacle.getBody().setLinearVelocity(new Vector2(direction, obstacle.getBody().getLinearVelocity().y));
-
     }
 
     public void in_light(){
 
     }
 
-    public void attracted(){
+    public void angry(){
     }
+
+    public void attack(){}
     public void stop() { obstacle.getBody().setLinearVelocity(0, 0); }
 
     @Override
     public void draw(SpriteBatch batch) {
         super.draw(batch);
-//        System.out.println("Drawing totem at " + getX() + "," + getY() + ".");
     }
 
     public void createSensor() {
@@ -202,4 +227,3 @@ public class Enemy extends ObstacleSprite {
     }
 
 }
-
