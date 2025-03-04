@@ -14,6 +14,12 @@ import edu.cornell.gdiac.physics2.*;
 
 public class Enemy extends ObstacleSprite {
 
+    public static final int PLAYER = 0x00000001;
+    public static final int WALL = 0x00000002;
+    public static final int TORCH = 0x00000004;
+    public static final int TOTEM = 0x00000008;
+    public static final int MOTH = 0x00000010;
+
     private static int MOVE_SPEED = 6;
     private JsonValue data;
 
@@ -28,7 +34,7 @@ public class Enemy extends ObstacleSprite {
 
     private int freezeTimer;
 
-    private EnemyState state;
+    public EnemyState state;
     /**
      * Returns true if this character is facing right
      *
@@ -39,16 +45,18 @@ public class Enemy extends ObstacleSprite {
     }
 
     public void changeDirection() {
+        System.out.println("changing direction");
         faceRight = !faceRight;
     }
     private Body body;
-    private float width;
-    private float height;
+    public float width;
+    public float height;
     private float x;
     private float y;
     public SpriteBatch batch;
 
     private Fixture fixture;
+
 
     public enum EnemyState {
 
@@ -83,7 +91,6 @@ public class Enemy extends ObstacleSprite {
         obstacle.setRestitution( data.getFloat( "restitution", 0 ) );
 
         obstacle.setPhysicsUnits( units );
-        obstacle.setFixedRotation(true);
         obstacle.setUserData( this );
         obstacle.setName("enemy");
 
@@ -134,11 +141,6 @@ public class Enemy extends ObstacleSprite {
     }
 
     public void move_to(Vector2 target) {
-        Body body = obstacle.getBody();
-        if (body == null) {
-            return;
-        }
-        System.out.println(" MOVING TOWARDS " + target.x + "," + target.y + ".");
         int direction = MOVE_SPEED;
         if (target.x < x) {
             direction *= -1;
@@ -150,16 +152,13 @@ public class Enemy extends ObstacleSprite {
 
     public void move() {
         int direction;
-        Body body = obstacle.getBody();
-        if (body == null) {
-            return;
-        }
-        if (!isFacingRight()) {
+        if (isFacingRight()) {
             direction = MOVE_SPEED;
         } else {
             direction = -MOVE_SPEED;
         }
         obstacle.getBody().setLinearVelocity(new Vector2(direction, obstacle.getBody().getLinearVelocity().y));
+
     }
 
     public void in_light(){
@@ -173,6 +172,7 @@ public class Enemy extends ObstacleSprite {
     @Override
     public void draw(SpriteBatch batch) {
         super.draw(batch);
+//        System.out.println("Drawing totem at " + getX() + "," + getY() + ".");
     }
 
     public void createSensor() {
@@ -202,3 +202,4 @@ public class Enemy extends ObstacleSprite {
     }
 
 }
+

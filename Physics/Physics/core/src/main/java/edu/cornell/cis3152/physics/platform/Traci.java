@@ -41,12 +41,17 @@ import edu.cornell.gdiac.physics2.*;
  *
  * Note that unlike a traditional ObstacleSprite, this attaches some additional
  * information to the obstacle. In particular, we add a sensor fixture. This
-  * sensor is used to prevent double-jumping. However, we only have one mesh,
+ * sensor is used to prevent double-jumping. However, we only have one mesh,
  * the mesh for Traci. The sensor is invisible and only shows up in debug mode.
  * While we could have made the fixture a separate obstacle, we want it to be a
  * simple fixture so that we can attach it to the obstacle WITHOUT using joints.
  */
 public class Traci extends ObstacleSprite {
+    public static final int PLAYER = 0x00000001;
+    public static final int WALL = 0x00000002;
+    public static final int TORCH = 0x00000004;
+    public static final int TOTEM = 0x00000008;
+    public static final int MOTH = 0x00000010;
     /** The initializing data (to avoid magic numbers) */
     private final JsonValue data;
     /** The width of Traci's avatar */
@@ -91,6 +96,9 @@ public class Traci extends ObstacleSprite {
     /** The name of the sensor fixture */
     private String sensorName;
 
+    private float x;
+    private float y;
+
     /** Cache for internal force calculations */
     private final Vector2 forceCache = new Vector2();
     /** Cache for the affine flip */
@@ -123,7 +131,6 @@ public class Traci extends ObstacleSprite {
             faceRight = true;
         }
     }
-
 
     /**
      * Returns true if Traci is actively firing.
@@ -165,11 +172,6 @@ public class Traci extends ObstacleSprite {
      */
     public boolean getHasTorch() {
         return hasTorch;
-    }
-
-
-    public Vector2 getLocation() {
-        return new Vector2(getObstacle().getX(), getObstacle().getY());
     }
 
     /**
@@ -270,8 +272,8 @@ public class Traci extends ObstacleSprite {
         this.data = data;
         JsonValue debugInfo = data.get("debug");
 
-        float x = data.get("pos").getFloat(0);
-        float y = data.get("pos").getFloat(1);
+        x = data.get("pos").getFloat(0);
+        y = data.get("pos").getFloat(1);
         float s = data.getFloat( "size" );
         float size = s*units;
 
@@ -315,6 +317,29 @@ public class Traci extends ObstacleSprite {
         // actually smaller than the image, making a tighter hitbox. You can
         // see this when you enable debug mode.
         mesh.set(-size/2.0f,-size/2.0f,size,size);
+    }
+
+    public void create_Fixture() {
+        if (obstacle.getBody() != null) {
+            FixtureDef fd = new FixtureDef();
+            fd.filter.categoryBits = PLAYER;
+            fd.filter.maskBits = WALL | TORCH | MOTH;
+            PolygonShape fixShape = new PolygonShape();
+            fixShape.setAsBox(width, height, new Vector2(0, 0), 0.0f);
+            fd.shape = fixShape;
+            obstacle.getBody().createFixture(fd);
+        } else {
+            System.out.println("Error: Body is null in createFixture()");
+        }
+    }
+
+    public void updateCollisionState() {
+        Fixture fixture = obstacle.getBody().getFixtureList().get(0);
+        if ((fixture.getFilterData().maskBits & TOTEM) != 0) {
+            fixture.getFilterData().maskBits &= ~TOTEM; // remove
+        } else {
+            fixture.getFilterData().maskBits |= TOTEM;  // add
+        }
     }
 
     /**
@@ -487,3 +512,4 @@ public class Traci extends ObstacleSprite {
         }
     }
 }
+

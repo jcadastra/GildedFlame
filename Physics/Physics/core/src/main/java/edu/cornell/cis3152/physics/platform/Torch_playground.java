@@ -11,7 +11,7 @@
  * Version: 2/8/2025
  */
 package edu.cornell.cis3152.physics.platform;
-import java.util.List;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -23,7 +23,6 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.JointDef;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.badlogic.gdx.physics.box2d.MassData;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.Null;
@@ -86,16 +85,14 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
      * Reference to the character avatar
      */
     private Traci avatar;
-    private Vector2 location;
     private Torch torch;
 
     private Totem totem;
     private Moth moth;
+
     private Body body;
     private int count;
-    /**
-     * Reference to the goalDoor (for collision detection)
-     */
+    /** Reference to the goalDoor (for collision detection) */
     private Door goalDoor;
 
     /**
@@ -112,23 +109,6 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
      * Active joint for avatar holding torch
      */
     private Joint activeTorchJoint;
-    private List<Enemy> enemies;
-
-    public AIController aiController;
-
-    public List<Enemy> getEnemies(){
-        return enemies;
-    }
-
-    public Traci getAvatar() { return avatar; }
-
-    public Vector2 getPlayerLocation() {
-        return avatar.getObstacle().getPosition();
-    }
-    /**
-     * Active joint for torch holding light
-     */
-    private Joint activeLightJoint;
 
     /**
      * If torch is on the right of the avatar
@@ -150,9 +130,6 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
         fireSound = directory.getEntry("platform-pew", SoundEffect.class);
         plopSound = directory.getEntry("platform-plop", SoundEffect.class);
         volume = constants.getFloat("volume", 1.0f);
-        populateLevel();
-
-        aiController = new AIController(this);
     }
 
     /**
@@ -164,22 +141,12 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
         JsonValue values = constants.get("world");
         Vector2 gravity = new Vector2(0, values.getFloat("gravity"));
 
-        if (activeTorchJoint != null) {
-            world.destroyJoint(activeTorchJoint);
-            activeTorchJoint = null;
-        }
-        if (activeLightJoint != null) {
-            world.destroyJoint(activeLightJoint);
-            activeLightJoint = null;
-        }
-
         for (ObstacleSprite sprite : sprites) {
             Obstacle obj = sprite.getObstacle();
             sprite.getObstacle().deactivatePhysics(world);
         }
         sprites.clear();
         addQueue.clear();
-
         if (world != null) {
             world.dispose();
         }
@@ -198,8 +165,7 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
         float units = height / bounds.height;
 
         // Create ground pieces
-        Texture texture = directory.getEntry( "shared-earth", Texture.class );
-        enemies = new ArrayList<>();
+        Texture texture = directory.getEntry("shared-earth", Texture.class);
 
         Surface wall;
         String wname = "wall";
@@ -227,20 +193,14 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
         addSprite(avatar);
         // Have to do after body is created
         avatar.createSensor();
-
-        Light l = new Light(units, constants.get("light"));
-        l.setTexture(texture);
-        addSprite(l);
-        l.createSensor();
+        avatar.create_Fixture();
 
         // Create Torch
         torch = new Torch(units, constants.get("torch"));
         torch.setTexture(texture);
         addSprite(torch);
-        l.getObstacle().setPosition(torch.getObstacle().getPosition());
-        activeLightJoint = world.createJoint(torch.attachLight(l));
-//        System.out.println(l.getObstacle().getMass());
 //        torch.createSensor();
+
 
         // Totem
         texture = directory.getEntry("rocket-crate01", Texture.class);
@@ -248,15 +208,14 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
         totem.setTexture(texture);
         addSprite(totem);
         totem.createSensor();
-        enemies.add(totem);
+        totem.create_Fixture();
 
-        // Create Moth
+        // Moth
 //        texture = directory.getEntry("rocket-crate02", Texture.class);
 //        moth = new Moth(0, units, constants.get("moth"));
 //        moth.setTexture(texture);
 //        addSprite(moth);
 //        moth.createSensor();
-//        enemies.add(moth);
     }
 
     /**
@@ -292,10 +251,8 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
      * @param dt Number of seconds since last animation frame
      */
     public void update(float dt) {
-
         torch.update();
         totem.update();
-//        moth.update();
         InputController input = InputController.getInstance();
 
         // Process actions in object model
@@ -322,7 +279,7 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
             sounds.play("jump", jumpSound, volume);
         }
         if ((queueAddTorch && activeTorchJoint == null) || (activeTorchJoint != null &&
-            torchOnRight != avatar.isFacingRight())) {
+                torchOnRight != avatar.isFacingRight())) {
             joinTorchtoAvatar();
         }
 
@@ -339,12 +296,11 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
         }
         torch.getObstacle().setAngle(0);
         Vector2 offset = (new Vector2((avatar.isFacingRight() ? 1 : -1) * avatar.getWidth() / 2,
-            avatar.getHeight() / 4));
+                avatar.getHeight() / 4));
         torch.getObstacle().setPosition(avatar.getObstacle().getPosition().add(offset));
         activeTorchJoint = world.createJoint(avatar.attachTorchToAvatar(torch));
         queueAddTorch = false;
         torchOnRight = avatar.isFacingRight();
-        aiController.update();
     }
 
     /**
@@ -409,18 +365,16 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
                 removeBullet(bd2);
             }
 
-            // See if we have landed on a platform.
-            if ((avatar.getSensorName().equals(fd2) && avatar != bd1 &&
-                (bd1.getName().equals("floor")) ||
-                (avatar.getSensorName().equals(fd1) && avatar != bd2 &&
-                    (bd2.getName().equals("floor"))))) {
+            // See if we have landed on the ground.
+            if ((avatar.getSensorName().equals(fd2) && avatar != bd1) ||
+                    (avatar.getSensorName().equals(fd1) && avatar != bd2)) {
                 avatar.setGrounded(true);
                 sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
             }
 
             // Check for win condition
             if ((bd1 == avatar && bd2.getName().equals("goal")) ||
-                (bd1.getName().equals("goal") && bd2 == avatar)) {
+                    (bd1.getName().equals("goal") && bd2 == avatar)) {
                 setComplete(true);
             }
 
@@ -428,32 +382,30 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
                 avatar.setHasTorch(true);
                 queueAddTorch = true;
             }
-            if (bd1 == torch && bd2 == avatar && torch.canBePickedUp()) {
-                avatar.setHasTorch(true);
-                queueAddTorch = true;
-            }
 
             if ((bd1 instanceof Enemy && bd2.getName().startsWith("wall")) ||
-                (bd2 instanceof Enemy && bd1.getName().startsWith("wall"))) {
+                    (bd2 instanceof Enemy && bd1.getName().startsWith("wall"))) {
                 Enemy enemy = (bd1 instanceof Enemy) ? (Enemy) bd1 : (Enemy) bd2;
                 enemy.changeDirection();
             }
 
-            if ((bd2 instanceof Totem && bd1 instanceof Moth) || (bd1 instanceof Totem && bd2 instanceof Moth)) {
+            if ((bd2 instanceof Totem && bd1 instanceof Moth)) {
                 ((Enemy) bd2).changeDirection();
                 ((Enemy) bd1).changeDirection();
             }
 
-            if ((bd2 instanceof Light && bd1 instanceof Totem)) {
-                Texture texture = directory.getEntry("rocket-totem04", Texture.class);
-                totem.setTexture(texture);
+            if ((bd2 instanceof Torch && bd1 instanceof Totem)) {
                 totem.setState(Enemy.EnemyState.IN_LIGHT);
                 totem.resetFreeze();
             }
 
-            if ((bd2 instanceof Light && bd1 instanceof Moth)){
-                moth.setState(Enemy.EnemyState.ATTRACTED);
+            if ((bd2 == avatar && bd1 instanceof Totem)){
+                if (totem.getState() == Enemy.EnemyState.OUT_OF_LIGHT){
+                    contact.setEnabled(false);
+                    avatar.updateCollisionState();
+                }
             }
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -478,19 +430,13 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
 
         Object bd1 = body1.getUserData();
         Object bd2 = body2.getUserData();
-        /**TRACI JUMPS OFF OF LIGHT*/
+
         if ((avatar.getSensorName().equals(fd2) && avatar != bd1) ||
-            (avatar.getSensorName().equals(fd1) && avatar != bd2)) {
+                (avatar.getSensorName().equals(fd1) && avatar != bd2)) {
             sensorFixtures.remove(avatar == bd1 ? fix2 : fix1);
             if (sensorFixtures.size == 0) {
                 avatar.setGrounded(false);
             }
-        }
-
-        if ((bd2 instanceof Light && bd1 instanceof Totem)) {
-            Texture texture = directory.getEntry("rocket-totem03", Texture.class);
-            totem.setTexture(texture);
-            totem.setState(Enemy.EnemyState.OUT_OF_LIGHT);
         }
     }
 
@@ -504,6 +450,16 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
      * Unused ContactListener method
      */
     public void preSolve(Contact contact, Manifold oldManifold) {
+        Fixture fix1 = contact.getFixtureA();
+        Fixture fix2 = contact.getFixtureB();
+
+        Body body1 = fix1.getBody();
+        Body body2 = fix2.getBody();
+        ObstacleSprite bd1 = (ObstacleSprite) body1.getUserData();
+        ObstacleSprite bd2 = (ObstacleSprite) body2.getUserData();
+        if(bd2 == avatar && bd1 instanceof Totem && totem.getState() == Enemy.EnemyState.OUT_OF_LIGHT) {
+            contact.setEnabled(false);
+        }
     }
 
     /**
@@ -519,3 +475,4 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
         sounds.stop("jump");
     }
 }
+
