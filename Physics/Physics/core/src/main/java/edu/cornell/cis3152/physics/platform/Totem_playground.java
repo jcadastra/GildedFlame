@@ -483,9 +483,10 @@ public class Totem_playground extends PhysicsScene implements ContactListener {
             }
         }
 
-        if ((bd2 instanceof Light && bd1 instanceof Totem)) {
+        if ((bd2 instanceof Light && bd1 instanceof Totem) || (bd2 instanceof Totem && bd1 instanceof Light)) {
             Texture texture = directory.getEntry("rocket-totem01", Texture.class);
             totem.setTexture(texture);
+            totem.resetFreeze();
             totem.setState(Enemy.EnemyState.OUT_OF_LIGHT);
         }
 

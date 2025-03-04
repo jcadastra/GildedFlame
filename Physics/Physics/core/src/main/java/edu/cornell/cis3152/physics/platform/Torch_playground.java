@@ -404,8 +404,8 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
             }
 
             // See if we have landed on a platform.
-            if ((avatar.getSensorName().equals(fd2) && avatar != bd1 && (bd1.getName().equals("floor") || bd1 instanceof Totem) ||
-                (avatar.getSensorName().equals(fd1) && avatar != bd2 && (bd2.getName().equals("floor") || bd2 instanceof Totem)
+            if ((avatar.getSensorName().equals(fd2) && avatar != bd1 && (bd1.getName().equals("floor") || bd1 instanceof Enemy) ||
+                (avatar.getSensorName().equals(fd1) && avatar != bd2 && (bd2.getName().equals("floor") || bd2 instanceof Enemy)
                 )) ) {
                 avatar.setGrounded(true);
                 sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
@@ -437,7 +437,6 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
                 Texture texture = directory.getEntry("rocket-totem03", Texture.class);
                 totem.setTexture(texture);
                 totem.setState(Enemy.EnemyState.IN_LIGHT);
-                totem.resetFreeze();
             }
 
             if ((bd2 instanceof Light && bd1 instanceof Moth) || (bd2 instanceof Moth && bd1 instanceof Light) ){
@@ -454,14 +453,10 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
                 } else if (lx > mx && moth.isFacingRight()){
                     moth.changeDirection();
                 }
-
                 moth.setTexture(texture);
                 moth.setState(Enemy.EnemyState.IN_LIGHT);
                 moth.resetAttackTimer();
             }
-
-
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -498,6 +493,7 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
         if ((bd2 instanceof Light && bd1 instanceof Totem)) {
             Texture texture = directory.getEntry("rocket-totem01", Texture.class);
             totem.setTexture(texture);
+            totem.resetFreeze();
             totem.setState(Enemy.EnemyState.OUT_OF_LIGHT);
         }
 
@@ -542,7 +538,6 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
                 contact.setEnabled(false);
             }
         }
-        totem.resetFreeze();
     }
 
     /**
