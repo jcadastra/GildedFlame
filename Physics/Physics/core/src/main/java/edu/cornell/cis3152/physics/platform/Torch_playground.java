@@ -208,6 +208,11 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
         platform.setTexture(texture);
         addSprite(platform);
 
+        texture = directory.getEntry( "platform-barrier", Texture.class );
+        Spinner spinPlatform = new Spinner(units,constants.get("spinner"));
+        spinPlatform.setTexture(texture);
+        addSpriteGroup(spinPlatform);
+
         // Create Traci
         texture = directory.getEntry("platform-traci", Texture.class);
         avatar = new Traci(units, constants.get("traci"));
