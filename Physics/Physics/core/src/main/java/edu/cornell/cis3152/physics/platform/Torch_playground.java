@@ -178,7 +178,6 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
         setFailure(false);
         populateLevel();
     }
-
     /**
      * Lays out the game geography.
      */
@@ -232,12 +231,12 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
 
 
         // Create Totem
-//        texture = directory.getEntry("rocket-totem01", Texture.class);
-//        totem = new Totem(0, units, constants.get("totem"));
-//        totem.setTexture(texture);
-//        addSprite(totem);
-//        totem.createSensor();
-//        enemies.add(totem);
+        texture = directory.getEntry("rocket-totem01", Texture.class);
+        totem = new Totem(0, units, constants.get("totem"));
+        totem.setTexture(texture);
+        addSprite(totem);
+        totem.createSensor();
+        enemies.add(totem);
 
         // Create Moth
         texture = directory.getEntry("rocket-moth01", Texture.class);
@@ -282,7 +281,7 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
      */
     public void update(float dt) {
         torch.update();
-//        totem.update();
+        totem.update();
         moth.update();
         InputController input = InputController.getInstance();
 
@@ -427,14 +426,27 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
             }
 
             if ((bd2 instanceof Light && bd1 instanceof Totem)) {
-                Texture texture = directory.getEntry("rocket-totem04", Texture.class);
+                Texture texture = directory.getEntry("rocket-totem03", Texture.class);
                 totem.setTexture(texture);
                 totem.setState(Enemy.EnemyState.IN_LIGHT);
                 totem.resetFreeze();
             }
 
-            if ((bd2 instanceof Light && bd1 instanceof Moth)){
-                Texture texture = directory.getEntry("rocket-moth04", Texture.class);
+            if ((bd2 instanceof Light && bd1 instanceof Moth) || (bd2 instanceof Moth && bd1 instanceof Light) ){
+                Light light = (bd1 instanceof Light) ? (Light) bd1 : (Light) bd2;
+                Enemy moth = (bd1 instanceof Enemy) ? (Enemy) bd1 : (Enemy) bd2;
+
+                float lx = light.getObstacle().getX();
+                float mx = moth.getObstacle().getX();
+
+                Texture texture = directory.getEntry("rocket-moth03", Texture.class);
+
+                if (lx < mx && !moth.isFacingRight()){
+                    moth.changeDirection();
+                } else if (lx > mx && moth.isFacingRight()){
+                    moth.changeDirection();
+                }
+
                 moth.setTexture(texture);
                 moth.setState(Enemy.EnemyState.IN_LIGHT);
                 moth.resetAttackTimer();
@@ -474,7 +486,7 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
         }
 
         if ((bd2 instanceof Light && bd1 instanceof Totem)) {
-            Texture texture = directory.getEntry("rocket-totem03", Texture.class);
+            Texture texture = directory.getEntry("rocket-totem01", Texture.class);
             totem.setTexture(texture);
             totem.setState(Enemy.EnemyState.OUT_OF_LIGHT);
         }

@@ -30,8 +30,6 @@ public class Enemy extends ObstacleSprite {
 
     private int attackTimer;
 
-    private int attackAnimationTimer;
-
     private EnemyState state;
     /**
      * Returns true if this character is facing right

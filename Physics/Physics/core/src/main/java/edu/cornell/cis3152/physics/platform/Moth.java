@@ -14,13 +14,13 @@ public class Moth extends Enemy {
 
     @Override
     public void in_light(){
-        System.out.println("In light");
+//        System.out.println("In light");
         setState(EnemyState.ANGRY);
     }
 
     @Override
     public void attack(){
-        System.out.println("Attack");
+//        System.out.println("Attack");
         setMoveSpeed(150);
         move();
         resetMoveSpeed();
@@ -29,12 +29,12 @@ public class Moth extends Enemy {
 
     @Override
     public void angry(){
-        System.out.println("Angry: " + getAttackTimer());
+//        System.out.println("Angry: " + getAttackTimer());
         if (getAttackTimer() == 0){
             setState(EnemyState.ATTACK);
         } else {
             stop();
-            System.out.println("Waiting to attack");
+//            System.out.println("Waiting to attack");
             decrementAttackTimer();
         }
     }
