@@ -51,8 +51,8 @@ public class Enemy extends ObstacleSprite {
         System.out.println("changing direction");
         faceRight = !faceRight;
     }
-    private float width;
-    private float height;
+    public float width;
+    public float height;
     private Body body;
     private float x;
     private float y;

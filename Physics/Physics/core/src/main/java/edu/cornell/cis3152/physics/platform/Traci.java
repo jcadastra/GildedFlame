@@ -174,6 +174,10 @@ public class Traci extends ObstacleSprite {
         return hasTorch;
     }
 
+    public Vector2 getLocation() {
+        return new Vector2(getObstacle().getX(), getObstacle().getY());
+    }
+
     /**
      * Sets whether Traci has torch.
      */
