@@ -162,6 +162,15 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
         JsonValue values = constants.get("world");
         Vector2 gravity = new Vector2(0, values.getFloat("gravity"));
 
+        if (activeTorchJoint != null) {
+            world.destroyJoint(activeTorchJoint);
+            activeTorchJoint = null;
+        }
+        if (activeLightJoint != null) {
+            world.destroyJoint(activeLightJoint);
+            activeLightJoint = null;
+        }
+
         for (ObstacleSprite sprite : sprites) {
             Obstacle obj = sprite.getObstacle();
             sprite.getObstacle().deactivatePhysics(world);
@@ -396,9 +405,11 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
                 removeBullet(bd2);
             }
 
-            // See if we have landed on the ground.
-            if ((avatar.getSensorName().equals(fd2) && avatar != bd1) ||
-                (avatar.getSensorName().equals(fd1) && avatar != bd2)) {
+            // See if we have landed on a platform.
+            if ((avatar.getSensorName().equals(fd2) && avatar != bd1 &&
+                (bd1.getName().equals("floor")) ||
+                (avatar.getSensorName().equals(fd1) && avatar != bd2 &&
+                    (bd2.getName().equals("floor"))))) {
                 avatar.setGrounded(true);
                 sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
             }
@@ -409,7 +420,7 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
                 setComplete(true);
             }
 
-            if (bd1 == avatar && bd2 == torch && torch.canBePickedUp()) {
+            if (bd1 == torch && bd2 == avatar && torch.canBePickedUp()) {
                 avatar.setHasTorch(true);
                 queueAddTorch = true;
             }
