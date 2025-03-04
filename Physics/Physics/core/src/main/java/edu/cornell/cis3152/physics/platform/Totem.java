@@ -15,8 +15,8 @@ public class Totem extends Enemy {
     // reacting to light
     @Override
     public void in_light(){
+        obstacle.setFriction(12345678);
         stop();
-//        System.out.println("Frozen: " +  getFreezeTimer());
     }
 
     @Override

@@ -509,16 +509,40 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
         }
     }
 
+
+
     /**
      * Unused ContactListener method
      */
     public void postSolve(Contact contact, ContactImpulse impulse) {
     }
 
+
     /**
-     * Unused ContactListener method
+     * Overridden preSolve method to disable collision between the avatar and Totem.
+     * This allows the avatar to pass through the Totem while other collisions remain active.
      */
+    @Override
     public void preSolve(Contact contact, Manifold oldManifold) {
+        Fixture fixA = contact.getFixtureA();
+        Fixture fixB = contact.getFixtureB();
+        Body bodyA = fixA.getBody();
+        Body bodyB = fixB.getBody();
+
+        // Retrieve the user data from the bodies.
+        Object dataA = bodyA.getUserData();
+        Object dataB = bodyB.getUserData();
+
+        // If either user data is null, do nothing.
+        if (dataA == null || dataB == null) return;
+
+        // Disable collision if one body is Totem and the other is the avatar.
+        if (totem.getState() != Enemy.EnemyState.IN_LIGHT){
+            if ((dataA instanceof Totem && dataB == avatar) ||
+                (dataB instanceof Totem && dataA == avatar)) {
+                contact.setEnabled(false);
+            }
+        }
     }
 
     /**

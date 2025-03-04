@@ -20,11 +20,21 @@ public class Moth extends Enemy {
 
     @Override
     public void attack(){
-//        System.out.println("Attack");
-        setMoveSpeed(150);
-        move();
-        resetMoveSpeed();
-        setState(EnemyState.OUT_OF_LIGHT);
+        if (getAttackAnimationTimer() != 0) {
+            obstacle.setBullet(true);
+            if (isFacingRight()){
+                obstacle.getBody().applyForceToCenter(new Vector2(-500, 0), true);
+            } else {
+                obstacle.getBody().applyForceToCenter(new Vector2(500, 0), true);
+            }
+            obstacle.setBullet(false);
+            decrementAttackAnimationTimer();
+        } else {
+            stop();
+            setState(EnemyState.ANGRY);
+            resetAttackTimer();
+            resetAttackAnimationTimer();
+        }
     }
 
     @Override

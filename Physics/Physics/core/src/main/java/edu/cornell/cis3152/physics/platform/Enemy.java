@@ -30,6 +30,8 @@ public class Enemy extends ObstacleSprite {
 
     private int attackTimer;
 
+    private int attackAnimationTimer;
+
     private EnemyState state;
     /**
      * Returns true if this character is facing right
@@ -122,6 +124,12 @@ public class Enemy extends ObstacleSprite {
     public void decrementAttackTimer() { attackTimer--; }
 
     public void resetAttackTimer() { attackTimer = data.getInt("attackTimer");}
+
+    public int getAttackAnimationTimer() { return attackAnimationTimer; }
+
+    public void decrementAttackAnimationTimer() { attackAnimationTimer--; }
+
+    public void resetAttackAnimationTimer() { attackAnimationTimer = data.getInt("attackAnimationTimer");}
 
     public void update(){
         switch (state) {
