@@ -21,7 +21,7 @@ public class Moth extends Enemy {
     @Override
     public void attack(){
         System.out.println("Attack");
-        setMoveSpeed(12);
+        setMoveSpeed(150);
         move();
         resetMoveSpeed();
         setState(EnemyState.OUT_OF_LIGHT);
@@ -29,15 +29,14 @@ public class Moth extends Enemy {
 
     @Override
     public void angry(){
-        System.out.println("Angry");
+        System.out.println("Angry: " + getAttackTimer());
         if (getAttackTimer() == 0){
             setState(EnemyState.ATTACK);
         } else {
+            stop();
             System.out.println("Waiting to attack");
             decrementAttackTimer();
         }
-        // Freezes for a little
-        // then goes to attack
     }
 
     @Override
