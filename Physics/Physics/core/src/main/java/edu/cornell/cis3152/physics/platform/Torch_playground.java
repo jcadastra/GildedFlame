@@ -93,7 +93,9 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
 
     private Body body;
     private int count;
-    /** Reference to the goalDoor (for collision detection) */
+    /**
+     * Reference to the goalDoor (for collision detection)
+     */
     private Door goalDoor;
 
     /**
@@ -146,7 +148,6 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
     public void reset() {
         JsonValue values = constants.get("world");
         Vector2 gravity = new Vector2(0, values.getFloat("gravity"));
-
 
         if (activeTorchJoint != null) {
             world.destroyJoint(activeTorchJoint);
@@ -224,7 +225,6 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
         activeLightJoint = world.createJoint(torch.attachLight(l));
 //        System.out.println(l.getObstacle().getMass());
 //        torch.createSensor();
-
 
         // Totem
         texture = directory.getEntry("rocket-crate01", Texture.class);
@@ -389,9 +389,11 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
                 removeBullet(bd2);
             }
 
-            // See if we have landed on the ground.
-            if ((avatar.getSensorName().equals(fd2) && avatar != bd1) ||
-                (avatar.getSensorName().equals(fd1) && avatar != bd2)) {
+            // See if we have landed on a platform.
+            if ((avatar.getSensorName().equals(fd2) && avatar != bd1 &&
+                (bd1.getName().equals("floor")) ||
+                (avatar.getSensorName().equals(fd1) && avatar != bd2 &&
+                    (bd2.getName().equals("floor"))))) {
                 avatar.setGrounded(true);
                 sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
             }
@@ -433,7 +435,6 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
 //                }
 //            }
 
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -457,6 +458,7 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
 
         Object bd1 = body1.getUserData();
         Object bd2 = body2.getUserData();
+        /**TRACI JUMPS OFF OF LIGHT*/
         if ((avatar.getSensorName().equals(fd2) && avatar != bd1) ||
             (avatar.getSensorName().equals(fd1) && avatar != bd2)) {
             sensorFixtures.remove(avatar == bd1 ? fix2 : fix1);
