@@ -21,7 +21,7 @@ public class Totem extends Enemy {
 
     @Override
     public void out_of_light(){
-
+        obstacle.setFriction(0);
         if (getFreezeTimer() == 0){
             move();
         } else {
