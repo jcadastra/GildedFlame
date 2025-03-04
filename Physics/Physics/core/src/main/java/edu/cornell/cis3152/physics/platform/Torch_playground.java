@@ -422,8 +422,6 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
                 queueAddTorch = true;
             }
 
-
-
             if ((bd1 instanceof Enemy && bd2.getName().startsWith("wall")) ||
                 (bd2 instanceof Enemy && bd1.getName().startsWith("wall"))) {
                 Enemy enemy = (bd1 instanceof Enemy) ? (Enemy) bd1 : (Enemy) bd2;
@@ -544,6 +542,7 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
                 contact.setEnabled(false);
             }
         }
+        totem.resetFreeze();
     }
 
     /**
