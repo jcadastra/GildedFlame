@@ -231,21 +231,21 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
 //        torch.createSensor();
 
 
-        // Totem
-        texture = directory.getEntry("rocket-crate01", Texture.class);
-        totem = new Totem(0, units, constants.get("totem"));
-        totem.setTexture(texture);
-        addSprite(totem);
-        totem.createSensor();
-        enemies.add(totem);
+        // Create Totem
+//        texture = directory.getEntry("rocket-totem01", Texture.class);
+//        totem = new Totem(0, units, constants.get("totem"));
+//        totem.setTexture(texture);
+//        addSprite(totem);
+//        totem.createSensor();
+//        enemies.add(totem);
 
         // Create Moth
-//        texture = directory.getEntry("rocket-crate02", Texture.class);
-//        moth = new Moth(0, units, constants.get("moth"));
-//        moth.setTexture(texture);
-//        addSprite(moth);
-//        moth.createSensor();
-//        enemies.add(moth);
+        texture = directory.getEntry("rocket-moth01", Texture.class);
+        moth = new Moth(0, units, constants.get("moth"));
+        moth.setTexture(texture);
+        addSprite(moth);
+        moth.createSensor();
+        enemies.add(moth);
     }
 
     /**
@@ -282,8 +282,8 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
      */
     public void update(float dt) {
         torch.update();
-        totem.update();
-//        moth.update();
+//        totem.update();
+        moth.update();
         InputController input = InputController.getInstance();
 
         // Process actions in object model
@@ -434,7 +434,7 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
             }
 
             if ((bd2 instanceof Light && bd1 instanceof Moth)){
-                moth.setState(Enemy.EnemyState.ATTRACTED);
+                moth.setState(Enemy.EnemyState.IN_LIGHT);
             }
 
 
@@ -474,6 +474,12 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
             Texture texture = directory.getEntry("rocket-totem03", Texture.class);
             totem.setTexture(texture);
             totem.setState(Enemy.EnemyState.OUT_OF_LIGHT);
+        }
+
+        if ((bd2 instanceof Light && bd1 instanceof Moth)){
+            Texture texture = directory.getEntry("rocket-moth03", Texture.class);
+            moth.setTexture(texture);
+            moth.setState(Enemy.EnemyState.OUT_OF_LIGHT);
         }
     }
 

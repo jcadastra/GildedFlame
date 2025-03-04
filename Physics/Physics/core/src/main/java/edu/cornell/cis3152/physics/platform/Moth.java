@@ -14,19 +14,35 @@ public class Moth extends Enemy {
 
     @Override
     public void in_light(){
-        // turns angry - maybe just represent this with a different sprite color
-//        spriteColor = Color.RED;
-        draw(batch); // change sprite color
+        System.out.println("In light");
+        setState(EnemyState.ANGRY);
     }
 
     @Override
-    public void attracted(){
-        move_to(AIController.playerPosition);
+    public void attack(){
+        System.out.println("Attack");
+        setMoveSpeed(12);
+        move();
+        resetMoveSpeed();
+        setState(EnemyState.OUT_OF_LIGHT);
+    }
+
+    @Override
+    public void angry(){
+        System.out.println("Angry");
+        if (getAttackTimer() == 0){
+            setState(EnemyState.ATTACK);
+        } else {
+            System.out.println("Waiting to attack");
+            decrementAttackTimer();
+        }
+        // Freezes for a little
+        // then goes to attack
     }
 
     @Override
     public void out_of_light(){
+//        System.out.println("Out of light");
         move();
-        //        getFixture().setSensor(true); // no collisions
     }
 }
