@@ -130,7 +130,6 @@ public class Light extends ObstacleSprite {
     public void drawDebug(SpriteBatch batch){
         if (this.obstacle != null) {
             this.obstacle.draw(batch, this.debug);
-            System.out.println("Drawing light at " + getX() + ", " + getY());
         }
     }
 

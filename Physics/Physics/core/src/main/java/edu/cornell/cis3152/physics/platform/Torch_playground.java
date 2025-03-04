@@ -147,12 +147,23 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
         JsonValue values = constants.get("world");
         Vector2 gravity = new Vector2(0, values.getFloat("gravity"));
 
+
+        if (activeTorchJoint != null) {
+            world.destroyJoint(activeTorchJoint);
+            activeTorchJoint = null;
+        }
+        if (activeLightJoint != null) {
+            world.destroyJoint(activeLightJoint);
+            activeLightJoint = null;
+        }
+
         for (ObstacleSprite sprite : sprites) {
             Obstacle obj = sprite.getObstacle();
             sprite.getObstacle().deactivatePhysics(world);
         }
         sprites.clear();
         addQueue.clear();
+
         if (world != null) {
             world.dispose();
         }
@@ -263,6 +274,7 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
      * @param dt Number of seconds since last animation frame
      */
     public void update(float dt) {
+
         torch.update();
         totem.update();
         InputController input = InputController.getInstance();
@@ -394,6 +406,10 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
                 avatar.setHasTorch(true);
                 queueAddTorch = true;
             }
+            if (bd1 == torch && bd2 == avatar && torch.canBePickedUp()) {
+                avatar.setHasTorch(true);
+                queueAddTorch = true;
+            }
 
             if ((bd1 instanceof Enemy && bd2.getName().startsWith("wall")) ||
                 (bd2 instanceof Enemy && bd1.getName().startsWith("wall"))) {
@@ -441,7 +457,6 @@ public class Torch_playground extends PhysicsScene implements ContactListener {
 
         Object bd1 = body1.getUserData();
         Object bd2 = body2.getUserData();
-
         if ((avatar.getSensorName().equals(fd2) && avatar != bd1) ||
             (avatar.getSensorName().equals(fd1) && avatar != bd2)) {
             sensorFixtures.remove(avatar == bd1 ? fix2 : fix1);
