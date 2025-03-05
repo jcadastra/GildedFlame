@@ -229,7 +229,7 @@ public class Totem_playground extends PhysicsScene implements ContactListener {
 
         // Create Totem
         texture = directory.getEntry("rocket-totem01", Texture.class);
-        totem = new Totem(0, units, constants.get("totem"));
+        totem = new Totem(0, units, constants.get("totem"), directory);
         totem.setTexture(texture);
         addSprite(totem);
         totem.createSensor();
@@ -237,7 +237,7 @@ public class Totem_playground extends PhysicsScene implements ContactListener {
 
         // Create Moth
         texture = directory.getEntry("rocket-moth01", Texture.class);
-        moth = new Moth(0, units, constants.get("moth"));
+        moth = new Moth(0, units, constants.get("moth"), directory);
         moth.setTexture(texture);
         addSprite(moth);
         moth.createSensor();
@@ -418,9 +418,16 @@ public class Totem_playground extends PhysicsScene implements ContactListener {
                 enemy.changeDirection();
             }
 
-            if ((bd2 instanceof Totem && bd1 instanceof Moth) || (bd1 instanceof Totem && bd2 instanceof Moth)) {
-                ((Enemy) bd2).changeDirection();
-                ((Enemy) bd1).changeDirection();
+            if ((bd2 instanceof Enemy && bd1 instanceof Enemy)){
+                System.out.println("HERE");
+                if (((Enemy) bd2).getState() != Enemy.EnemyState.IN_LIGHT){
+                    System.out.println(" bd2 NOT IN LIGHT");
+                    ((Enemy) bd2).changeDirection();
+                }
+                if (((Enemy) bd1).getState() != Enemy.EnemyState.IN_LIGHT){
+                    System.out.println(" bd1 NOT IN LIGHT");
+                    ((Enemy) bd1).changeDirection();
+                }
             }
 
             if ((bd2 instanceof Light && bd1 instanceof Totem)) {

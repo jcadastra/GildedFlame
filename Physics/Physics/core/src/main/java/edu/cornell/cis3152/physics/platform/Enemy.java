@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.JsonValue;
+import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.assets.ParserUtils;
 import edu.cornell.gdiac.graphics.SpriteBatch;
 import edu.cornell.gdiac.graphics.Texture2D;
@@ -14,7 +15,8 @@ import edu.cornell.gdiac.physics2.*;
 
 public class Enemy extends ObstacleSprite {
 
-    private static int MOVE_SPEED = 3;
+
+    protected AssetDirectory directory;
     private JsonValue data;
 
     private Path2 sensorOutline;
@@ -43,7 +45,16 @@ public class Enemy extends ObstacleSprite {
     }
 
     public void changeDirection() {
-        faceRight = !faceRight;
+        faceRight = !isFacingRight();
+    }
+
+
+    public void setFaceRight() {
+        faceRight = true;
+    }
+
+    public void setFaceLeft() {
+        faceRight = false;
     }
     private float width;
     private float height;
@@ -63,7 +74,8 @@ public class Enemy extends ObstacleSprite {
         ATTACK
     }
 
-    public Enemy(int id, float units, JsonValue data) {
+    public Enemy(int id, float units, JsonValue data, AssetDirectory directory) {
+        this.directory = directory;
         this.id = id;
         this.data = data;
         this.state = EnemyState.OUT_OF_LIGHT;
@@ -100,10 +112,6 @@ public class Enemy extends ObstacleSprite {
     public float getY() { return y; }
     public void setY(float value) { y = value; }
 
-    public int getMoveSpeed() { return MOVE_SPEED; }
-    public void setMoveSpeed(int value) { MOVE_SPEED = value; }
-
-    public void resetMoveSpeed() { MOVE_SPEED = 3; }
     public Fixture getFixture() {
         return obstacle.getBody().getFixtureList().first();
     }
@@ -117,7 +125,6 @@ public class Enemy extends ObstacleSprite {
     public void decrementFreezeTimer() { freezeTimer--; }
 
     public void resetFreeze() { freezeTimer = data.getInt("freezeTimer");}
-
 
     public int getAttackTimer() { return attackTimer; }
 
@@ -151,25 +158,26 @@ public class Enemy extends ObstacleSprite {
     }
 
     public void out_of_light(){
-        x += MOVE_SPEED;
+
     }
 
-    public void move_to(Vector2 target) {
-        Body body = obstacle.getBody();
-        if (body == null) {
-            System.out.println("R");
-            return;
-        }
-        int direction = MOVE_SPEED;
-        if (target.x < x) {
-            direction *= -1;
-        } else if (target.x == x) {
-            direction *= 0;
-        }
-        obstacle.getBody().applyForceToCenter(new Vector2(direction, 0), true);
-    }
+//    public void move_to(Vector2 target) {
+//        Body body = obstacle.getBody();
+//        if (body == null) {
+//            System.out.println("R");
+//            return;
+//        }
+//        int direction = MOVE_SPEED;
+//        if (target.x < x) {
+//            direction *= -1;
+//        } else if (target.x == x) {
+//            direction *= 0;
+//        }
+//        obstacle.getBody().applyForceToCenter(new Vector2(direction, 0), true);
+//    }
 
-    public void move() {
+    public void move(int MOVE_SPEED) {
+
         int direction;
         Body body = obstacle.getBody();
         if (body == null) {
@@ -191,7 +199,7 @@ public class Enemy extends ObstacleSprite {
     }
 
     public void attack(){}
-    public void stop() { obstacle.getBody().setLinearVelocity(0, 0); }
+    public void stop() { obstacle.getBody().setLinearVelocity(0, 0);}
 
     @Override
     public void draw(SpriteBatch batch) {

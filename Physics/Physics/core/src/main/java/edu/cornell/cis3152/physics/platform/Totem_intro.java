@@ -254,7 +254,7 @@ public class Totem_intro extends PhysicsScene implements ContactListener {
 
         // Create Totem
         texture = directory.getEntry("rocket-totem01", Texture.class);
-        totem = new Totem(0, units, constants.get("totem"));
+        totem = new Totem(0, units, constants.get("totem"), directory);
         totem.setTexture(texture);
         addSprite(totem);
         totem.createSensor();
