@@ -7,27 +7,27 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import edu.cornell.cis3152.physics.GameplayScene;
-import edu.cornell.cis3152.physics.level_player.enemies.Enemy;
-import edu.cornell.cis3152.physics.level_player.enemies.Moth;
-import edu.cornell.cis3152.physics.level_player.enemies.Totem;
-import edu.cornell.cis3152.physics.level_player.enviromentals.Light;
+import edu.cornell.cis3152.physics.level_player.enemies.*;
+import edu.cornell.cis3152.physics.level_player.enemies.Enemy.EnemyState;
+import edu.cornell.cis3152.physics.level_player.enviromentals.*;
+import edu.cornell.cis3152.physics.level_player.player.*;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
+import java.util.Stack;
 
 public class CollisionController implements ContactListener {
 
-    /**
-     * Creates and initialize a new instance of the platformer game
-     * <p>
-     * The game has default gravity and other settings
-     */
+    private Stack<Object[]> todos;
+
+    public Stack<Object[]> getTodos() {
+        return todos;
+    }
 
     private AssetDirectory directory;
-    private Torch_playground scene;
-    public CollisionController(AssetDirectory d, Torch_playground s) {
-        directory = d;
-        scene = s;
+
+    public CollisionController(AssetDirectory directory) {
+        this.directory = directory;
+        this.todos = new Stack<Object[]>();
     }
 
     /**
@@ -54,65 +54,35 @@ public class CollisionController implements ContactListener {
             ObstacleSprite bd1 = (ObstacleSprite) body1.getUserData();
             ObstacleSprite bd2 = (ObstacleSprite) body2.getUserData();
 
-            // Test bullet collision with world
-            if (bd1.getName().equals("bullet") && bd2 != scene.avatar && !bd2.getName().equals("goal")) {
-                scene.removeBullet(bd1);
+            if (isXandY(bd1, bd2, "bullet", Traci.class) > 0) {
+                todos.push(new Object[]{"removeBullet", idX(bd1, bd2, "bullet")});
             }
 
-            if (bd2.getName().equals("bullet") && bd1 != scene.avatar && !bd1.getName().equals("goal")) {
-                scene.removeBullet(bd2);
+            if ((isGround(bd1) || isGround(bd2)) && isX(bd1, bd2, Traci.class) == 1){
+                ((Traci) idX(bd1,bd2,Traci.class)).setGrounded(true);
+                todos.push(new Object[]{"traciGrounded", bd1 instanceof Traci ? fix2 : fix1});
             }
 
-            // See if we have landed on a platform.
-            if ((scene.avatar.getSensorName().equals(fd2) && scene.avatar != bd1 && (
-                bd1.getName().equals("floor") || (bd1 instanceof Enemy
-                    || bd1.getName().contains("barrier"))) ||
-                (scene.avatar.getSensorName().equals(fd1) && scene.avatar != bd2 && (
-                    bd2.getName().equals("floor") || (bd2 instanceof Enemy || bd2.getName()
-                        .contains("barrier")))
-                ))) {
-                scene.avatar.setGrounded(true);
-                scene.sensorFixtures.add(scene.avatar == bd1 ? fix2 : fix1); // Could have more than one ground
+            if (isX(bd1, bd2, Torch.class) + isX(bd1,bd2,Traci.class) == 2) {
+                ((Traci) idX(bd1,bd2,Traci.class)).setHasTorch(true);
+                todos.push(new Object[]{"addTorch", idX(bd1, bd2, Traci.class)});
             }
 
-            // Check for win condition
-            if ((scene.avatar.getSensorName().equals(fd2) && scene.avatar != bd1 && (
-                bd1.getName().equals("floor") || bd1 instanceof Totem) ||
-                (scene.avatar.getSensorName().equals(fd1) && scene.avatar != bd2 && (
-                    bd2.getName().equals("floor") || bd2 instanceof Totem)
-                ))) {
-                scene.avatar.setGrounded(true);
-                scene.sensorFixtures.add(scene.avatar == bd1 ? fix2 : fix1); // Could have more than one ground
+            if (isXandY(bd1, bd2, "wall", Enemy.class) == 1) {
+                ((Enemy) idX(bd1, bd2, Enemy.class)).changeDirection();
             }
 
-            if (bd1 == scene.torch && bd2 == scene.avatar && scene.torch.canBePickedUp()) {
-                scene.avatar.setHasTorch(true);
-                scene.queueAddTorch = true;
-            }
-
-            if ((bd1 instanceof Enemy && bd2.getName().startsWith("wall")) ||
-                (bd2 instanceof Enemy && bd1.getName().startsWith("wall"))) {
-                Enemy enemy = (bd1 instanceof Enemy) ? (Enemy) bd1 : (Enemy) bd2;
-                enemy.changeDirection();
-            }
-
-            if ((bd2 instanceof Totem && bd1 instanceof Moth) || (bd1 instanceof Totem
-                && bd2 instanceof Moth)) {
-                ((Enemy) bd2).changeDirection();
-                ((Enemy) bd1).changeDirection();
-            }
-
-            if ((bd2 instanceof Light && bd1 instanceof Totem)) {
+            if (isXandY(bd1,bd2, Light.class, Totem.class) == 1) {
                 Texture texture = directory.getEntry("rocket-totem03", Texture.class);
-                scene.totem.setTexture(texture);
-                scene.totem.setState(Enemy.EnemyState.IN_LIGHT);
-                scene.totem.resetFreeze();
+                Totem totem = (Totem) idX(bd1,bd2, Totem.class);
+                totem.setTexture(texture);
+                totem.setState(Enemy.EnemyState.IN_LIGHT);
+                totem.resetFreeze();
             }
 
-            if ((bd2 instanceof Light && bd1 instanceof Moth) || (bd2 instanceof Moth
-                && bd1 instanceof Light)) {
-                Light light = (bd1 instanceof Light) ? (Light) bd1 : (Light) bd2;
-                Enemy moth = (bd1 instanceof Enemy) ? (Enemy) bd1 : (Enemy) bd2;
+            if (isXandY(bd1, bd2, Light.class, Moth.class) == 1) {
+                Light light = (Light) idX(bd1, bd2, Light.class);
+                Moth moth = (Moth) idX(bd1,bd2, Moth.class);
 
                 float lx = light.getObstacle().getX();
                 float mx = moth.getObstacle().getX();
@@ -129,7 +99,6 @@ public class CollisionController implements ContactListener {
                 moth.setState(Enemy.EnemyState.IN_LIGHT);
                 moth.resetAttackTimer();
             }
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -153,27 +122,26 @@ public class CollisionController implements ContactListener {
         Object fd1 = fix1.getUserData();
         Object fd2 = fix2.getUserData();
 
-        Object bd1 = body1.getUserData();
-        Object bd2 = body2.getUserData();
+        ObstacleSprite bd1 = (ObstacleSprite) body1.getUserData();
+        ObstacleSprite bd2 = (ObstacleSprite) body2.getUserData();
 
-        if ((scene.avatar.getSensorName().equals(fd2) && scene.avatar != bd1) ||
-            (scene.avatar.getSensorName().equals(fd1) && scene.avatar != bd2)) {
-            scene.sensorFixtures.remove(scene.avatar == bd1 ? fix2 : fix1);
-            if (scene.sensorFixtures.size == 0) {
-                scene.avatar.setGrounded(false);
-            }
+
+        if ((isGround(bd1) || isGround(bd2)) && isX(bd1, bd2, Traci.class) == 1){
+            todos.push(new Object[]{"traciGrounded", bd1 instanceof Traci ? fix2 : fix1});
         }
 
-        if ((bd2 instanceof Light && bd1 instanceof Totem)) {
+        if (isXandY(bd1, bd2, Light.class, Totem.class) == 1) {
+            Totem totem = (Totem) idX(bd1, bd2, Totem.class);
             Texture texture = directory.getEntry("rocket-totem01", Texture.class);
-            scene.totem.setTexture(texture);
-            scene.totem.setState(Enemy.EnemyState.OUT_OF_LIGHT);
+            totem.setTexture(texture);
+            totem.setState(Enemy.EnemyState.OUT_OF_LIGHT);
         }
 
-        if ((bd2 instanceof Light && bd1 instanceof Moth)) {
+        if (isXandY(bd1, bd2, Light.class, Moth.class) == 1) {
+            Moth moth = (Moth) idX(bd1, bd2, Moth.class);
             Texture texture = directory.getEntry("rocket-moth01", Texture.class);
-            scene.moth.setTexture(texture);
-            scene.moth.setState(Enemy.EnemyState.OUT_OF_LIGHT);
+            moth.setTexture(texture);
+            moth.setState(EnemyState.OUT_OF_LIGHT);
         }
     }
 
@@ -192,27 +160,52 @@ public class CollisionController implements ContactListener {
      */
     @Override
     public void preSolve(Contact contact, Manifold oldManifold) {
-        Fixture fixA = contact.getFixtureA();
-        Fixture fixB = contact.getFixtureB();
-        Body bodyA = fixA.getBody();
-        Body bodyB = fixB.getBody();
+        Fixture fix1 = contact.getFixtureA();
+        Fixture fix2 = contact.getFixtureB();
 
-        // Retrieve the user data from the bodies.
-        Object dataA = bodyA.getUserData();
-        Object dataB = bodyB.getUserData();
+        Body body1 = fix1.getBody();
+        Body body2 = fix2.getBody();
 
-        // If either user data is null, do nothing.
-        if (dataA == null || dataB == null) {
-            return;
-        }
+        Object fd1 = fix1.getUserData();
+        Object fd2 = fix2.getUserData();
 
-        // Disable collision if one body is Totem and the other is the avatar.
-        if (scene.totem.getState() != Enemy.EnemyState.IN_LIGHT) {
-            if ((dataA instanceof Totem && dataB == scene.avatar) ||
-                (dataB instanceof Totem && dataA == scene.avatar)) {
+        ObstacleSprite bd1 = (ObstacleSprite) body1.getUserData();
+        ObstacleSprite bd2 = (ObstacleSprite) body2.getUserData();
+
+
+        if (isXandY(bd1, bd2, Totem.class, Traci.class) == 1) {
+            Totem totem = (Totem) idX(bd1, bd2, Totem.class);
+            if (totem.getState() != Enemy.EnemyState.IN_LIGHT) {
                 contact.setEnabled(false);
             }
         }
     }
 
+    private static <T,U> int isXandY (ObstacleSprite a, ObstacleSprite b, Class<T> x, Class<U> y) {
+        return (x.isInstance(a) && y.isInstance(b) ? 1 : 0) + (x.isInstance(b) && y.isInstance(a) ? 1 : 0);
+    }
+    private static <U> int isXandY (ObstacleSprite a, ObstacleSprite b, String x, Class<U> y) {
+        return (a.getName().contains(x) && y.isInstance(b) ? 1 : 0) + (b.getName().contains(x) && y.isInstance(a) ? 1 : 0);
+    }
+    private int isXandY (ObstacleSprite a, ObstacleSprite b, String x, String y) {
+        return (a.getName().contains(x) && b.getName().contains(y) ? 1 : 0) + (b.getName().contains(x) && a.getName().contains(y) ? 1 : 0);
+    }
+    private static <T> int isX (ObstacleSprite a, ObstacleSprite b, Class<T> x) {
+        return (x.isInstance(a) ? 1 : 0) + (x.isInstance(b) ? 1 : 0);
+    }
+    private int isX (ObstacleSprite a, ObstacleSprite b, String x) {
+        return (a.getName().contains(x) ? 1 : 0) + (b.getName().contains(x) ? 1 : 0);
+    }
+    private static <T> ObstacleSprite idX (ObstacleSprite a, ObstacleSprite b, Class<T> x) {
+        return (x.isInstance(a) ? a : b);
+    }
+    private ObstacleSprite idX (ObstacleSprite a, ObstacleSprite b, String x) {
+        return (a.getName().contains(x) ? a : b);
+    }
+    private static boolean isGround(ObstacleSprite sprite) {
+        return sprite.getName().equals("floor") ||
+        sprite.getName().equals("barrier") ||
+        sprite.getName().equals("spinner") ||
+        sprite.getName().equals("surface")|| sprite instanceof Enemy;
+    }
 }

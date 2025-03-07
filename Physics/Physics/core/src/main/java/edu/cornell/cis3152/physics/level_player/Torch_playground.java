@@ -11,6 +11,7 @@
  * Version: 2/8/2025
  */
 package edu.cornell.cis3152.physics.level_player;
+import com.badlogic.gdx.utils.Null;
 import edu.cornell.cis3152.physics.level_player.enemies.Enemy;
 import edu.cornell.cis3152.physics.level_player.enemies.Moth;
 import edu.cornell.cis3152.physics.level_player.enemies.Totem;
@@ -39,6 +40,7 @@ import edu.cornell.gdiac.physics2.Obstacle;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 /**
  * The game scene for the platformer game.
@@ -141,7 +143,7 @@ public class Torch_playground extends GameplayScene {
      */
     public Torch_playground(AssetDirectory directory) {
         super(directory, "platform");
-        contactListener = new CollisionController(directory, this);
+        contactListener = new CollisionController(directory);
         world.setContactListener(contactListener);
         sensorFixtures = new ObjectSet<Fixture>();
 
@@ -278,7 +280,6 @@ public class Torch_playground extends GameplayScene {
             setFailure(true);
             return false;
         }
-
         return true;
     }
 
@@ -293,11 +294,11 @@ public class Torch_playground extends GameplayScene {
      * @param dt Number of seconds since last animation frame
      */
     public void update(float dt) {
+        supplementaryCollisionActions();
         torch.update();
         totem.update();
         moth.update();
         InputController input = InputController.getInstance();
-
         // Process actions in object model
         avatar.setMovement(input.getHorizontal() * avatar.getForce());
         avatar.setJumping(input.didPrimary());
@@ -308,7 +309,7 @@ public class Torch_playground extends GameplayScene {
             createBullet();
         }
 
-        if (input.getThrowing() && avatar.getHasTorch()) {
+        if (input.getThrowing() && avatar.getHasTorch() && activeTorchJoint != null) {
             avatar.setHasTorch(false);
             world.destroyJoint(activeTorchJoint);
             activeTorchJoint = null;
@@ -325,7 +326,32 @@ public class Torch_playground extends GameplayScene {
             torchOnRight != avatar.isFacingRight())) {
             joinTorchtoAvatar();
         }
+    }
 
+    private void supplementaryCollisionActions() {
+        Stack<Object[]> todos = contactListener.getTodos();
+        while ( !todos.isEmpty() ) {
+            Object[] todo_action = todos.pop();
+            switch ((String) todo_action[0]) {
+                case "removeBullet":
+                    removeBullet((Bullet) todo_action[1]);
+                    break;
+                case "addTorch":
+                    if (torch.canBePickedUp()) {
+                        queueAddTorch = true;
+                    }
+                    break;
+                case "traciGrounded":
+                    sensorFixtures.add((Fixture) todo_action[1]);
+                    break;
+                case "traciAirborne":
+                    sensorFixtures.remove((Fixture) todo_action[1]);
+                    if (sensorFixtures.size == 0) {
+                        avatar.setGrounded(false);
+                    }
+                    break;
+            }
+        }
     }
 
     /**
