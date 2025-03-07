@@ -51,7 +51,7 @@ import java.util.ArrayList;
  * work is done in the method for the ContactListener interface. That is the method that is called
  * upon collisions, giving us a chance to define a response.
  */
-public class Torch_playground extends GameplayScene implements ContactListener {
+public class Torch_playground extends GameplayScene {
 
     /**
      * Texture asset for character avatar
@@ -90,12 +90,12 @@ public class Torch_playground extends GameplayScene implements ContactListener {
     /**
      * Reference to the character avatar
      */
-    private Traci avatar;
+    protected Traci avatar;
     private Vector2 location;
-    private Torch torch;
+    protected Torch torch;
 
-    private Totem totem;
-    private Moth moth;
+    protected Totem totem;
+    protected Moth moth;
     private Body body;
     private int count;
     /** Reference to the goalDoor (for collision detection) */
@@ -109,7 +109,7 @@ public class Torch_playground extends GameplayScene implements ContactListener {
     /**
      * Flag to add torch to avatar in update
      */
-    private boolean queueAddTorch;
+    protected boolean queueAddTorch;
 
     /**
      * Active joint for avatar holding torch
@@ -131,6 +131,7 @@ public class Torch_playground extends GameplayScene implements ContactListener {
      * Active joint for torch holding light
      */
     private Joint activeLightJoint;
+    protected ContactListener contactListener;
 
     /**
      * If torch is on the right of the avatar
@@ -144,7 +145,6 @@ public class Torch_playground extends GameplayScene implements ContactListener {
      */
     public Torch_playground(AssetDirectory directory) {
         super(directory, "platform");
-        world.setContactListener(this);
         sensorFixtures = new ObjectSet<Fixture>();
 
         // Pull out sounds
@@ -154,6 +154,11 @@ public class Torch_playground extends GameplayScene implements ContactListener {
         volume = constants.getFloat("volume", 1.0f);
         populateLevel();
 
+    }
+
+    public void instantiateCollisionController () {
+        contactListener = new CollisionController(directory);
+        world.setContactListener(contactListener);
     }
 
     /**
@@ -185,7 +190,9 @@ public class Torch_playground extends GameplayScene implements ContactListener {
         }
 
         world = new World(gravity, false);
-        world.setContactListener(this);
+        if (contactListener != null) {
+            world.setContactListener(contactListener);
+        }
         setComplete(false);
         setFailure(false);
         populateLevel();
@@ -373,211 +380,6 @@ public class Torch_playground extends GameplayScene implements ContactListener {
         bullet.getObstacle().markRemoved(true);
         SoundEffectManager sounds = SoundEffectManager.getInstance();
         sounds.play("plop", plopSound, volume);
-    }
-
-
-    /**
-     * Callback method for the start of a collision
-     * <p>
-     * This method is called when we first get a collision between two objects. We use this method
-     * to test if it is the "right" kind of collision. In particular, we use it to test if we made
-     * it to the win door.
-     *
-     * @param contact The two bodies that collided
-     */
-    public void beginContact(Contact contact) {
-        Fixture fix1 = contact.getFixtureA();
-        Fixture fix2 = contact.getFixtureB();
-
-        Body body1 = fix1.getBody();
-        Body body2 = fix2.getBody();
-
-        Object fd1 = fix1.getUserData();
-        Object fd2 = fix2.getUserData();
-
-        try {
-            ObstacleSprite bd1 = (ObstacleSprite) body1.getUserData();
-            ObstacleSprite bd2 = (ObstacleSprite) body2.getUserData();
-
-            // Test bullet collision with world
-            if (bd1.getName().equals("bullet") && bd2 != avatar && !bd2.getName().equals("goal")) {
-                removeBullet(bd1);
-            }
-
-            if (bd2.getName().equals("bullet") && bd1 != avatar && !bd1.getName().equals("goal")) {
-                removeBullet(bd2);
-            }
-
-            // See if we have landed on a platform.
-            if ((avatar.getSensorName().equals(fd2) && avatar != bd1 && (bd1.getName().equals("floor") || bd1 instanceof Enemy) ||
-                (avatar.getSensorName().equals(fd1) && avatar != bd2 && (bd2.getName().equals("floor") || bd2 instanceof Enemy)
-                )) ) {
-                avatar.setGrounded(true);
-                sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
-            }
-
-            // Check for win condition
-            if ((bd1 == avatar && bd2.getName().equals("goal")) ||
-                (bd1.getName().equals("goal") && bd2 == avatar)) {
-                setComplete(true);
-            }
-
-            if (bd1 == torch && bd2 == avatar && torch.canBePickedUp()) {
-                avatar.setHasTorch(true);
-                queueAddTorch = true;
-            }
-
-            if ((bd1 instanceof Enemy && bd2.getName().startsWith("wall")) ||
-                (bd2 instanceof Enemy && bd1.getName().startsWith("wall"))) {
-                Enemy enemy = (bd1 instanceof Enemy) ? (Enemy) bd1 : (Enemy) bd2;
-                enemy.changeDirection();
-            }
-
-
-            if ((bd1 instanceof Moth && bd2 instanceof Totem) || (bd2 instanceof Moth && bd1 instanceof Totem)) {
-                Moth moth = (bd1 instanceof Moth) ? (Moth) bd1 : (Moth) bd2;
-                Totem totem = (bd1 instanceof Totem) ? (Totem) bd1 : (Totem) bd2;
-
-                Body mothBody = moth.getObstacle().getBody();
-                Body totemBody = totem.getObstacle().getBody();
-
-                float bounceForce = 10.0f;
-                float bounceDirection = (mothBody.getPosition().x < totemBody.getPosition().x) ? -1 : 1;
-
-
-                if (moth.getState() == Enemy.EnemyState.OUT_OF_LIGHT){
-                    moth.changeDirection();
-                } else if (moth.getState() == Enemy.EnemyState.ATTACK){
-//                    System.out.println("HERE");
-                    mothBody.applyLinearImpulse(new Vector2(bounceDirection * bounceForce, 3.0f), mothBody.getWorldCenter(), true);
-                    moth.changeDirection();
-                }
-
-                if (totem.getState() == Enemy.EnemyState.OUT_OF_LIGHT){
-                    totem.changeDirection();
-                };
-            }
-
-
-//            if ((bd1 instanceof Moth && bd2 == avatar) || (bd2 instanceof Moth && bd1 == avatar)) {
-//                Moth moth = (bd1 instanceof Moth) ? (Moth) bd1 : (Moth) bd2;
-//                Traci avatar = (bd1 instanceof Traci) ? (Traci) bd1 : (Traci) bd2;
-//
-//                System.out.println("HERE");
-//                Body mothBody = moth.getObstacle().getBody();
-//                Body avatarBody = avatar.getObstacle().getBody();
-//
-//                float bounceForce = 10.0f;
-//                float bounceDirection = (mothBody.getPosition().x < avatarBody.getPosition().x) ? -1 : 1;
-//
-//
-//                if (moth.getState() == Enemy.EnemyState.ATTACK){
-//                    mothBody.applyLinearImpulse(new Vector2(bounceDirection * bounceForce, 3.0f), mothBody.getWorldCenter(), true);
-//                }
-//            }
-
-
-
-            if ((bd2 instanceof Light && bd1 instanceof Totem)) {
-                totem.setState(Enemy.EnemyState.IN_LIGHT);
-            }
-
-            if ((bd2 instanceof Light && bd1 instanceof Moth) || (bd2 instanceof Moth && bd1 instanceof Light) ){
-                Light light = (bd1 instanceof Light) ? (Light) bd1 : (Light) bd2;
-                Enemy moth = (bd1 instanceof Enemy) ? (Enemy) bd1 : (Enemy) bd2;
-
-                float lx = light.getObstacle().getX();
-                float mx = moth.getObstacle().getX();
-
-
-
-                if (lx < mx && !moth.isFacingRight()){
-                    moth.changeDirection();
-                } else if (lx > mx && moth.isFacingRight()){
-                    moth.changeDirection();
-                }
-
-                moth.setState(Enemy.EnemyState.IN_LIGHT);
-                moth.resetAttackTimer();
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Callback method for the start of a collision
-     * <p>
-     * This method is called when two objects cease to touch. The main use of this method is to
-     * determine when the characer is NOT on the ground. This is how we prevent double jumping.
-     */
-    public void endContact(Contact contact) {
-        Fixture fix1 = contact.getFixtureA();
-        Fixture fix2 = contact.getFixtureB();
-
-        Body body1 = fix1.getBody();
-        Body body2 = fix2.getBody();
-
-        Object fd1 = fix1.getUserData();
-        Object fd2 = fix2.getUserData();
-
-        Object bd1 = body1.getUserData();
-        Object bd2 = body2.getUserData();
-
-        if ((avatar.getSensorName().equals(fd2) && avatar != bd1) ||
-            (avatar.getSensorName().equals(fd1) && avatar != bd2)) {
-            sensorFixtures.remove(avatar == bd1 ? fix2 : fix1);
-            if (sensorFixtures.size == 0) {
-                avatar.setGrounded(false);
-            }
-        }
-
-        if ((bd2 instanceof Light && bd1 instanceof Totem)) {
-            totem.resetFreeze();
-            totem.setState(Enemy.EnemyState.OUT_OF_LIGHT);
-        }
-
-        if ((bd2 instanceof Light && bd1 instanceof Moth)) {
-
-            moth.setState(Enemy.EnemyState.OUT_OF_LIGHT);
-        }
-    }
-
-
-
-    /**
-     * Unused ContactListener method
-     */
-    public void postSolve(Contact contact, ContactImpulse impulse) {
-    }
-
-
-    /**
-     * Overridden preSolve method to disable collision between the avatar and Totem.
-     * This allows the avatar to pass through the Totem while other collisions remain active.
-     */
-    @Override
-    public void preSolve(Contact contact, Manifold oldManifold) {
-        Fixture fixA = contact.getFixtureA();
-        Fixture fixB = contact.getFixtureB();
-        Body bodyA = fixA.getBody();
-        Body bodyB = fixB.getBody();
-
-        // Retrieve the user data from the bodies.
-        Object dataA = bodyA.getUserData();
-        Object dataB = bodyB.getUserData();
-
-        // If either user data is null, do nothing.
-        if (dataA == null || dataB == null) return;
-
-        // Disable collision if one body is Totem and the other is the avatar.
-        if (totem.getState() != Enemy.EnemyState.IN_LIGHT){
-            if ((dataA instanceof Totem && dataB == avatar) ||
-                (dataB instanceof Totem && dataA == avatar)) {
-                contact.setEnabled(false);
-            }
-        }
     }
 
     /**

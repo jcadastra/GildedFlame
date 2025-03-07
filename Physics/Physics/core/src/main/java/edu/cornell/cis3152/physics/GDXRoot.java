@@ -146,6 +146,7 @@ public class GDXRoot extends Game implements ScreenListener {
             controllers[3] = new spinner_layout(directory);
 //            controllers[2] = new RagdollScene(directory);
 //            controllers[3] = new PlatformScene(directory);
+            ((Torch_playground) controllers[2]).instantiateCollisionController();
 
             for(int ii = 0; ii < controllers.length; ii++) {
                 controllers[ii].setScreenListener(this);
