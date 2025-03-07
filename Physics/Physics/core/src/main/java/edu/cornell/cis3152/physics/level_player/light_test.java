@@ -19,7 +19,7 @@ import edu.cornell.gdiac.audio.SoundEffectManager;
 import edu.cornell.gdiac.physics2.Obstacle;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
 
-public class light_test extends GameplayScene implements ContactListener {
+public class light_test extends GameplayScene implements ContactListener  {
     /** Texture asset for character avatar */
     private TextureRegion avatarTexture;
     /** Texture asset for the spinning barrier */

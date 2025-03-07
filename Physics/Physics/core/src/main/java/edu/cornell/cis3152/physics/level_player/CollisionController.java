@@ -7,27 +7,20 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import edu.cornell.cis3152.physics.GameplayScene;
-import edu.cornell.cis3152.physics.level_player.Torch_playground;
 import edu.cornell.cis3152.physics.level_player.enemies.Enemy;
 import edu.cornell.cis3152.physics.level_player.enemies.Moth;
 import edu.cornell.cis3152.physics.level_player.enemies.Totem;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Light;
-import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
 
-public class CollisionController extends Torch_playground implements ContactListener {
+public class CollisionController implements ContactListener {
 
     /**
      * Creates and initialize a new instance of the platformer game
      * <p>
      * The game has default gravity and other settings
-     *
-     * @param directory
      */
-    public CollisionController(AssetDirectory directory) {
-        super(directory);
-    }
+    public CollisionController() {}
 
     /**
      * Callback method for the start of a collision

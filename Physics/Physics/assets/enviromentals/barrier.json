@@ -1,0 +1,7 @@
+{
+//  "pos"     : [13.0,12.5],
+  "size"    : [0.125,6.0],
+  "radius"  : 0.1,
+  "low density" : 0.0,
+  "high density": 10.0
+}
