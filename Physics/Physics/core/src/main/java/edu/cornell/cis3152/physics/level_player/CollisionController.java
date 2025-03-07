@@ -1,6 +1,7 @@
 package edu.cornell.cis3152.physics.level_player;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -72,12 +73,33 @@ public class CollisionController implements ContactListener {
                 ((Enemy) idX(bd1, bd2, Enemy.class)).changeDirection();
             }
 
-            if (isXandY(bd1,bd2, Light.class, Totem.class) == 1) {
-                Texture texture = directory.getEntry("rocket-totem03", Texture.class);
+            if (isXandY(bd1, bd2, Totem.class, Moth.class) == 1) {
                 Totem totem = (Totem) idX(bd1,bd2, Totem.class);
-                totem.setTexture(texture);
+                Moth moth = (Moth) idX(bd1,bd2, Moth.class);
+
+
+                Body mothBody = moth.getObstacle().getBody();
+                Body totemBody = totem.getObstacle().getBody();
+
+                float bounceForce = 10.0f;
+                float bounceDirection = (mothBody.getPosition().x < totemBody.getPosition().x) ? -1 : 1;
+
+
+                if (moth.getState() == Enemy.EnemyState.OUT_OF_LIGHT){
+                    moth.changeDirection();
+                } else if (moth.getState() == Enemy.EnemyState.ATTACK){
+                    mothBody.applyLinearImpulse(new Vector2(bounceDirection * bounceForce, 3.0f), mothBody.getWorldCenter(), true);
+                    moth.changeDirection();
+                }
+
+                if (totem.getState() == Enemy.EnemyState.OUT_OF_LIGHT){
+                    totem.changeDirection();
+                };
+            }
+
+            if (isXandY(bd1,bd2, Light.class, Totem.class) == 1) {
+                Totem totem = (Totem) idX(bd1,bd2, Totem.class);
                 totem.setState(Enemy.EnemyState.IN_LIGHT);
-                totem.resetFreeze();
             }
 
             if (isXandY(bd1, bd2, Light.class, Moth.class) == 1) {
@@ -87,15 +109,12 @@ public class CollisionController implements ContactListener {
                 float lx = light.getObstacle().getX();
                 float mx = moth.getObstacle().getX();
 
-                Texture texture = directory.getEntry("rocket-moth03", Texture.class);
-
                 if (lx < mx && !moth.isFacingRight()) {
                     moth.changeDirection();
                 } else if (lx > mx && moth.isFacingRight()) {
                     moth.changeDirection();
                 }
 
-                moth.setTexture(texture);
                 moth.setState(Enemy.EnemyState.IN_LIGHT);
                 moth.resetAttackTimer();
             }
@@ -132,15 +151,11 @@ public class CollisionController implements ContactListener {
 
         if (isXandY(bd1, bd2, Light.class, Totem.class) == 1) {
             Totem totem = (Totem) idX(bd1, bd2, Totem.class);
-            Texture texture = directory.getEntry("rocket-totem01", Texture.class);
-            totem.setTexture(texture);
             totem.setState(Enemy.EnemyState.OUT_OF_LIGHT);
         }
 
         if (isXandY(bd1, bd2, Light.class, Moth.class) == 1) {
             Moth moth = (Moth) idX(bd1, bd2, Moth.class);
-            Texture texture = directory.getEntry("rocket-moth01", Texture.class);
-            moth.setTexture(texture);
             moth.setState(EnemyState.OUT_OF_LIGHT);
         }
     }
