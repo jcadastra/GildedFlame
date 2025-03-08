@@ -14,7 +14,7 @@ import edu.cornell.cis3152.physics.level_player.enviromentals.Light;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
 
-public class _CollisionController implements ContactListener {
+public class legacy_CollisionController implements ContactListener {
 
     /**
      * Creates and initialize a new instance of the platformer game
@@ -24,7 +24,7 @@ public class _CollisionController implements ContactListener {
 
     private AssetDirectory directory;
     private Torch_playground scene;
-    public _CollisionController(AssetDirectory d, Torch_playground s) {
+    public legacy_CollisionController(AssetDirectory d, Torch_playground s) {
         directory = d;
         scene = s;
     }
