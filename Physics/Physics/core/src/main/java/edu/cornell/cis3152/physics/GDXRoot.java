@@ -14,10 +14,13 @@
  package edu.cornell.cis3152.physics;
 
 import com.badlogic.gdx.*;
+import edu.cornell.cis3152.physics.level_player.Moth_intro;
+import edu.cornell.cis3152.physics.level_player.Torch_playground;
+import edu.cornell.cis3152.physics.level_player.Totem_intro;
+import edu.cornell.cis3152.physics.level_player.spinner_layout;
 import edu.cornell.gdiac.util.*;
 import edu.cornell.gdiac.assets.*;
 import edu.cornell.gdiac.graphics.*;
-import edu.cornell.cis3152.physics.platform.*;
 //import edu.cornell.cis3152.physics.ragdoll.*;
 
 /**
@@ -40,7 +43,7 @@ public class GDXRoot extends Game implements ScreenListener {
     /** Player mode for the the game proper (CONTROLLER CLASS) */
     private int current;
     /** List of all WorldControllers */
-    private PhysicsScene[] controllers;
+    private GameplayScene[] controllers;
 
     /**
      * Creates a new game from the configuration settings.
@@ -132,15 +135,15 @@ public class GDXRoot extends Game implements ScreenListener {
             loading = null;
 
             // Initialize the three game worlds
-            controllers = new PhysicsScene[4];
+            controllers = new GameplayScene[1];
 //            controllers[0] = new RocketScene(directory);
             //controllers[0] = new og_platformer(directory);
 //            controllers[1] = new empty_layout1(directory);
 //            controllers[2] = new empty_layout2(directory);
-            controllers[0] = new Totem_intro(directory);
-            controllers[1] = new Moth_intro(directory);
-            controllers[2] = new Torch_playground(directory);
-            controllers[3] = new spinner_layout(directory);
+//            controllers[0] = new Totem_intro(directory);
+//            controllers[1] = new Moth_intro(directory);
+//            controllers[2] = new Torch_playground(directory);
+            controllers[0] = new GameplayScene_temp(directory, "temp");
 //            controllers[2] = new RagdollScene(directory);
 //            controllers[3] = new PlatformScene(directory);
 
@@ -152,15 +155,15 @@ public class GDXRoot extends Game implements ScreenListener {
             current = 0;
             controllers[current].reset();
             setScreen(controllers[current]);
-        } else if (exitCode == PhysicsScene.EXIT_NEXT) {
+        } else if (exitCode == GameplayScene.EXIT_NEXT) {
             current = (current+1) % controllers.length;
             controllers[current].reset();
             setScreen(controllers[current]);
-        } else if (exitCode == PhysicsScene.EXIT_PREV) {
+        } else if (exitCode == GameplayScene.EXIT_PREV) {
             current = (current+controllers.length-1) % controllers.length;
             controllers[current].reset();
             setScreen(controllers[current]);
-        } else if (exitCode == PhysicsScene.EXIT_QUIT) {
+        } else if (exitCode == GameplayScene.EXIT_QUIT) {
             // We quit the main application
             Gdx.app.exit();
         }
