@@ -146,7 +146,7 @@ public class CollisionController implements ContactListener {
 
 
         if ((isGround(bd1) || isGround(bd2)) && isX(bd1, bd2, Traci.class) == 1){
-            todos.push(new Object[]{"traciGrounded", bd1 instanceof Traci ? fix2 : fix1});
+            todos.push(new Object[]{"traciAirborne", bd1 instanceof Traci ? fix2 : fix1});
         }
 
         if (isXandY(bd1, bd2, Light.class, Totem.class) == 1) {
