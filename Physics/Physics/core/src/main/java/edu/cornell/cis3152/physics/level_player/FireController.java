@@ -103,7 +103,7 @@ public class FireController {
      */
     private Fire lightAnew (Surface b, Vector2 point) {
         genFirePinPoints(b, 20);
-        Fire f = new Fire(point);
+        Fire f = new Fire(b.getObstacle().getPhysicsUnits(), point);
 //        b.addFire(f);
         // TODO: because of joint turn above into flag^
         return f;

@@ -256,7 +256,7 @@ public class spinner_layout extends GameplayScene implements ContactListener {
         torch.setTexture(texture);
         addSprite(torch);
         l.getObstacle().setPosition(torch.getObstacle().getPosition());
-        activeLightJoint = world.createJoint(torch.attachLight(l));
+        activeLightJoint = world.createJoint(torch.attachObj(l));
 //        System.out.println(l.getObstacle().getMass());
 //        torch.createSensor();
 

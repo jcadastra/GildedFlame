@@ -99,10 +99,10 @@ public class Torch extends ObstacleSprite {
         }
     }
 
-    public JointDef attachLight(Light l) {
+    public JointDef attachObj(ObstacleSprite o) {
         WeldJointDef jointDef = new WeldJointDef();
         Vector2 anchor = new Vector2(obstacle.getX(), obstacle.getY());
-        jointDef.initialize(l.getObstacle().getBody(), obstacle.getBody(), anchor);
+        jointDef.initialize(o.getObstacle().getBody(), obstacle.getBody(), anchor);
         jointDef.collideConnected = false;
         return jointDef;
     }

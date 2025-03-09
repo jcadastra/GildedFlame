@@ -61,7 +61,15 @@ public class CollisionController implements ContactListener {
 
             if ((isGround(bd1) || isGround(bd2)) && isX(bd1, bd2, Traci.class) == 1){
                 ((Traci) idX(bd1,bd2,Traci.class)).setGrounded(true);
-                todos.push(new Object[]{"traciGrounded", bd1 instanceof Traci ? fix2 : fix1});
+            }
+
+            if (isX(bd1, bd2, Traci.class) == 1) {
+                Traci t = (Traci) idX(bd1,bd2, Traci.class);
+                if ((t.getSensorName().equals(fd2) && t != bd1 && isGround(bd1)) ||
+                    (t.getSensorName().equals(fd1) && t != bd2 && isGround(bd2))) {
+                    t.setGrounded(true);
+                    todos.push(new Object[]{"traciGrounded", bd1 instanceof Traci ? fix2 : fix1});
+                }
             }
 
             if (isX(bd1, bd2, Torch.class) + isX(bd1,bd2,Traci.class) == 2) {
@@ -145,8 +153,12 @@ public class CollisionController implements ContactListener {
         ObstacleSprite bd2 = (ObstacleSprite) body2.getUserData();
 
 
-        if ((isGround(bd1) || isGround(bd2)) && isX(bd1, bd2, Traci.class) == 1){
-            todos.push(new Object[]{"traciAirborne", bd1 instanceof Traci ? fix2 : fix1});
+        if (isX(bd1, bd2, Traci.class) == 1) {
+            Traci t = (Traci) idX(bd1, bd2, Traci.class);
+            if ((t.getSensorName().equals(fd2) && t != bd1) ||
+                (t.getSensorName().equals(fd1) && t != bd2)) {
+                todos.push(new Object[]{"traciAirborne", bd1 instanceof Traci ? fix2 : fix1});
+            }
         }
 
         if (isXandY(bd1, bd2, Light.class, Totem.class) == 1) {

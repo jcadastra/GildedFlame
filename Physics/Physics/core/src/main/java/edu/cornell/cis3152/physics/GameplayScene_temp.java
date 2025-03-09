@@ -20,8 +20,6 @@ import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectSet;
-import edu.cornell.cis3152.physics.InputController;
-import edu.cornell.cis3152.physics.GameplayScene;
 import edu.cornell.cis3152.physics.level_player.enemies.*;
 import edu.cornell.cis3152.physics.level_player.enviromentals.*;
 import edu.cornell.cis3152.physics.level_player.player.*;
@@ -34,12 +32,6 @@ import edu.cornell.gdiac.physics2.ObstacleSprite;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
-import com.badlogic.gdx.utils.Null;
-
-import edu.cornell.cis3152.physics.level_player.Torch_playground;
-import edu.cornell.cis3152.physics.level_player.Moth_intro;
-import edu.cornell.cis3152.physics.level_player.Totem_intro;
-import edu.cornell.cis3152.physics.level_player.spinner_layout;
 
 
 public class GameplayScene_temp extends GameplayScene {
@@ -227,13 +219,17 @@ public class GameplayScene_temp extends GameplayScene {
         l.setTexture(texture);
         addSprite(l);
         l.createSensor();
+//        Fire fire = new Fire(units, new Vector2(10,10));
+//        addSprite(fire);
 
         // Create Torch
         torch = new Torch(units, constants.get("torch"));
         torch.setTexture(texture);
         addSprite(torch);
         l.getObstacle().setPosition(torch.getObstacle().getPosition());
-        activeLightJoint = world.createJoint(torch.attachLight(l));
+//        fire.getObstacle().setPosition(torch.getObstacle().getPosition());
+        activeLightJoint = world.createJoint(torch.attachObj(l));
+//        activeLightJoint = world.createJoint(torch.attachObj(fire));
 
         // Create Totem
         texture = directory.getEntry("rocket-totem01", Texture.class);
@@ -251,8 +247,13 @@ public class GameplayScene_temp extends GameplayScene {
         moth.createSensor();
         enemies.add(moth);
 
-        Fire fire = new Fire(new Vector2(10,10));
-        addSprite(fire);
+
+        texture = directory.getEntry( "shared-earth", Texture.class );
+        platform = new Surface(new float[]{11.0f, 3.0f, 15.0f, 3.0f, 15.0f, 5.0f, 11.0f, 5.0f}, units, walls);
+        platform.getObstacle().setName("floor");
+        platform.setTexture(texture);
+        addSprite(platform);
+
     }
 
     /**

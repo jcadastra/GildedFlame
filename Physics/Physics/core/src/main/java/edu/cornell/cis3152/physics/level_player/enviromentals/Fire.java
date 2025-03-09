@@ -31,7 +31,7 @@ public class Fire extends ObstacleSprite {
      *
      * fire must be attached to something else at all times
      */
-    public Fire(Vector2 point) {
+    public Fire(Float units, Vector2 point) {
         super();
 //        this.radius = data.getFloat("radius");
         float radius = 1f;
@@ -39,8 +39,12 @@ public class Fire extends ObstacleSprite {
         obstacle = new WheelObstacle(point.x, point.y, radius);
         obstacle.setUserData( this );
         obstacle.setSensor(true);
+        obstacle.setDensity(0.0000001f);
+        obstacle.setMass(0.0000001f);
+        obstacle.setInertia(0.0000001f);
+        obstacle.setPhysicsUnits(units);
         obstacle.setName("fire");
-        obstacle.setBodyType( BodyType.StaticBody );
+        obstacle.setBodyType( BodyType.DynamicBody );
         mesh.set( -radius, -radius, 2 * radius, 2 * radius );
         debug = Color.RED;
     }

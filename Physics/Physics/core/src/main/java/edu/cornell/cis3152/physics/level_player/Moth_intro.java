@@ -242,7 +242,7 @@ public class Moth_intro extends GameplayScene implements ContactListener {
         addSprite(torch);
         torch.getObstacle().setPosition(15f,3f);
         l.getObstacle().setPosition(torch.getObstacle().getPosition());
-        activeLightJoint = world.createJoint(torch.attachLight(l));
+        activeLightJoint = world.createJoint(torch.attachObj(l));
 //        System.out.println(l.getObstacle().getMass());
 //        torch.createSensor();
 
