@@ -29,6 +29,14 @@ public class FireController {
 
     }
 
+    /**
+     * Aglorithim for divying up a given polygon body and assigning points to it
+     * These points will be used to ensure that the body s fully covered in fire and will burn
+     * TODO: double check to ensure they are points relative to the body as opposed to space
+     *
+     * @param b the ObstactleSprite that will be partiionted into
+     * @param num_of_points the number of points within b
+     */
     private void genFirePoints(ObstacleSprite b, int num_of_points) {
         FloatArray vertices = b.getMesh().vertices;
         EarClippingTriangulator cutter = new EarClippingTriangulator();
@@ -87,6 +95,10 @@ public class FireController {
 
             firePointsList.add(fireX);
             firePointsList.add(fireY);
+        }
+        
+        for (Float v : vertices.toArray()) {
+            firePointsList.add(v);
         }
 
         Float[] firePoints = firePointsList.toArray(new Float[0]);
