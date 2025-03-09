@@ -1,22 +1,28 @@
 package edu.cornell.cis3152.physics.level_player;
 
+import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
-import edu.cornell.cis3152.physics.level_player.enviromentals.Fire;
+import edu.cornell.cis3152.physics.level_player.enviromentals.*;
 import edu.cornell.gdiac.physics2.Obstacle;
-import edu.cornell.gdiac.physics2.ObstacleSprite;
 import java.util.HashMap;
 import com.badlogic.gdx.math.EarClippingTriangulator;
 import com.badlogic.gdx.utils.ShortArray;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
+import java.util.Vector;
+
 
 public class FireController {
 
     /** Map that stores the fire point diagrams of calculated flammable bodies */
-    private HashMap<Obstacle, Float[]> nFireDiagrams;
+    private HashMap<Surface, Vector2[]> nFireDiagrams;
 
     /**
      * Controls the fires...
@@ -26,7 +32,81 @@ public class FireController {
     }
 
     public void update() {
+        for (Surface s : nFireDiagrams.keySet()) {
+//            if (testIfFullyBurnt(s)) {
+//                if (s.burnTimer == 0) {
+//                    s.dispose();
+//                } else {
+//                    s.setBurnTimer(120);
+////                    TODO: ??????? put in json/base off of material
+//                }
+//            } else {
+//                Vector2 p = findSuitableFirePoint(s);
+//                // TODO: because of joint turn below  into flag v
+//                s.addFire(new Fire(p));
+//            }
+        }
+    }
 
+    private Vector2 findSuitableFirePoint(Surface s) {
+        Array<Vector2> preburnt = getPointsOnFire(s);
+        Vector2[] reference = nFireDiagrams.get(s);
+        ArrayList<Vector2> openSpots = new ArrayList<>();
+        ArrayList<Vector2> closedSpots = new ArrayList<>();
+        for (Vector2 v : reference) {
+            if (!preburnt.contains(v, true)) {
+                openSpots.add(v);
+            } else {
+                closedSpots.add(v);
+            }
+        }
+
+        float lowestDelta = Float.POSITIVE_INFINITY;
+        Vector2 open = new Vector2();
+        for (Vector2 o : openSpots) {
+            for (Vector2 c : closedSpots) {
+                float manhattan = Math.abs(o.x - c.x) + Math.abs(o.y - c.y);
+                if (manhattan < lowestDelta) {
+                    open = o;
+                    lowestDelta = manhattan;
+                }
+            }
+        }
+        return open;
+    }
+
+
+    private Array<Vector2> getPointsOnFire(Surface s) {
+        Array<Vector2> returnArray = new Array<Vector2>();
+//        Float[] subject = nFireDiagrams.get(s);
+//        int totalVerticesToCount = subject.length;
+//        for (int i = 0; i < totalVerticesToCount; i += 2) {
+//            for (Fire f : s.getFires()) {
+//                if (f.getPolygon().contains(subject[i], subject[i+1])) {
+//                    returnArray.add(new Vector2 ( subject[1], subject[1+1]));
+//                }
+//            }
+//        }
+        return returnArray;
+    }
+
+    private boolean testIfFullyBurnt (Surface s) {
+        return getPointsOnFire(s).size * 2 == nFireDiagrams.get(s).length;
+    }
+
+    /**
+     * Generates a fire at the passed in point p
+     *
+     * @param b the body, not on fire, contacted by the fire
+     * @param point the location to start the fire
+     * @return fire generated
+     */
+    private Fire lightAnew (Surface b, Vector2 point) {
+        genFirePinPoints(b, 20);
+        Fire f = new Fire(point);
+//        b.addFire(f);
+        // TODO: because of joint turn above into flag^
+        return f;
     }
 
     /**
@@ -37,7 +117,7 @@ public class FireController {
      * @param b the ObstactleSprite that will be partiionted into
      * @param num_of_points the number of points within b
      */
-    private void genFirePoints(ObstacleSprite b, int num_of_points) {
+    private void genFirePinPoints(Surface b, int num_of_points) {
         FloatArray vertices = b.getMesh().vertices;
         EarClippingTriangulator cutter = new EarClippingTriangulator();
         ShortArray triangleIndices = cutter.computeTriangles(vertices);
@@ -96,12 +176,17 @@ public class FireController {
             firePointsList.add(fireX);
             firePointsList.add(fireY);
         }
-        
+
         for (Float v : vertices.toArray()) {
             firePointsList.add(v);
         }
 
-        Float[] firePoints = firePointsList.toArray(new Float[0]);
-        nFireDiagrams.put(b.getObstacle(), firePoints);
+
+        Array<Vector2> returnArray = new Array<Vector2>();
+        int totalVerticesToCount = firePointsList.size();
+        for (int i = 0; i < totalVerticesToCount; i += 2) {
+            returnArray.add(new Vector2 ( firePointsList.get(i), firePointsList.get(i+1)));
+        }
+        nFireDiagrams.put(b, returnArray.toArray());
     }
 }

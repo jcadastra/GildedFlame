@@ -250,6 +250,9 @@ public class GameplayScene_temp extends GameplayScene {
         addSprite(moth);
         moth.createSensor();
         enemies.add(moth);
+
+        Fire fire = new Fire(new Vector2(10,10));
+        addSprite(fire);
     }
 
     /**
