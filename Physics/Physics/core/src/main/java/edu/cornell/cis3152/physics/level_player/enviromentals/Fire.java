@@ -13,11 +13,13 @@ import java.util.Vector;
 public class Fire extends ObstacleSprite {
 
     private Vector2 position;
-    private Vector2 radius;
-    private Polygon polygon;
+    private Float radius;
+    public float getRadius () {
+        return radius;
+    }
 
-    public Polygon getPolygon() {
-        return polygon;
+    public Boolean queryPointInside(Vector2 point) {
+        return obstacle.getCentroid().sub(point).len() <= radius;
     }
 
     /**
@@ -34,7 +36,7 @@ public class Fire extends ObstacleSprite {
     public Fire(Float units, Vector2 point) {
         super();
 //        this.radius = data.getFloat("radius");
-        float radius = 1f;
+        radius = .8f;
         position = point;
         obstacle = new WheelObstacle(point.x, point.y, radius);
         obstacle.setUserData( this );

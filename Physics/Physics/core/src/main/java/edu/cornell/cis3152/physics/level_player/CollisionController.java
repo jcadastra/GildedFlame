@@ -8,6 +8,8 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.badlogic.gdx.physics.box2d.RayCastCallback;
+import com.badlogic.gdx.physics.box2d.WorldManifold;
 import edu.cornell.cis3152.physics.level_player.enemies.*;
 import edu.cornell.cis3152.physics.level_player.enemies.Enemy.EnemyState;
 import edu.cornell.cis3152.physics.level_player.enviromentals.*;
@@ -15,6 +17,7 @@ import edu.cornell.cis3152.physics.level_player.player.*;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
 import java.util.Stack;
+import java.util.Vector;
 
 public class CollisionController implements ContactListener {
 
@@ -125,6 +128,19 @@ public class CollisionController implements ContactListener {
 
                 moth.setState(Enemy.EnemyState.IN_LIGHT);
                 moth.resetAttackTimer();
+            }
+
+            if (isXandY(bd1, bd2, Surface.class, Fire.class) == 1) {
+                Surface b = (Surface) idX(bd1, bd2, Surface.class);
+                Fire f = (Fire) idX(bd1, bd2, Fire.class);
+                float pu = bd1.getObstacle().getPhysicsUnits();
+
+                Vector2 f_pos = f.getObstacle().getPosition().cpy();
+                Vector2 b_pos = b.temp_delect_position_remove().cpy();
+                f_pos.sub(b_pos).nor();
+                Vector2 offset = f_pos.scl(f.getRadius());
+
+                todos.push(new Object[]{"addFire", new Fire(pu, (f.getObstacle().getPosition().cpy()).sub(offset))});
             }
 
         } catch (Exception e) {

@@ -15,11 +15,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectSet;
+import edu.cornell.cis3152.physics.level_player.FireController;
 import edu.cornell.cis3152.physics.level_player.enemies.*;
 import edu.cornell.cis3152.physics.level_player.enviromentals.*;
 import edu.cornell.cis3152.physics.level_player.player.*;
@@ -111,6 +113,7 @@ public class GameplayScene_temp extends GameplayScene {
      */
     private Joint activeLightJoint;
     protected CollisionController contactListener;
+    protected FireController fireController;
 
     /**
      * If torch is on the right of the avatar
@@ -133,6 +136,8 @@ public class GameplayScene_temp extends GameplayScene {
         contactListener = new CollisionController(directory);
         world.setContactListener(contactListener);
         sensorFixtures = new ObjectSet<Fixture>();
+
+        fireController = new FireController();
 
         // Pull out sounds
         jumpSound = directory.getEntry("platform-jump", SoundEffect.class);
@@ -219,17 +224,17 @@ public class GameplayScene_temp extends GameplayScene {
         l.setTexture(texture);
         addSprite(l);
         l.createSensor();
-//        Fire fire = new Fire(units, new Vector2(10,10));
-//        addSprite(fire);
+        Fire fire = new Fire(units, new Vector2(10,10));
+        addSprite(fire);
 
         // Create Torch
         torch = new Torch(units, constants.get("torch"));
         torch.setTexture(texture);
         addSprite(torch);
         l.getObstacle().setPosition(torch.getObstacle().getPosition());
-//        fire.getObstacle().setPosition(torch.getObstacle().getPosition());
+        fire.getObstacle().setPosition(torch.getObstacle().getPosition());
         activeLightJoint = world.createJoint(torch.attachObj(l));
-//        activeLightJoint = world.createJoint(torch.attachObj(fire));
+        activeLightJoint = world.createJoint(torch.attachObj(fire));
 
         // Create Totem
         texture = directory.getEntry("rocket-totem01", Texture.class);
@@ -237,7 +242,7 @@ public class GameplayScene_temp extends GameplayScene {
         totem.setTexture(texture);
         addSprite(totem);
         totem.createSensor();
-        enemies.add(totem);
+//        enemies.add(totem);
 
         // Create Moth
         texture = directory.getEntry("rocket-moth01", Texture.class);
@@ -245,7 +250,7 @@ public class GameplayScene_temp extends GameplayScene {
         moth.setTexture(texture);
         addSprite(moth);
         moth.createSensor();
-        enemies.add(moth);
+//        enemies.add(moth);
 
 
         texture = directory.getEntry( "shared-earth", Texture.class );
@@ -346,6 +351,11 @@ public class GameplayScene_temp extends GameplayScene {
                         avatar.setGrounded(false);
                     }
                     break;
+                case "addFire":
+                    Fire f = (Fire) todo_action[1];
+                    f.getObstacle().setBodyType( BodyType.StaticBody );
+                    addSprite(f);
+                    System.out.println("added torch");
             }
         }
     }

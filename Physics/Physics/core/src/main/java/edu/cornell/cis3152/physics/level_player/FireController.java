@@ -23,12 +23,16 @@ public class FireController {
 
     /** Map that stores the fire point diagrams of calculated flammable bodies */
     private HashMap<Surface, Vector2[]> nFireDiagrams;
+    private HashMap<Surface, ArrayList<Fire>> firesOnShape;
 
     /**
      * Controls the fires...
+     *
+     * but you can't control fire 🤔
      */
     public FireController() {
         nFireDiagrams = new HashMap<>();
+        firesOnShape = new HashMap<>();
     }
 
     public void update() {
@@ -78,15 +82,15 @@ public class FireController {
 
     private Array<Vector2> getPointsOnFire(Surface s) {
         Array<Vector2> returnArray = new Array<Vector2>();
-//        Float[] subject = nFireDiagrams.get(s);
-//        int totalVerticesToCount = subject.length;
-//        for (int i = 0; i < totalVerticesToCount; i += 2) {
-//            for (Fire f : s.getFires()) {
-//                if (f.getPolygon().contains(subject[i], subject[i+1])) {
-//                    returnArray.add(new Vector2 ( subject[1], subject[1+1]));
-//                }
-//            }
-//        }
+        Vector2[] subject = nFireDiagrams.get(s);
+        int totalVerticesToCount = subject.length;
+        for (int i = 0; i < totalVerticesToCount; i++) {
+            for (Fire f : firesOnShape.get(s)) {
+                if (f.queryPointInside(new Vector2(subject[i]))) {
+                    returnArray.add(new Vector2 ( subject[1]));
+                }
+            }
+        }
         return returnArray;
     }
 
