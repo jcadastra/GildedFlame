@@ -1,5 +1,7 @@
 package edu.cornell.cis3152.physics.level_player.enviromentals;
 
+import static java.lang.Float.NaN;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.math.Polygon;
@@ -20,8 +22,9 @@ public class Fire extends ObstacleSprite {
     }
 
     public Boolean queryPointInside(Vector2 point) {
-        System.out.println("fire pos" + obstacle.getPosition());
-        System.out.println("alt point" + point);
+//        System.out.println("fire pos" + obstacle.getPosition());
+//        System.out.println("alt point" + point);
+//        System.out.println("ALERT ON " + point);
         return (obstacle.getPosition()).sub(point).len() <= radius;
     }
 

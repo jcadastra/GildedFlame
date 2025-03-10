@@ -217,7 +217,7 @@ public class Torch_playground extends GameplayScene {
         Surface platform;
         String pname = "platform";
         JsonValue plats = constants.get("platforms");
-        platform = new Surface(new float[]{1.0f, 0f, 60.0f, 0f, 60.0f, 1f, 1.0f, 1f}, units, walls);
+        platform = new Surface(new float[]{1.0f, 0f, 30f, 0f, 30f, 1f, 1.0f, 1f}, units, walls);
         platform.getObstacle().setName("floor");
         platform.setTexture(texture);
         addSprite(platform);

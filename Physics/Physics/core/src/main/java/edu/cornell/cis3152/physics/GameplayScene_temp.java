@@ -11,6 +11,7 @@ package edu.cornell.cis3152.physics;/*
  * Version: 2/8/2025
  */
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -208,7 +209,7 @@ public class GameplayScene_temp extends GameplayScene {
         Surface platform;
         String pname = "platform";
         JsonValue plats = constants.get("platforms");
-        platform = new Surface(new float[]{1.0f, 0f, 60.0f, 0f, 60.0f, 1f, 1.0f, 1f}, units, walls);
+        platform = new Surface(new float[]{1.0f, 0f, 31f, 0f, 31f, 1f, 1.0f, 1f}, units, walls);
         platform.getObstacle().setName("floor");
         platform.setTexture(texture);
         addSprite(platform);
@@ -236,6 +237,7 @@ public class GameplayScene_temp extends GameplayScene {
         fire.getObstacle().setPosition(torch.getObstacle().getPosition());
         activeLightJoint = world.createJoint(torch.attachObj(l));
         activeLightJoint = world.createJoint(torch.attachObj(fire));
+        // TODO: FIX THE BAOVE^^
 
         // Create Totem
         texture = directory.getEntry("rocket-totem01", Texture.class);
@@ -256,7 +258,29 @@ public class GameplayScene_temp extends GameplayScene {
 
         texture = directory.getEntry( "shared-earth", Texture.class );
         platform = new Surface(new float[]{11.0f, 3.0f, 15.0f, 3.0f, 15.0f, 5.0f, 11.0f, 5.0f}, units, walls);
-        platform.getObstacle().setName("floor");
+        platform.getObstacle().setName("blocky");
+        platform.setTexture(texture);
+        addSprite(platform);
+        texture = directory.getEntry( "shared-earth", Texture.class );
+        platform = new Surface(new float[]{
+            15.5f, 5.5f,
+            19.5f, 5.5f,
+            19.5f, 7.5f,
+            15.5f, 7.5f
+        }, units, walls);
+        platform.getObstacle().setName("blocky");
+        platform.setTexture(texture);
+        addSprite(platform);
+        texture = directory.getEntry( "shared-earth", Texture.class );
+        platform = new Surface(new float[]{
+            22.0f, 7.0f,   // Bottom-left
+            25.0f, 7.5f,   // Bottom-right
+            26.0f, 8.5f,   // Right-middle
+            24.5f, 10.0f,  // Top
+            21.0f, 9.5f,   // Top-left
+            20.0f, 8.0f    // Left-middle
+        }, units, walls);
+        platform.getObstacle().setName("blocky");
         platform.setTexture(texture);
         addSprite(platform);
 
@@ -294,6 +318,7 @@ public class GameplayScene_temp extends GameplayScene {
      * @param dt Number of seconds since last animation frame
      */
     public void update(float dt) {
+        System.out.println(Gdx.graphics.getFramesPerSecond());
         supplementaryCollisionActions();
         supplementaryFireActions();
         for (Enemy e : enemies) {

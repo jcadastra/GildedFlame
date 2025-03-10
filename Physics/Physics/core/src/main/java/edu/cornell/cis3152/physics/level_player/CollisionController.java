@@ -1,5 +1,6 @@
 package edu.cornell.cis3152.physics.level_player;
 
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.GlyphAndBitmap;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -55,6 +56,10 @@ public class CollisionController implements ContactListener {
         try {
             ObstacleSprite bd1 = (ObstacleSprite) body1.getUserData();
             ObstacleSprite bd2 = (ObstacleSprite) body2.getUserData();
+
+//            if (isXandY(bd1, bd2, Fire.class, Fire.class) == 2) {
+//                return;
+//            }
 
             if (isXandY(bd1, bd2, "bullet", Traci.class) > 0) {
                 collisionFlags.push(new Object[]{"removeBullet", idX(bd1, bd2, "bullet")});
@@ -130,7 +135,7 @@ public class CollisionController implements ContactListener {
 
             if (isXandY(bd1, bd2, Surface.class, Fire.class) == 1) {
                 ObstacleSprite b = idX(bd1, bd2, ObstacleSprite.class);
-                if (!fireController.isBodyOnFire(b)) {
+//                if (!fireController.isBodyOnFire(b)) {
                     Fire f = (Fire) idX(bd1, bd2, Fire.class);
                     float pu = bd1.getObstacle().getPhysicsUnits();
 
@@ -140,7 +145,7 @@ public class CollisionController implements ContactListener {
                     Vector2 offset = f_pos.scl(f.getRadius());
 
                     fireController.lightAnew(b, (f.getObstacle().getPosition().cpy()).sub(offset));
-                }
+//                }
             }
 
         } catch (Exception e) {
