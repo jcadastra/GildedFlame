@@ -24,8 +24,12 @@
  */
 package edu.cornell.cis3152.physics;
 
+import edu.cornell.cis3152.physics.level_player.enemies.Enemy;
 import edu.cornell.cis3152.physics.level_player.utils.ObstacleGroup;
+
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
@@ -112,6 +116,8 @@ public abstract class GameplayScene implements Screen {
     protected boolean debug;
     /** Countdown active for winning or losing */
     protected int countdown;
+
+    private List<Enemy> enemies;
 
     /**
      * Returns true if debug mode is active.
@@ -341,6 +347,11 @@ public abstract class GameplayScene implements Screen {
      * This method disposes of the world and creates a new one.
      */
     public abstract void reset();
+
+    private void loadLevel(JsonValue levelData) {
+        float units = height / bounds.height;
+        enemies = new ArrayList<>();
+    }
 
     /**
      * Returns whether to process the update loop
