@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Joint;
 import edu.cornell.gdiac.assets.ParserUtils;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
 import edu.cornell.gdiac.physics2.WheelObstacle;
@@ -19,8 +20,14 @@ public class Fire extends ObstacleSprite {
     }
 
     public Boolean queryPointInside(Vector2 point) {
-        return obstacle.getCentroid().sub(point).len() <= radius;
+        System.out.println("fire pos" + obstacle.getPosition());
+        System.out.println("alt point" + point);
+        return (obstacle.getPosition()).sub(point).len() <= radius;
     }
+
+    private Joint fixtureJoint;
+    public Joint getFixtureJoint() {return fixtureJoint;}
+    public void setFixtureJoint(Joint j) {fixtureJoint = j;}
 
     /**
      * Boolean value if the fire spreads to other sources or stays constant

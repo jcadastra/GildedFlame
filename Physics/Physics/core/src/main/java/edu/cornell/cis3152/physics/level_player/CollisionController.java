@@ -24,9 +24,11 @@ public class CollisionController implements ContactListener {
     }
 
     private AssetDirectory directory;
+    private FireController fireController;
 
-    public CollisionController(AssetDirectory directory) {
+    public CollisionController(AssetDirectory directory, FireController fireController) {
         this.directory = directory;
+        this.fireController = fireController;
         this.collisionFlags = new Stack<Object[]>();
     }
 
@@ -127,16 +129,18 @@ public class CollisionController implements ContactListener {
             }
 
             if (isXandY(bd1, bd2, Surface.class, Fire.class) == 1) {
-                Surface b = (Surface) idX(bd1, bd2, Surface.class);
-                Fire f = (Fire) idX(bd1, bd2, Fire.class);
-                float pu = bd1.getObstacle().getPhysicsUnits();
+                ObstacleSprite b = idX(bd1, bd2, ObstacleSprite.class);
+                if (!fireController.isBodyOnFire(b)) {
+                    Fire f = (Fire) idX(bd1, bd2, Fire.class);
+                    float pu = bd1.getObstacle().getPhysicsUnits();
 
-                Vector2 f_pos = f.getObstacle().getPosition().cpy();
-                Vector2 b_pos = b.temp_delect_position_remove().cpy();
-                f_pos.sub(b_pos).nor();
-                Vector2 offset = f_pos.scl(f.getRadius());
+                    Vector2 f_pos = f.getObstacle().getPosition().cpy();
+                    Vector2 b_pos = (((Surface) b).temp_delect_position_remove()).cpy();
+                    f_pos.sub(b_pos).nor();
+                    Vector2 offset = f_pos.scl(f.getRadius());
 
-                collisionFlags.push(new Object[]{"addFire", new Fire(pu, (f.getObstacle().getPosition().cpy()).sub(offset))});
+                    fireController.lightAnew(b, (f.getObstacle().getPosition().cpy()).sub(offset));
+                }
             }
 
         } catch (Exception e) {

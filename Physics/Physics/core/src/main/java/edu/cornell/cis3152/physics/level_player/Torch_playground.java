@@ -130,6 +130,7 @@ public class Torch_playground extends GameplayScene {
     private Joint activeLightJoint;
     protected CollisionController contactListener;
 
+    protected FireController fireController;
     /**
      * If torch is on the right of the avatar
      */
@@ -142,7 +143,8 @@ public class Torch_playground extends GameplayScene {
      */
     public Torch_playground(AssetDirectory directory) {
         super(directory, "platform");
-        contactListener = new CollisionController(directory);
+        fireController = new FireController();
+        contactListener = new CollisionController(directory, fireController);
         world.setContactListener(contactListener);
         sensorFixtures = new ObjectSet<Fixture>();
 

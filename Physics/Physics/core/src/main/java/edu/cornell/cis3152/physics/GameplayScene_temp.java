@@ -19,6 +19,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectSet;
 import edu.cornell.cis3152.physics.level_player.FireController;
@@ -133,11 +134,11 @@ public class GameplayScene_temp extends GameplayScene {
     public GameplayScene_temp(AssetDirectory directory, String internalLevelName) {
         super(directory, "platform");
         this.internalLevelName = internalLevelName;
-        contactListener = new CollisionController(directory);
+        fireController = new FireController();
+        contactListener = new CollisionController(directory, fireController);
         world.setContactListener(contactListener);
         sensorFixtures = new ObjectSet<Fixture>();
 
-        fireController = new FireController();
 
         // Pull out sounds
         jumpSound = directory.getEntry("platform-jump", SoundEffect.class);
@@ -294,10 +295,12 @@ public class GameplayScene_temp extends GameplayScene {
      */
     public void update(float dt) {
         supplementaryCollisionActions();
+        supplementaryFireActions();
         for (Enemy e : enemies) {
             e.update();
         }
         torch.update();
+        fireController.update();
 
         InputController input = InputController.getInstance();
         // Process actions in object model
@@ -325,7 +328,7 @@ public class GameplayScene_temp extends GameplayScene {
         }
         if ((queueAddTorch && activeTorchJoint == null) || (activeTorchJoint != null &&
             torchOnRight != avatar.isFacingRight())) {
-            joinTorchtoAvatar();
+            joinTorchToAvatar();
         }
     }
 
@@ -351,11 +354,21 @@ public class GameplayScene_temp extends GameplayScene {
                         avatar.setGrounded(false);
                     }
                     break;
-                case "addFire":
-                    Fire f = (Fire) todo_action[1];
-                    f.getObstacle().setBodyType( BodyType.StaticBody );
-                    addSprite(f);
-                    System.out.println("added torch");
+            }
+        }
+    }
+
+    private void supplementaryFireActions() {
+        Stack<Object[]> todos = fireController.getFireFlags();
+        while (!todos.isEmpty()) {
+            Object[] todo_action = todos.pop();
+            switch ((String) todo_action[0]) {
+                case "attachFire":
+                    Fire fire = (Fire) todo_action[2];
+                    addSprite(fire);
+                    joinFireToObject((ObstacleSprite) todo_action[1], fire);
+                    System.out.println("added fire to game at " + fire.getObstacle().getPosition());
+                    break;
             }
         }
     }
@@ -364,7 +377,7 @@ public class GameplayScene_temp extends GameplayScene {
      * Generates torch joint and connects the avatar to the torch Also used to flip the torch round
      * if avatar rotates
      */
-    private void joinTorchtoAvatar() {
+    private void joinTorchToAvatar () {
         if (activeTorchJoint != null) {
             world.destroyJoint(activeTorchJoint);
             activeTorchJoint = null;
@@ -376,6 +389,17 @@ public class GameplayScene_temp extends GameplayScene {
         activeTorchJoint = world.createJoint(avatar.attachTorchToAvatar(torch));
         queueAddTorch = false;
         torchOnRight = avatar.isFacingRight();
+    }
+
+    /**
+     * Generates fire joint and connects the fire to the obstacle passed in
+     */
+    private void joinFireToObject (ObstacleSprite o, Fire f) {
+        WeldJointDef jointDef = new WeldJointDef();
+        jointDef.initialize(o.getObstacle().getBody(), f.getObstacle().getBody(), Vector2.Zero);
+        jointDef.collideConnected = false;
+        Joint joint = world.createJoint(jointDef);
+        f.setFixtureJoint(joint);
     }
 
     /**
