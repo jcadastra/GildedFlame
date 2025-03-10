@@ -64,6 +64,11 @@ public class Fire extends ObstacleSprite {
     public void dispose() {
 
     }
+
+    @Override
+    public String toString() {
+        return (obstacle.getPosition().toString());
+    }
 }
 
 /**

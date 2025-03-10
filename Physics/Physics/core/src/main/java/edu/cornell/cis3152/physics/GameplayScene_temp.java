@@ -256,33 +256,22 @@ public class GameplayScene_temp extends GameplayScene {
 //        enemies.add(moth);
 
 
-        texture = directory.getEntry( "shared-earth", Texture.class );
-        platform = new Surface(new float[]{11.0f, 3.0f, 15.0f, 3.0f, 15.0f, 5.0f, 11.0f, 5.0f}, units, walls);
-        platform.getObstacle().setName("blocky");
-        platform.setTexture(texture);
-        addSprite(platform);
-        texture = directory.getEntry( "shared-earth", Texture.class );
-        platform = new Surface(new float[]{
-            15.5f, 5.5f,
-            19.5f, 5.5f,
-            19.5f, 7.5f,
-            15.5f, 7.5f
-        }, units, walls);
-        platform.getObstacle().setName("blocky");
-        platform.setTexture(texture);
-        addSprite(platform);
-        texture = directory.getEntry( "shared-earth", Texture.class );
-        platform = new Surface(new float[]{
-            22.0f, 7.0f,   // Bottom-left
-            25.0f, 7.5f,   // Bottom-right
-            26.0f, 8.5f,   // Right-middle
-            24.5f, 10.0f,  // Top
-            21.0f, 9.5f,   // Top-left
-            20.0f, 8.0f    // Left-middle
-        }, units, walls);
-        platform.getObstacle().setName("blocky");
-        platform.setTexture(texture);
-        addSprite(platform);
+        texture = directory.getEntry( "rocket-crate0", Texture.class );
+        GameObject o = new GameObject(11,13, units);
+        o.getObstacle().setBodyType(BodyType.DynamicBody);
+        o.getObstacle().setName("blocky1");
+        o.setTexture(texture);
+        addSprite(o);
+        o = new GameObject(12, 14, units);
+        o.getObstacle().setName("blocky2");
+        o.getObstacle().setBodyType(BodyType.DynamicBody);
+        o.setTexture(texture);
+        addSprite(o);
+        o = new GameObject(9,9, units);
+        o.getObstacle().setBodyType(BodyType.DynamicBody);
+        o.getObstacle().setName("blocky3");
+        o.setTexture(texture);
+        addSprite(o);
 
     }
 
@@ -318,7 +307,7 @@ public class GameplayScene_temp extends GameplayScene {
      * @param dt Number of seconds since last animation frame
      */
     public void update(float dt) {
-        System.out.println(Gdx.graphics.getFramesPerSecond());
+//        System.out.println(Gdx.graphics.getFramesPerSecond());
         supplementaryCollisionActions();
         supplementaryFireActions();
         for (Enemy e : enemies) {

@@ -133,19 +133,26 @@ public class CollisionController implements ContactListener {
                 moth.resetAttackTimer();
             }
 
-            if (isXandY(bd1, bd2, Surface.class, Fire.class) == 1) {
-                ObstacleSprite b = idX(bd1, bd2, ObstacleSprite.class);
-//                if (!fireController.isBodyOnFire(b)) {
+            if (isXandY(bd1, bd2, GameObject.class, Fire.class) == 1) {
+                GameObject b = (GameObject) idX(bd1, bd2, GameObject.class);
+                if (b.getFlammable() && !fireController.testIfFullyBurnt(b)) {
                     Fire f = (Fire) idX(bd1, bd2, Fire.class);
                     float pu = bd1.getObstacle().getPhysicsUnits();
 
                     Vector2 f_pos = f.getObstacle().getPosition().cpy();
-                    Vector2 b_pos = (((Surface) b).temp_delect_position_remove()).cpy();
-                    f_pos.sub(b_pos).nor();
-                    Vector2 offset = f_pos.scl(f.getRadius());
+                    Vector2 b_pos = (b.getObstacle().getPosition().cpy());
 
-                    fireController.lightAnew(b, (f.getObstacle().getPosition().cpy()).sub(offset));
-//                }
+                    System.out.println(f_pos);
+                    System.out.println(b_pos);
+                    System.out.println("-----");
+                    b_pos.sub(f_pos);
+                    b_pos.nor().scl(f.getRadius());
+                    f_pos.add(b_pos);
+                    System.out.println(f_pos);
+                    System.out.println(b_pos);
+
+                    fireController.lightAnew(b, f_pos);
+                }
             }
 
         } catch (Exception e) {
