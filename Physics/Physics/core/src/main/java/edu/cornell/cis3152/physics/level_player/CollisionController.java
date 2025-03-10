@@ -1,6 +1,5 @@
 package edu.cornell.cis3152.physics.level_player;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -8,8 +7,6 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.badlogic.gdx.physics.box2d.RayCastCallback;
-import com.badlogic.gdx.physics.box2d.WorldManifold;
 import edu.cornell.cis3152.physics.level_player.enemies.*;
 import edu.cornell.cis3152.physics.level_player.enemies.Enemy.EnemyState;
 import edu.cornell.cis3152.physics.level_player.enviromentals.*;
@@ -17,21 +14,20 @@ import edu.cornell.cis3152.physics.level_player.player.*;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
 import java.util.Stack;
-import java.util.Vector;
 
 public class CollisionController implements ContactListener {
 
-    private Stack<Object[]> todos;
+    private Stack<Object[]> collisionFlags;
 
-    public Stack<Object[]> getTodos() {
-        return todos;
+    public Stack<Object[]> getCollisionFlags() {
+        return collisionFlags;
     }
 
     private AssetDirectory directory;
 
     public CollisionController(AssetDirectory directory) {
         this.directory = directory;
-        this.todos = new Stack<Object[]>();
+        this.collisionFlags = new Stack<Object[]>();
     }
 
     /**
@@ -59,7 +55,7 @@ public class CollisionController implements ContactListener {
             ObstacleSprite bd2 = (ObstacleSprite) body2.getUserData();
 
             if (isXandY(bd1, bd2, "bullet", Traci.class) > 0) {
-                todos.push(new Object[]{"removeBullet", idX(bd1, bd2, "bullet")});
+                collisionFlags.push(new Object[]{"removeBullet", idX(bd1, bd2, "bullet")});
             }
 
             if ((isGround(bd1) || isGround(bd2)) && isX(bd1, bd2, Traci.class) == 1){
@@ -71,13 +67,13 @@ public class CollisionController implements ContactListener {
                 if ((t.getSensorName().equals(fd2) && t != bd1 && isGround(bd1)) ||
                     (t.getSensorName().equals(fd1) && t != bd2 && isGround(bd2))) {
                     t.setGrounded(true);
-                    todos.push(new Object[]{"traciGrounded", bd1 instanceof Traci ? fix2 : fix1});
+                    collisionFlags.push(new Object[]{"traciGrounded", bd1 instanceof Traci ? fix2 : fix1});
                 }
             }
 
             if (isX(bd1, bd2, Torch.class) + isX(bd1,bd2,Traci.class) == 2) {
                 ((Traci) idX(bd1,bd2,Traci.class)).setHasTorch(true);
-                todos.push(new Object[]{"addTorch", idX(bd1, bd2, Traci.class)});
+                collisionFlags.push(new Object[]{"addTorch", idX(bd1, bd2, Traci.class)});
             }
 
             if (isXandY(bd1, bd2, "wall", Enemy.class) == 1) {
@@ -140,7 +136,7 @@ public class CollisionController implements ContactListener {
                 f_pos.sub(b_pos).nor();
                 Vector2 offset = f_pos.scl(f.getRadius());
 
-                todos.push(new Object[]{"addFire", new Fire(pu, (f.getObstacle().getPosition().cpy()).sub(offset))});
+                collisionFlags.push(new Object[]{"addFire", new Fire(pu, (f.getObstacle().getPosition().cpy()).sub(offset))});
             }
 
         } catch (Exception e) {
@@ -173,7 +169,7 @@ public class CollisionController implements ContactListener {
             Traci t = (Traci) idX(bd1, bd2, Traci.class);
             if ((t.getSensorName().equals(fd2) && t != bd1) ||
                 (t.getSensorName().equals(fd1) && t != bd2)) {
-                todos.push(new Object[]{"traciAirborne", bd1 instanceof Traci ? fix2 : fix1});
+                collisionFlags.push(new Object[]{"traciAirborne", bd1 instanceof Traci ? fix2 : fix1});
             }
         }
 

@@ -321,7 +321,7 @@ public class GameplayScene_temp extends GameplayScene {
         avatar.applyForce();
         if (avatar.isJumping()) {
             SoundEffectManager sounds = SoundEffectManager.getInstance();
-            sounds.play("jump", jumpSound, volume);
+//            sounds.play("jump", jumpSound, volume);
         }
         if ((queueAddTorch && activeTorchJoint == null) || (activeTorchJoint != null &&
             torchOnRight != avatar.isFacingRight())) {
@@ -330,7 +330,7 @@ public class GameplayScene_temp extends GameplayScene {
     }
 
     private void supplementaryCollisionActions() {
-        Stack<Object[]> todos = contactListener.getTodos();
+        Stack<Object[]> todos = contactListener.getCollisionFlags();
         while ( !todos.isEmpty() ) {
             Object[] todo_action = todos.pop();
             switch ((String) todo_action[0]) {

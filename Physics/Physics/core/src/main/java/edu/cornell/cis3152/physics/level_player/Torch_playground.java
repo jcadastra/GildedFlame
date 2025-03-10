@@ -328,7 +328,7 @@ public class Torch_playground extends GameplayScene {
     }
 
     private void supplementaryCollisionActions() {
-        Stack<Object[]> todos = contactListener.getTodos();
+        Stack<Object[]> todos = contactListener.getCollisionFlags();
         while ( !todos.isEmpty() ) {
             Object[] todo_action = todos.pop();
             switch ((String) todo_action[0]) {

@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.Stack;
 import java.util.Vector;
 
 
@@ -24,6 +25,10 @@ public class FireController {
     /** Map that stores the fire point diagrams of calculated flammable bodies */
     private HashMap<Surface, Vector2[]> nFireDiagrams;
     private HashMap<Surface, ArrayList<Fire>> firesOnShape;
+    private Stack<Object[]> fireFlags;
+    public Stack<Object[]> getFireFlags() {
+        return fireFlags;
+    }
 
     /**
      * Controls the fires...
@@ -37,18 +42,19 @@ public class FireController {
 
     public void update() {
         for (Surface s : nFireDiagrams.keySet()) {
-//            if (testIfFullyBurnt(s)) {
+            if (testIfFullyBurnt(s)) {
 //                if (s.burnTimer == 0) {
-//                    s.dispose();
+                    s.dispose();
 //                } else {
 //                    s.setBurnTimer(120);
-////                    TODO: ??????? put in json/base off of material
+//                    TODO: ??????? put in json/base off of material
 //                }
-//            } else {
-//                Vector2 p = findSuitableFirePoint(s);
-//                // TODO: because of joint turn below  into flag v
-//                s.addFire(new Fire(p));
-//            }
+            } else {
+                Vector2 p = findSuitableFirePoint(s);
+                // TODO: because of joint turn below  into flag v
+                fireFlags.push(new Object[]{"attachFire", });
+                s.addFire(new Fire(s.getObstacle().getPhysicsUnits(), p));
+            }
         }
     }
 
@@ -184,7 +190,6 @@ public class FireController {
         for (Float v : vertices.toArray()) {
             firePointsList.add(v);
         }
-
 
         Array<Vector2> returnArray = new Array<Vector2>();
         int totalVerticesToCount = firePointsList.size();
