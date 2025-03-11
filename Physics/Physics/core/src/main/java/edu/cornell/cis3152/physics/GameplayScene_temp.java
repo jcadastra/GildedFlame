@@ -167,6 +167,16 @@ public class GameplayScene_temp extends GameplayScene {
             activeLightJoint = null;
         }
 
+        if (fireController != null) {
+            for (Fire fire : fireController.getLitFires()) {
+                Joint joint = fire.getFixtureJoint();
+                if (joint != null) {
+                    world.destroyJoint(fire.getFixtureJoint());
+                }
+            }
+            fireController.resetStorage();
+        }
+
         for (ObstacleSprite sprite : sprites) {
             Obstacle obj = sprite.getObstacle();
             sprite.getObstacle().deactivatePhysics(world);
@@ -257,17 +267,22 @@ public class GameplayScene_temp extends GameplayScene {
 
 
         texture = directory.getEntry( "rocket-crate0", Texture.class );
-        GameObject o = new GameObject(11,13, units);
+        GameObject o = new GameObject(11,13, 2, 2, units);
         o.getObstacle().setBodyType(BodyType.DynamicBody);
         o.getObstacle().setName("blocky1");
         o.setTexture(texture);
         addSprite(o);
-        o = new GameObject(12, 14, units);
+        o = new GameObject(12, 3, 2, 2, units);
         o.getObstacle().setName("blocky2");
         o.getObstacle().setBodyType(BodyType.DynamicBody);
         o.setTexture(texture);
         addSprite(o);
-        o = new GameObject(9,9, units);
+        o = new GameObject(9,9, 2, 2, units);
+        o.getObstacle().setBodyType(BodyType.DynamicBody);
+        o.getObstacle().setName("blocky3");
+        o.setTexture(texture);
+        addSprite(o);
+        o = new GameObject(16,9, 15, 1, units);
         o.getObstacle().setBodyType(BodyType.DynamicBody);
         o.getObstacle().setName("blocky3");
         o.setTexture(texture);

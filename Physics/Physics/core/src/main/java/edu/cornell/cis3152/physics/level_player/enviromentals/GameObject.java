@@ -8,17 +8,19 @@ public class GameObject extends ObstacleSprite {
     public boolean getFlammable() {
         return flammable;
     }
-    public GameObject (float x, float y, float units) {
+    public GameObject (float x, float y, float len, float height, float units) {
         super();
 
-        float s =2f;
-        float size = s*units;
+//        float s =2f;
+//        float size = s*units;
 
-        obstacle = new BoxObstacle(x, y, s, s);
+        obstacle = new BoxObstacle(x, y, len, height);
         flammable = true;
+        obstacle.setPosition(x,y);
         obstacle.setDensity( .5f );
         obstacle.setFriction( .5f);
-        obstacle.setRestitution( .2f );        obstacle.setPhysicsUnits( units );
+        obstacle.setRestitution( 1.2f );
+        obstacle.setPhysicsUnits( units );
         obstacle.setUserData( this );
 
 //        debug = ParserUtils.parseColor( settings.get("debug"),  Color.WHITE);
@@ -27,6 +29,6 @@ public class GameObject extends ObstacleSprite {
         // the physics units. For all meshes attached to a physics body, we
         // want (0,0) to be in the center of the mesh. So the method call below
         // is (x,y,w,h) where x, y is the bottom left.
-        mesh.set(-size/2.0f,-size/2.0f,size,size);
+        mesh.set(-(len/2.0f) * units,-(height/2.0f) * units,len*units,height*units);
     }
 }

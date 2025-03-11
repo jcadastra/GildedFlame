@@ -57,9 +57,9 @@ public class CollisionController implements ContactListener {
             ObstacleSprite bd1 = (ObstacleSprite) body1.getUserData();
             ObstacleSprite bd2 = (ObstacleSprite) body2.getUserData();
 
-//            if (isXandY(bd1, bd2, Fire.class, Fire.class) == 2) {
-//                return;
-//            }
+            if (isXandY(bd1, bd2, Fire.class, Fire.class) == 2) {
+                return;
+            }
 
             if (isXandY(bd1, bd2, "bullet", Traci.class) > 0) {
                 collisionFlags.push(new Object[]{"removeBullet", idX(bd1, bd2, "bullet")});
@@ -134,23 +134,14 @@ public class CollisionController implements ContactListener {
             }
 
             if (isXandY(bd1, bd2, GameObject.class, Fire.class) == 1) {
+                Fire f = (Fire) idX(bd1, bd2, Fire.class);
                 GameObject b = (GameObject) idX(bd1, bd2, GameObject.class);
                 if (b.getFlammable() && !fireController.testIfFullyBurnt(b)) {
-                    Fire f = (Fire) idX(bd1, bd2, Fire.class);
-                    float pu = bd1.getObstacle().getPhysicsUnits();
-
                     Vector2 f_pos = f.getObstacle().getPosition().cpy();
                     Vector2 b_pos = (b.getObstacle().getPosition().cpy());
-
-                    System.out.println(f_pos);
-                    System.out.println(b_pos);
-                    System.out.println("-----");
                     b_pos.sub(f_pos);
                     b_pos.nor().scl(f.getRadius());
                     f_pos.add(b_pos);
-                    System.out.println(f_pos);
-                    System.out.println(b_pos);
-
                     fireController.lightAnew(b, f_pos);
                 }
             }

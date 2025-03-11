@@ -1,5 +1,6 @@
 package edu.cornell.cis3152.physics.level_player;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -36,12 +37,15 @@ public class FireController {
         return nFireDiagrams.getOrDefault(s, null) != null;
     }
 
-    /**
-     * Controls the fires...
-     *
-     * but you can't control fire 🤔
-     */
-    public FireController() {
+    public Set<Fire> getLitFires() {
+        Set<Fire> returnSet = new HashSet<>();
+        for (GameObject obj : nFireDiagrams.keySet()) {
+            returnSet.addAll(firesOnShape.get(obj));
+        }
+        return returnSet;
+    }
+
+    public void resetStorage() {
         nFireDiagrams = new HashMap<>();
         firesOnShape = new HashMap<>();
         fireFlags = new Stack<>();
@@ -49,13 +53,27 @@ public class FireController {
         rand = new Random();
     }
 
+    /**
+     * Controls the fires...
+     *
+     * but you can't control fire 🤔
+     */
+    public FireController() {
+        resetStorage();
+    }
+
     public void update() {
+        int sum = 0;
+        for (GameObject object : firesOnShape.keySet()) {
+            for (Fire fireList : firesOnShape.get(object)) {
+
+            }
+        }
         for (GameObject s : nFireDiagrams.keySet()) {
 //            System.out.println("art thou burnth?" + testIfFullyBurnt(s));
 //            System.out.println(firesOnShape.get(s).size());
 //            System.out.println("NOW EVALUATING " + s.getName());
             if (testIfFullyBurnt(s)) {
-                System.out.println(s.getObstacle().getName() + " fully cooked");
 //                if (s.burnTimer == 0) {
 //                    s.dispose();
 //                } else {
@@ -67,7 +85,7 @@ public class FireController {
 //                System.out.println("points --> "+ Arrays.toString(nFireDiagrams.get(s)));
                 for (Vector2 p : findSuitableFirePoint(s)) {
 //                    System.out.println("suitable point here" + p);
-                    Fire f = new Fire(s.getObstacle().getPhysicsUnits(), p);
+                    Fire f = new Fire(s.getObstacle().getPhysicsUnits(), p.cpy());
                     firesOnShape.get(s).add(f);
                     fireFlags.push(new Object[]{"attachFire", s, f});
 //                    System.out.println("spreading fire");
@@ -178,7 +196,7 @@ public class FireController {
             genFirePinPoints(s, point);
         }
 
-        Fire f = new Fire(s.getObstacle().getPhysicsUnits(), (point.cpy()).scl(s.getObstacle().getPhysicsUnits()));
+        Fire f = new Fire(s.getObstacle().getPhysicsUnits(), point.cpy());
         firesOnShape.computeIfAbsent(s, k -> new ArrayList<>()).add(f);
 //        System.out.println("new fire" + point);
         fireFlags.push(new Object[]{"attachFire", s, f});
@@ -207,8 +225,8 @@ public class FireController {
 //        System.out.println("ignition here ->" +ignitionPoint);
         ShortArray triangleIndices = cutter.computeTriangles(releventVertecies);
 //        System.out.println(b.getMesh());
-//        System.out.println("elephant ->" + releventVertecies);
-//        System.out.println(vertices);
+        System.out.println("elephant ->" + releventVertecies);
+//        System.out.println(releventVertecies);
 //        System.out.println(vertices.get(12));
 //        System.out.println(vertices.getClass());
 
@@ -298,7 +316,8 @@ public class FireController {
         }
 
 //        System.out.println("pre"+returnArray);
-        returnArray.add(ignitionPoint);
+//        returnArray.add(ignitionPoint);
+        returnArray.add(ignitionPoint.cpy());
         for (Vector2 v : returnArray) {
             v.scl((float) Math.pow(b.getObstacle().getPhysicsUnits(), -1));
 //            v.add(b.getObstacle().getPosition());
@@ -306,8 +325,8 @@ public class FireController {
 //        System.out.println("post"+returnArray);
         nFireDiagrams.put(b, (returnArray).toArray(Vector2.class));
 
-//        for (Vector2 f : returnArray.toArray(Vector2.class)) {
+        for (Vector2 f : returnArray.toArray(Vector2.class)) {
 //            System.out.println("a generated point" + f);
-//        }
+        }
     }
 }

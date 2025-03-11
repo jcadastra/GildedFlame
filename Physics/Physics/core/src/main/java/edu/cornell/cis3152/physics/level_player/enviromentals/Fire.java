@@ -15,7 +15,6 @@ import java.util.Vector;
 
 public class Fire extends ObstacleSprite {
 
-    private Vector2 position;
     private Float radius;
     public float getRadius () {
         return radius;
@@ -47,8 +46,8 @@ public class Fire extends ObstacleSprite {
         super();
 //        this.radius = data.getFloat("radius");
         radius = .8f;
-        position = point;
         obstacle = new WheelObstacle(point.x, point.y, radius);
+        obstacle.setPosition(point);
         obstacle.setUserData( this );
         obstacle.setSensor(true);
         obstacle.setDensity(0.0000001f);
