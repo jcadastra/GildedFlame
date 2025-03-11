@@ -273,7 +273,7 @@ public class FireController {
         List<Float> firePointsList = new ArrayList<>();
 
         // TODO: MAKE BELOW FROM JSON BUT FINE ATM vvvv
-        int num_of_points = Math.round(totalArea / (10 * b.getObstacle().getPhysicsUnits()));
+        int num_of_points = (int) Math.round(totalArea / (10* Math.pow(1,2) * Math.PI * b.getObstacle().getPhysicsUnits()));
 //        num_of_points = 20;
         for (int i = 0; i < num_of_points; i++) {
             float rArea = rand.nextFloat() * totalArea;

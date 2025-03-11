@@ -316,23 +316,41 @@ public class GameplayScene_temp extends GameplayScene {
         enemies.add(moth);
 
 
-//        texture = directory.getEntry( "rocket-crate0", Texture.class );
-//        GameObject o = new GameObject(11,13, 2, 2, units);
-//        o.getObstacle().setBodyType(BodyType.DynamicBody);
-//        o.getObstacle().setName("blocky1");
-//        o.setTexture(texture);
-//        addSprite(o);
-//        o = new GameObject(12, 3, 2, 2, units);
+        float[] temp = new float[]{
+            0f, 0f,
+            3f, 1f,
+            6f, 0f,
+            5f, 2f,
+            7f, 4f,
+            4f, 4f,
+            6f, 6f,
+            3f, 5f,
+            1f, 7f,
+            0f, 4f,
+            -1f, 6f,
+            -3f, 4f,
+            -2f, 2f,
+            -4f, 0f,
+            -1f, 1f
+        };
+
+        texture = directory.getEntry( "rocket-crate0", Texture.class );
+        GameObject o = new GameObject(temp, 11,9, units);
+        o.getObstacle().setBodyType(BodyType.DynamicBody);
+        o.getObstacle().setName("blocky1");
+        o.setTexture(texture);
+        addSprite(o);
+//        o = new GameObject(12, 3,  units);
 //        o.getObstacle().setName("blocky2");
 //        o.getObstacle().setBodyType(BodyType.DynamicBody);
 //        o.setTexture(texture);
 //        addSprite(o);
-//        o = new GameObject(9,9, 2, 2, units);
+//        o = new GameObject(9,9, units);
 //        o.getObstacle().setBodyType(BodyType.DynamicBody);
 //        o.getObstacle().setName("blocky3");
 //        o.setTexture(texture);
 //        addSprite(o);
-//        o = new GameObject(16,9, 15, 1, units);
+//        o = new GameObject(16,9,  units);
 //        o.getObstacle().setBodyType(BodyType.DynamicBody);
 //        o.getObstacle().setName("blocky3");
 //        o.setTexture(texture);

@@ -146,6 +146,10 @@ public class CollisionController implements ContactListener {
                 }
             }
 
+            if (isXandY(bd1, bd2, GameObject.class, GameObject.class) == 2) {
+                System.out.println(contact.getWorldManifold().getPoints()[0]);
+            }
+
             if (isXandY(bd1, bd2, Moth.class, Traci.class) == 1) {
                 collisionFlags.push(new Object[]{"queueFailure"});
             }
