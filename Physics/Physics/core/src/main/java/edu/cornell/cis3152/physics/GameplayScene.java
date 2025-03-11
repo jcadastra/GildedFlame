@@ -452,6 +452,17 @@ public class GameplayScene implements Screen, ContactListener {
         Texture texture = directory.getEntry( "shared-earth", Texture.class );
         enemies = new ArrayList<>();
 
+        Surface wall;
+        String wname = "wall";
+        JsonValue walls = levelData.get("walls");
+        JsonValue walljv = walls.get("positions");
+        for (int ii = 0; ii < walljv.size; ii++) {
+            wall = new Surface(walljv.get(ii).asFloatArray(), units, walls);
+            wall.getObstacle().setName(wname + ii);
+            wall.setTexture(texture);
+            addSprite(wall);
+        }
+
         // Create walls and platforms
         JsonValue platforms = levelData.get("platforms");
         for (JsonValue platformJson : platforms) {
@@ -461,20 +472,7 @@ public class GameplayScene implements Screen, ContactListener {
             addSprite(platform);
         }
 
-
-
-        /*Surface wall;
-        String wname = "wall";
-        JsonValue walls = constants.get("walls");
-        JsonValue walljv = walls.get("positions");
-        for (int ii = 0; ii < walljv.size; ii++) {
-            wall = new Surface(walljv.get(ii).asFloatArray(), units, walls);
-            wall.getObstacle().setName(wname + ii);
-            wall.setTexture(texture);
-            addSprite(wall);
-        }
-
-        Surface platform;
+        /*Surface platform;
         String pname = "platform";
         JsonValue plats = constants.get("platforms");
         platform = new Surface(new float[]{1.0f, 0f, 60.0f, 0f, 60.0f, 1f, 1.0f, 1f}, units, walls);
@@ -605,7 +603,14 @@ public class GameplayScene implements Screen, ContactListener {
         torch.update();
         // moth.update();
         for (Enemy enemy : enemies) {
-            enemy.update(dt);
+            if (enemy instanceof Totem) {
+                Totem totem = (Totem) enemy;
+                totem.update(dt);
+            }
+            else if (enemy instanceof Moth) {
+                Moth moth = (Moth) enemy;
+                moth.update(dt);
+            }
         }
         InputController input = InputController.getInstance();
 
