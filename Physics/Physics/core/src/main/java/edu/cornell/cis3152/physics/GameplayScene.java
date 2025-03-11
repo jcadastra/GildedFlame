@@ -605,11 +605,11 @@ public class GameplayScene implements Screen, ContactListener {
         for (Enemy enemy : enemies) {
             if (enemy instanceof Totem) {
                 Totem totem = (Totem) enemy;
-                totem.update(dt);
+                totem.update();
             }
             else if (enemy instanceof Moth) {
                 Moth moth = (Moth) enemy;
-                moth.update(dt);
+                moth.update();
             }
         }
         InputController input = InputController.getInstance();
