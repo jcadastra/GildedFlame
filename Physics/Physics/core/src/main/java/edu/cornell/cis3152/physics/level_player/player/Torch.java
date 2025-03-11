@@ -15,6 +15,8 @@ public class Torch extends ObstacleSprite {
 
     /** The light that the torch emits */
     private Light internal_light;
+    private Light lightJoint;
+    private Light fireJoint;
 
     /** Json file to avoid magic numbers */
     private final JsonValue data;

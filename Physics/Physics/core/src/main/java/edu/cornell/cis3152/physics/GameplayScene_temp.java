@@ -12,7 +12,10 @@ package edu.cornell.cis3152.physics;/*
  */
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -23,6 +26,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectSet;
+import com.badlogic.gdx.utils.ScreenUtils;
 import edu.cornell.cis3152.physics.level_player.FireController;
 import edu.cornell.cis3152.physics.level_player.enemies.*;
 import edu.cornell.cis3152.physics.level_player.enviromentals.*;
@@ -31,14 +35,30 @@ import edu.cornell.cis3152.physics.level_player.CollisionController;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.audio.SoundEffect;
 import edu.cornell.gdiac.audio.SoundEffectManager;
+import edu.cornell.gdiac.graphics.TextAlign;
+import edu.cornell.gdiac.graphics.TextLayout;
 import edu.cornell.gdiac.physics2.Obstacle;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
+import edu.cornell.gdiac.util.PooledList;
+import edu.cornell.gdiac.util.PooledList.Entry;
+import edu.cornell.gdiac.util.ScreenListener;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
 
 public class GameplayScene_temp extends GameplayScene {
+    /** Exit code for quitting the game */
+    public static final int EXIT_QUIT = 0;
+    /** Exit code for advancing to next level */
+    public static final int EXIT_NEXT = 1;
+    /** Exit code for jumping back to previous level */
+    public static final int EXIT_PREV = 2;
+    /** How many frames after winning/losing do we continue? */
+    public static final int EXIT_COUNT = 180;
+    private boolean queueFailure;
+
     /**
      * Texture asset for character avatar
      */
@@ -114,9 +134,14 @@ public class GameplayScene_temp extends GameplayScene {
      * Active joint for torch holding light
      */
     private Joint activeLightJoint;
+    private Joint activeFireJoint;
     protected CollisionController contactListener;
     protected FireController fireController;
 
+    /** A layout for drawing a victory message */
+    private TextLayout goodMessage;
+    /** A layout for drawing a failure message */
+    private TextLayout badMessage;
     /**
      * If torch is on the right of the avatar
      */
@@ -146,6 +171,23 @@ public class GameplayScene_temp extends GameplayScene {
         fireSound = directory.getEntry("platform-pew", SoundEffect.class);
         plopSound = directory.getEntry("platform-plop", SoundEffect.class);
         volume = constants.getFloat("volume", 1.0f);
+
+
+        displayFont = directory.getEntry( "shared-retro" , BitmapFont.class);
+        goodMessage = new TextLayout();
+        goodMessage.setFont( displayFont );
+        goodMessage.setAlignment( TextAlign.middleCenter );
+        goodMessage.setColor( Color.YELLOW );
+        goodMessage.setText("VICTORY!");
+        goodMessage.layout();
+
+        badMessage = new TextLayout();
+        badMessage.setFont( displayFont );
+        badMessage.setAlignment( TextAlign.middleCenter );
+        badMessage.setColor( Color.RED );
+        badMessage.setText("FAILURE!");
+        badMessage.layout();
+
         populateLevel();
     }
 
@@ -157,6 +199,9 @@ public class GameplayScene_temp extends GameplayScene {
     public void reset() {
         JsonValue values = constants.get("world");
         Vector2 gravity = new Vector2(0, values.getFloat("gravity"));
+        if (queueFailure) {
+            queueFailure = false;
+        }
 
         if (activeTorchJoint != null) {
             world.destroyJoint(activeTorchJoint);
@@ -166,6 +211,11 @@ public class GameplayScene_temp extends GameplayScene {
             world.destroyJoint(activeLightJoint);
             activeLightJoint = null;
         }
+        if (activeFireJoint != null) {
+            world.destroyJoint(activeFireJoint);
+            activeFireJoint = null;
+        }
+        //TODO: imrpove above
 
         if (fireController != null) {
             for (Fire fire : fireController.getLitFires()) {
@@ -246,7 +296,7 @@ public class GameplayScene_temp extends GameplayScene {
         l.getObstacle().setPosition(torch.getObstacle().getPosition());
         fire.getObstacle().setPosition(torch.getObstacle().getPosition());
         activeLightJoint = world.createJoint(torch.attachObj(l));
-        activeLightJoint = world.createJoint(torch.attachObj(fire));
+        activeFireJoint = world.createJoint(torch.attachObj(fire));
         // TODO: FIX THE BAOVE^^
 
         // Create Totem
@@ -266,27 +316,27 @@ public class GameplayScene_temp extends GameplayScene {
 //        enemies.add(moth);
 
 
-        texture = directory.getEntry( "rocket-crate0", Texture.class );
-        GameObject o = new GameObject(11,13, 2, 2, units);
-        o.getObstacle().setBodyType(BodyType.DynamicBody);
-        o.getObstacle().setName("blocky1");
-        o.setTexture(texture);
-        addSprite(o);
-        o = new GameObject(12, 3, 2, 2, units);
-        o.getObstacle().setName("blocky2");
-        o.getObstacle().setBodyType(BodyType.DynamicBody);
-        o.setTexture(texture);
-        addSprite(o);
-        o = new GameObject(9,9, 2, 2, units);
-        o.getObstacle().setBodyType(BodyType.DynamicBody);
-        o.getObstacle().setName("blocky3");
-        o.setTexture(texture);
-        addSprite(o);
-        o = new GameObject(16,9, 15, 1, units);
-        o.getObstacle().setBodyType(BodyType.DynamicBody);
-        o.getObstacle().setName("blocky3");
-        o.setTexture(texture);
-        addSprite(o);
+//        texture = directory.getEntry( "rocket-crate0", Texture.class );
+//        GameObject o = new GameObject(11,13, 2, 2, units);
+//        o.getObstacle().setBodyType(BodyType.DynamicBody);
+//        o.getObstacle().setName("blocky1");
+//        o.setTexture(texture);
+//        addSprite(o);
+//        o = new GameObject(12, 3, 2, 2, units);
+//        o.getObstacle().setName("blocky2");
+//        o.getObstacle().setBodyType(BodyType.DynamicBody);
+//        o.setTexture(texture);
+//        addSprite(o);
+//        o = new GameObject(9,9, 2, 2, units);
+//        o.getObstacle().setBodyType(BodyType.DynamicBody);
+//        o.getObstacle().setName("blocky3");
+//        o.setTexture(texture);
+//        addSprite(o);
+//        o = new GameObject(16,9, 15, 1, units);
+//        o.getObstacle().setBodyType(BodyType.DynamicBody);
+//        o.getObstacle().setName("blocky3");
+//        o.setTexture(texture);
+//        addSprite(o);
 
     }
 
@@ -305,6 +355,10 @@ public class GameplayScene_temp extends GameplayScene {
         }
 
         if (!isFailure() && avatar.getObstacle().getY() < -1) {
+            setFailure(true);
+            return false;
+        }
+        if (activeFireJoint == null || queueFailure) {
             setFailure(true);
             return false;
         }
@@ -383,6 +437,8 @@ public class GameplayScene_temp extends GameplayScene {
                         avatar.setGrounded(false);
                     }
                     break;
+                case "queueFailure":
+                    queueFailure = true;
             }
         }
     }
@@ -471,5 +527,188 @@ public class GameplayScene_temp extends GameplayScene {
         sounds.stop("plop");
         sounds.stop("fire");
         sounds.stop("jump");
+    }
+
+
+    /**
+     * Returns true if the level is completed.
+     *
+     * If true, the level will advance after a countdown
+     *
+     * @return true if the level is completed.
+     */
+    public boolean isComplete( ) {
+        return complete;
+    }
+
+    /**
+     * Sets whether the level is completed.
+     *
+     * If true, the level will advance after a countdown
+     *
+     * @param value whether the level is completed.
+     */
+    public void setComplete(boolean value) {
+        if (value) {
+            countdown = EXIT_COUNT;
+        }
+        complete = value;
+    }
+
+    /**
+     * Returns true if the level is failed.
+     *
+     * If true, the level will reset after a countdown
+     *
+     * @return true if the level is failed.
+     */
+    public boolean isFailure( ) {
+        return failed;
+    }
+
+    /**
+     * Sets whether the level is failed.
+     *
+     * If true, the level will reset after a countdown
+     *
+     * @param value whether the level is failed.
+     */
+    public void setFailure(boolean value) {
+        if (value) {
+            countdown = EXIT_COUNT;
+        }
+        failed = value;
+    }
+
+    public void postUpdate(float dt) {
+        // Add any objects created by actions
+        while (!addQueue.isEmpty()) {
+            addSprite(addQueue.poll());
+        }
+
+        // Turn the physics engine crank.
+        // NORMALLY we would use a fixed step, not dt
+        // But that is harder and a topic of the advanced class
+        world.step(dt,WORLD_VELOC,WORLD_POSIT);
+
+        // Garbage collect the deleted objects.
+        // Note how we use the linked list nodes to delete O(1) in place.
+        // This is O(n) without copying.
+        Iterator<PooledList<ObstacleSprite>.Entry> iterator = sprites.entryIterator();
+        while (iterator.hasNext()) {
+            PooledList<ObstacleSprite>.Entry entry = iterator.next();
+            ObstacleSprite sprite = entry.getValue();
+            Obstacle obj = sprite.getObstacle();
+            if (obj.isRemoved()) {
+                obj.deactivatePhysics(world);
+                entry.remove();
+            } else {
+                // Note that update is called last!
+                obj.update(dt);
+            }
+        }
+    }
+
+    /**
+     * Draws the physics objects to the screen
+     *
+     * For simple worlds, this method is enough by itself. It will need to be
+     * overriden if the world needs fancy backgrounds or the like.
+     *
+     * The method draws all objects in the order that they were added.
+     *
+     * @param dt    Number of seconds since last animation frame
+     */
+    public void draw(float dt) {
+        // Clear the screen (color is homage to the XNA years)
+        ScreenUtils.clear(0.39f, 0.58f, 0.93f, 1.0f);
+
+        // This shows off how powerful our new SpriteBatch is
+        batch.begin(camera);
+
+        // Draw the meshes (images)
+        for(ObstacleSprite obj : sprites) {
+            obj.draw(batch);
+        }
+
+        if (debug) {
+            // Draw the outlines
+            for (ObstacleSprite obj : sprites) {
+                obj.drawDebug( batch );
+            }
+        }
+
+        // Draw a final message
+        if (complete && !failed) {
+            batch.drawText(goodMessage, width/2, height/2);
+        } else if (failed) {
+            batch.drawText(badMessage, width/2, height/2);
+        }
+
+        batch.end();
+    }
+
+    /**
+     * Called when the Screen is resized.
+     *
+     * This can happen at any point during a non-paused state but will never
+     * happen before a call to show().
+     *
+     * @param width  The new width in pixels
+     * @param height The new height in pixels
+     */
+    public void resize(int width, int height) {
+        this.width  = width;
+        this.height = height;
+        if (camera == null) {
+            camera = new OrthographicCamera();
+        }
+        camera.setToOrtho( false, width, height );
+        scale.x = width/bounds.width;
+        scale.y = height/bounds.height;
+        reset();
+    }
+
+    /**
+     * Called when the Screen should render itself.
+     *
+     * We defer to the other methods update() and draw().  However, it is VERY
+     * important that we only quit AFTER a draw.
+     *
+     * @param delta Number of seconds since last animation frame
+     */
+    public void render(float delta) {
+        if (active) {
+            if (preUpdate(delta)) {
+                update(delta); // This is the one that must be defined.
+                postUpdate(delta);
+            }
+            draw(delta);
+        }
+    }
+
+    /**
+     * Called when the Screen is resumed from a paused state.
+     *
+     * This is usually when it regains focus.
+     */
+    public void resume() {
+        // TODO Auto-generated method stub
+    }
+
+    /**
+     * Called when this screen becomes the current screen for a Game.
+     */
+    public void show() {
+        // Useless if called in outside animation loop
+        active = true;
+    }
+
+    /**
+     * Called when this screen is no longer the current screen for a Game.
+     */
+    public void hide() {
+        // Useless if called in outside animation loop
+        active = false;
     }
 }
