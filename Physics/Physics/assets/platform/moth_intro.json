@@ -1,0 +1,101 @@
+{
+  "platforms": [
+    {
+      "name": "floor",
+      "tile"        : 128.0,
+      "friction"    : 0.1,
+      "density"     : 0.0,
+      "restitution" : 0.1,
+      "debug"      : "#ffffff",
+      "positions": [1.0, 0.0, 60.0, 0.0, 60.0, 1.0, 1.0, 1.0]
+    },
+    {
+      "name": "wall",
+      "tile"        : 128.0,
+      "friction"    : 0.1,
+      "density"     : 0.0,
+      "restitution" : 0.1,
+      "debug"      : "#ffffff",
+      "positions": [25.0, 0.0, 31.0, 0.0, 31.0, 3.0, 25.0, 3.0]
+    }
+  ],
+  "traci" : {
+    "pos"       : [2.5, 5.0],
+    "inner"     : [0.7, 0.95],
+    "size"      : 1.5,
+    "force"     : 20.0,
+    "damping"   : 10.0,
+    "density"   : 0.5,
+    "friction"  : 0.0,
+    "maxspeed"  : 5.0,
+    "jump_force": 5.5,
+    "jump_cool" : 30,
+    "shot_cool" : 40,
+    "sensor": {
+      "shrink" : 0.6,
+      "height" : 0.05
+    },
+    "debug" : {
+      "avatar" : "#ffff00ff",
+      "sensor" : "#ff0000ff",
+      "tolerance" : 0.05
+    }
+  },
+  "torch" : {
+    "pos"       : [15.0, 3.0],
+    "dimensions": [0.4, 0.8],
+    "size"      : 1,
+    "force"     : 20.0,
+    "damping"   : 10.0,
+    "density"   : 0.5,
+    "friction"  : 4,
+    "tossForce" : [1, 1],
+    "pickUpTimer": 10,
+    "angular_force":0.1,
+    "sensor": {
+      "shrink" : 0.6,
+      "height" : 0.05
+    },
+    "debug" : {
+      "avatar" : "#ffff00ff",
+      "sensor" : "#ff0000ff",
+      "tolerance" : 0.05
+    }
+  },
+  "light":{
+    "radius": 2.2,
+    "pos": [6.0,6.0],
+    "debug"      : "#ffffff",
+    "friction"    : 0.0,
+    "density"     : 0.0,
+    "restitution" : 0.0
+  },
+  "enemies": {
+    "moths": {
+      "count": 1,
+      "instances": [
+        {
+          "pos": [20.0, 2.0],
+          "dimension": [1, 1],
+          "size": 1,
+          "density": 0.5,
+          "attackTimer": 75,
+          "attackAnimationTimer": 10,
+          "sensor": {
+            "shrink": 0.6,
+            "height": 0.05
+          },
+          "debug": {
+            "avatar": "#ffff00ff",
+            "sensor": "#ff0000ff",
+            "tolerance": 0.05
+          }
+        }
+      ]
+    },
+    "totems": {
+      "count": 0,
+      "instances": []
+    }
+  }
+}
