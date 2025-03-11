@@ -305,7 +305,7 @@ public class GameplayScene_temp extends GameplayScene {
         totem.setTexture(texture);
         addSprite(totem);
         totem.createSensor();
-//        enemies.add(totem);
+        enemies.add(totem);
 
         // Create Moth
         texture = directory.getEntry("rocket-moth01", Texture.class);
@@ -313,7 +313,7 @@ public class GameplayScene_temp extends GameplayScene {
         moth.setTexture(texture);
         addSprite(moth);
         moth.createSensor();
-//        enemies.add(moth);
+        enemies.add(moth);
 
 
 //        texture = directory.getEntry( "rocket-crate0", Texture.class );
