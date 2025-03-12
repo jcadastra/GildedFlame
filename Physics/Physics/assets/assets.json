@@ -149,7 +149,8 @@
         "rocket-constants"  : "rocket/constants.json",
         "platform-constants": "platform/constants.json",
         "ragdoll-constants" : "ragdoll/constants.json",
-        "moth_intro" : "platform/moth_intro.json"
+        "moth_intro" : "platform/moth_intro.json",
+        "totem_intro" : "platform/totem_intro.json"
     },
     "soundfx" : {
         "rocket-bump"       : "rocket/bump.wav",

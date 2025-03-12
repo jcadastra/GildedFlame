@@ -140,8 +140,9 @@ public class GDXRoot extends Game implements ScreenListener {
 
             // Initialize the three game worlds
             currentScene = new GameplayScene(directory, "platform");
-            levels = new String[1];
+            levels = new String[2];
             levels[0] = "moth_intro";
+            levels[1] = "totem_intro";
             currentScene.loadLevel(levels[0]);
             currentScene.setScreenListener(this);
             currentScene.setSpriteBatch(batch);
@@ -169,12 +170,16 @@ public class GDXRoot extends Game implements ScreenListener {
             // controllers[current].reset();
             // setScreen(controllers[current]);
         } else if (exitCode == GameplayScene.EXIT_NEXT) {
+            currentScene.clearLevel();
             current = (current+1) % levels.length;
+            currentScene.loadLevel(levels[current]);
             /*current = (current+1) % controllers.length;
             controllers[current].reset();
             setScreen(controllers[current]);*/
         } else if (exitCode == GameplayScene.EXIT_PREV) {
+            currentScene.clearLevel();
             current = (current+levels.length-1) % levels.length;
+            currentScene.loadLevel(levels[current]);
             /*controllers[current].reset();
             setScreen(controllers[current]);*/
         } else if (exitCode == GameplayScene.EXIT_QUIT) {

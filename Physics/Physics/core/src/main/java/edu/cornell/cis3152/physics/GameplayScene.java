@@ -130,6 +130,9 @@ public class GameplayScene implements Screen, ContactListener {
     protected Traci avatar;
     protected Torch torch;
 
+    /** Reference to the goalDoor (for collision detection) */
+    private Door goalDoor;
+
     //protected Totem totem;
     //protected Moth moth;
 
@@ -440,6 +443,35 @@ public class GameplayScene implements Screen, ContactListener {
         loadLevel(levelName);
     };
 
+    public void clearLevel() {
+        JsonValue values = constants.get("world");
+        Vector2 gravity = new Vector2(0, values.getFloat("gravity"));
+
+        if (activeTorchJoint != null) {
+            world.destroyJoint(activeTorchJoint);
+            activeTorchJoint = null;
+        }
+        if (activeLightJoint != null) {
+            world.destroyJoint(activeLightJoint);
+            activeLightJoint = null;
+        }
+
+        for (ObstacleSprite sprite : sprites) {
+            Obstacle obj = sprite.getObstacle();
+            sprite.getObstacle().deactivatePhysics(world);
+        }
+        sprites.clear();
+        addQueue.clear();
+        if (world != null) {
+            world.dispose();
+        }
+
+        world = new World(gravity, false);
+        world.setContactListener(this);
+        setComplete(false);
+        setFailure(false);
+    }
+
     private void populateLevel() {}
 
     public void loadLevel(String levelName) {
@@ -480,6 +512,15 @@ public class GameplayScene implements Screen, ContactListener {
         platform.setTexture(texture);
         addSprite(platform);*/
 
+        // Add level goal
+        texture = directory.getEntry( "shared-goal", Texture.class );
+
+        JsonValue goal = levelData.get("goal");
+        // JsonValue goalpos = goal.get("pos");
+        goalDoor = new Door(units, goal);
+        goalDoor.setTexture( texture );
+        goalDoor.getObstacle().setName("goal");
+        addSprite(goalDoor);
 
         // Create Traci
         texture = directory.getEntry("platform-traci", Texture.class);
