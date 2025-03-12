@@ -522,6 +522,16 @@ public class GameplayScene implements Screen, ContactListener {
         goalDoor.getObstacle().setName("goal");
         addSprite(goalDoor);
 
+        // Create spinners
+        texture = directory.getEntry( "platform-barrier", Texture.class );
+        JsonValue spinners = levelData.get("spinners");
+        for (JsonValue spinnerJson : spinners) {
+            Spinner spinner = new Spinner(units, spinnerJson);
+            // spinner.getObstacle().setName(spinnerJson.getString("name"));
+            spinner.setTexture(texture);
+            addSpriteGroup(spinner);
+        }
+
         // Create Traci
         texture = directory.getEntry("platform-traci", Texture.class);
         avatar = new Traci(units, levelData.get("traci"));
