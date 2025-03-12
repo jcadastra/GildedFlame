@@ -119,7 +119,7 @@ public class RopeBridge extends ObstacleGroup {
             // This constructor AUTOMATICALLY makes a mesh for us
             // Because we set the physics units for the obstacle, it uses
             // that value and the fixture shapes to create the mesh.
-            ObstacleSprite sprite = new ObstacleSprite(plank);
+            EnhancedObstacleSprite sprite = new EnhancedObstacleSprite(plank);
             sprite.setDebugColor( color );
 
             sprites.add(sprite);

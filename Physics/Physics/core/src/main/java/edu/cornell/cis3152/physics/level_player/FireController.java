@@ -24,8 +24,8 @@ import java.util.Stack;
 public class FireController {
 
     /** Map that stores the fire point diagrams of calculated flammable bodies */
-    private HashMap<GameObject, Vector2[]> nFireDiagrams;
-    private HashMap<GameObject, ArrayList<Fire>> firesOnShape;
+    private HashMap<EnhancedObstacleSprite, Vector2[]> nFireDiagrams;
+    private HashMap<EnhancedObstacleSprite, ArrayList<Fire>> firesOnShape;
     private Stack<Object[]> fireFlags;
     public Stack<Object[]> getFireFlags() {
         return fireFlags;
@@ -33,13 +33,13 @@ public class FireController {
     private EarClippingTriangulator cutter;
     private Random rand;
 
-    public boolean isBodyOnFire(GameObject s) {
+    public boolean isBodyOnFire(EnhancedObstacleSprite s) {
         return nFireDiagrams.getOrDefault(s, null) != null;
     }
 
     public Set<Fire> getLitFires() {
         Set<Fire> returnSet = new HashSet<>();
-        for (GameObject obj : nFireDiagrams.keySet()) {
+        for (EnhancedObstacleSprite obj : nFireDiagrams.keySet()) {
             returnSet.addAll(firesOnShape.get(obj));
         }
         return returnSet;
@@ -64,12 +64,12 @@ public class FireController {
 
     public void update() {
         int sum = 0;
-        for (GameObject object : firesOnShape.keySet()) {
+        for (EnhancedObstacleSprite object : firesOnShape.keySet()) {
             for (Fire fireList : firesOnShape.get(object)) {
 
             }
         }
-        for (GameObject s : nFireDiagrams.keySet()) {
+        for (EnhancedObstacleSprite s : nFireDiagrams.keySet()) {
 //            System.out.println("art thou burnth?" + testIfFullyBurnt(s));
 //            System.out.println(firesOnShape.get(s).size());
 //            System.out.println("NOW EVALUATING " + s.getName());
@@ -94,7 +94,7 @@ public class FireController {
         }
     }
 
-    private Set<Vector2> findSuitableFirePoint(GameObject s) {
+    private Set<Vector2> findSuitableFirePoint(EnhancedObstacleSprite s) {
         Set<Vector2> preburnt = getPointsOnFire(s);
 //        System.out.println("points on fire -> " + getPointsOnFire(s));
         Vector2[] temp = nFireDiagrams.get(s);
@@ -143,7 +143,7 @@ public class FireController {
     }
 
 
-    private Set<Vector2> getPointsOnFire(GameObject s) {
+    private Set<Vector2> getPointsOnFire(EnhancedObstacleSprite s) {
         Set<Vector2> returnArray = new HashSet<>();
         Vector2[] temp = nFireDiagrams.get(s);
         ArrayList<Vector2> reference = new  ArrayList<Vector2>();
@@ -166,7 +166,7 @@ public class FireController {
         return returnArray;
     }
 
-    public boolean testIfFullyBurnt (GameObject s) {
+    public boolean testIfFullyBurnt (EnhancedObstacleSprite s) {
         if (!nFireDiagrams.containsKey(s)) {
             return false;
         }
@@ -182,7 +182,7 @@ public class FireController {
      * @param s     the body, not on fire, contacted by the fire
      * @param point the location to start the fire
      */
-    public void lightAnew (GameObject s, Vector2 point) {
+    public void lightAnew (EnhancedObstacleSprite s, Vector2 point) {
         ArrayList<Fire> currentFires = firesOnShape.get(s);
         if (currentFires != null) {
             for (Fire f : currentFires) {
@@ -212,7 +212,7 @@ public class FireController {
      * @param b the ObstactleSprite that will be partiionted into
      * @param ignitionPoint the Vertex of contact to ensure that it keeps burning
      */
-    private void genFirePinPoints(GameObject b, Vector2 ignitionPoint) {
+    private void genFirePinPoints(EnhancedObstacleSprite b, Vector2 ignitionPoint) {
 //        System.out.println("GENERATED POINTS FOR " + b.getName());
         FloatArray vertices = b.getMesh().vertices;
         SpriteMesh mesh = b.getMesh();

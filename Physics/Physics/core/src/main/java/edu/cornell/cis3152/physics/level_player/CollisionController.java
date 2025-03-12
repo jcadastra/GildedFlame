@@ -133,10 +133,10 @@ public class CollisionController implements ContactListener {
                 moth.resetAttackTimer();
             }
 
-            if (isXandY(bd1, bd2, GameObject.class, Fire.class) == 1) {
+            if (isXandY(bd1, bd2, EnhancedObstacleSprite.class, Fire.class) == 1) {
                 Fire f = (Fire) idX(bd1, bd2, Fire.class);
-                GameObject b = (GameObject) idX(bd1, bd2, GameObject.class);
-                if (b.getFlammable() && !fireController.testIfFullyBurnt(b)) {
+                EnhancedObstacleSprite b = (EnhancedObstacleSprite) idX(bd1, bd2, GameObject.class);
+                if (b.getMaterial().getFlammability() > 0 && !fireController.testIfFullyBurnt(b)) {
                     Vector2 f_pos = f.getObstacle().getPosition().cpy();
                     Vector2 b_pos = (b.getObstacle().getPosition().cpy());
                     b_pos.sub(f_pos);

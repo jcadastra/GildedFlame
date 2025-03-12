@@ -1,14 +1,11 @@
 package edu.cornell.cis3152.physics.level_player.enviromentals;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import edu.cornell.gdiac.math.Poly2;
 import edu.cornell.gdiac.math.PolyTriangulator;
-import edu.cornell.gdiac.physics2.ObstacleSprite;
 import edu.cornell.gdiac.physics2.PolygonObstacle;
 
-public class GameObject extends ObstacleSprite {
+public class GameObject extends EnhancedObstacleSprite {
     private boolean flammable;
     private Vector2 internalPosition;
 
