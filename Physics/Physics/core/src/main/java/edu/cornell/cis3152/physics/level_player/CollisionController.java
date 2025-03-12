@@ -235,6 +235,14 @@ public class CollisionController implements ContactListener {
         }
     }
 
+
+    /**
+     * Next three are for querying if a is of type x or y and b is of the other type
+     *
+     * 0 means no combo works ie a and b are neither x or y
+     * 1 means that there is a comb that works ie a is x and b is y || a is y and b is x
+     * 2 means that both combos work ie a == b == x == y
+     */
     private static <T,U> int isXandY (ObstacleSprite a, ObstacleSprite b, Class<T> x, Class<U> y) {
         return (x.isInstance(a) && y.isInstance(b) ? 1 : 0) + (x.isInstance(b) && y.isInstance(a) ? 1 : 0);
     }
@@ -244,12 +252,24 @@ public class CollisionController implements ContactListener {
     private int isXandY (ObstacleSprite a, ObstacleSprite b, String x, String y) {
         return (a.getName().contains(x) && b.getName().contains(y) ? 1 : 0) + (b.getName().contains(x) && a.getName().contains(y) ? 1 : 0);
     }
+
+    /**
+     * Next two are for querying if either a or b is of type x
+     *
+     * 0 means none are of x, 1 means one is, 2 means both are
+     */
     private static <T> int isX (ObstacleSprite a, ObstacleSprite b, Class<T> x) {
         return (x.isInstance(a) ? 1 : 0) + (x.isInstance(b) ? 1 : 0);
     }
     private int isX (ObstacleSprite a, ObstacleSprite b, String x) {
         return (a.getName().contains(x) ? 1 : 0) + (b.getName().contains(x) ? 1 : 0);
     }
+
+    /**
+     * Next two are used mainly when you know either a or b is x but not both
+     *
+     * returns whichever is of X; undefined behavior when a.class == b.class == x.class
+     */
     private static <T> ObstacleSprite idX (ObstacleSprite a, ObstacleSprite b, Class<T> x) {
         return (x.isInstance(a) ? a : b);
     }
