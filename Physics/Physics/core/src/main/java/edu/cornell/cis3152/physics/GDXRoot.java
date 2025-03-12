@@ -14,10 +14,7 @@
  package edu.cornell.cis3152.physics;
 
 import com.badlogic.gdx.*;
-import edu.cornell.cis3152.physics.level_player.Moth_intro;
-import edu.cornell.cis3152.physics.level_player.Torch_playground;
-import edu.cornell.cis3152.physics.level_player.Totem_intro;
-import edu.cornell.cis3152.physics.level_player.spinner_layout;
+import edu.cornell.cis3152.physics.level_player.*;
 import edu.cornell.gdiac.util.*;
 import edu.cornell.gdiac.assets.*;
 import edu.cornell.gdiac.graphics.*;
@@ -135,15 +132,16 @@ public class GDXRoot extends Game implements ScreenListener {
             loading = null;
 
             // Initialize the three game worlds
-            controllers = new GameplayScene[1];
+            controllers = new GameplayScene[2];
 //            controllers[0] = new RocketScene(directory);
             //controllers[0] = new og_platformer(directory);
 //            controllers[1] = new empty_layout1(directory);
 //            controllers[2] = new empty_layout2(directory);
 //            controllers[0] = new Totem_intro(directory);
 //            controllers[1] = new Moth_intro(directory);
-//            controllers[2] = new Torch_playground(directory);
-            controllers[0] = new GameplayScene_temp(directory, "temp");
+            controllers[1] = new Torch_playground(directory);
+//            controllers[1] = new GameplayScene_temp(directory, "temp");
+            controllers[0] = new Totem_playground(directory);
 //            controllers[2] = new RagdollScene(directory);
 //            controllers[3] = new PlatformScene(directory);
 

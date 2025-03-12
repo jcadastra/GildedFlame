@@ -246,16 +246,18 @@ public class Torch_playground extends GameplayScene {
 
 
         // Create Totem
+        Vector2 position = new Vector2(7,2);
         texture = directory.getEntry("rocket-totem01", Texture.class);
-        totem = new Totem(0, units, constants.get("totem"), directory);
+        totem = new Totem(0, units, constants.get("totem"), directory, position );
         totem.setTexture(texture);
         addSprite(totem);
         totem.createSensor();
         enemies.add(totem);
 
         // Create Moth
+        position = new Vector2(20,2);
         texture = directory.getEntry("rocket-moth01", Texture.class);
-        moth = new Moth(0, units, constants.get("moth"), directory);
+        moth = new Moth(0, units, constants.get("moth"), directory, position);
         moth.setTexture(texture);
         addSprite(moth);
         moth.createSensor();

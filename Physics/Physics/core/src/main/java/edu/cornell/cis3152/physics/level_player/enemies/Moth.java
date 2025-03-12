@@ -6,10 +6,8 @@ import edu.cornell.gdiac.assets.AssetDirectory;
 
 public class Moth extends Enemy {
 
-    private int MOVE_SPEED;
-    public Moth(int id, float units, JsonValue value, AssetDirectory directory) {
-        super(id, units, value, directory);
-        MOVE_SPEED = 4;
+    public Moth(int id, float units, JsonValue value, AssetDirectory directory, Vector2 position) {
+        super(id, units, value, directory, position);
     }
 
     @Override
@@ -56,6 +54,6 @@ public class Moth extends Enemy {
         Texture texture = directory.getEntry("rocket-moth01", Texture.class);
         setTexture(texture);
 //        System.out.println("Out of light");
-        move(MOVE_SPEED);
+        move();
     }
 }

@@ -1,15 +1,16 @@
 package edu.cornell.cis3152.physics.level_player.enemies;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.AssetDirectory;
 
 public class Totem extends Enemy {
 
-    private int MOVE_SPEED;
-    public Totem(int id, float units, JsonValue value, AssetDirectory directory) {
-        super(id, units, value, directory);
-        MOVE_SPEED = 3;
+    boolean isStacked;
+    int stackHeight;
+    public Totem(int id, float units, JsonValue value, AssetDirectory directory, Vector2 position) {
+        super(id, units, value, directory, position);
     }
 
     // reacting to light
@@ -27,9 +28,7 @@ public class Totem extends Enemy {
         Texture texture = directory.getEntry("rocket-totem01", Texture.class);
         setTexture(texture);
         if (getFreezeTimer() == 0){
-//            System.out.println("HERE");
-
-            move(MOVE_SPEED);
+            move();
         } else {
             angry();
         }

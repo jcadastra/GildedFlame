@@ -236,16 +236,18 @@ public class GameplayScene_temp extends GameplayScene {
         activeLightJoint = world.createJoint(torch.attachLight(l));
 
         // Create Totem
+        Vector2 position = new Vector2(7,2);
         texture = directory.getEntry("rocket-totem01", Texture.class);
-        Totem totem = new Totem(0, units, constants.get("totem"), directory);
+        Totem totem = new Totem(0, units, constants.get("totem"), directory, position);
         totem.setTexture(texture);
         addSprite(totem);
         totem.createSensor();
         enemies.add(totem);
 
         // Create Moth
+        position = new Vector2(20,2);
         texture = directory.getEntry("rocket-moth01", Texture.class);
-        Moth moth = new Moth(0, units, constants.get("moth"), directory);
+        Moth moth = new Moth(0, units, constants.get("moth"), directory, position);
         moth.setTexture(texture);
         addSprite(moth);
         moth.createSensor();
