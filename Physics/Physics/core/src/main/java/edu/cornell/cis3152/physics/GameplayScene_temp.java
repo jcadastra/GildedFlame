@@ -335,7 +335,7 @@ public class GameplayScene_temp extends GameplayScene {
         };
 
         texture = directory.getEntry( "rocket-crate0", Texture.class );
-        Rope o = new Rope(new Vector2(100,600), new Vector2(150, 600),1, units);
+        Rope o = new Rope(new Vector2(900,600), new Vector2(1850, 600),700, units);
         addSpriteGroup(o);
 //        texture = directory.getEntry( "rocket-crate0", Texture.class );
 //        GameObject o = new GameObject(temp, 11,9, units);

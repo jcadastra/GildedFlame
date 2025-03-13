@@ -53,8 +53,8 @@ public class Rope extends ObstacleGroup {
         this.units = units;
 
 //        from json
-        this.ropeThickness = 3;
-        this.ropePieceLen = 3;
+        this.ropeThickness = 30;
+        this.ropePieceLen = 30;
 
 
         float[] bottomVertices = genOneRow(-ropeThickness/2);
@@ -64,7 +64,7 @@ public class Rope extends ObstacleGroup {
         anchors = genAnchors();
         bottomEntities = genFixtures(bottomVertices);
         topEntities = genFixtures(topVertices);
-
+        fixAnchors();
     }
 
 
@@ -77,14 +77,16 @@ public class Rope extends ObstacleGroup {
      * @return
      */
     private float caternaryCurveFunc(float x_pos, float y_offset) {
-        return (float) (h * (Math.cosh(x_pos/1000) - 1 / Math.cosh(d/1000) - 1)) + y_offset;
+//        return (float) (h * (Math.cosh(x_pos/1000) - 1 / Math.cosh(d/1000) - 1)) + y_offset;
+        return 0;
     }
 
     private float[] genOneRow(float y_offset) {
+        System.out.println("gen one caternary row ------------------------------");
         FloatArray vertexSet = new FloatArray();
-        for (float i = pin1.x + 1f; i < pin2.x - 1f; i += .5f) {
+        for (float i = pin1.x + 1f; i < pin2.x - 1f; i += ropePieceLen) {
             vertexSet.add(i);
-            vertexSet.add( + caternaryCurveFunc(i, y_offset));
+            vertexSet.add(pin1.y + caternaryCurveFunc(i, y_offset) + y_offset);
             System.out.println(new Vector2(i,caternaryCurveFunc(i, y_offset)));
         }
         return vertexSet.toArray();
@@ -98,18 +100,18 @@ public class Rope extends ObstacleGroup {
     private ArrayList<EnhancedObstacleSprite> genAnchors() {
         ArrayList<EnhancedObstacleSprite> returnSet = new ArrayList<>();
 
-        WheelObstacle wheel = new WheelObstacle(pin1.x / units, pin1.y / units, ropeThickness/2);
-        wheel.setBodyType(BodyType.DynamicBody);
-        wheel.setMass(0.0001f);
+        WheelObstacle wheel = new WheelObstacle(pin1.x / units, pin1.y / units, ropeThickness/(2 * units));
+        wheel.setBodyType(BodyType.StaticBody);
+        wheel.setMass(0.1f);
         wheel.setPhysicsUnits(units);
         wheel.setName("leftRopeAnchor");
         EnhancedObstacleSprite s = new EnhancedObstacleSprite(wheel);
         returnSet.add(s);
         sprites.add(s);
 
-        wheel = new WheelObstacle(pin2.x / units, pin2.y / units, ropeThickness/2);
-        wheel.setBodyType(BodyType.DynamicBody);
-        wheel.setMass(0.0001f);
+        wheel = new WheelObstacle(pin2.x / units, pin2.y / units, ropeThickness/(2 * units));
+        wheel.setBodyType(BodyType.StaticBody);
+        wheel.setMass(0.1f);
         wheel.setPhysicsUnits(units);
         wheel.setName("rightRopeAnchor");
         s = new EnhancedObstacleSprite(wheel);
@@ -124,7 +126,7 @@ public class Rope extends ObstacleGroup {
         int tempLen = vertices.length;
         ArrayList<EnhancedObstacleSprite> returnSet = new ArrayList<>();
         for (int i = 0; i < tempLen; i += 2) {
-            WheelObstacle wheel = new WheelObstacle(vertices[i] / units, vertices[i + 1] / units, ropeThickness/2);
+            WheelObstacle wheel = new WheelObstacle(vertices[i] / units, vertices[i + 1] / units, ropeThickness/(2 * units));
 //            System.out.println(new Vector2(vertices[i] / units, vertices[i + 1] / units));
             wheel.setBodyType(BodyType.DynamicBody);
             wheel.setMass(0.0001f);
@@ -142,8 +144,9 @@ public class Rope extends ObstacleGroup {
     protected boolean createJoints(World world) {
 
         DistanceJointDef keyJoint = new DistanceJointDef();
-        keyJoint.frequencyHz = .5f;
-        keyJoint.dampingRatio = .5f;
+        keyJoint.frequencyHz = .05f;
+        keyJoint.dampingRatio = .7f;
+        keyJoint.length = (ropePieceLen * 2)/units;
         int totalNumOfUnits = topEntities.size();
 
         for (int i = 0; i < totalNumOfUnits; i++) {
@@ -189,6 +192,13 @@ public class Rope extends ObstacleGroup {
         }
 
         return true;
+    }
+
+    private void fixAnchors() {
+//        for (EnhancedObstacleSprite ebs : anchors) {
+//            ebs.getObstacle().setBodyType(BodyType.StaticBody);
+//        }
+        anchors.get(1).getObstacle().setBodyType(BodyType.DynamicBody);
     }
 
 }
