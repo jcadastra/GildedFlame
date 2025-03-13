@@ -457,6 +457,12 @@ public class Totem_playground extends GameplayScene implements ContactListener {
                 sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
             }
 
+            if ((avatar.getSensorName().equals(fd2) && avatar != bd1 && (bd1.getName().contains("totem")) ||
+                (avatar.getSensorName().equals(fd1) && avatar != bd2 && (bd2.getName().contains("totem"))))) {
+                avatar.setGrounded(true);
+                sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
+            }
+
             // Check for win condition
             if ((bd1 == avatar && bd2.getName().equals("goal")) ||
                 (bd1.getName().equals("goal") && bd2 == avatar)) {

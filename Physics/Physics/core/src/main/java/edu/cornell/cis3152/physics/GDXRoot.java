@@ -132,14 +132,14 @@ public class GDXRoot extends Game implements ScreenListener {
             loading = null;
 
             // Initialize the three game worlds
-            controllers = new GameplayScene[2];
+            controllers = new GameplayScene[1];
 //            controllers[0] = new RocketScene(directory);
             //controllers[0] = new og_platformer(directory);
 //            controllers[1] = new empty_layout1(directory);
 //            controllers[2] = new empty_layout2(directory);
 //            controllers[0] = new Totem_intro(directory);
-//            controllers[1] = new Moth_intro(directory);
-            controllers[1] = new Torch_playground(directory);
+//            controllers[0] = new Moth_intro(directory);
+//            controllers[1] = new Torch_playground(directory);
 //            controllers[1] = new GameplayScene_temp(directory, "temp");
             controllers[0] = new Totem_playground(directory);
 //            controllers[2] = new RagdollScene(directory);

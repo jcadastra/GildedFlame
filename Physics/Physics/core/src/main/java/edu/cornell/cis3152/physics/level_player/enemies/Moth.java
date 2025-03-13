@@ -1,7 +1,11 @@
 package edu.cornell.cis3152.physics.level_player.enemies;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.RayCastCallback;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.JsonValue;
+import edu.cornell.cis3152.physics.level_player.enviromentals.Light;
 import edu.cornell.gdiac.assets.AssetDirectory;
 
 public class Moth extends Enemy {
@@ -14,7 +18,6 @@ public class Moth extends Enemy {
     public void in_light(){
         Texture texture = directory.getEntry("rocket-moth03", Texture.class);
         setTexture(texture);
-//        System.out.println("In light");
         setState(EnemyState.ANGRY);
     }
 
@@ -38,13 +41,36 @@ public class Moth extends Enemy {
     }
 
     @Override
+    public void raycast() {
+        Vector2 start = obstacle.getBody().getPosition();
+        Vector2 direction;
+        if (isFacingRight()) {
+            direction = new Vector2(-1, 0);
+        } else {
+            direction = new Vector2(1, 0);
+        }
+        float maxDistance = 5f;
+        Vector2 end = start.cpy().add(direction.scl(maxDistance));
+        RayCastCallback callback = new RayCastCallback() {
+            @Override
+            public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
+                if (fixture.getBody().getUserData() instanceof Light){
+                    System.out.println("Light detected");
+                }
+                return fraction;
+            }
+        };
+        World world = obstacle.getBody().getWorld();
+        world.rayCast(callback, start, end);
+    }
+
+    @Override
     public void angry(){
 //        System.out.println("Angry: " + getAttackTimer());
         if (getAttackTimer() == 0){
             setState(EnemyState.ATTACK);
         } else {
             stop();
-//            System.out.println("Waiting to attack");
             decrementAttackTimer();
         }
     }

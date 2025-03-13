@@ -25,7 +25,9 @@ public class Enemy extends ObstacleSprite {
     private Color sensorColor;
     private String sensorName;
     // Instance attributes
-    /** Which direction is the character facing */
+    /**
+     * Which direction is the character facing
+     */
     private boolean faceRight;
     private int id;
     private int freezeTimer;
@@ -35,6 +37,7 @@ public class Enemy extends ObstacleSprite {
     private int attackAnimationTimer;
 
     private EnemyState state;
+
     /**
      * Returns true if this character is facing right
      *
@@ -56,6 +59,7 @@ public class Enemy extends ObstacleSprite {
     public void setFaceLeft() {
         faceRight = false;
     }
+
     private float width;
     private float height;
     private float x;
@@ -72,7 +76,9 @@ public class Enemy extends ObstacleSprite {
 
         ANGRY,
 
-        ATTACK
+        ATTACK,
+        CREEP,
+
     }
 
     public Enemy(int id, float units, JsonValue data, AssetDirectory directory, Vector2 position) {
@@ -83,8 +89,8 @@ public class Enemy extends ObstacleSprite {
         this.faceRight = true;
         this.speed = data.getInt("speed");
 
-        float s = data.getFloat( "size" );
-        float size = s*units;
+        float s = data.getFloat("size");
+        float size = s * units;
 
         this.width = data.get("dimension").getFloat(0);
         this.height = data.get("dimension").getFloat(1);
@@ -94,53 +100,90 @@ public class Enemy extends ObstacleSprite {
         obstacle = new BoxObstacle(x, y, width, height);
         obstacle.setBodyType(BodyDef.BodyType.DynamicBody);
 
-        obstacle.setDensity( data.getFloat( "density", 0 ) );
-        obstacle.setFriction( data.getFloat( "friction", 0 ) );
-        obstacle.setRestitution( data.getFloat( "restitution", 0 ) );
+        obstacle.setDensity(data.getFloat("density", 0));
+        obstacle.setFriction(data.getFloat("friction", 0));
+        obstacle.setRestitution(data.getFloat("restitution", 0));
 
-        obstacle.setPhysicsUnits( units );
+        obstacle.setPhysicsUnits(units);
         obstacle.setFixedRotation(true);
-        obstacle.setUserData( this );
+        obstacle.setUserData(this);
         obstacle.setName("enemy");
 
 
-        mesh.set(-size/2.0f,-size/2.0f,size,size);
+        mesh.set(-size / 2.0f, -size / 2.0f, size, size);
     }
 
 
-    public int getId() { return id; }
-    public float getX() { return x; }
-    public void setX(float value) { x = value; }
-    public float getY() { return y; }
-    public void setY(float value) { y = value; }
+    public int getId() {
+        return id;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public void setX(float value) {
+        x = value;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public void setY(float value) {
+        y = value;
+    }
 
     public Fixture getFixture() {
         return obstacle.getBody().getFixtureList().first();
     }
 
-    public EnemyState getState() { return state; }
-    public void setState(EnemyState value) { state = value; }
+    public EnemyState getState() {
+        return state;
+    }
+
+    public void setState(EnemyState value) {
+        state = value;
+    }
 
 
-    public int getFreezeTimer() { return freezeTimer; }
+    public int getFreezeTimer() {
+        return freezeTimer;
+    }
 
-    public void decrementFreezeTimer() { freezeTimer--; }
+    public void decrementFreezeTimer() {
+        freezeTimer--;
+    }
 
-    public void resetFreeze() { freezeTimer = data.getInt("freezeTimer");}
+    public void resetFreeze() {
+        freezeTimer = data.getInt("freezeTimer");
+    }
 
-    public int getAttackTimer() { return attackTimer; }
+    public int getAttackTimer() {
+        return attackTimer;
+    }
 
-    public void decrementAttackTimer() { attackTimer--; }
+    public void decrementAttackTimer() {
+        attackTimer--;
+    }
 
-    public void resetAttackTimer() { attackTimer = data.getInt("attackTimer");}
+    public void resetAttackTimer() {
+        attackTimer = data.getInt("attackTimer");
+    }
 
-    public int getAttackAnimationTimer() { return attackAnimationTimer; }
+    public int getAttackAnimationTimer() {
+        return attackAnimationTimer;
+    }
 
-    public void decrementAttackAnimationTimer() { attackAnimationTimer--; }
+    public void decrementAttackAnimationTimer() {
+        attackAnimationTimer--;
+    }
 
-    public void resetAttackAnimationTimer() { attackAnimationTimer = data.getInt("attackAnimationTimer");}
+    public void resetAttackAnimationTimer() {
+        attackAnimationTimer = data.getInt("attackAnimationTimer");
+    }
 
-    public void update(){
+    public void update() {
         switch (state) {
             case OUT_OF_LIGHT:
                 out_of_light();
@@ -159,7 +202,7 @@ public class Enemy extends ObstacleSprite {
         }
     }
 
-    public void out_of_light(){
+    public void out_of_light() {
 
     }
 
@@ -201,7 +244,7 @@ public class Enemy extends ObstacleSprite {
             @Override
             public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
                 ObstacleSprite target = (ObstacleSprite) fixture.getBody().getUserData();
-                if (target.getName().equals("platform") || target.getName().equals("enemy")){
+                if (target.getName().equals("platform") || target.getName().equals("enemy")) {
                     groundDetected[0] = true;
                 }
                 return fraction;
@@ -213,11 +256,11 @@ public class Enemy extends ObstacleSprite {
     }
 
 
-    public void raycast(){
+    public void raycast() {
         Vector2 start = obstacle.getBody().getPosition();
         Vector2 direction;
         if (isFacingRight()) {
-             direction = new Vector2(-1,0);
+            direction = new Vector2(-1, 0);
         } else {
             direction = new Vector2(1, 0);
         }
@@ -226,7 +269,6 @@ public class Enemy extends ObstacleSprite {
         RayCastCallback callback = new RayCastCallback() {
             @Override
             public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
-//                System.out.println("Hit: " + fixture.getBody().getUserData() + " at " + point);
                 return fraction;
             }
         };
@@ -242,7 +284,7 @@ public class Enemy extends ObstacleSprite {
             return;
         }
 
-        if (isAboutToFall()){
+        if (isAboutToFall()) {
             changeDirection();
         }
 
@@ -256,15 +298,20 @@ public class Enemy extends ObstacleSprite {
 
     }
 
-    public void in_light(){
+    public void in_light() {
 
     }
 
-    public void angry(){
+    public void angry() {
     }
 
-    public void attack(){}
-    public void stop() { obstacle.getBody().setLinearVelocity(0, 0);}
+    public void attack() {
+    }
+
+    public void stop() {
+        float currY = obstacle.getLinearVelocity().y;
+        obstacle.getBody().setLinearVelocity(0, currY);
+    }
 
     @Override
     public void draw(SpriteBatch batch) {
@@ -274,19 +321,19 @@ public class Enemy extends ObstacleSprite {
     public void createSensor() {
         Vector2 sensorCenter = new Vector2(0, -height / 2);
         FixtureDef sensorDef = new FixtureDef();
-        sensorDef.density = data.getFloat("density",0);
+        sensorDef.density = data.getFloat("density", 0);
         sensorDef.isSensor = true;
 
         JsonValue sensorjv = data.get("sensor");
-        float w = sensorjv.getFloat("shrink",0)*width/2.0f;
-        float h = sensorjv.getFloat("height",0);
+        float w = sensorjv.getFloat("shrink", 0) * width / 2.0f;
+        float h = sensorjv.getFloat("height", 0);
         PolygonShape sensorShape = new PolygonShape();
         sensorShape.setAsBox(w, h, sensorCenter, 0.0f);
         sensorDef.shape = sensorShape;
 
         // Ground sensor to represent our feet
         Body body = obstacle.getBody();
-        Fixture sensorFixture = body.createFixture( sensorDef );
+        Fixture sensorFixture = body.createFixture(sensorDef);
 //        sensorName = "traci_sensor";
         sensorFixture.setUserData(sensorName);
 
@@ -294,7 +341,7 @@ public class Enemy extends ObstacleSprite {
         float u = obstacle.getPhysicsUnits();
         PathFactory factory = new PathFactory();
         sensorOutline = new Path2();
-        factory.makeRect( (sensorCenter.x-w/2)*u,(sensorCenter.y-h/2)*u, w*u, h*u,  sensorOutline);
+        factory.makeRect((sensorCenter.x - w / 2) * u, (sensorCenter.y - h / 2) * u, w * u, h * u, sensorOutline);
     }
 
 }

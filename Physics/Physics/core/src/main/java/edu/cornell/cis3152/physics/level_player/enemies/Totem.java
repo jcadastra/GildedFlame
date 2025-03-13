@@ -2,6 +2,7 @@ package edu.cornell.cis3152.physics.level_player.enemies;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.AssetDirectory;
 
@@ -16,18 +17,18 @@ public class Totem extends Enemy {
     // reacting to light
     @Override
     public void in_light(){
-//        System.out.println("INLIGHT");
         Texture texture = directory.getEntry("rocket-totem03", Texture.class);
         setTexture(texture);
+        obstacle.setBodyType(BodyDef.BodyType.StaticBody);
         stop();
     }
 
     @Override
     public void out_of_light(){
-//        System.out.println("OUTOFLIGHT");
         Texture texture = directory.getEntry("rocket-totem01", Texture.class);
         setTexture(texture);
         if (getFreezeTimer() == 0){
+            obstacle.setBodyType(BodyDef.BodyType.DynamicBody);
             move();
         } else {
             angry();
@@ -36,7 +37,6 @@ public class Totem extends Enemy {
 
     @Override
     public void angry() {
-//        System.out.println("ANGRY");
         Texture texture = directory.getEntry("rocket-totem02", Texture.class);
         setTexture(texture);
         decrementFreezeTimer();
