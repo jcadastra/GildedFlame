@@ -65,4 +65,6 @@ public class Fire extends ObstacleSprite {
     public String toString() {
         return (obstacle.getPosition().toString());
     }
+
+
 }
