@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import edu.cornell.gdiac.math.Poly2;
 import edu.cornell.gdiac.math.PolyTriangulator;
 import edu.cornell.gdiac.physics2.PolygonObstacle;
+import edu.cornell.gdiac.physics2.WheelObstacle;
 
 public class GameObject extends EnhancedObstacleSprite {
 
@@ -29,7 +30,7 @@ public class GameObject extends EnhancedObstacleSprite {
         triangulator.calculate();
         triangulator.getPolygon(poly);
 
-        obstacle = new PolygonObstacle(points, x, y);
+        obstacle = new WheelObstacle(y);
         obstacle.setPosition(x, y);
         obstacle.setDensity(0.5f);
         obstacle.setFriction(0.5f);
