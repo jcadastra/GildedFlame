@@ -31,12 +31,12 @@ public class Totem extends Enemy {
             obstacle.setBodyType(BodyDef.BodyType.DynamicBody);
             move();
         } else {
-            angry();
+            cd();
         }
     }
 
     @Override
-    public void angry() {
+    public void cd() {
         Texture texture = directory.getEntry("rocket-totem02", Texture.class);
         setTexture(texture);
         decrementFreezeTimer();
