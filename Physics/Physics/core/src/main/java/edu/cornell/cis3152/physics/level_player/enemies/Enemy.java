@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.JsonValue;
+import edu.cornell.cis3152.physics.level_player.enviromentals.Light;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.graphics.SpriteBatch;
 import edu.cornell.gdiac.math.Path2;
@@ -63,6 +64,8 @@ public class Enemy extends ObstacleSprite {
     public SpriteBatch batch;
 
     private Fixture fixture;
+
+    public RaycastResult rr;
 
     public class RaycastResult {
         public Object targetObject;
@@ -192,7 +195,10 @@ public class Enemy extends ObstacleSprite {
     }
 
     public void update() {
-
+        if (state == EnemyState.IN_LIGHT){
+            updateRayCastInLight();
+        }
+        updateRayCast();
         switch (state) {
             case OUT_OF_LIGHT:
                 out_of_light();
@@ -219,6 +225,13 @@ public class Enemy extends ObstacleSprite {
         }
     }
 
+    public void updateRayCast(){
+        rr = raycast();
+    }
+
+    public void updateRayCastInLight(){
+        rr = raycastInLight();
+    }
     public void out_of_light() {
 
     }
@@ -274,6 +287,7 @@ public class Enemy extends ObstacleSprite {
 
 
     public RaycastResult raycast() {
+
         Vector2 start = obstacle.getBody().getPosition();
         Vector2 direction;
         if (isFacingRight()) {
@@ -306,10 +320,42 @@ public class Enemy extends ObstacleSprite {
         return null;
     }
 
+    public RaycastResult raycastInLight() {
+
+        Vector2 start = obstacle.getBody().getPosition();
+        Vector2 direction;
+        if (isFacingRight()) {
+            direction = new Vector2(-1, 0);
+        } else {
+            direction = new Vector2(1, 0);
+        }
+        float maxDistance = 5f;
+        Vector2 end = start.cpy().add(direction.scl(maxDistance));
+        final Object[] closestObject = {null};
+        final Vector2[] closestPoint = {null};
+        final float[] closestFraction = {Float.MAX_VALUE};
+        RayCastCallback callback = (fixture, point, normal, fraction) -> {
+            if (fraction < closestFraction[0] && !(fixture.getBody().getUserData() instanceof Light)) {
+                closestObject[0] = fixture.getBody().getUserData();
+                closestPoint[0] = new Vector2(point);
+                closestFraction[0] = fraction;
+            }
+            return fraction;
+        };
+
+        World world = obstacle.getBody().getWorld();
+        world.rayCast(callback, start, end);
+
+        if (closestObject[0] != null && closestPoint[0] != null) {
+            float distance = start.dst(closestPoint[0]);
+            return new RaycastResult(closestObject[0], closestPoint[0], distance);
+        }
+
+        return null;
+    }
+
     public void move() {
         Body body = obstacle.getBody();
-
-
 
         int direction;
         if (isAboutToFall()) {

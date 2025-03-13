@@ -6,26 +6,28 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.JsonValue;
+import edu.cornell.cis3152.physics.GameplayScene;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Light;
+import edu.cornell.cis3152.physics.level_player.player.Torch;
 import edu.cornell.gdiac.assets.AssetDirectory;
 
 public class Moth extends Enemy {
     float DETECTION_DISTANCE = 5;
 
-    RaycastResult rr;
 
     public Moth(int id, float units, JsonValue value, AssetDirectory directory, Vector2 position) {
         super(id, units, value, directory, position);
+        rr = null;
     }
-
-    @Override
-    public void update() {
-    }
-
 
     @Override
     public void in_light() {
-
+        if (getAttackTimer() == 0) {
+            setState(EnemyState.ATTACK);
+        } else {
+            stop();
+            decrementAttackTimer();
+        }
     }
 
     @Override
@@ -49,52 +51,28 @@ public class Moth extends Enemy {
         }
     }
 
-    @Override
-    public RaycastResult raycast() {
-        Vector2 start = obstacle.getBody().getPosition();
-        Vector2 direction;
-        if (isFacingRight()) {
-            direction = new Vector2(-1, 0);
-        } else {
-            direction = new Vector2(1, 0);
-        }
-        float maxDistance = 5f;
-        Vector2 end = start.cpy().add(direction.scl(maxDistance));
-        RayCastCallback callback = new RayCastCallback() {
-            @Override
-            public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
-                if (fixture.getBody().getUserData() instanceof Light) {
-                    System.out.println("Light detected");
-                }
-                return fraction;
-            }
-        };
-        World world = obstacle.getBody().getWorld();
-        world.rayCast(callback, start, end);
-        return null;
-    }
-
     // just follows the torch around.
     @Override
     public void angry() {
-        
-
-        if (getAttackTimer() == 0) {
-            setState(EnemyState.ATTACK);
-        } else {
-            stop();
-            decrementAttackTimer();
-        }
+//        move_to();
     }
 
     @Override
     public void out_of_light() {
         Texture texture = directory.getEntry("rocket-moth01", Texture.class);
         setTexture(texture);
-        if (rr.targetDistance < DETECTION_DISTANCE && rr.targetObject instanceof Light){
-            angry();
-        } else {
-            move();
+        if (!(rr == null) && (!Float.isNaN(rr.targetDistance))) {
+            System.out.println("TARGET: " + rr.targetObject.toString());
+            if (rr.targetDistance < DETECTION_DISTANCE && rr.targetObject instanceof Light) {
+                setState(EnemyState.ANGRY);
+                System.out.println("angry");
+            } else {
+                System.out.println("out of light");
+                move();
+            }
         }
     }
+
+
 }
+
