@@ -54,6 +54,7 @@ public class CollisionController implements ContactListener {
         Object fd2 = fix2.getUserData();
 
         try {
+            System.out.println(body2.getUserData());
             ObstacleSprite bd1 = (ObstacleSprite) body1.getUserData();
             ObstacleSprite bd2 = (ObstacleSprite) body2.getUserData();
 

@@ -6,12 +6,6 @@ import edu.cornell.gdiac.math.PolyTriangulator;
 import edu.cornell.gdiac.physics2.PolygonObstacle;
 
 public class GameObject extends EnhancedObstacleSprite {
-    private boolean flammable;
-    private Vector2 internalPosition;
-
-    public boolean getFlammable() {
-        return flammable;
-    }
 
     /**
      * Creates a GameObject with a hardcoded shape.
@@ -29,26 +23,13 @@ public class GameObject extends EnhancedObstacleSprite {
     public GameObject(float[] points, float x, float y, float units) {
         super();
 
-        // Compute the centroid (average of vertices)
-        float xSum = 0, ySum = 0;
-        int count = points.length / 2;
-        for (int i = 0; i < points.length; i += 2) {
-            xSum += points[i];
-            ySum += points[i + 1];
-        }
-        internalPosition = new Vector2(xSum / count, ySum / count);
-
-        // Construct a Poly2 object using a triangulator
         Poly2 poly = new Poly2();
         PolyTriangulator triangulator = new PolyTriangulator();
         triangulator.set(points);
         triangulator.calculate();
         triangulator.getPolygon(poly);
 
-        // Create the polygon obstacle from the same hardcoded vertices.
-        // The obstacle is positioned at (x,y) in world space.
         obstacle = new PolygonObstacle(points, x, y);
-        flammable = true;
         obstacle.setPosition(x, y);
         obstacle.setDensity(0.5f);
         obstacle.setFriction(0.5f);
@@ -57,16 +38,9 @@ public class GameObject extends EnhancedObstacleSprite {
         obstacle.setUserData(this);
         obstacle.setFixedRotation(true);
 
-        // Create the mesh from the Poly2.
-        // Scale the polygon by the physics units so that drawing is adjusted.
         poly.scl(units);
-        // Hardcoded tiling factor; adjust as needed.
         float tile = 1.0f;
         mesh.set(poly, tile, tile);
-//        mesh.
     }
 
-    public Vector2 getInternalPosition() {
-        return internalPosition;
-    }
 }
