@@ -57,19 +57,9 @@ public class Rope extends ObstacleGroup {
         topVertices = genOneRowOnX(ropeThickness/2);
         lenOfCurve = lengthOfCurve(bottomVertices);
         anchors = genAnchors();
-//        System.out.println("l anchors"+anchors.get(0).getObstacle().getPosition());
-//        System.out.println("r anchors"+anchors.get(1).getObstacle().getPosition());
         bottomEntities = genFixtures(bottomVertices);
-//        System.out.println("l anchors"+anchors.get(0).getObstacle().getPosition());
-//        System.out.println("r anchors"+anchors.get(1).getObstacle().getPosition());
         topEntities = genFixtures(topVertices);
-//        System.out.println("l anchors"+anchors.get(0).getObstacle().getPosition());
-//        System.out.println("r anchors"+anchors.get(1).getObstacle().getPosition());
         fixAnchors();
-//        System.out.println("l anchors"+anchors.get(0).getObstacle().getPosition());
-//        System.out.println("r anchors"+anchors.get(1).getObstacle().getPosition());
-
-//        System.out.println(h + ", "+ pin1 + ", "+ pin2 + ", "+ d);
     }
 
     public Rope(Vector2 pin1, boolean pinBottom, float lenOfCurve, float units, JsonValue data) {
@@ -107,13 +97,10 @@ public class Rope extends ObstacleGroup {
     }
 
     private float[] genOneRowOnX(float y_offset) {
-//        System.out.println("gen one caternary row ------------------------------");
         FloatArray vertexSet = new FloatArray();
         for (float i = pin1.x; i < pin2.x; i += ropePieceLen/2) {
             vertexSet.add(i);
-//            System.out.println(i);
             vertexSet.add(pin1.y + caternaryCurveFunc(i, y_offset));
-//            System.out.println(i + "," + caternaryCurveFunc(i, y_offset));
         }
         return vertexSet.toArray();
     }
@@ -164,7 +151,6 @@ public class Rope extends ObstacleGroup {
         int tempLen = vertices.length;
         ArrayList<EnhancedObstacleSprite> returnSet = new ArrayList<>();
         for (int i = 0; i < tempLen; i += 2) {
-//            System.out.println(vertices[i] + "," + vertices[i+1]);
             WheelObstacle wheel = new WheelObstacle(vertices[i] / units, vertices[i+1] / units, ropeThickness/(2 * units));
             wheel.setBodyType(BodyType.DynamicBody);
             wheel.setMass(0.3f);
@@ -173,7 +159,6 @@ public class Rope extends ObstacleGroup {
             EnhancedObstacleSprite s = new EnhancedObstacleSprite(wheel);
             s.setMaterial(new ObstacleMaterial("spinalFluid", data.get(1)));
             returnSet.add(s);
-//            System.out.println("Physics Body Pos: " + wheel.getPosition());
             s.setDebugColor( Color.PURPLE );
             sprites.add(s);
         }

@@ -20,7 +20,7 @@ public class ObstacleMaterial {
         this.name = "wood";
         this.flammability =  .05f;
         this.burnTimerLimit = 80f;
-        this.ignitionTimerLimit = 60f;
+        this.ignitionTimerLimit = 15f;
         this.burnTimer = 0f;
         this.ignitionTimer = 0f;
     }
@@ -30,7 +30,7 @@ public class ObstacleMaterial {
     }
     public void incrementBurnTimer() {
         burnTimer++;
-        System.out.println(burnTimer);
+//        System.out.println(burnTimer);
     }
     public boolean isExpiredBurnTimer() {
         return burnTimer > burnTimerLimit;

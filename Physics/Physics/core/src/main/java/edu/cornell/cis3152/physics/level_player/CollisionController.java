@@ -17,7 +17,9 @@ import edu.cornell.gdiac.physics2.ObstacleSprite;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
@@ -29,6 +31,8 @@ public class CollisionController implements ContactListener {
         return collisionFlags;
     }
 
+    private Map<ContactKey, Integer> sustainedContacts = new HashMap<>();
+
     private AssetDirectory directory;
     private FireController fireController;
 
@@ -37,6 +41,7 @@ public class CollisionController implements ContactListener {
         this.directory = directory;
         this.fireController = fireController;
         this.collisionFlags = new Stack<>();
+        this.sustainedContacts = new HashMap<>();
     }
 
     /**
@@ -139,10 +144,6 @@ public class CollisionController implements ContactListener {
                 moth.resetAttackTimer();
             }
 
-            if (isXandY(bd1, bd2, GameObject.class, GameObject.class) == 2) {
-                System.out.println(contact.getWorldManifold().getPoints()[0]);
-            }
-
             if (isXandY(bd1, bd2, Moth.class, Traci.class) == 1) {
                 collisionFlags.push(new Object[]{"queueFailure"});
             }
@@ -153,18 +154,51 @@ public class CollisionController implements ContactListener {
                     EnhancedObstacleSprite.class);
                 if (b.getMaterial().getFlammability() > 0 &&
                     !fireController.testIfFullyBurnt(b)) {
-
-                    Vector2 f_pos = f.getObstacle().getPosition().cpy();
-                    Vector2 b_pos = (b.getObstacle().getPosition().cpy());
-                    b_pos.sub(f_pos);
-                    b_pos.nor().scl(f.getRadius());
-                    f_pos.add(b_pos);
-                    fireController.lightAnew(b, f_pos);
+                    ContactKey key = new ContactKey(fix1, fix2);
+                    sustainedContacts.put(key, 1);
                 }
             }
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+
+    public void sustainedContact() {
+        for (Iterator<ContactKey> it = sustainedContacts.keySet().iterator(); it.hasNext(); ) {
+            ContactKey key = it.next();
+            Fixture fix1 = key.fix1;
+            Fixture fix2 = key.fix2;
+
+            Body body1 = fix1.getBody();
+            Body body2 = fix2.getBody();
+
+            Object fd1 = fix1.getUserData();
+            Object fd2 = fix2.getUserData();
+
+            ObstacleSprite bd1 = (ObstacleSprite) body1.getUserData();
+            ObstacleSprite bd2 = (ObstacleSprite) body2.getUserData();
+
+            if (isXandY(bd1, bd2, EnhancedObstacleSprite.class, Fire.class) == 1) {
+                Fire f = (Fire) idX(bd1, bd2, Fire.class);
+                EnhancedObstacleSprite b = (EnhancedObstacleSprite) idX(bd1, bd2, EnhancedObstacleSprite.class);
+                int contactTime = sustainedContacts.get(key);
+                if (b.getMaterial().getFlammability() > 0 &&
+                    b.getMaterial().surpassIgnitionTimer(contactTime) &&
+                    !fireController.testIfFullyBurnt(b)) {
+
+                    Vector2 f_pos = f.getObstacle().getPosition().cpy();
+                    Vector2 b_pos = b.getObstacle().getPosition().cpy();
+                    b_pos.sub(f_pos);
+                    b_pos.nor().scl(f.getRadius());
+                    f_pos.add(b_pos);
+                    fireController.lightAnew(b, f_pos);
+                    it.remove();
+                } else {
+                    sustainedContacts.put(key, contactTime + 1);
+                }
+            }
         }
     }
 
@@ -205,6 +239,10 @@ public class CollisionController implements ContactListener {
         if (isXandY(bd1, bd2, Light.class, Moth.class) == 1) {
             Moth moth = (Moth) idX(bd1, bd2, Moth.class);
             moth.setState(EnemyState.OUT_OF_LIGHT);
+        }
+        if (isXandY(bd1,bd2, Fire.class, EnhancedObstacleSprite.class) == 1) {
+            ContactKey key = new ContactKey(fix1, fix2);
+            sustainedContacts.remove(key);
         }
     }
 
@@ -296,3 +334,4 @@ public class CollisionController implements ContactListener {
         return fireController;
     }
 }
+

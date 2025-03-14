@@ -406,8 +406,6 @@ public class GameplayScene_temp extends GameplayScene {
      * @param dt Number of seconds since last animation frame
      */
     public void update(float dt) {
-//        System.out.println(Gdx.graphics.getFramesPerSecond());
-//        System.out.println(avatar.getObstacle().getPosition().cpy().scl(avatar.getObstacle().getPhysicsUnits()));
         supplementaryCollisionActions();
         supplementaryFireActions();
         if (enemies != null) {
@@ -417,6 +415,7 @@ public class GameplayScene_temp extends GameplayScene {
         }
         torch.update();
         fireController.update();
+        contactListener.sustainedContact();
 
         InputController input = InputController.getInstance();
         // Process actions in object model
@@ -488,7 +487,6 @@ public class GameplayScene_temp extends GameplayScene {
                         break;
                     }
                     joinFireToObject((ObstacleSprite) todo_action[1], fire);
-                    System.out.println("added fire to game at " + fire.getObstacle().getPosition());
                     break;
                 case "expireObj":
                     for (Fire f : (ArrayList<Fire>) todo_action[2]) {
