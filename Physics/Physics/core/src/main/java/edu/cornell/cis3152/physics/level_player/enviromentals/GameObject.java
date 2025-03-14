@@ -11,12 +11,6 @@ public class GameObject extends EnhancedObstacleSprite {
     /**
      * Creates a GameObject with a hardcoded shape.
      *
-     * The hardcoded shape is defined by the vertices:
-     *  (0,0), (3,0), (3,1), (1,1), (1,5)
-     *
-     * The centroid is computed for internal bookkeeping.
-     * The physics obstacle and mesh are created based on these vertices.
-     *
      * @param x      The world x-position.
      * @param y      The world y-position.
      * @param units  The physics unit scale.

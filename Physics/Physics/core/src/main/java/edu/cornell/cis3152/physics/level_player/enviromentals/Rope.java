@@ -21,8 +21,9 @@ public class Rope extends ObstacleGroup {
     private JsonValue data;
     private float lenOfCurve;
 
-    private float ropeThickness;
-    private float ropePieceLen;
+    private float ropeThickness = 7;
+    private float ropePieceLen = 14;
+//        from json
     private ArrayList <EnhancedObstacleSprite> bottomEntities;
     private ArrayList <EnhancedObstacleSprite> topEntities;
     private ArrayList <EnhancedObstacleSprite> anchors;
@@ -51,9 +52,6 @@ public class Rope extends ObstacleGroup {
         this.units = units;
         this.data = data;
 
-//        from json
-        this.ropeThickness = 12;
-        this.ropePieceLen = 20f;
 
         bottomVertices = genOneRowOnX(-ropeThickness/2);
         topVertices = genOneRowOnX(ropeThickness/2);
@@ -74,15 +72,12 @@ public class Rope extends ObstacleGroup {
 //        System.out.println(h + ", "+ pin1 + ", "+ pin2 + ", "+ d);
     }
 
-    public Rope(Vector2 pin1, float lenOfCurve, float units, JsonValue data) {
+    public Rope(Vector2 pin1, boolean pinBottom, float lenOfCurve, float units, JsonValue data) {
         this.pin1 = pin1;
         this.units = units;
         this.data = data;
 
         this.pin2 = new Vector2(pin1.x, pin1.y - lenOfCurve);
-
-        this.ropeThickness = 12;
-        this.ropePieceLen = 20f;
 
         bottomVertices = genOneRowOnY(-ropeThickness / 2);
         topVertices = genOneRowOnY(ropeThickness / 2);
@@ -92,7 +87,9 @@ public class Rope extends ObstacleGroup {
         bottomEntities = genFixtures(bottomVertices);
         topEntities = genFixtures(topVertices);
 
-        anchors.get(1).getObstacle().setBodyType(BodyType.DynamicBody);
+        if (!pinBottom) {
+            anchors.get(1).getObstacle().setBodyType(BodyType.DynamicBody);
+        }
     }
 
     public static double acosh(double x) {
