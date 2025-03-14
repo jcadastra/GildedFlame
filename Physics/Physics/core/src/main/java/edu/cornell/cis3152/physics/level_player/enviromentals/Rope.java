@@ -154,6 +154,7 @@ public class Rope extends ObstacleGroup {
             WheelObstacle wheel = new WheelObstacle(vertices[i] / units, vertices[i+1] / units, ropeThickness/(2 * units));
             wheel.setBodyType(BodyType.DynamicBody);
             wheel.setMass(0.3f);
+            wheel.setSensor(true);
             wheel.setPhysicsUnits(units);
             wheel.setName("ropeSegment");
             EnhancedObstacleSprite s = new EnhancedObstacleSprite(wheel);
