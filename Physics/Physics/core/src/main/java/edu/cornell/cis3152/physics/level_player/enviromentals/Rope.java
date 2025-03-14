@@ -1,26 +1,17 @@
 package edu.cornell.cis3152.physics.level_player.enviromentals;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.joints.DistanceJoint;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.JsonValue;
-import edu.cornell.cis3152.physics.level_player.Torch_playground;
 import edu.cornell.cis3152.physics.level_player.utils.ObstacleGroup;
-import edu.cornell.gdiac.physics2.Obstacle;
-import edu.cornell.gdiac.physics2.ObstacleSprite;
 import edu.cornell.gdiac.physics2.WheelObstacle;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Rope extends ObstacleGroup {
     private Vector2 pin1;
@@ -61,11 +52,11 @@ public class Rope extends ObstacleGroup {
         this.data = data;
 
 //        from json
-        this.ropeThickness = 10;
+        this.ropeThickness = 12;
         this.ropePieceLen = 20f;
 
-        bottomVertices = genOneRow(-ropeThickness/2);
-        topVertices = genOneRow(ropeThickness/2);
+        bottomVertices = genOneRowOnX(-ropeThickness/2);
+        topVertices = genOneRowOnX(ropeThickness/2);
         lenOfCurve = lengthOfCurve(bottomVertices);
         anchors = genAnchors();
 //        System.out.println("l anchors"+anchors.get(0).getObstacle().getPosition());
@@ -83,6 +74,26 @@ public class Rope extends ObstacleGroup {
 //        System.out.println(h + ", "+ pin1 + ", "+ pin2 + ", "+ d);
     }
 
+    public Rope(Vector2 pin1, float lenOfCurve, float units, JsonValue data) {
+        this.pin1 = pin1;
+        this.units = units;
+        this.data = data;
+
+        this.pin2 = new Vector2(pin1.x, pin1.y - lenOfCurve);
+
+        this.ropeThickness = 12;
+        this.ropePieceLen = 20f;
+
+        bottomVertices = genOneRowOnY(-ropeThickness / 2);
+        topVertices = genOneRowOnY(ropeThickness / 2);
+        this.lenOfCurve = lenOfCurve;
+
+        anchors = genAnchors();
+        bottomEntities = genFixtures(bottomVertices);
+        topEntities = genFixtures(topVertices);
+
+        anchors.get(1).getObstacle().setBodyType(BodyType.DynamicBody);
+    }
 
     public static double acosh(double x) {
         return Math.log(x + Math.sqrt(x * x - 1));
@@ -98,7 +109,7 @@ public class Rope extends ObstacleGroup {
         return y_offset;
     }
 
-    private float[] genOneRow(float y_offset) {
+    private float[] genOneRowOnX(float y_offset) {
 //        System.out.println("gen one caternary row ------------------------------");
         FloatArray vertexSet = new FloatArray();
         for (float i = pin1.x; i < pin2.x; i += ropePieceLen/2) {
@@ -106,6 +117,16 @@ public class Rope extends ObstacleGroup {
 //            System.out.println(i);
             vertexSet.add(pin1.y + caternaryCurveFunc(i, y_offset));
 //            System.out.println(i + "," + caternaryCurveFunc(i, y_offset));
+        }
+        return vertexSet.toArray();
+    }
+
+    private float[] genOneRowOnY(float offset) {
+        FloatArray vertexSet = new FloatArray();
+        for (float y = pin1.y; y > pin2.y; y -= ropePieceLen / 2) {
+            float x = pin1.x + caternaryCurveFunc(y, offset);
+            vertexSet.add(x);
+            vertexSet.add(y);
         }
         return vertexSet.toArray();
     }
@@ -149,7 +170,7 @@ public class Rope extends ObstacleGroup {
 //            System.out.println(vertices[i] + "," + vertices[i+1]);
             WheelObstacle wheel = new WheelObstacle(vertices[i] / units, vertices[i+1] / units, ropeThickness/(2 * units));
             wheel.setBodyType(BodyType.DynamicBody);
-            wheel.setMass(0.025f);
+            wheel.setMass(0.3f);
             wheel.setPhysicsUnits(units);
             wheel.setName("ropeSegment");
             EnhancedObstacleSprite s = new EnhancedObstacleSprite(wheel);
@@ -165,6 +186,8 @@ public class Rope extends ObstacleGroup {
     @Override
     protected boolean createJoints(World world) {
         DistanceJointDef externalJoint = new DistanceJointDef();
+        externalJoint.frequencyHz = 32f;
+        externalJoint.dampingRatio = .5f;
         externalJoint.collideConnected = false;
         externalJoint.length = (ropePieceLen * 2) / units;
 
