@@ -13,6 +13,12 @@ import edu.cornell.cis3152.physics.level_player.utils.ObstacleGroup;
 import edu.cornell.gdiac.physics2.WheelObstacle;
 import java.util.ArrayList;
 
+/**
+ * A  group that resents a rope, it is made out of a latice interwoven structure found at the end
+ * of the slides for box2d, atm starts horrixontal but will implement beizer curves, of material rope
+ *
+ * rope is not interactable with surroundings other than to check for collision
+ */
 public class Rope extends ObstacleGroup {
     private Vector2 pin1;
     private Vector2 pin2;
@@ -62,6 +68,19 @@ public class Rope extends ObstacleGroup {
         fixAnchors();
     }
 
+    /**
+     * Helper method to create a whole rope from one point and length
+     * Will hang downard from x y of length y
+     *
+     * provide PIN1 and PIN2 cords in terms of global cords, ie not box2d, ie * units
+     * pin2.x - pin1.x >= 2
+     *
+     * @param pin1 point at which the rope hangs
+     * @param pinBottom if the bottom is pinned or not, ie static or swinging
+     * @param lenOfCurve total len of curve in pixels not phys cords
+     * @param units physics units
+     * @param data json values
+     */
     public Rope(Vector2 pin1, boolean pinBottom, float lenOfCurve, float units, JsonValue data) {
         this.pin1 = pin1;
         this.units = units;
@@ -87,7 +106,7 @@ public class Rope extends ObstacleGroup {
     }
 
     /**
-     * Given an x value, returns a y value at that point on the curve
+     * Given an x value, returns a y value at that point on the curve, non functional
      * @return
      */
     private float caternaryCurveFunc(float x_pos, float y_offset) {
@@ -96,15 +115,27 @@ public class Rope extends ObstacleGroup {
         return y_offset;
     }
 
-    private float[] genOneRowOnX(float y_offset) {
+    /**
+     * Generates a given row of points (with a given offset for up or down) and returns array of
+     * points to generate the info, iterates from te x value of a cord
+     * @param offset the offset from ideal line that the poitns are generated on
+     * @return a float array of x y cords describing position
+     */
+    private float[] genOneRowOnX(float offset) {
         FloatArray vertexSet = new FloatArray();
         for (float i = pin1.x; i < pin2.x; i += ropePieceLen/2) {
             vertexSet.add(i);
-            vertexSet.add(pin1.y + caternaryCurveFunc(i, y_offset));
+            vertexSet.add(pin1.y + caternaryCurveFunc(i, offset));
         }
         return vertexSet.toArray();
     }
-
+    /**
+     *
+     * Generates a given row of points (with a given offset for up or down) and returns array of
+     * points to generate the info, iterates from te x value of a cord
+     * @param offset the offset from ideal line that the poitns are generated on
+     * @return a float array of x y cords describing position
+     */
     private float[] genOneRowOnY(float offset) {
         FloatArray vertexSet = new FloatArray();
         for (float y = pin1.y; y > pin2.y; y -= ropePieceLen / 2) {
@@ -115,11 +146,20 @@ public class Rope extends ObstacleGroup {
         return vertexSet.toArray();
     }
 
+    /**
+     * Given the vertices of a generated set, what is the length of the curve
+     * @param vertexSet
+     * @return
+     */
     private float lengthOfCurve(float[] vertexSet) {
         Polyline temp = new Polyline(vertexSet);
         return temp.getLength();
     }
 
+    /**
+     * Generates the two anchors of rope pin and stores them in an ArrayList
+     * @return
+     */
     private ArrayList<EnhancedObstacleSprite> genAnchors() {
         ArrayList<EnhancedObstacleSprite> returnSet = new ArrayList<>();
 
@@ -149,6 +189,11 @@ public class Rope extends ObstacleGroup {
         return returnSet;
     }
 
+    /**
+     * Generates the fixtures alone on set of vertices for a rope lattice
+     * @param vertices x y format of float for vertices
+     * @return
+     */
     private ArrayList<EnhancedObstacleSprite> genFixtures(float[] vertices) {
         int tempLen = vertices.length;
         ArrayList<EnhancedObstacleSprite> returnSet = new ArrayList<>();
@@ -168,6 +213,12 @@ public class Rope extends ObstacleGroup {
         return returnSet;
     }
 
+    /**
+     * Actually generates the joints that merges the lattice together
+     * @param world the box2d world referencing the obstacles
+     *
+     * @return
+     */
     @Override
     protected boolean createJoints(World world) {
         DistanceJointDef externalJoint = new DistanceJointDef();
@@ -230,14 +281,3 @@ public class Rope extends ObstacleGroup {
     }
 
 }
-
-/**
- * make the hypotehtical curve
- * find length to see how long it would be
- *
- * create rope points along the curve to create rope x 2
- * join each set of rope points with a distance joint constraint
- * attach the ends to a revolute at the end
- *
- * rope needs to be made of enhanced
- */

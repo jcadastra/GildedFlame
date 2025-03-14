@@ -9,7 +9,7 @@ import edu.cornell.gdiac.physics2.WheelObstacle;
 public class GameObject extends EnhancedObstacleSprite {
 
     /**
-     * Creates a GameObject with a hardcoded shape.
+     * Creates a GameObject with a hardcoded shape, generic object that is enhanced
      *
      * @param x      The world x-position.
      * @param y      The world y-position.

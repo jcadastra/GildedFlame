@@ -5,6 +5,13 @@ import edu.cornell.gdiac.physics2.Obstacle;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
 import java.awt.Shape;
 
+/**
+ * Enhanced obstacle sprite is for any Obstacle Sprite that needs
+ * additional functionality, in the beginning this is just to attach
+ * a material type to an object (which currently just holds fire) but this
+ * can be extended out to chnage a floor to ice or other values as needed
+ */
+
 public class EnhancedObstacleSprite extends ObstacleSprite {
 
     private ObstacleMaterial material;

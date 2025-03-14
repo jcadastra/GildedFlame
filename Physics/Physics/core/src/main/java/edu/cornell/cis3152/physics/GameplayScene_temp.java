@@ -335,18 +335,18 @@ public class GameplayScene_temp extends GameplayScene {
             -1f, 1f
         };
 
-        texture = directory.getEntry( "rocket-crate0", Texture.class );
-        o = new Rope(new Vector2(150,200),new Vector2(400,200),200, units, constants.get(1));
-        addSpriteGroup(o);
-        o = new Rope(new Vector2(150,190),false,100, units, constants.get(1));
-        addSpriteGroup(o);
 //        texture = directory.getEntry( "rocket-crate0", Texture.class );
-//        GameObject o = new GameObject(temp, 11,9, units);
-//        o.getObstacle().setBodyType(BodyType.DynamicBody);
-//        o.getObstacle().setName("blocky1");
-//        o.setMaterial(new ObstacleMaterial("wood", constants.get(1)));
-//        o.setTexture(texture);
-//        addSprite(o);
+//        o = new Rope(new Vector2(150,200),new Vector2(400,200),200, units, constants.get(1));
+//        addSpriteGroup(o);
+//        o = new Rope(new Vector2(150,200),false,50, units, constants.get(1));
+//        addSpriteGroup(o);
+        texture = directory.getEntry( "rocket-crate0", Texture.class );
+        GameObject o = new GameObject(temp, 11,9, units);
+        o.getObstacle().setBodyType(BodyType.DynamicBody);
+        o.getObstacle().setName("blocky1");
+        o.setMaterial(new ObstacleMaterial("iron", constants.get(1)));
+        o.setTexture(texture);
+        addSprite(o);
 
 //        texture = directory.getEntry( "platform-rope", Texture.class );
 //        RopeBridge bridge = new RopeBridge(units, constants.get("bridge"));

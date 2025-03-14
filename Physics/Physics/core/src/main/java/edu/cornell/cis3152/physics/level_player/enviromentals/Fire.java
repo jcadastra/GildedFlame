@@ -13,8 +13,15 @@ import edu.cornell.gdiac.physics2.ObstacleSprite;
 import edu.cornell.gdiac.physics2.WheelObstacle;
 import java.util.Vector;
 
+/**
+ * Geneeral burning fire that holds a flame, there is nothing more than the
+ * sensor here, all logic is stored in the firecontroller, atm all fire can spread
+ *
+ * fire must be attached to something else at all times
+ */
 public class Fire extends ObstacleSprite {
 
+    // raidus of the fire
     private Float radius;
     public float getRadius () {
         return radius;
@@ -24,21 +31,11 @@ public class Fire extends ObstacleSprite {
         return (obstacle.getPosition()).sub(point).len() <= radius;
     }
 
+    // The joint the conencts the fire to the obstacle that it is burning
     private Joint fixtureJoint;
     public Joint getFixtureJoint() {return fixtureJoint;}
     public void setFixtureJoint(Joint j) {fixtureJoint = j;}
 
-    /**
-     * Boolean value if the fire spreads to other sources or stays constant
-     */
-    private boolean spreads;
-
-    /**
-     * General fire usuage, can either spread or not depending on needs
-     * If spreads, then also destructive
-     *
-     * fire must be attached to something else at all times
-     */
     public Fire(Float units, Vector2 point) {
         super();
 //        this.radius = data.getFloat("radius");
@@ -57,15 +54,9 @@ public class Fire extends ObstacleSprite {
         debug = Color.RED;
     }
 
+    // cleans up the fire
     public void dispose() {
         mesh.clear();
         obstacle.markRemoved(true);
     }
-
-    @Override
-    public String toString() {
-        return (obstacle.getPosition().toString());
-    }
-
-
 }

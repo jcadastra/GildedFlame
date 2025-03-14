@@ -1,15 +1,10 @@
 package edu.cornell.cis3152.physics.level_player;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import edu.cornell.cis3152.physics.level_player.enviromentals.*;
 import edu.cornell.gdiac.graphics.SpriteMesh;
-import edu.cornell.gdiac.physics2.ObstacleSprite;
-import java.util.Arrays;
 import java.util.HashMap;
 import com.badlogic.gdx.math.EarClippingTriangulator;
 import com.badlogic.gdx.utils.ShortArray;
@@ -25,6 +20,7 @@ public class FireController {
 
     /**
      * Map that stores the fire point diagrams of calculated flammable bodies
+     * ie a bunch of random points on a shape that are used to determine how on fire someting is
      */
     private HashMap<EnhancedObstacleSprite, Vector2[]> nFireDiagrams;
     private HashMap<EnhancedObstacleSprite, ArrayList<Fire>> firesOnShape;
@@ -66,6 +62,9 @@ public class FireController {
         resetStorage();
     }
 
+    /**
+     * runs comparisons on all the values and dspreads fire/marks objects for destruction as needed
+     */
     public void update() {
         int sum = 0;
         for (EnhancedObstacleSprite object : firesOnShape.keySet()) {
@@ -73,17 +72,19 @@ public class FireController {
 
             }
         }
+        // for each obnject that exists and has been given an assoicated diagram
         for (EnhancedObstacleSprite s : nFireDiagrams.keySet()) {
             if (s.getObstacle().isRemoved()) {
                 continue;
             }
-            if (testIfFullyBurnt(s)) {
+            if (testIfFullyBurning(s)) {
                 if (s.getMaterial().isExpiredBurnTimer()) {
                     fireFlags.push(new Object[]{"expireObj", s, firesOnShape.get(s)});
                 } else {
                     s.getMaterial().incrementBurnTimer();
                 }
             } else {
+                // calculate new points to be lit and place there
                 for (Vector2 p : findSuitableFirePoint(s)) {
                     if (rand.nextFloat() < s.getMaterial().getFlammability()) {
                         Fire f = new Fire(s.getObstacle().getPhysicsUnits(), p.cpy());
@@ -95,19 +96,37 @@ public class FireController {
         }
     }
 
-    private Set<Vector2> findSuitableFirePoint(EnhancedObstacleSprite s) {
-        Set<Vector2> preburnt = getPointsOnFire(s);
+    /**
+     * rotates and transforms sthe associated fire diagram of s to s's current location/rotation
+      * @param s
+     * @return
+     */
+    private ArrayList<Vector2> rotateAndTransformDiagram(EnhancedObstacleSprite s) {
         Vector2[] temp = nFireDiagrams.get(s);
         ArrayList<Vector2> reference = new ArrayList<Vector2>();
-        float th = s.getObstacle().getBody().getAngle();
+        float theta = s.getObstacle().getBody().getAngle();
         for (Vector2 v : temp) {
             Vector2 new_vector = v.cpy();
-            new_vector.rotateRad(th);
+            new_vector.rotateRad(theta);
             reference.add(new_vector.add(s.getObstacle().getPosition()));
         }
+        return reference;
+    }
+
+    /**
+     * for a given EOS s, takes the nFireDiagram and transofrms it to the current rotation and position
+     * them it gets all the points within the diagram that are less than the spread threshold and returns
+     * all valid candidates
+     * @param s
+     * @return
+     */
+    private Set<Vector2> findSuitableFirePoint(EnhancedObstacleSprite s) {
+        Set<Vector2> preburnt = getPointsOnFire(s);
 
         ArrayList<Vector2> openSpots = new ArrayList<>();
         ArrayList<Vector2> closedSpots = new ArrayList<>();
+
+        ArrayList<Vector2> reference = rotateAndTransformDiagram(s);
 
         for (Vector2 v : reference) {
             if (!preburnt.contains(v)) {
@@ -136,17 +155,15 @@ public class FireController {
         return toIgnite;
     }
 
-
+    /**
+     * gets the points within an nFireDiagram and returns all points that are overlapping a fire
+     * @param s
+     * @return
+     */
     private Set<Vector2> getPointsOnFire(EnhancedObstacleSprite s) {
         Set<Vector2> returnArray = new HashSet<>();
-        Vector2[] temp = nFireDiagrams.get(s);
-        ArrayList<Vector2> reference = new ArrayList<Vector2>();
-        float th = s.getObstacle().getBody().getAngle();
-        for (Vector2 v : temp) {
-            Vector2 new_vector = v.cpy();
-            new_vector.rotateRad(th);
-            reference.add(new_vector.add(s.getObstacle().getPosition()));
-        }
+        ArrayList<Vector2> reference = rotateAndTransformDiagram(s);
+
         int totalVerticesToCount = reference.size();
         for (int i = 0; i < totalVerticesToCount; i++) {
             for (Fire f : firesOnShape.get(s)) {
@@ -158,7 +175,13 @@ public class FireController {
         return returnArray;
     }
 
-    public boolean testIfFullyBurnt(EnhancedObstacleSprite s) {
+    /**
+     * returns true iff all points within an nFireDiagram are inside of a fire, ie the shape is
+     * fully on fire
+     * @param s
+     * @return
+     */
+    public boolean testIfFullyBurning(EnhancedObstacleSprite s) {
         if (!nFireDiagrams.containsKey(s)) {
             return false;
         }
@@ -196,8 +219,6 @@ public class FireController {
     /**
      * Aglorithim for divying up a given polygon body and assigning points to it These points will
      * be used to ensure that the body s fully covered in fire and will burn
-     * TODO: double check to ensure they are points relative to the body as opposed to space
-     *          Pretty sure they are global cords
      *
      * @param b             the ObstactleSprite that will be partiionted into
      * @param ignitionPoint the Vertex of contact to ensure that it keeps burning
@@ -287,6 +308,10 @@ public class FireController {
         }
     }
 
+    /**
+     * removes the object from any data structures that stores it to prevent double counting
+     * @param s
+     */
     public void cleanObj (EnhancedObstacleSprite s) {
         nFireDiagrams.remove(s);
         firesOnShape.remove(s);

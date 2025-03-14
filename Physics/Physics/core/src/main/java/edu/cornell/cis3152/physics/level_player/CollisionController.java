@@ -1,6 +1,5 @@
 package edu.cornell.cis3152.physics.level_player;
 
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.GlyphAndBitmap;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -14,15 +13,12 @@ import edu.cornell.cis3152.physics.level_player.enviromentals.*;
 import edu.cornell.cis3152.physics.level_player.player.*;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.Stack;
+import java.util.Vector;
 
 public class CollisionController implements ContactListener {
 
@@ -154,7 +150,7 @@ public class CollisionController implements ContactListener {
                 EnhancedObstacleSprite b = (EnhancedObstacleSprite) idX(bd1, bd2,
                     EnhancedObstacleSprite.class);
                 if (b.getMaterial().getFlammability() > 0 &&
-                    !fireController.testIfFullyBurnt(b)) {
+                    !fireController.testIfFullyBurning(b)) {
                     ContactKey key = new ContactKey(fix1, fix2);
                     sustainedContacts.put(key, 1);
                 }
@@ -186,23 +182,22 @@ public class CollisionController implements ContactListener {
                 EnhancedObstacleSprite b = (EnhancedObstacleSprite) idX(bd1, bd2, EnhancedObstacleSprite.class);
                 int contactTime = sustainedContacts.get(key);
 
-                float distance = ((bd1.getObstacle().getBody().getPosition().cpy()).sub(bd2.getObstacle().getBody().getPosition())).len();
+                Vector2 delta = ((b.getObstacle().getBody().getPosition().cpy()).sub(f.getObstacle().getBody().getPosition()));
 
                 if (b.getMaterial().getFlammability() > 0 &&
                     b.getMaterial().surpassIgnitionTimer(contactTime) &&
-                    !fireController.testIfFullyBurnt(b)) {
+                    !fireController.testIfFullyBurning(b)) {
 
                     Vector2 f_pos = f.getObstacle().getPosition().cpy();
                     Vector2 b_pos = b.getObstacle().getPosition().cpy();
                     b_pos.sub(f_pos);
                     b_pos.nor().scl(f.getRadius());
-                    f_pos.add(b_pos);
-                    fireController.lightAnew(b, f_pos);
+                    fireController.lightAnew(b, delta.len() < b_pos.len() ? f_pos.add(delta) : f_pos.add(b_pos));
                     it.remove();
                 } else {
                     float modif;
                     if (Objects.equals(b.getMaterial().getName(), "rope")) {
-                        modif = (float) (1/(Math.PI * Math.pow(distance,2.3) * 4));
+                        modif = (float) (1/(Math.PI * Math.pow(delta.len(),2.3) * 4));
                     } else {
                         modif = 1;
                     }
@@ -340,8 +335,5 @@ public class CollisionController implements ContactListener {
         sprite.getName().equals("surface")|| sprite instanceof Enemy;
     }
 
-    public FireController getFireController() {
-        return fireController;
-    }
 }
 
