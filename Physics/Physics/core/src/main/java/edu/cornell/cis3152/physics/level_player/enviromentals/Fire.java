@@ -58,7 +58,8 @@ public class Fire extends ObstacleSprite {
     }
 
     public void dispose() {
-
+        mesh.clear();
+        obstacle.markRemoved(true);
     }
 
     @Override

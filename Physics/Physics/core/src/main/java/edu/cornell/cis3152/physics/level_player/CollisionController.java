@@ -14,6 +14,11 @@ import edu.cornell.cis3152.physics.level_player.enviromentals.*;
 import edu.cornell.cis3152.physics.level_player.player.*;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 
 public class CollisionController implements ContactListener {
@@ -27,10 +32,11 @@ public class CollisionController implements ContactListener {
     private AssetDirectory directory;
     private FireController fireController;
 
+
     public CollisionController(AssetDirectory directory, FireController fireController) {
         this.directory = directory;
         this.fireController = fireController;
-        this.collisionFlags = new Stack<Object[]>();
+        this.collisionFlags = new Stack<>();
     }
 
     /**
@@ -133,10 +139,21 @@ public class CollisionController implements ContactListener {
                 moth.resetAttackTimer();
             }
 
+            if (isXandY(bd1, bd2, GameObject.class, GameObject.class) == 2) {
+                System.out.println(contact.getWorldManifold().getPoints()[0]);
+            }
+
+            if (isXandY(bd1, bd2, Moth.class, Traci.class) == 1) {
+                collisionFlags.push(new Object[]{"queueFailure"});
+            }
+
             if (isXandY(bd1, bd2, EnhancedObstacleSprite.class, Fire.class) == 1) {
                 Fire f = (Fire) idX(bd1, bd2, Fire.class);
-                EnhancedObstacleSprite b = (EnhancedObstacleSprite) idX(bd1, bd2, EnhancedObstacleSprite.class);
-                if (b.getMaterial().getFlammability() > 0 && !fireController.testIfFullyBurnt(b)) {
+                EnhancedObstacleSprite b = (EnhancedObstacleSprite) idX(bd1, bd2,
+                    EnhancedObstacleSprite.class);
+                if (b.getMaterial().getFlammability() > 0 &&
+                    !fireController.testIfFullyBurnt(b)) {
+
                     Vector2 f_pos = f.getObstacle().getPosition().cpy();
                     Vector2 b_pos = (b.getObstacle().getPosition().cpy());
                     b_pos.sub(f_pos);
@@ -144,14 +161,6 @@ public class CollisionController implements ContactListener {
                     f_pos.add(b_pos);
                     fireController.lightAnew(b, f_pos);
                 }
-            }
-
-            if (isXandY(bd1, bd2, GameObject.class, GameObject.class) == 2) {
-                System.out.println(contact.getWorldManifold().getPoints()[0]);
-            }
-
-            if (isXandY(bd1, bd2, Moth.class, Traci.class) == 1) {
-                collisionFlags.push(new Object[]{"queueFailure"});
             }
 
         } catch (Exception e) {
@@ -281,5 +290,9 @@ public class CollisionController implements ContactListener {
         sprite.getName().equals("barrier") ||
         sprite.getName().equals("spinner") ||
         sprite.getName().equals("surface")|| sprite instanceof Enemy;
+    }
+
+    public FireController getFireController() {
+        return fireController;
     }
 }

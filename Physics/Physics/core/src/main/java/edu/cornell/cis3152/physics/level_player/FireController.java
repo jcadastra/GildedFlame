@@ -74,16 +74,18 @@ public class FireController {
             }
         }
         for (EnhancedObstacleSprite s : nFireDiagrams.keySet()) {
+            if (s.getObstacle().isRemoved()) {
+                continue;
+            }
 //            System.out.println("art thou burnth?" + testIfFullyBurnt(s));
 //            System.out.println(firesOnShape.get(s).size());
 //            System.out.println("NOW EVALUATING " + s.getName());
             if (testIfFullyBurnt(s)) {
-//                if (s.burnTimer == 0) {
-//                    s.dispose();
-//                } else {
-//                    s.setBurnTimer(120);
-//                    TODO: ??????? put in json/base off of material
-//                }
+                if (s.getMaterial().isExpiredBurnTimer()) {
+                    fireFlags.push(new Object[]{"expireObj", s, firesOnShape.get(s)});
+                } else {
+                    s.getMaterial().incrementBurnTimer();
+                }
             } else {
 //                System.out.println("fires --> "+ Arrays.toString(firesOnShape.get(s).toArray()));
 //                System.out.println("points --> "+ Arrays.toString(nFireDiagrams.get(s)));
@@ -190,6 +192,9 @@ public class FireController {
      * @param point the location to start the fire
      */
     public void lightAnew(EnhancedObstacleSprite s, Vector2 point) {
+        if (s.getObstacle().isRemoved()) {
+            return;
+        }
         ArrayList<Fire> currentFires = firesOnShape.get(s);
         if (currentFires != null) {
             for (Fire f : currentFires) {
@@ -336,5 +341,10 @@ public class FireController {
         for (Vector2 f : returnArray.toArray(Vector2.class)) {
 //            System.out.println("a generated point" + f);
         }
+    }
+
+    public void cleanObj (EnhancedObstacleSprite s) {
+        nFireDiagrams.remove(s);
+        firesOnShape.remove(s);
     }
 }

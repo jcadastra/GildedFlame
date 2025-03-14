@@ -30,7 +30,7 @@ public class GameObject extends EnhancedObstacleSprite {
         triangulator.calculate();
         triangulator.getPolygon(poly);
 
-        obstacle = new WheelObstacle(y);
+        obstacle = new PolygonObstacle(points, x, y);
         obstacle.setPosition(x, y);
         obstacle.setDensity(0.5f);
         obstacle.setFriction(0.5f);

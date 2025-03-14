@@ -317,34 +317,34 @@ public class GameplayScene_temp extends GameplayScene {
         enemies.add(moth);
 
 
-//        float[] temp = new float[]{
-//            0f, 0f,
-//            3f, 1f,
-//            6f, 0f,
-//            5f, 2f,
-//            7f, 4f,
-//            4f, 4f,
-//            6f, 6f,
-//            3f, 5f,
-//            1f, 7f,
-//            0f, 4f,
-//            -1f, 6f,
-//            -3f, 4f,
-//            -2f, 2f,
-//            -4f, 0f,
-//            -1f, 1f
-//        };
+        float[] temp = new float[]{
+            0f, 0f,
+            3f, 1f,
+            6f, 0f,
+            5f, 2f,
+            7f, 4f,
+            4f, 4f,
+            6f, 6f,
+            3f, 5f,
+            1f, 7f,
+            0f, 4f,
+            -1f, 6f,
+            -3f, 4f,
+            -2f, 2f,
+            -4f, 0f,
+            -1f, 1f
+        };
 
-        texture = directory.getEntry( "rocket-crate0", Texture.class );
-        o = new Rope(new Vector2(150,400),200, units, constants.get(1));
-        addSpriteGroup(o);
 //        texture = directory.getEntry( "rocket-crate0", Texture.class );
-//        GameObject o = new GameObject(temp, 11,9, units);
-//        o.getObstacle().setBodyType(BodyType.DynamicBody);
-//        o.getObstacle().setName("blocky1");
-//        o.setMaterial(new ObstacleMaterial("iron", constants.get(1)));
-//        o.setTexture(texture);
-//        addSprite(o);
+//        o = new Rope(new Vector2(150,200),new Vector2(400,200),200, units, constants.get(1));
+//        addSpriteGroup(o);
+        texture = directory.getEntry( "rocket-crate0", Texture.class );
+        GameObject o = new GameObject(temp, 11,9, units);
+        o.getObstacle().setBodyType(BodyType.DynamicBody);
+        o.getObstacle().setName("blocky1");
+        o.setMaterial(new ObstacleMaterial("iron", constants.get(1)));
+        o.setTexture(texture);
+        addSprite(o);
 
 //        texture = directory.getEntry( "platform-rope", Texture.class );
 //        RopeBridge bridge = new RopeBridge(units, constants.get("bridge"));
@@ -482,8 +482,22 @@ public class GameplayScene_temp extends GameplayScene {
                 case "attachFire":
                     Fire fire = (Fire) todo_action[2];
                     addSprite(fire);
+                    if (((EnhancedObstacleSprite) todo_action[1]).getObstacle().getBody() == null) {
+                        break;
+                    }
                     joinFireToObject((ObstacleSprite) todo_action[1], fire);
                     System.out.println("added fire to game at " + fire.getObstacle().getPosition());
+                    break;
+                case "expireObj":
+                    for (Fire f : (ArrayList<Fire>) todo_action[2]) {
+                        if (f.getFixtureJoint() != null) {
+                            world.destroyJoint(f.getFixtureJoint());
+                            f.setFixtureJoint(null);
+                        }
+                        f.dispose();
+                    }
+                    ((EnhancedObstacleSprite) todo_action[1]).getObstacle().markRemoved(true);
+                    fireController.cleanObj((EnhancedObstacleSprite) todo_action[1]);
                     break;
             }
         }
