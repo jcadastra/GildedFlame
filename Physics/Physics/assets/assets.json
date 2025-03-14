@@ -1,4 +1,4 @@
-
+{
 	"textures": {
         "shared-earth" : {
             "file":  "shared/earthtile.png",
@@ -148,7 +148,10 @@
     "jsons"  : {
         "rocket-constants"  : "rocket/constants.json",
         "platform-constants": "platform/constants.json",
-        "ragdoll-constants" : "ragdoll/constants.json"
+        "ragdoll-constants" : "ragdoll/constants.json",
+        "moth_intro" : "platform/moth_intro.json",
+        "totem_intro" : "platform/totem_intro.json",
+        "spinner_layout" : "platform/spinner_layout.json"
     },
     "soundfx" : {
         "rocket-bump"       : "rocket/bump.wav",

@@ -50,6 +50,7 @@ import java.util.Stack;
 
 public class GameplayScene_temp extends GameplayScene {
     /** Exit code for quitting the game */
+    public Rope o;
     public static final int EXIT_QUIT = 0;
     /** Exit code for advancing to next level */
     public static final int EXIT_NEXT = 1;
@@ -254,7 +255,7 @@ public class GameplayScene_temp extends GameplayScene {
         // Create ground pieces
         Texture texture = directory.getEntry( "shared-earth", Texture.class );
         enemies = new ArrayList<>();
-
+//
         Surface wall;
         String wname = "wall";
         JsonValue walls = constants.get("walls");
@@ -265,7 +266,7 @@ public class GameplayScene_temp extends GameplayScene {
             wall.setTexture(texture);
             addSprite(wall);
         }
-
+//
         Surface platform;
         String pname = "platform";
         JsonValue plats = constants.get("platforms");
@@ -273,7 +274,7 @@ public class GameplayScene_temp extends GameplayScene {
         platform.getObstacle().setName("floor");
         platform.setTexture(texture);
         addSprite(platform);
-
+//
         // Create Traci
         texture = directory.getEntry("platform-traci", Texture.class);
         avatar = new Traci(units, constants.get("traci"));
@@ -281,14 +282,14 @@ public class GameplayScene_temp extends GameplayScene {
         addSprite(avatar);
         // Have to do after body is created
         avatar.createSensor();
-
+//
         Light l = new Light(units, constants.get("light"));
         l.setTexture(texture);
         addSprite(l);
         l.createSensor();
         Fire fire = new Fire(units, new Vector2(10,10));
         addSprite(fire);
-
+//
         // Create Torch
         torch = new Torch(units, constants.get("torch"));
         torch.setTexture(texture);
@@ -299,14 +300,14 @@ public class GameplayScene_temp extends GameplayScene {
         activeFireJoint = world.createJoint(torch.attachObj(fire));
         // TODO: FIX THE BAOVE^^
 
-        // Create Totem
+//         Create Totem
         texture = directory.getEntry("rocket-totem01", Texture.class);
         Totem totem = new Totem(0, units, constants.get("totem"), directory);
         totem.setTexture(texture);
         addSprite(totem);
         totem.createSensor();
         enemies.add(totem);
-
+//
         // Create Moth
         texture = directory.getEntry("rocket-moth01", Texture.class);
         Moth moth = new Moth(0, units, constants.get("moth"), directory);
@@ -316,26 +317,26 @@ public class GameplayScene_temp extends GameplayScene {
         enemies.add(moth);
 
 
-        float[] temp = new float[]{
-            0f, 0f,
-            3f, 1f,
-            6f, 0f,
-            5f, 2f,
-            7f, 4f,
-            4f, 4f,
-            6f, 6f,
-            3f, 5f,
-            1f, 7f,
-            0f, 4f,
-            -1f, 6f,
-            -3f, 4f,
-            -2f, 2f,
-            -4f, 0f,
-            -1f, 1f
-        };
+//        float[] temp = new float[]{
+//            0f, 0f,
+//            3f, 1f,
+//            6f, 0f,
+//            5f, 2f,
+//            7f, 4f,
+//            4f, 4f,
+//            6f, 6f,
+//            3f, 5f,
+//            1f, 7f,
+//            0f, 4f,
+//            -1f, 6f,
+//            -3f, 4f,
+//            -2f, 2f,
+//            -4f, 0f,
+//            -1f, 1f
+//        };
 
         texture = directory.getEntry( "rocket-crate0", Texture.class );
-        Rope o = new Rope(new Vector2(900,600), new Vector2(1850, 600),700, units);
+        o = new Rope(new Vector2(150,400), new Vector2(600, 400),50, units, constants.get(1));
         addSpriteGroup(o);
 //        texture = directory.getEntry( "rocket-crate0", Texture.class );
 //        GameObject o = new GameObject(temp, 11,9, units);
@@ -381,10 +382,10 @@ public class GameplayScene_temp extends GameplayScene {
             return false;
         }
 
-        if (!isFailure() && avatar.getObstacle().getY() < -1) {
-            setFailure(true);
-            return false;
-        }
+//        if (!isFailure() && avatar.getObstacle().getY() < -1) {
+//            setFailure(true);
+//            return false;
+//        }
         if (activeFireJoint == null || queueFailure) {
             setFailure(true);
             return false;
@@ -404,10 +405,13 @@ public class GameplayScene_temp extends GameplayScene {
      */
     public void update(float dt) {
 //        System.out.println(Gdx.graphics.getFramesPerSecond());
+//        System.out.println(avatar.getObstacle().getPosition().cpy().scl(avatar.getObstacle().getPhysicsUnits()));
         supplementaryCollisionActions();
         supplementaryFireActions();
-        for (Enemy e : enemies) {
-            e.update();
+        if (enemies != null) {
+            for (Enemy e : enemies) {
+                e.update();
+            }
         }
         torch.update();
         fireController.update();
