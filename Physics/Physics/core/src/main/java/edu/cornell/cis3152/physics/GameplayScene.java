@@ -560,7 +560,8 @@ public class GameplayScene implements Screen, ContactListener {
         texture = directory.getEntry("rocket-totem01", Texture.class);
         JsonValue totemsJson = enemiesJson.get("totems").get("instances");
         for (int i = 0; i < totemsJson.size; i++) {
-            Totem totem = new Totem(i, units, totemsJson.get(i), directory);
+            Vector2 position = new Vector2(totemsJson.get(i).get("pos").getFloat(0), totemsJson.get(i).get("pos").getFloat(1));
+            Totem totem = new Totem(i, units, totemsJson.get(i), directory, position);
             totem.setTexture(texture);
             addSprite(totem);
             totem.createSensor();
@@ -571,7 +572,8 @@ public class GameplayScene implements Screen, ContactListener {
         texture = directory.getEntry("rocket-moth01", Texture.class);
         JsonValue mothsJson = enemiesJson.get("moths").get("instances");
         for (int i = 0; i < mothsJson.size; i++) {
-            Moth moth = new Moth(i, units, mothsJson.get(i), directory);
+            Vector2 position = new Vector2(mothsJson.get(i).get("pos").getFloat(0), mothsJson.get(i).get("pos").getFloat(1));
+            Moth moth = new Moth(i, units, mothsJson.get(i), directory, position);
             moth.setTexture(texture);
             addSprite(moth);
             moth.createSensor();
