@@ -202,7 +202,7 @@ public class CollisionController implements ContactListener {
                 } else {
                     float modif;
                     if (Objects.equals(b.getMaterial().getName(), "rope")) {
-                        modif = (1/distance);
+                        modif = (float) (1/(Math.PI * Math.pow(distance,2.3) * 4));
                     } else {
                         modif = 1;
                     }

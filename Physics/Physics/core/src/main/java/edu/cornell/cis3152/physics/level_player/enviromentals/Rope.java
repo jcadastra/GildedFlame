@@ -127,6 +127,7 @@ public class Rope extends ObstacleGroup {
         wheel.setBodyType(BodyType.StaticBody);
         wheel.setMass(0.1f);
         wheel.setPhysicsUnits(units);
+        wheel.setSensor(true);
         wheel.setName("leftRopeAnchor");
         EnhancedObstacleSprite s = new EnhancedObstacleSprite(wheel);
         s.setMaterial(new ObstacleMaterial("rope", data.get(1)));
@@ -138,6 +139,7 @@ public class Rope extends ObstacleGroup {
         wheel.setBodyType(BodyType.StaticBody);
         wheel.setMass(0.1f);
         wheel.setPhysicsUnits(units);
+        wheel.setSensor(true);
         wheel.setName("rightRopeAnchor");
         s = new EnhancedObstacleSprite(wheel);
         s.setMaterial(new ObstacleMaterial("rope", data.get(1)));

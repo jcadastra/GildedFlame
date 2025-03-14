@@ -1,6 +1,7 @@
 package edu.cornell.cis3152.physics.level_player.enviromentals;
 
 import com.badlogic.gdx.utils.JsonValue;
+import java.util.Objects;
 
 public class ObstacleMaterial {
 
@@ -16,11 +17,16 @@ public class ObstacleMaterial {
 
 
     public ObstacleMaterial (String name, JsonValue data) {
-        //TODO: process from json
         this.name = name;
+
+        //TODO: process from json
         this.flammability =  .05f;
         this.burnTimerLimit = 80f;
-        this.ignitionTimerLimit = 15f;
+        if (!Objects.equals(name, "rope")) {
+            this.ignitionTimerLimit = 15f;
+        } else {
+            this.ignitionTimerLimit = 8f;
+        }
         this.burnTimer = 0f;
         this.ignitionTimer = 0f;
     }
