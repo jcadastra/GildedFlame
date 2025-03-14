@@ -344,7 +344,7 @@ public class GameplayScene_temp extends GameplayScene {
 //        GameObject o = new GameObject(temp, 11,9, units);
 //        o.getObstacle().setBodyType(BodyType.DynamicBody);
 //        o.getObstacle().setName("blocky1");
-//        o.setMaterial(new ObstacleMaterial("iron", constants.get(1)));
+//        o.setMaterial(new ObstacleMaterial("wood", constants.get(1)));
 //        o.setTexture(texture);
 //        addSprite(o);
 

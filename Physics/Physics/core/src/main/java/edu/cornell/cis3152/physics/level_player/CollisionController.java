@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Stack;
 
@@ -184,6 +185,9 @@ public class CollisionController implements ContactListener {
                 Fire f = (Fire) idX(bd1, bd2, Fire.class);
                 EnhancedObstacleSprite b = (EnhancedObstacleSprite) idX(bd1, bd2, EnhancedObstacleSprite.class);
                 int contactTime = sustainedContacts.get(key);
+
+                float distance = ((bd1.getObstacle().getBody().getPosition().cpy()).sub(bd2.getObstacle().getBody().getPosition())).len();
+
                 if (b.getMaterial().getFlammability() > 0 &&
                     b.getMaterial().surpassIgnitionTimer(contactTime) &&
                     !fireController.testIfFullyBurnt(b)) {
@@ -196,7 +200,13 @@ public class CollisionController implements ContactListener {
                     fireController.lightAnew(b, f_pos);
                     it.remove();
                 } else {
-                    sustainedContacts.put(key, contactTime + 1);
+                    float modif;
+                    if (Objects.equals(b.getMaterial().getName(), "rope")) {
+                        modif = (1/distance);
+                    } else {
+                        modif = 1;
+                    }
+                    sustainedContacts.put(key, (int) (contactTime + modif));
                 }
             }
         }

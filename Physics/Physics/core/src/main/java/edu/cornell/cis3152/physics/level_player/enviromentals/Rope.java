@@ -129,7 +129,7 @@ public class Rope extends ObstacleGroup {
         wheel.setPhysicsUnits(units);
         wheel.setName("leftRopeAnchor");
         EnhancedObstacleSprite s = new EnhancedObstacleSprite(wheel);
-        s.setMaterial(new ObstacleMaterial("spinalFluid", data.get(1)));
+        s.setMaterial(new ObstacleMaterial("rope", data.get(1)));
         returnSet.add(s);
         s.setDebugColor( Color.GREEN );
         sprites.add(s);
@@ -140,7 +140,7 @@ public class Rope extends ObstacleGroup {
         wheel.setPhysicsUnits(units);
         wheel.setName("rightRopeAnchor");
         s = new EnhancedObstacleSprite(wheel);
-        s.setMaterial(new ObstacleMaterial("spinalFluid", data.get(1)));
+        s.setMaterial(new ObstacleMaterial("rope", data.get(1)));
         returnSet.add(s);
         s.setDebugColor( Color.GREEN );
         sprites.add(s);
@@ -158,7 +158,7 @@ public class Rope extends ObstacleGroup {
             wheel.setPhysicsUnits(units);
             wheel.setName("ropeSegment");
             EnhancedObstacleSprite s = new EnhancedObstacleSprite(wheel);
-            s.setMaterial(new ObstacleMaterial("spinalFluid", data.get(1)));
+            s.setMaterial(new ObstacleMaterial("rope", data.get(1)));
             returnSet.add(s);
             s.setDebugColor( Color.PURPLE );
             sprites.add(s);

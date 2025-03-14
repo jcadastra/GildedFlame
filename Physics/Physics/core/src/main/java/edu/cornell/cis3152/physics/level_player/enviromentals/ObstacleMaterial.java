@@ -17,7 +17,7 @@ public class ObstacleMaterial {
 
     public ObstacleMaterial (String name, JsonValue data) {
         //TODO: process from json
-        this.name = "wood";
+        this.name = name;
         this.flammability =  .05f;
         this.burnTimerLimit = 80f;
         this.ignitionTimerLimit = 15f;
@@ -39,4 +39,7 @@ public class ObstacleMaterial {
         return v > ignitionTimerLimit;
     }
 
+    public String getName() {
+        return name;
+    }
 }
