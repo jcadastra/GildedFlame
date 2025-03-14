@@ -56,6 +56,7 @@ public class DesktopLauncher {
         config.title = "Optimization";
 
         // Use windowed mode
+//        config.fullscreen = true;
         config.fullscreen = false;
         config.resizable = false;
         config.width = 1024;

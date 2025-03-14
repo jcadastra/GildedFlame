@@ -263,7 +263,8 @@ public class spinner_layout extends GameplayScene implements ContactListener {
 
         // Create Totem
         texture = directory.getEntry("rocket-totem01", Texture.class);
-        totem = new Totem(0, units, constants.get("totem"), directory);
+        Vector2 position = new Vector2(7,2);
+        totem = new Totem(0, units, constants.get("totem"), directory, position);
         totem.setTexture(texture);
         addSprite(totem);
         totem.createSensor();
@@ -271,7 +272,8 @@ public class spinner_layout extends GameplayScene implements ContactListener {
 
         // Create Moth
         texture = directory.getEntry("rocket-moth01", Texture.class);
-        moth = new Moth(0, units, constants.get("spinner_moth"), directory);
+        position = new Vector2(20,2);
+        moth = new Moth(0, units, constants.get("spinner_moth"), directory, position);
         moth.setTexture(texture);
         addSprite(moth);
         moth.createSensor();

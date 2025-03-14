@@ -249,7 +249,8 @@ public class Moth_intro extends GameplayScene implements ContactListener {
 
         // Create Moth
         texture = directory.getEntry("rocket-moth01", Texture.class);
-        moth = new Moth(0, units, constants.get("moth"), directory);
+        Vector2 position = new Vector2(20,2);
+        moth = new Moth(0, units, constants.get("moth"), directory, position);
         moth.setTexture(texture);
         addSprite(moth);
         moth.createSensor();

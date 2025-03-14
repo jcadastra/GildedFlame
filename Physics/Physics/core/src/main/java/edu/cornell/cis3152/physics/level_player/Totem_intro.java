@@ -262,7 +262,16 @@ public class Totem_intro extends GameplayScene implements ContactListener {
 
         // Create Totem
         texture = directory.getEntry("rocket-totem01", Texture.class);
-        totem = new Totem(0, units, constants.get("totem"), directory);
+        Vector2 position = new Vector2(7,2);
+        totem = new Totem(0, units, constants.get("totem"), directory, position);
+        totem.setTexture(texture);
+        addSprite(totem);
+        totem.createSensor();
+        enemies.add(totem);
+
+        texture = directory.getEntry("rocket-totem01", Texture.class);
+        position = new Vector2(14,2);
+        totem = new Totem(1, units, constants.get("totem"), directory, position);
         totem.setTexture(texture);
         addSprite(totem);
         totem.createSensor();

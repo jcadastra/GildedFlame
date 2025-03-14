@@ -69,10 +69,6 @@ public class CollisionController implements ContactListener {
                 return;
             }
 
-            if (isXandY(bd1, bd2, "bullet", Traci.class) > 0) {
-                collisionFlags.push(new Object[]{"removeBullet", idX(bd1, bd2, "bullet")});
-            }
-
             if ((isGround(bd1) || isGround(bd2)) && isX(bd1, bd2, Traci.class) == 1){
                 ((Traci) idX(bd1,bd2,Traci.class)).setGrounded(true);
             }

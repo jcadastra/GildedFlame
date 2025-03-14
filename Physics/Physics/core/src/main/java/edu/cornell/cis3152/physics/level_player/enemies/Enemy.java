@@ -13,6 +13,8 @@ import edu.cornell.gdiac.math.Path2;
 import edu.cornell.gdiac.math.PathFactory;
 import edu.cornell.gdiac.physics2.*;
 
+import java.util.List;
+
 public class Enemy extends ObstacleSprite {
 
 
@@ -26,8 +28,6 @@ public class Enemy extends ObstacleSprite {
     /** Which direction is the character facing */
     private boolean faceRight;
     private int id;
-    private Vector2 position;
-
     private int freezeTimer;
 
     private int attackTimer;
@@ -60,6 +60,7 @@ public class Enemy extends ObstacleSprite {
     private float height;
     private float x;
     private float y;
+    private int speed;
     public SpriteBatch batch;
 
     private Fixture fixture;
@@ -74,12 +75,13 @@ public class Enemy extends ObstacleSprite {
         ATTACK
     }
 
-    public Enemy(int id, float units, JsonValue data, AssetDirectory directory) {
+    public Enemy(int id, float units, JsonValue data, AssetDirectory directory, Vector2 position) {
         this.directory = directory;
         this.id = id;
         this.data = data;
         this.state = EnemyState.OUT_OF_LIGHT;
         this.faceRight = true;
+        this.speed = data.getInt("speed");
 
         float s = data.getFloat( "size" );
         float size = s*units;
@@ -87,8 +89,8 @@ public class Enemy extends ObstacleSprite {
         this.width = data.get("dimension").getFloat(0);
         this.height = data.get("dimension").getFloat(1);
 
-        this.x = data.get("pos").getFloat(0);
-        this.y = data.get("pos").getFloat(1);
+        this.x = position.x;
+        this.y = position.y;
         obstacle = new BoxObstacle(x, y, width, height);
         obstacle.setBodyType(BodyDef.BodyType.DynamicBody);
 
@@ -176,19 +178,82 @@ public class Enemy extends ObstacleSprite {
 //        obstacle.getBody().applyForceToCenter(new Vector2(direction, 0), true);
 //    }
 
-    public void move(int MOVE_SPEED) {
 
-        int direction;
+    public boolean isAboutToFall() {
+        Body body = obstacle.getBody();
+        if (body == null) return false;
+
+        Vector2 position = body.getPosition();
+        float halfWidth = width / 2.0f;
+        Vector2 rayStart;
+        if (isFacingRight()) {
+            rayStart = new Vector2(position.x - halfWidth, position.y - height / 2);
+        } else {
+            rayStart = new Vector2(position.x + halfWidth, position.y - height / 2);
+        }
+
+        float rayLength = 1.0f;
+        Vector2 rayEnd = rayStart.cpy().add(0, -rayLength);
+
+        final boolean[] groundDetected = {false};
+
+        RayCastCallback callback = new RayCastCallback() {
+            @Override
+            public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
+                ObstacleSprite target = (ObstacleSprite) fixture.getBody().getUserData();
+                if (target.getName().equals("platform") || target.getName().equals("enemy")){
+                    groundDetected[0] = true;
+                }
+                return fraction;
+            }
+        };
+
+        body.getWorld().rayCast(callback, rayStart, rayEnd);
+        return !groundDetected[0];
+    }
+
+
+    public void raycast(){
+        Vector2 start = obstacle.getBody().getPosition();
+        Vector2 direction;
+        if (isFacingRight()) {
+             direction = new Vector2(-1,0);
+        } else {
+            direction = new Vector2(1, 0);
+        }
+        float maxDistance = 5f;
+        Vector2 end = start.cpy().add(direction.scl(maxDistance));
+        RayCastCallback callback = new RayCastCallback() {
+            @Override
+            public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
+//                System.out.println("Hit: " + fixture.getBody().getUserData() + " at " + point);
+                return fraction;
+            }
+        };
+        World world = obstacle.getBody().getWorld();
+        world.rayCast(callback, start, end);
+    }
+
+    public void move() {
+        raycast();
+
         Body body = obstacle.getBody();
         if (body == null) {
             return;
         }
+
+        if (isAboutToFall()){
+            changeDirection();
+        }
+
+        int direction;
         if (!isFacingRight()) {
-            direction = MOVE_SPEED;
+            direction = speed;
         } else {
-            direction = -MOVE_SPEED;
+            direction = -speed;
         }
         obstacle.getBody().setLinearVelocity(new Vector2(direction, obstacle.getBody().getLinearVelocity().y));
+
     }
 
     public void in_light(){
