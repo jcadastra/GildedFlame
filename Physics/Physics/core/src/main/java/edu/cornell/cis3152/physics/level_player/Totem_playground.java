@@ -582,6 +582,12 @@ public class Totem_playground extends GameplayScene implements ContactListener {
             moth.setTexture(texture);
             moth.setState(Enemy.EnemyState.OUT_OF_LIGHT);
         }
+
+        if ((bd1 instanceof Light && bd2 instanceof Moth)) {
+            Texture texture = directory.getEntry("rocket-moth01", Texture.class);
+            moth.setTexture(texture);
+            moth.setState(Enemy.EnemyState.OUT_OF_LIGHT);
+        }
     }
 
 

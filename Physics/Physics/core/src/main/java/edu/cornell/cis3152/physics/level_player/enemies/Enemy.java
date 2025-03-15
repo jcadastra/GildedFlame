@@ -194,6 +194,13 @@ public class Enemy extends ObstacleSprite {
         attackAnimationTimer = data.getInt("attackAnimationTimer");
     }
 
+
+    public void setSpeed(int value){
+        speed = value;
+    }
+    public int getSpeed(){
+        return speed;
+    }
     public void update() {
         if (state == EnemyState.IN_LIGHT){
             updateRayCastInLight();
@@ -274,7 +281,7 @@ public class Enemy extends ObstacleSprite {
             @Override
             public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
                 ObstacleSprite target = (ObstacleSprite) fixture.getBody().getUserData();
-                if (target.getName().equals("platform") || target.getName().equals("enemy")) {
+                if (target.getName().equals("platform") || target.getName().equals("enemy") || target.getName().equals("ground")) {
                     groundDetected[0] = true;
                 }
                 return fraction;
@@ -361,11 +368,12 @@ public class Enemy extends ObstacleSprite {
         if (isAboutToFall()) {
             changeDirection();
         }
-        if (!isFacingRight()) {
-            direction = speed;
-        } else {
-            direction = -speed;
-        }
+            if (!isFacingRight()) {
+                direction = speed;
+            } else {
+                direction = -speed;
+            }
+
 
         body.setLinearVelocity(new Vector2(direction, body.getLinearVelocity().y));
 
