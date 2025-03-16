@@ -45,8 +45,25 @@
     }
   ],
   "spinners" : [],
-  "bridges" : [],
-  "ropes" : [],
+  "bridges": [],
+  "ropes" : [
+    {
+      "type" : 1,
+      "thickness" : 7,
+      "piecelen" : 14,
+      "pin1" : [4.0, 11.0],
+      "pin2" : [9.0, 11.0],
+      "depth" : 2.0
+    },
+    {
+      "type" : 2,
+      "thickness" : 7,
+      "piecelen" : 14,
+      "pin1" : [5.0, 12.0],
+      "bottom" : true,
+      "len" : 6.0
+    }
+  ],
   "traci": {
     "pos": [2.5, 5.0],
     "inner": [0.7, 0.95],

@@ -57,6 +57,8 @@
       "high density": 10.0
     }
   ],
+  "ropes" : [],
+  "bridges" : [],
   "traci": {
     "pos": [2.5, 5.0],
     "inner": [0.7, 0.95],
