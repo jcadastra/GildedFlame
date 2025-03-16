@@ -99,8 +99,35 @@
         "magfilter": "linear mipmap linear"
       },
 
+      "platform-moth01": {
+        "file" : "platform/mothNorm.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+      "platform-moth02": {
+        "file" : "platform/mothAngry.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+      "platform-totem01": {
+        "file" : "platform/totem.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+      "platform-totem02": {
+        "file" : "platform/totemLight.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+
       "platform-rope-end" : "platform/ropeEnd.png",
       "platform-rope-mid" : "platform/ropeBodyRec.png",
+      "platform-player" : "platform/player.png",
+      "platform-torch" : "platform/torch.png",
 
 
       "platform-traci"    : "platform/traci.png",

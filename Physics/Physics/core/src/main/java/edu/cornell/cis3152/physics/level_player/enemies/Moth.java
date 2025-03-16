@@ -12,7 +12,7 @@ public class Moth extends Enemy {
 
     @Override
     public void in_light(){
-        Texture texture = directory.getEntry("rocket-moth03", Texture.class);
+        Texture texture = directory.getEntry("platform-moth02", Texture.class);
         setTexture(texture);
 //        System.out.println("In light");
         setState(EnemyState.ANGRY);
@@ -51,7 +51,7 @@ public class Moth extends Enemy {
 
     @Override
     public void out_of_light(){
-        Texture texture = directory.getEntry("rocket-moth01", Texture.class);
+        Texture texture = directory.getEntry("platform-moth01", Texture.class);
         setTexture(texture);
 //        System.out.println("Out of light");
         move();

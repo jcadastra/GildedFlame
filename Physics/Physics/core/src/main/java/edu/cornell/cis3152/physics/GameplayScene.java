@@ -585,7 +585,7 @@ public class GameplayScene implements Screen {
         }
 
         // Create Traci
-        texture = directory.getEntry("platform-traci", Texture.class);
+        texture = directory.getEntry("platform-player", Texture.class);
         avatar = new Traci(units, levelData.get("traci"));
         avatar.setTexture(texture);
         addSprite(avatar);
@@ -600,6 +600,7 @@ public class GameplayScene implements Screen {
         addSprite(fire);
 //
         // Create Torch
+        texture = directory.getEntry("platform-torch", Texture.class);
         torch = new Torch(units, constants.get("torch"));
         torch.setTexture(texture);
         addSprite(torch);
@@ -612,7 +613,7 @@ public class GameplayScene implements Screen {
         JsonValue enemiesJson = levelData.get("enemies");
 
         // Create Totem
-        texture = directory.getEntry("rocket-totem01", Texture.class);
+        texture = directory.getEntry("platform-totem01", Texture.class);
         JsonValue totemsJson = enemiesJson.get("totems").get("instances");
         for (int i = 0; i < totemsJson.size; i++) {
             Vector2 position = new Vector2(totemsJson.get(i).get("pos").getFloat(0), totemsJson.get(i).get("pos").getFloat(1));
@@ -624,7 +625,7 @@ public class GameplayScene implements Screen {
         }
 
         // Create Moth
-        texture = directory.getEntry("rocket-moth01", Texture.class);
+        texture = directory.getEntry("platform-moth01", Texture.class);
         JsonValue mothsJson = enemiesJson.get("moths").get("instances");
         for (int i = 0; i < mothsJson.size; i++) {
             Vector2 position = new Vector2(mothsJson.get(i).get("pos").getFloat(0), mothsJson.get(i).get("pos").getFloat(1));
