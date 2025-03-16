@@ -17,17 +17,17 @@ public class Totem extends Enemy {
 
     // reacting to light
     @Override
-    public void in_light() {
-//        System.out.println("in light");
-        Texture texture = directory.getEntry("rocket-totem03", Texture.class);
+    public void in_light(){
+//        System.out.println("INLIGHT");
+        Texture texture = directory.getEntry("platform-totem02", Texture.class);
         setTexture(texture);
         stop();
     }
 
     @Override
-    public void out_of_light() {
-//        System.out.println("out of light: " + getFreezeTimer());
-        Texture texture = directory.getEntry("rocket-totem01", Texture.class);
+    public void out_of_light(){
+//        System.out.println("OUTOFLIGHT");
+        Texture texture = directory.getEntry("platform-totem01", Texture.class);
         setTexture(texture);
         if (getFreezeTimer() == 0) {
             obstacle.setBodyType(BodyDef.BodyType.DynamicBody);
@@ -40,7 +40,7 @@ public class Totem extends Enemy {
     @Override
     public void cd() {
 //        System.out.println("cd");
-        Texture texture = directory.getEntry("rocket-totem02", Texture.class);
+        Texture texture = directory.getEntry("platform-totem02", Texture.class);
         setTexture(texture);
         decrementFreezeTimer();
     }
