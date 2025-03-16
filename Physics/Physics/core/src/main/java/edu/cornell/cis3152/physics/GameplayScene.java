@@ -31,12 +31,10 @@ import edu.cornell.cis3152.physics.level_player.FireController;
 import edu.cornell.cis3152.physics.level_player.enemies.Enemy;
 import edu.cornell.cis3152.physics.level_player.enemies.Moth;
 import edu.cornell.cis3152.physics.level_player.enemies.Totem;
-import edu.cornell.cis3152.physics.level_player.player.Bullet;
 import edu.cornell.cis3152.physics.level_player.player.Torch;
 import edu.cornell.cis3152.physics.level_player.player.Traci;
 import edu.cornell.cis3152.physics.level_player.utils.ObstacleGroup;
 
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -173,6 +171,7 @@ public class GameplayScene implements Screen {
     private Joint activeFireJoint;
     protected CollisionController contactListener;
     protected FireController fireController;
+    protected SoundEngine soundEngine;
 
     /**
      * Flag to add torch to avatar in update
@@ -305,17 +304,15 @@ public class GameplayScene implements Screen {
      * @param directory The asset directory defining this scene
      * @param prefix    The prefix for the asset keys
      */
-    protected GameplayScene(AssetDirectory directory, String prefix) {
+    protected GameplayScene(AssetDirectory directory, SoundEngine soundEngine, String  prefix) {
         this.directory = directory;
         constants = directory.getEntry(prefix+"-constants",JsonValue.class);
         JsonValue defaults = constants.get("world");
         fireController = new FireController();
         contactListener = new CollisionController(directory, fireController);
+        this.soundEngine = soundEngine;
 
         // pull out sounds
-        jumpSound = directory.getEntry("platform-jump", SoundEffect.class);
-        fireSound = directory.getEntry("platform-pew", SoundEffect.class);
-        plopSound = directory.getEntry("platform-plop", SoundEffect.class);
         volume = constants.getFloat("volume", 1.0f);
 
         sensorFixtures = new ObjectSet<Fixture>();
@@ -356,6 +353,9 @@ public class GameplayScene implements Screen {
                 obj.deactivatePhysics(world);
             }
         }
+
+        soundEngine.dispose();
+
         sprites.clear();
         addQueue.clear();
         world.dispose();
@@ -614,6 +614,7 @@ public class GameplayScene implements Screen {
             enemies.add(moth);
         }
 
+
     }
 
     /**
@@ -693,6 +694,7 @@ public class GameplayScene implements Screen {
      * @param dt    Number of seconds since last animation frame
      */
     public void update(float dt) {
+        soundEngine.tendToMusicLoop();
         supplementaryCollisionActions();
         supplementaryFireActions();
         if (enemies != null) {
@@ -727,7 +729,7 @@ public class GameplayScene implements Screen {
         avatar.applyForce();
         if (avatar.isJumping()) {
             SoundEffectManager sounds = SoundEffectManager.getInstance();
-//            sounds.play("jump", jumpSound, volume);
+            soundEngine.playSoundEffects("jump");
         }
         if ((queueAddTorch && activeTorchJoint == null) || (activeTorchJoint != null &&
             torchOnRight != avatar.isFacingRight())) {

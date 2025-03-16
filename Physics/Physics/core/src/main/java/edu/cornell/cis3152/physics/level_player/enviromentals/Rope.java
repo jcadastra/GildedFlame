@@ -1,6 +1,7 @@
 package edu.cornell.cis3152.physics.level_player.enviromentals;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -280,4 +281,15 @@ public class Rope extends ObstacleGroup {
 //        anchors.get(0).getObstacle().setBodyType(BodyType.DynamicBody);
     }
 
+    public void setTextures(Texture endRopeTexture, Texture midRopeTexture) {
+        for (EnhancedObstacleSprite eos : anchors) {
+            eos.setTexture(endRopeTexture);
+        }
+        for (EnhancedObstacleSprite eos : bottomEntities) {
+            eos.setTexture(midRopeTexture);
+        }
+        for (EnhancedObstacleSprite eos : topEntities) {
+            eos.setTexture(midRopeTexture);
+        }
+    }
 }

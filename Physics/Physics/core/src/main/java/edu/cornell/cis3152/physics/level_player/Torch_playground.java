@@ -11,6 +11,7 @@
  * Version: 2/8/2025
  */
 package edu.cornell.cis3152.physics.level_player;
+import edu.cornell.cis3152.physics.SoundEngine;
 import edu.cornell.cis3152.physics.level_player.enemies.Enemy;
 import edu.cornell.cis3152.physics.level_player.enemies.Moth;
 import edu.cornell.cis3152.physics.level_player.enemies.Totem;
@@ -142,7 +143,7 @@ public class Torch_playground extends GameplayScene {
      * The game has default gravity and other settings
      */
     public Torch_playground(AssetDirectory directory) {
-        super(directory, "platform");
+        super(directory,new SoundEngine(), "platform");
         fireController = new FireController();
         contactListener = new CollisionController(directory, fireController);
         world.setContactListener(contactListener);

@@ -11,6 +11,7 @@
  * Version: 2/8/2025
  */
 package edu.cornell.cis3152.physics.level_player;
+import edu.cornell.cis3152.physics.SoundEngine;
 import edu.cornell.cis3152.physics.level_player.enemies.Enemy;
 import edu.cornell.cis3152.physics.level_player.enemies.Moth;
 import edu.cornell.cis3152.physics.level_player.enemies.Totem;
@@ -145,7 +146,7 @@ public class spinner_layout extends GameplayScene implements ContactListener {
      * The game has default gravity and other settings
      */
     public spinner_layout(AssetDirectory directory) {
-        super(directory, "platform");
+        super(directory, new SoundEngine(),"platform");
         world.setContactListener(this);
         sensorFixtures = new ObjectSet<Fixture>();
 
