@@ -74,6 +74,7 @@ public class Moth extends Enemy {
 
     @Override
     public void out_of_light() {
+        System.out.println("out_of_light");
         Texture texture = directory.getEntry("rocket-moth01", Texture.class);
         setTexture(texture);
         if (!(rr == null) && (!Float.isNaN(rr.targetDistance))) {
@@ -81,7 +82,6 @@ public class Moth extends Enemy {
             if (rr.targetDistance < DETECTION_DISTANCE && rr.targetObject instanceof Light) {
                 setState(EnemyState.ANGRY);
             } else {
-                System.out.println("out of light");
                 move();
             }
         }

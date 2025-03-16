@@ -136,10 +136,10 @@ public class GDXRoot extends Game implements ScreenListener {
             loading = null;
 
             currentScene = new GameplayScene(directory, "platform");
-            levels = new String[3];
+            levels = new String[1];
             levels[0] = "totem_intro";
-            levels[1] = "moth_intro";
-            levels[2] = "spinner_layout";
+//            levels[0] = "moth_intro";
+//            levels[2] = "spinner_layout";
             currentScene.loadLevel(levels[0]);
             currentScene.setScreenListener(this);
             currentScene.setSpriteBatch(batch);

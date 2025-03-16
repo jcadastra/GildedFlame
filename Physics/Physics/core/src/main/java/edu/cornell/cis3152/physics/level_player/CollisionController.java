@@ -14,24 +14,59 @@ import java.util.*;
 
 public class CollisionController implements ContactListener {
 
-    private Stack<Object[]> collisionFlags;
+    private final Stack<Object[]> collisionFlags;
 
-    public Stack<Object[]> getCollisionFlags() {
-        return collisionFlags;
-    }
-
-    private List<Totem[]> pendingTotemMerges = new ArrayList<>();
+    private boolean directionFlag;
+    private final List<Totem[]> pendingTotemMerges = new ArrayList<>();
     private Map<ContactKey, Integer> sustainedContacts = new HashMap<>();
-
-    private AssetDirectory directory;
-    private FireController fireController;
-
-
+    private final AssetDirectory directory;
+    private final FireController fireController;
     public CollisionController(AssetDirectory directory, FireController fireController) {
         this.directory = directory;
         this.fireController = fireController;
         this.collisionFlags = new Stack<>();
         this.sustainedContacts = new HashMap<>();
+    }
+
+    /**
+     * Next three are for querying if a is of type x or y and b is of the other type
+     * <p>
+     * 0 means no combo works ie a and b are neither x or y
+     * 1 means that there is a comb that works ie a is x and b is y || a is y and b is x
+     * 2 means that both combos work ie a == b == x == y
+     */
+    private static <T, U> int isXandY(ObstacleSprite a, ObstacleSprite b, Class<T> x, Class<U> y) {
+        return (x.isInstance(a) && y.isInstance(b) ? 1 : 0) + (x.isInstance(b) && y.isInstance(a) ? 1 : 0);
+    }
+
+    private static <U> int isXandY(ObstacleSprite a, ObstacleSprite b, String x, Class<U> y) {
+        return (a.getName().contains(x) && y.isInstance(b) ? 1 : 0) + (b.getName().contains(x) && y.isInstance(a) ? 1 : 0);
+    }
+
+    /**
+     * Next two are for querying if either a or b is of type x
+     * <p>
+     * 0 means none are of x, 1 means one is, 2 means both are
+     */
+    private static <T> int isX(ObstacleSprite a, ObstacleSprite b, Class<T> x) {
+        return (x.isInstance(a) ? 1 : 0) + (x.isInstance(b) ? 1 : 0);
+    }
+
+    /**
+     * Next two are used mainly when you know either a or b is x but not both
+     * <p>
+     * returns whichever is of X; undefined behavior when a.class == b.class == x.class
+     */
+    private static <T> ObstacleSprite idX(ObstacleSprite a, ObstacleSprite b, Class<T> x) {
+        return (x.isInstance(a) ? a : b);
+    }
+
+    private static boolean isGround(ObstacleSprite sprite) {
+        return sprite.getName().equals("floor") || sprite.getName().equals("platform") || sprite.getName().equals("barrier") || sprite.getName().equals("spinner") || sprite.getName().equals("surface") || sprite instanceof Totem;
+    }
+
+    public Stack<Object[]> getCollisionFlags() {
+        return collisionFlags;
     }
 
     private void createTotemJoint(Totem topTotem, Totem bottomTotem) {
@@ -53,9 +88,8 @@ public class CollisionController implements ContactListener {
         for (Totem[] pair : pendingTotemMerges) {
             createTotemJoint(pair[0], pair[1]);
         }
-        pendingTotemMerges.clear();  // Clear the queue after processing
+        pendingTotemMerges.clear();
     }
-
 
     /**
      * Callback method for the start of a collision
@@ -91,8 +125,7 @@ public class CollisionController implements ContactListener {
 
             if (isX(bd1, bd2, Traci.class) == 1) {
                 Traci t = (Traci) idX(bd1, bd2, Traci.class);
-                if ((t.getSensorName().equals(fd2) && t != bd1 && isGround(bd1)) ||
-                    (t.getSensorName().equals(fd1) && t != bd2 && isGround(bd2))) {
+                if ((t.getSensorName().equals(fd2) && t != bd1 && isGround(bd1)) || (t.getSensorName().equals(fd1) && t != bd2 && isGround(bd2))) {
                     t.setGrounded(true);
                     collisionFlags.push(new Object[]{"traciGrounded", bd1 instanceof Traci ? fix2 : fix1});
                 }
@@ -104,9 +137,15 @@ public class CollisionController implements ContactListener {
             }
 
             if (isXandY(bd1, bd2, "wall", Enemy.class) == 1) {
-                ((Enemy) idX(bd1, bd2, Enemy.class)).changeDirection();
+                Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
+                    enemy.changeDirection();
+                    enemy.setJustCollided(true);
             }
 
+            if (isXandY(bd1, bd2, "floor", Totem.class) == 1) {
+                Totem totem = (Totem) idX(bd1, bd2, Totem.class);
+                totem.setGrounded(true);
+            }
             if (isXandY(bd1, bd2, Totem.class, Moth.class) == 1) {
                 Totem totem = (Totem) idX(bd1, bd2, Totem.class);
                 Moth moth = (Moth) idX(bd1, bd2, Moth.class);
@@ -134,7 +173,6 @@ public class CollisionController implements ContactListener {
                 Totem totem1 = (Totem) bd1;
                 Totem totem2 = (Totem) bd2;
 
-                if (!totem1.hasJustCollided() && !totem2.hasJustCollided()) {
                     Vector2 pos1 = body1.getPosition();
                     Vector2 pos2 = body2.getPosition();
 
@@ -145,15 +183,13 @@ public class CollisionController implements ContactListener {
                         Totem topTotem = (pos1.y > pos2.y) ? totem1 : totem2;
                         Totem bottomTotem = (topTotem == totem1) ? totem2 : totem1;
                         pendingTotemMerges.add(new Totem[]{topTotem, bottomTotem});
-                    }
-                    else if (xDiff > 0.5f && yDiff < 0.5f) {
+                    } else if (xDiff > 0.5f && yDiff < 0.5f) {
                         totem1.changeDirection();
                         totem2.changeDirection();
-
                         totem1.setJustCollided(true);
                         totem2.setJustCollided(true);
                     }
-                }
+
             }
 
             if (isXandY(bd1, bd2, Light.class, Totem.class) == 1) {
@@ -185,10 +221,8 @@ public class CollisionController implements ContactListener {
 
             if (isXandY(bd1, bd2, EnhancedObstacleSprite.class, Fire.class) == 1) {
                 Fire f = (Fire) idX(bd1, bd2, Fire.class);
-                EnhancedObstacleSprite b = (EnhancedObstacleSprite) idX(bd1, bd2,
-                    EnhancedObstacleSprite.class);
-                if (b.getMaterial().getFlammability() > 0 &&
-                    !fireController.testIfFullyBurning(b)) {
+                EnhancedObstacleSprite b = (EnhancedObstacleSprite) idX(bd1, bd2, EnhancedObstacleSprite.class);
+                if (b.getMaterial().getFlammability() > 0 && !fireController.testIfFullyBurning(b)) {
                     ContactKey key = new ContactKey(fix1, fix2);
                     sustainedContacts.put(key, 1);
                 }
@@ -198,7 +232,6 @@ public class CollisionController implements ContactListener {
             e.printStackTrace();
         }
     }
-
 
     public void sustainedContact() {
         for (Iterator<ContactKey> it = sustainedContacts.keySet().iterator(); it.hasNext(); ) {
@@ -222,9 +255,7 @@ public class CollisionController implements ContactListener {
 
                 Vector2 delta = ((b.getObstacle().getBody().getPosition().cpy()).sub(f.getObstacle().getBody().getPosition()));
 
-                if (b.getMaterial().getFlammability() > 0 &&
-                    b.getMaterial().surpassIgnitionTimer(contactTime) &&
-                    !fireController.testIfFullyBurning(b)) {
+                if (b.getMaterial().getFlammability() > 0 && b.getMaterial().surpassIgnitionTimer(contactTime) && !fireController.testIfFullyBurning(b)) {
 
                     Vector2 f_pos = f.getObstacle().getPosition().cpy();
                     Vector2 b_pos = b.getObstacle().getPosition().cpy();
@@ -268,8 +299,7 @@ public class CollisionController implements ContactListener {
 
         if (isX(bd1, bd2, Traci.class) == 1) {
             Traci t = (Traci) idX(bd1, bd2, Traci.class);
-            if ((t.getSensorName().equals(fd2) && t != bd1) ||
-                (t.getSensorName().equals(fd1) && t != bd2)) {
+            if ((t.getSensorName().equals(fd2) && t != bd1) || (t.getSensorName().equals(fd1) && t != bd2)) {
                 collisionFlags.push(new Object[]{"traciAirborne", bd1 instanceof Traci ? fix2 : fix1});
             }
         }
@@ -291,15 +321,15 @@ public class CollisionController implements ContactListener {
 
         }
 
+
         if (isXandY(bd1, bd2, Totem.class, Totem.class) == 2) {
             Totem totem1 = (Totem) bd1;
             Totem totem2 = (Totem) bd2;
-
             totem1.setJustCollided(false);
             totem2.setJustCollided(false);
         }
-    }
 
+    }
 
     /**
      * Unused ContactListener method
@@ -307,7 +337,6 @@ public class CollisionController implements ContactListener {
     @Override
     public void postSolve(Contact contact, ContactImpulse impulse) {
     }
-
 
     /**
      * Overridden preSolve method to disable collision between the avatar and Totem. This allows the
@@ -336,57 +365,16 @@ public class CollisionController implements ContactListener {
         }
     }
 
-
-    /**
-     * Next three are for querying if a is of type x or y and b is of the other type
-     * <p>
-     * 0 means no combo works ie a and b are neither x or y
-     * 1 means that there is a comb that works ie a is x and b is y || a is y and b is x
-     * 2 means that both combos work ie a == b == x == y
-     */
-    private static <T, U> int isXandY(ObstacleSprite a, ObstacleSprite b, Class<T> x, Class<U> y) {
-        return (x.isInstance(a) && y.isInstance(b) ? 1 : 0) + (x.isInstance(b) && y.isInstance(a) ? 1 : 0);
-    }
-
-    private static <U> int isXandY(ObstacleSprite a, ObstacleSprite b, String x, Class<U> y) {
-        return (a.getName().contains(x) && y.isInstance(b) ? 1 : 0) + (b.getName().contains(x) && y.isInstance(a) ? 1 : 0);
-    }
-
     private int isXandY(ObstacleSprite a, ObstacleSprite b, String x, String y) {
         return (a.getName().contains(x) && b.getName().contains(y) ? 1 : 0) + (b.getName().contains(x) && a.getName().contains(y) ? 1 : 0);
-    }
-
-    /**
-     * Next two are for querying if either a or b is of type x
-     * <p>
-     * 0 means none are of x, 1 means one is, 2 means both are
-     */
-    private static <T> int isX(ObstacleSprite a, ObstacleSprite b, Class<T> x) {
-        return (x.isInstance(a) ? 1 : 0) + (x.isInstance(b) ? 1 : 0);
     }
 
     private int isX(ObstacleSprite a, ObstacleSprite b, String x) {
         return (a.getName().contains(x) ? 1 : 0) + (b.getName().contains(x) ? 1 : 0);
     }
 
-    /**
-     * Next two are used mainly when you know either a or b is x but not both
-     * <p>
-     * returns whichever is of X; undefined behavior when a.class == b.class == x.class
-     */
-    private static <T> ObstacleSprite idX(ObstacleSprite a, ObstacleSprite b, Class<T> x) {
-        return (x.isInstance(a) ? a : b);
-    }
-
     private ObstacleSprite idX(ObstacleSprite a, ObstacleSprite b, String x) {
         return (a.getName().contains(x) ? a : b);
-    }
-
-    private static boolean isGround(ObstacleSprite sprite) {
-        return sprite.getName().equals("floor") ||
-            sprite.getName().equals("barrier") ||
-            sprite.getName().equals("spinner") ||
-            sprite.getName().equals("surface") || sprite instanceof Enemy;
     }
 
 }

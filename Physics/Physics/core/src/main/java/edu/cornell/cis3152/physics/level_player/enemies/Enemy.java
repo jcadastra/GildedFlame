@@ -47,13 +47,14 @@ public class Enemy extends ObstacleSprite {
         faceRight = !isFacingRight();
     }
 
+    private boolean isGrounded = false;
 
-    public void setFaceRight() {
-        faceRight = true;
+    public boolean isGrounded() {
+        return isGrounded;
     }
 
-    public void setFaceLeft() {
-        faceRight = false;
+    public void setGrounded(boolean grounded) {
+        this.isGrounded = grounded;
     }
 
     private float width;
@@ -211,17 +212,15 @@ public class Enemy extends ObstacleSprite {
         size = val;
     }
 
-    public void setSpeed(float value){
+    public void setSpeed(float value) {
         speed = value;
     }
-    public float getSpeed(){
+
+    public float getSpeed() {
         return speed;
     }
-    public void update() {
 
-        if (state == EnemyState.IN_LIGHT){
-            updateRayCastInLight();
-        }
+    public void update() {
         updateRayCast();
         switch (state) {
             case OUT_OF_LIGHT:
@@ -249,13 +248,14 @@ public class Enemy extends ObstacleSprite {
         }
     }
 
-    public void updateRayCast(){
+    public void updateRayCast() {
         rr = raycast();
     }
 
-    public void updateRayCastInLight(){
+    public void updateRayCastInLight() {
         rr = raycastInLight();
     }
+
     public void out_of_light() {
 
     }
@@ -277,19 +277,16 @@ public class Enemy extends ObstacleSprite {
 
 
     public boolean isAboutToFall() {
+//        if (!isGrounded()) return false;
+
         Body body = obstacle.getBody();
         if (body == null) return false;
 
         Vector2 position = body.getPosition();
-        float halfWidth = width / 2.0f;
-        Vector2 rayStart;
-        if (isFacingRight()) {
-            rayStart = new Vector2(position.x - halfWidth, position.y - height / 2);
-        } else {
-            rayStart = new Vector2(position.x + halfWidth, position.y - height / 2);
-        }
-
         float rayLength = 1.0f;
+
+        float xOffset = isFacingRight() ? width - 0.4f : -width + 0.4f;
+        Vector2 rayStart = new Vector2(position.x - xOffset, position.y - height / 2);
         Vector2 rayEnd = rayStart.cpy().add(0, -rayLength);
 
         final boolean[] groundDetected = {false};
@@ -297,9 +294,14 @@ public class Enemy extends ObstacleSprite {
         RayCastCallback callback = new RayCastCallback() {
             @Override
             public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
-                ObstacleSprite target = (ObstacleSprite) fixture.getBody().getUserData();
-                if (target.getName().equals("platform") || target.getName().equals("enemy") || target.getName().equals("ground")) {
-                    groundDetected[0] = true;
+                Object userData = fixture.getBody().getUserData();
+                if (userData instanceof ObstacleSprite) {
+                    ObstacleSprite target = (ObstacleSprite) userData;
+                    if (target.getName().equals("platform") ||
+                        target.getName().equals("enemy") ||
+                        target.getName().equals("ground")) {
+                        groundDetected[0] = true;
+                    }
                 }
                 return fraction;
             }
@@ -379,18 +381,18 @@ public class Enemy extends ObstacleSprite {
     }
 
     public void move() {
+//        System.out.println("MOVING");
         Body body = obstacle.getBody();
         int direction;
-//        if (isAboutToFall()) {
-//            System.out.println("CHANGING DIRECTIONS");
-//            changeDirection();
-//        }
+        if (isAboutToFall() && !isGrounded()) {
+            changeDirection();
+        }
         if (!isFacingRight()) {
             direction = (int) (speed);
         } else {
             direction = (int) (-speed);
         }
-        if (body == null){
+        if (body == null) {
             System.out.println("ERROR");
         } else {
 //            System.out.println("Direction : " + direction + ", Linear Velocity: " + body.getLinearVelocity());
@@ -402,7 +404,9 @@ public class Enemy extends ObstacleSprite {
     public void in_light() {
 
     }
-    public void dazed(){}
+
+    public void dazed() {
+    }
 
 
     /*
@@ -414,8 +418,12 @@ public class Enemy extends ObstacleSprite {
     public void attack() {
     }
 
-    public void cd() { }
-    public void creep() {}
+    public void cd() {
+    }
+
+    public void creep() {
+    }
+
     public void stop() {
 //        System.out.println("stopping");
         float currY = obstacle.getLinearVelocity().y;
