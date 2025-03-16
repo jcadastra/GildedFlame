@@ -157,6 +157,11 @@
         "spinner_layout" : "platform/spinner_layout.json",
         "rope_test" : "platform/rope_test.json"
     },
+    "music" : {
+      "eerie": "music/eerie.wav",
+      "eerieCriminal": "music/eerieCriminalAtmosphere.wav",
+      "tenseSoundscape": "music/tenseAtmosphereHauntingSoundscapes.wav"
+    },
     "soundfx" : {
         "rocket-bump"       : "rocket/bump.wav",
         "rocket-mainburn"   : "rocket/afterburner.wav",
