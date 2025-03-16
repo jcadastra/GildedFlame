@@ -17,6 +17,7 @@
  package edu.cornell.cis3152.physics.level_player.enviromentals;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.ParserUtils;
@@ -43,6 +44,8 @@ import edu.cornell.gdiac.physics2.PolygonObstacle;
  */
 public class Surface extends ObstacleSprite {
 
+    private Vector2 internal_position;
+
     /**
      * Creates a surface from the given set of points and physics units
      *
@@ -67,6 +70,17 @@ public class Surface extends ObstacleSprite {
         triangulator.calculate();
         triangulator.getPolygon(poly);
 
+        float x_avg = 0;
+        float y_avg = 0;
+        for (int i = 0; i < points.length; i++) {
+            if (i%2 == 0) {
+                x_avg += points[i];
+            } else {
+                y_avg += points[i];
+            }
+        }
+        internal_position = new Vector2(x_avg/( (float) points.length / 2), y_avg /( (float) points.length / 2) );
+
         obstacle = new PolygonObstacle(points);
         obstacle.setBodyType( BodyDef.BodyType.StaticBody );
         obstacle.setDensity( settings.getFloat( "density", 0 ) );
@@ -87,4 +101,7 @@ public class Surface extends ObstacleSprite {
         mesh.set(poly,tile,tile);
     }
 
+    public Vector2 temp_delect_position_remove() {
+        return internal_position;
+    }
 }

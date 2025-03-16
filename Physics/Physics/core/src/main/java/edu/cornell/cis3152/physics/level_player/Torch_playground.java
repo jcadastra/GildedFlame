@@ -11,7 +11,6 @@
  * Version: 2/8/2025
  */
 package edu.cornell.cis3152.physics.level_player;
-import com.badlogic.gdx.utils.Null;
 import edu.cornell.cis3152.physics.level_player.enemies.Enemy;
 import edu.cornell.cis3152.physics.level_player.enemies.Moth;
 import edu.cornell.cis3152.physics.level_player.enemies.Totem;
@@ -131,6 +130,7 @@ public class Torch_playground extends GameplayScene {
     private Joint activeLightJoint;
     protected CollisionController contactListener;
 
+    protected FireController fireController;
     /**
      * If torch is on the right of the avatar
      */
@@ -143,7 +143,8 @@ public class Torch_playground extends GameplayScene {
      */
     public Torch_playground(AssetDirectory directory) {
         super(directory, "platform");
-        contactListener = new CollisionController(directory);
+        fireController = new FireController();
+        contactListener = new CollisionController(directory, fireController);
         world.setContactListener(contactListener);
         sensorFixtures = new ObjectSet<Fixture>();
 
@@ -216,7 +217,7 @@ public class Torch_playground extends GameplayScene {
         Surface platform;
         String pname = "platform";
         JsonValue plats = constants.get("platforms");
-        platform = new Surface(new float[]{1.0f, 0f, 60.0f, 0f, 60.0f, 1f, 1.0f, 1f}, units, walls);
+        platform = new Surface(new float[]{1.0f, 0f, 30f, 0f, 30f, 1f, 1.0f, 1f}, units, walls);
         platform.getObstacle().setName("floor");
         platform.setTexture(texture);
         addSprite(platform);
@@ -240,7 +241,7 @@ public class Torch_playground extends GameplayScene {
         torch.setTexture(texture);
         addSprite(torch);
         l.getObstacle().setPosition(torch.getObstacle().getPosition());
-        activeLightJoint = world.createJoint(torch.attachLight(l));
+        activeLightJoint = world.createJoint(torch.attachObj(l));
 //        System.out.println(l.getObstacle().getMass());
 //        torch.createSensor();
 
@@ -331,7 +332,7 @@ public class Torch_playground extends GameplayScene {
     }
 
     private void supplementaryCollisionActions() {
-        Stack<Object[]> todos = contactListener.getTodos();
+        Stack<Object[]> todos = contactListener.getCollisionFlags();
         while ( !todos.isEmpty() ) {
             Object[] todo_action = todos.pop();
             switch ((String) todo_action[0]) {

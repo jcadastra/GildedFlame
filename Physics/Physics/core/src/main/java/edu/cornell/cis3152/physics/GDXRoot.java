@@ -42,6 +42,10 @@ public class GDXRoot extends Game implements ScreenListener {
     /** List of all WorldControllers */
     private GameplayScene[] controllers;
 
+    private String[] levels;
+
+    private GameplayScene currentScene;
+
     /**
      * Creates a new game from the configuration settings.
      *
@@ -131,8 +135,17 @@ public class GDXRoot extends Game implements ScreenListener {
             loading.dispose();
             loading = null;
 
-            // Initialize the three game worlds
-            controllers = new GameplayScene[1];
+            currentScene = new GameplayScene(directory, "platform");
+            levels = new String[3];
+            levels[0] = "moth_intro";
+            levels[1] = "totem_intro";
+            levels[2] = "spinner_layout";
+            currentScene.loadLevel(levels[0]);
+            currentScene.setScreenListener(this);
+            currentScene.setSpriteBatch(batch);
+
+            // controllers = new GameplayScene[1];
+            // controllers = new GameplayScene[2];
 //            controllers[0] = new RocketScene(directory);
             //controllers[0] = new og_platformer(directory);
 //            controllers[1] = new empty_layout1(directory);
@@ -141,26 +154,33 @@ public class GDXRoot extends Game implements ScreenListener {
 //            controllers[0] = new Moth_intro(directory);
 //            controllers[1] = new Torch_playground(directory);
 //            controllers[1] = new GameplayScene_temp(directory, "temp");
-            controllers[0] = new Totem_playground(directory);
+            // controllers[0] = new Totem_playground(directory);
 //            controllers[2] = new RagdollScene(directory);
 //            controllers[3] = new PlatformScene(directory);
 
-            for(int ii = 0; ii < controllers.length; ii++) {
-                controllers[ii].setScreenListener(this);
-                controllers[ii].setSpriteBatch(batch);
-            }
+            //for(int ii = 0; ii < controllers.length; ii++) {
+            //    controllers[ii].setScreenListener(this);
+            //    controllers[ii].setSpriteBatch(batch);
+            //}
 
             current = 0;
-            controllers[current].reset();
-            setScreen(controllers[current]);
+            currentScene.reset();
+            setScreen(currentScene);
+            // controllers[current].reset();
+            // setScreen(controllers[current]);
         } else if (exitCode == GameplayScene.EXIT_NEXT) {
-            current = (current+1) % controllers.length;
+            currentScene.clearLevel();
+            current = (current+1) % levels.length;
+            currentScene.loadLevel(levels[current]);
+            /*current = (current+1) % controllers.length;
             controllers[current].reset();
-            setScreen(controllers[current]);
+            setScreen(controllers[current]);*/
         } else if (exitCode == GameplayScene.EXIT_PREV) {
-            current = (current+controllers.length-1) % controllers.length;
-            controllers[current].reset();
-            setScreen(controllers[current]);
+            currentScene.clearLevel();
+            current = (current+levels.length-1) % levels.length;
+            currentScene.loadLevel(levels[current]);
+            /*controllers[current].reset();
+            setScreen(controllers[current]);*/
         } else if (exitCode == GameplayScene.EXIT_QUIT) {
             // We quit the main application
             Gdx.app.exit();

@@ -41,7 +41,7 @@ import java.util.List;
 /**
  * The game scene for the platformer game.
  * <p>
- * Look at the method {@link #populateLevel} for how we initialize the scene. Beyond that, a lot of
+ * Look at the method for how we initialize the scene. Beyond that, a lot of
  * work is done in the method for the ContactListener interface. That is the method that is called
  * upon collisions, giving us a chance to define a response.
  */
@@ -151,7 +151,7 @@ public class Totem_playground extends GameplayScene {
     public Totem_playground(AssetDirectory directory) {
         super(directory, "platform");
 
-        collisionController = new CollisionController(directory);
+//        collisionController = new CollisionController(directory);
         world.setContactListener(collisionController);
         sensorFixtures = new ObjectSet<Fixture>();
 
@@ -272,7 +272,7 @@ public class Totem_playground extends GameplayScene {
         torch.setTexture(texture);
         addSprite(torch);
         l.getObstacle().setPosition(torch.getObstacle().getPosition());
-        activeLightJoint = world.createJoint(torch.attachLight(l));
+        activeLightJoint = world.createJoint(torch.attachObj(l));
 //        System.out.println(l.getObstacle().getMass());
 //        torch.createSensor();
 
@@ -365,10 +365,6 @@ public class Totem_playground extends GameplayScene {
             joinTorchtoAvatar();
         }
 
-        while (!collisionController.getTodos().isEmpty()) {
-            Object[] event = collisionController.getTodos().pop();
-            handleCollisionEvent(event);
-        }
 
     }
 
