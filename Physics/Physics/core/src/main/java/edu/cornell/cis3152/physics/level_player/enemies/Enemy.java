@@ -60,12 +60,23 @@ public class Enemy extends ObstacleSprite {
     private float height;
     private float x;
     private float y;
-    private int speed;
+    private float speed;
+    private float size;
     public SpriteBatch batch;
 
     private Fixture fixture;
 
     public RaycastResult rr;
+
+    private boolean justCollided = false;
+
+    public boolean hasJustCollided() {
+        return justCollided;
+    }
+
+    public void setJustCollided(boolean collided) {
+        this.justCollided = collided;
+    }
 
     public class RaycastResult {
         public Object targetObject;
@@ -98,10 +109,8 @@ public class Enemy extends ObstacleSprite {
         this.data = data;
         this.state = EnemyState.OUT_OF_LIGHT;
         this.faceRight = true;
-        this.speed = data.getInt("speed");
-
-        float s = data.getFloat("size");
-        float size = s * units;
+        this.speed = data.getFloat("speed");
+        this.size = data.getFloat("size") * units;
 
         this.width = data.get("dimension").getFloat(0);
         this.height = data.get("dimension").getFloat(1);
@@ -194,14 +203,22 @@ public class Enemy extends ObstacleSprite {
         attackAnimationTimer = data.getInt("attackAnimationTimer");
     }
 
+    public float getSize() {
+        return size;
+    }
 
-    public void setSpeed(int value){
+    public void setSize(float val) {
+        size = val;
+    }
+
+    public void setSpeed(float value){
         speed = value;
     }
-    public int getSpeed(){
+    public float getSpeed(){
         return speed;
     }
     public void update() {
+
         if (state == EnemyState.IN_LIGHT){
             updateRayCastInLight();
         }
@@ -243,20 +260,20 @@ public class Enemy extends ObstacleSprite {
 
     }
 
-    public void move_to(Vector2 target) {
-        Body body = obstacle.getBody();
-        if (body == null) {
-            System.out.println("R");
-            return;
-        }
-        int direction = speed;
-        if (target.x < x) {
-            direction *= -1;
-        } else if (target.x == x) {
-            direction *= 0;
-        }
-        obstacle.getBody().applyForceToCenter(new Vector2(direction, 0), true);
-    }
+//    public void move_to(Vector2 target) {
+//        Body body = obstacle.getBody();
+//        if (body == null) {
+//            System.out.println("R");
+//            return;
+//        }
+//        float direction = speed;
+//        if (target.x < x) {
+//            direction *= -1;
+//        } else if (target.x == x) {
+//            direction *= 0;
+//        }
+//        obstacle.getBody().applyForceToCenter(new Vector2(direction, 0), true);
+//    }
 
 
     public boolean isAboutToFall() {
@@ -363,19 +380,22 @@ public class Enemy extends ObstacleSprite {
 
     public void move() {
         Body body = obstacle.getBody();
-
         int direction;
-        if (isAboutToFall()) {
-            changeDirection();
+//        if (isAboutToFall()) {
+//            System.out.println("CHANGING DIRECTIONS");
+//            changeDirection();
+//        }
+        if (!isFacingRight()) {
+            direction = (int) (speed);
+        } else {
+            direction = (int) (-speed);
         }
-            if (!isFacingRight()) {
-                direction = speed;
-            } else {
-                direction = -speed;
-            }
-
-
-        body.setLinearVelocity(new Vector2(direction, body.getLinearVelocity().y));
+        if (body == null){
+            System.out.println("ERROR");
+        } else {
+//            System.out.println("Direction : " + direction + ", Linear Velocity: " + body.getLinearVelocity());
+            body.setLinearVelocity(new Vector2(direction, body.getLinearVelocity().y));
+        }
 
     }
 
@@ -397,8 +417,10 @@ public class Enemy extends ObstacleSprite {
     public void cd() { }
     public void creep() {}
     public void stop() {
+//        System.out.println("stopping");
         float currY = obstacle.getLinearVelocity().y;
         obstacle.getBody().setLinearVelocity(0, currY);
+        obstacle.setBodyType(BodyDef.BodyType.StaticBody);
     }
 
     @Override

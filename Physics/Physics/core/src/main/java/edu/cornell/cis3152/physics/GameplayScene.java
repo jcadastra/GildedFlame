@@ -668,6 +668,8 @@ public class GameplayScene implements Screen {
             }
         }
 
+        contactListener.processPendingMerges();
+
         if (!isFailure() && avatar.getObstacle().getY() < -1) {
             setFailure(true);
             return false;

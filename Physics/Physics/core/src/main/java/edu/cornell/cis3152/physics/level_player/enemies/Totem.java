@@ -8,23 +8,25 @@ import edu.cornell.gdiac.assets.AssetDirectory;
 
 public class Totem extends Enemy {
 
-    boolean isStacked;
-    int stackHeight;
+    boolean isGrounded;
     public Totem(int id, float units, JsonValue value, AssetDirectory directory, Vector2 position) {
         super(id, units, value, directory, position);
     }
 
+
+
     // reacting to light
     @Override
     public void in_light(){
+//        System.out.println("in light");
         Texture texture = directory.getEntry("rocket-totem03", Texture.class);
         setTexture(texture);
-        obstacle.setBodyType(BodyDef.BodyType.StaticBody);
         stop();
     }
 
     @Override
     public void out_of_light(){
+//        System.out.println("out of light: " + getFreezeTimer());
         Texture texture = directory.getEntry("rocket-totem01", Texture.class);
         setTexture(texture);
         if (getFreezeTimer() == 0){
@@ -37,9 +39,12 @@ public class Totem extends Enemy {
 
     @Override
     public void cd() {
+//        System.out.println("cd");
         Texture texture = directory.getEntry("rocket-totem02", Texture.class);
         setTexture(texture);
         decrementFreezeTimer();
     }
+
+
 
 }
