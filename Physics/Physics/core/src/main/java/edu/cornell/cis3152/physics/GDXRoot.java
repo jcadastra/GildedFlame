@@ -14,10 +14,12 @@
  package edu.cornell.cis3152.physics;
 
 import com.badlogic.gdx.*;
-import edu.cornell.cis3152.physics.level_player.*;
+import com.badlogic.gdx.audio.Music;
+import edu.cornell.gdiac.audio.SoundEffect;
 import edu.cornell.gdiac.util.*;
 import edu.cornell.gdiac.assets.*;
 import edu.cornell.gdiac.graphics.*;
+import java.util.ArrayList;
 //import edu.cornell.cis3152.physics.ragdoll.*;
 
 /**
@@ -46,6 +48,8 @@ public class GDXRoot extends Game implements ScreenListener {
 
     private GameplayScene currentScene;
 
+    private SoundEngine soundEngine;
+
     /**
      * Creates a new game from the configuration settings.
      *
@@ -62,6 +66,7 @@ public class GDXRoot extends Game implements ScreenListener {
      */
     public void create() {
         batch  = new SpriteBatch();
+        soundEngine = new SoundEngine();
 
         // Create the loading scene
         loading = new LoadingScene("assets.json",batch,1);
@@ -89,6 +94,7 @@ public class GDXRoot extends Game implements ScreenListener {
         }
 
         batch.dispose();
+        soundEngine.dispose();
         batch = null;
 
         // Unload all of the resources
@@ -135,8 +141,23 @@ public class GDXRoot extends Game implements ScreenListener {
             loading.dispose();
             loading = null;
 
+
+            soundEngine.registerSoundEffect("jump", directory.getEntry("platform-jump", SoundEffect.class));
+            soundEngine.registerSoundEffect("pew", directory.getEntry("platform-pew", SoundEffect.class));
+            soundEngine.registerSoundEffect("plop", directory.getEntry("platform-plop", SoundEffect.class));
+
+            soundEngine.registerMusic("eerie1", directory.getEntry("eerie", Music.class));
+            soundEngine.registerMusic("eerieCriminal", directory.getEntry("eerieCriminal", Music.class));
+            soundEngine.registerMusic("tenseSoundscape", directory.getEntry("tenseSoundscape", Music.class));
+
+            ArrayList<String> temp = new ArrayList<>();
+            temp.add("eerie1");
+            temp.add("eerieCriminal");
+            soundEngine.startMusicLoop(temp);
+            //TODO: fine a better place to put these ^
+
             // Initialize the three game worlds
-            currentScene = new GameplayScene(directory, "platform");
+            currentScene = new GameplayScene(directory, soundEngine, "platform");
             levels = new String[3];
             levels[0] = "moth_intro";
             levels[1] = "totem_intro";

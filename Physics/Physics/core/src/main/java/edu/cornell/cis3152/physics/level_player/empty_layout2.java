@@ -26,6 +26,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectSet;
 import edu.cornell.cis3152.physics.InputController;
 import edu.cornell.cis3152.physics.GameplayScene;
+import edu.cornell.cis3152.physics.SoundEngine;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Door;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Spinner;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Surface;
@@ -78,7 +79,7 @@ public class empty_layout2 extends GameplayScene implements ContactListener {
      * The game has default gravity and other settings
      */
     public empty_layout2(AssetDirectory directory) {
-        super(directory,"platform");
+        super(directory,new SoundEngine(),"platform");
         world.setContactListener(this);
         sensorFixtures = new ObjectSet<Fixture>();
 
