@@ -286,10 +286,10 @@ public class Rope extends ObstacleGroup {
             eos.setTexture(endRopeTexture);
         }
         for (EnhancedObstacleSprite eos : bottomEntities) {
-            eos.setTexture(endRopeTexture);
+            eos.setTexture(midRopeTexture);
         }
         for (EnhancedObstacleSprite eos : topEntities) {
-            eos.setTexture(endRopeTexture);
+            eos.setTexture(midRopeTexture);
         }
     }
 }
