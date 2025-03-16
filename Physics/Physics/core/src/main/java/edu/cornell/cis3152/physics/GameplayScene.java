@@ -535,30 +535,29 @@ public class GameplayScene implements Screen {
             addSprite(platform);
         }
 
-        /*Surface platform;
-        String pname = "platform";
-        JsonValue plats = constants.get("platforms");
-        platform = new Surface(new float[]{1.0f, 0f, 60.0f, 0f, 60.0f, 1f, 1.0f, 1f}, units, walls);
-        platform.getObstacle().setName("floor");
-        platform.setTexture(texture);
-        addSprite(platform);*/
-
         // Add level goal
         texture = directory.getEntry( "shared-goal", Texture.class );
 
         JsonValue goal = levelData.get("goal");
-        // JsonValue goalpos = goal.get("pos");
         goalDoor = new Door(units, goal);
         goalDoor.setTexture( texture );
         goalDoor.getObstacle().setName("goal");
         addSprite(goalDoor);
+
+        // Create rope bridges
+        texture = directory.getEntry( "platform-rope", Texture.class );
+        JsonValue bridges = levelData.get("bridges");
+        for (JsonValue bridgeJson : bridges) {
+            RopeBridge bridge = new RopeBridge(units, bridgeJson);
+            bridge.setTexture(texture);
+            addSpriteGroup(bridge);
+        }
 
         // Create spinners
         texture = directory.getEntry( "platform-barrier", Texture.class );
         JsonValue spinners = levelData.get("spinners");
         for (JsonValue spinnerJson : spinners) {
             Spinner spinner = new Spinner(units, spinnerJson);
-            // spinner.getObstacle().setName(spinnerJson.getString("name"));
             spinner.setTexture(texture);
             addSpriteGroup(spinner);
         }

@@ -45,6 +45,15 @@
     }
   ],
   "spinners" : [],
+  "bridges" : [
+    {
+      "pos"     : [9.0, 3.8],
+      "size"    : [1.0, 0.125],
+      "extent"  : 14.0,
+      "density" : 1.0,
+      "pin_radius": 0.1
+    }
+  ],
   "traci" : {
     "pos"       : [2.5, 5.0],
     "inner"     : [0.7, 0.95],
