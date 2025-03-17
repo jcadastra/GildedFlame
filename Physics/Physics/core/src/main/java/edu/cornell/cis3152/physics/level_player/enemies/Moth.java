@@ -2,9 +2,7 @@ package edu.cornell.cis3152.physics.level_player.enemies;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.RayCastCallback;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.cis3152.physics.GameplayScene;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Light;
@@ -23,19 +21,24 @@ public class Moth extends Enemy {
 
     @Override
     public void in_light() {
-        System.out.println("in light");
-        if (rr.targetObject instanceof Torch && ((Torch) rr.targetObject).canBePickedUp()) {
-            setState(EnemyState.CREEP);
-        } else if (rr.targetObject instanceof Traci) {
-            setState(EnemyState.CD);
+        resetAttackTimer();
+        if (rr != null){
+//            System.out.println("in light: " + rr.targetObject);
+            if (rr.targetObject instanceof Torch && ((Torch) rr.targetObject).canBePickedUp()) {
+                setState(EnemyState.CREEP);
+            } else if (rr.targetObject instanceof Traci) {
+                setState(EnemyState.CD);
+            } else {
+                System.out.println("ERROR: " + rr.targetObject);
+            }
         } else {
-            System.out.println("ERROR");
+//            System.out.println("in light");
         }
     }
 
     @Override
     public void cd() {
-        System.out.println("cd : " + rr.targetObject);
+//        System.out.println("cd : " + getAttackTimer());
         if (getAttackTimer() == 0) {
             setState(EnemyState.ATTACK);
         } else {
@@ -46,53 +49,71 @@ public class Moth extends Enemy {
 
     @Override
     public void attack() {
-        System.out.println("attack: " + getAttackAnimationTimer());
-        if (getAttackAnimationTimer() != 0) {
+        if (getAttackAnimationTimer() == 0) {
+//            System.out.print("attack");
+            obstacle.getBody().setType(BodyDef.BodyType.DynamicBody);
             obstacle.setBullet(true);
             if (isFacingRight()) {
-                obstacle.getBody().applyForceToCenter(new Vector2(-500, 0), true);
+                obstacle.getBody().applyForceToCenter(new Vector2(10000, 0), true);
             } else {
-                obstacle.getBody().applyForceToCenter(new Vector2(500, 0), true);
+                obstacle.getBody().applyForceToCenter(new Vector2(-10000, 0), true);
             }
+
             obstacle.setBullet(false);
-            decrementAttackAnimationTimer();
-        } else {
-            stop();
             resetAttackTimer();
             resetAttackAnimationTimer();
             setState(EnemyState.IN_LIGHT);
+        } else {
+//            System.out.println("attack: " + getAttackAnimationTimer());
+            stop();
+            decrementAttackAnimationTimer();
         }
     }
 
     // just follows the torch around.
     @Override
     public void angry() {
-        System.out.println("angry: " + rr.targetObject);
+//        if (rr != null){
+//            System.out.println("angry: " + rr.targetObject);
+//        } else {
+//            System.out.println("angry");
+//        }
+        setSpeed(3.0f);
         Texture texture = directory.getEntry("platform-moth02", Texture.class);
         setTexture(texture);
+        move();
+
     }
 
     @Override
     public void out_of_light() {
-        System.out.println("out_of_light");
+//        System.out.println("out_of_light");
         Texture texture = directory.getEntry("platform-moth01", Texture.class);
         setTexture(texture);
+        setSpeed(2.0f);
         if (!(rr == null) && (!Float.isNaN(rr.targetDistance))) {
-            System.out.println("TARGET: " + rr.targetObject.toString());
+//            System.out.println("TARGET: " + rr.targetObject);
             if (rr.targetDistance < DETECTION_DISTANCE && rr.targetObject instanceof Light) {
                 setState(EnemyState.ANGRY);
-            } else {
-                move();
             }
+//            else {
+//                System.out.print("MOVE1 ");
+//                move();change
+//            }
         }
+//        System.out.print("MOVE2 ");
+        move();
     }
 
     @Override
     public void creep() {
-        System.out.println("creep: " + rr.targetObject);
-        setSpeed(2);
-//        move();
-
+//        if (rr != null){
+//            System.out.println("creep: "+ rr.targetObject);
+//        } else {
+//            System.out.println("creep");
+//        }
+        setSpeed(0.5f);
+        move();
     }
 
 

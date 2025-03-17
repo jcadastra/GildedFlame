@@ -739,6 +739,7 @@ public class GameplayScene implements Screen {
 
         // Process actions in object model
         avatar.setMovement(input.getHorizontal() * avatar.getForce());
+        soundEngine.avatarWalking(input.getHorizontal(), avatar.isGrounded());
         avatar.setJumping(input.didPrimary());
         avatar.setShooting(input.didSecondary());
 
@@ -758,7 +759,7 @@ public class GameplayScene implements Screen {
         avatar.applyForce();
         if (avatar.isJumping()) {
             SoundEffectManager sounds = SoundEffectManager.getInstance();
-            soundEngine.playSoundEffects("jump");
+            soundEngine.jump();
         }
         if ((queueAddTorch && activeTorchJoint == null) || (activeTorchJoint != null &&
             torchOnRight != avatar.isFacingRight())) {

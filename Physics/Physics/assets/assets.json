@@ -190,6 +190,7 @@
       "tenseSoundscape": "music/tenseAtmosphereHauntingSoundscapes.wav"
     },
     "soundfx" : {
+        "dirtFootStep"       : "soundEffects/dirtFootStep.wav",
         "rocket-bump"       : "rocket/bump.wav",
         "rocket-mainburn"   : "rocket/afterburner.wav",
         "rocket-leftburn"   : "rocket/sideburner-left.wav",
