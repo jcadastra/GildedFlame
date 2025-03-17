@@ -138,13 +138,15 @@ public class CollisionController implements ContactListener {
 
             if (isXandY(bd1, bd2, "wall", Enemy.class) == 1) {
                 Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
-                    enemy.changeDirection();
-                    enemy.setJustCollided(true);
+//                System.out.println("HERE");
+                enemy.setJustCollided(false);
+                enemy.changeDirection();
+                enemy.setJustCollided(true);
             }
 
-            if (isXandY(bd1, bd2, "floor", Totem.class) == 1) {
-                Totem totem = (Totem) idX(bd1, bd2, Totem.class);
-                totem.setGrounded(true);
+            if (isXandY(bd1, bd2, "floor", Enemy.class) == 1) {
+                Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
+                enemy.setGrounded(true);
             }
             if (isXandY(bd1, bd2, Totem.class, Moth.class) == 1) {
                 Totem totem = (Totem) idX(bd1, bd2, Totem.class);
@@ -184,6 +186,8 @@ public class CollisionController implements ContactListener {
                         Totem bottomTotem = (topTotem == totem1) ? totem2 : totem1;
                         pendingTotemMerges.add(new Totem[]{topTotem, bottomTotem});
                     } else if (xDiff > 0.5f && yDiff < 0.5f) {
+                        totem1.setJustCollided(false);
+                        totem2.setJustCollided(false);
                         totem1.changeDirection();
                         totem2.changeDirection();
                         totem1.setJustCollided(true);
@@ -191,14 +195,18 @@ public class CollisionController implements ContactListener {
                     }
 
             }
-
             if (isXandY(bd1, bd2, Light.class, Totem.class) == 1) {
                 Totem totem = (Totem) idX(bd1, bd2, Totem.class);
                 totem.setState(Enemy.EnemyState.IN_LIGHT);
             }
 
+            if (isXandY(bd1, bd2, Moth.class, Torch.class) == 1) {
+                collisionFlags.push(new Object[]{"queueFailure"});
+            }
+
 
             if (isXandY(bd1, bd2, Light.class, Moth.class) == 1) {
+                System.out.println("LIGHT AND MOTH COLLISION");
                 Light light = (Light) idX(bd1, bd2, Light.class);
                 Moth moth = (Moth) idX(bd1, bd2, Moth.class);
 
@@ -206,12 +214,14 @@ public class CollisionController implements ContactListener {
                 float mx = moth.getObstacle().getX();
 
                 if (lx < mx && !moth.isFacingRight()) {
+                    System.out.println("TRY TO CHANGE RIGHT");
                     moth.changeDirection();
                 } else if (lx > mx && moth.isFacingRight()) {
+                    System.out.println("TRY TO CHANGE LEFT");
                     moth.changeDirection();
                 }
 
-                moth.setState(Enemy.EnemyState.IN_LIGHT);
+                moth.setState(EnemyState.IN_LIGHT);
                 moth.resetAttackTimer();
             }
 
@@ -320,7 +330,6 @@ public class CollisionController implements ContactListener {
             sustainedContacts.remove(key);
 
         }
-
 
         if (isXandY(bd1, bd2, Totem.class, Totem.class) == 2) {
             Totem totem1 = (Totem) bd1;

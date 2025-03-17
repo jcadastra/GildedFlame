@@ -63,7 +63,7 @@ public class SoundEngine {
             activeMusicIndex = (activeMusicIndex + 1) % activeMusic.size();
             activeMusic.get(activeMusicIndex).play();
         } else {
-            System.out.println(activeMusic.get(activeMusicIndex).getPosition());
+//            System.out.println(activeMusic.get(activeMusicIndex).getPosition());
         }
     }
     public void startMusicLoop(ArrayList<String> musicSet) {
