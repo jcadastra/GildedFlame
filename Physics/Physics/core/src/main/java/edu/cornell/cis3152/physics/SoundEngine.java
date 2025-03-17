@@ -114,6 +114,14 @@ public class SoundEngine {
         }
     }
 
+    public void throwTorch() {
+        SoundEffect torchThrow = registeredSoundEffects.get("torchThrow");
+        System.out.println("throwing");
+        if (torchThrow != null) {
+            torchThrow.play();
+        }
+    }
+
     public void dispose() {
         for (SoundEffect soundEffect : registeredSoundEffects.values()) {
             soundEffect.dispose();
