@@ -754,6 +754,7 @@ public class GameplayScene implements Screen {
             activeTorchJoint = null;
             torch.applyThrowForce(avatar.isFacingRight() ? 1 : -1);
             torch.resetPickUp();
+            soundEngine.throwTorch();
         }
 
         avatar.applyForce();
