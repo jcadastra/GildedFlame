@@ -152,8 +152,8 @@ public class GDXRoot extends Game implements ScreenListener {
             soundEngine.registerMusic("tenseSoundscape", directory.getEntry("tenseSoundscape", Music.class));
 
             ArrayList<String> temp = new ArrayList<>();
-            temp.add("eerie1");
             temp.add("eerieCriminal");
+            temp.add("eerie1");
             soundEngine.startMusicLoop(temp);
             //TODO: fine a better place to put these ^
 
