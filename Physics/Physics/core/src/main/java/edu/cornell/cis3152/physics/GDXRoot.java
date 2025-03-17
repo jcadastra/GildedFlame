@@ -145,6 +145,7 @@ public class GDXRoot extends Game implements ScreenListener {
             soundEngine.registerSoundEffect("jump", directory.getEntry("platform-jump", SoundEffect.class));
             soundEngine.registerSoundEffect("pew", directory.getEntry("platform-pew", SoundEffect.class));
             soundEngine.registerSoundEffect("plop", directory.getEntry("platform-plop", SoundEffect.class));
+            soundEngine.registerSoundEffect("dirtFootStep", directory.getEntry("dirtFootStep", SoundEffect.class));
 
             soundEngine.registerMusic("eerie1", directory.getEntry("eerie", Music.class));
             soundEngine.registerMusic("eerieCriminal", directory.getEntry("eerieCriminal", Music.class));
