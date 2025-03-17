@@ -29,6 +29,7 @@ import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.utils.ObjectSet;
 import edu.cornell.cis3152.physics.level_player.CollisionController;
 import edu.cornell.cis3152.physics.level_player.FireController;
+import edu.cornell.cis3152.physics.level_player.LightController;
 import edu.cornell.cis3152.physics.level_player.enemies.Enemy;
 import edu.cornell.cis3152.physics.level_player.enemies.Moth;
 import edu.cornell.cis3152.physics.level_player.enemies.Totem;
@@ -173,6 +174,8 @@ public class GameplayScene implements Screen {
     protected CollisionController contactListener;
     protected FireController fireController;
     protected SoundEngine soundEngine;
+
+    protected LightController lightController;
 
     protected ParticleEngine particleEngine;
 
@@ -360,7 +363,7 @@ public class GameplayScene implements Screen {
         }
 
         soundEngine.dispose();
-
+        lightController.dispose();
         sprites.clear();
         addQueue.clear();
         world.dispose();
@@ -461,6 +464,9 @@ public class GameplayScene implements Screen {
             }
             fireController.resetStorage();
         }
+
+        if (lightController != null){
+            lightController.dispose();}
 
         for (ObstacleSprite sprite : sprites) {
             Obstacle obj = sprite.getObstacle();
@@ -597,12 +603,14 @@ public class GameplayScene implements Screen {
         // Have to do after body is created
         avatar.createSensor();
 
-        Light l = new Light(units, levelData.get("light"));
+        Lighting l = new Lighting(units, levelData.get("light"));
         l.setTexture(texture);
         addSprite(l);
         l.createSensor();
         torchFire = new Fire(units, new Vector2(10,10));
         addSprite(torchFire);
+        lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds);
+        lightController.attachTorchLight(torchFire);
 
         particleEngine = new ParticleEngine(torchFire);
         particleEngine.newFires(fireController);
@@ -962,6 +970,7 @@ public class GameplayScene implements Screen {
         }
 
         batch.end();
+        lightController.render();
     }
 
     /**
@@ -978,7 +987,7 @@ public class GameplayScene implements Screen {
         this.height = height;
         if (camera == null) {
             camera = new OrthographicCamera();
-            camera.zoom = 0.8f;
+            //camera.zoom = 0.8f;
         }
         camera.setToOrtho( false, width, height );
         scale.x = width/bounds.width;

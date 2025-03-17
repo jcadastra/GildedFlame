@@ -4,8 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.JsonValue;
-import edu.cornell.cis3152.physics.GameplayScene;
-import edu.cornell.cis3152.physics.level_player.enviromentals.Light;
+import edu.cornell.cis3152.physics.level_player.enviromentals.Lighting;
 import edu.cornell.cis3152.physics.level_player.player.Torch;
 import edu.cornell.cis3152.physics.level_player.player.Traci;
 import edu.cornell.gdiac.assets.AssetDirectory;
@@ -93,7 +92,7 @@ public class Moth extends Enemy {
         setSpeed(2.0f);
         if (!(rr == null) && (!Float.isNaN(rr.targetDistance))) {
 //            System.out.println("TARGET: " + rr.targetObject);
-            if (rr.targetDistance < DETECTION_DISTANCE && rr.targetObject instanceof Light) {
+            if (rr.targetDistance < DETECTION_DISTANCE && rr.targetObject instanceof Lighting) {
                 setState(EnemyState.ANGRY);
             }
 //            else {

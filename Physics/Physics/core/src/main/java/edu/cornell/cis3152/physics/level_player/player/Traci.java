@@ -97,6 +97,10 @@ public class Traci extends ObstacleSprite {
     private float x;
     private float y;
 
+    public static final short CATEGORY_AVATAR = 0x0002;  // 00000010
+    public static final short CATEGORY_ENVIRONMENT = 0x0004;  // 00000100
+    public static final short CATEGORY_LIGHT = 0x0008;  // 00001000
+
     /** Cache for internal force calculations */
     private final Vector2 forceCache = new Vector2();
     /** Cache for the affine flip */
@@ -319,6 +323,11 @@ public class Traci extends ObstacleSprite {
         // actually smaller than the image, making a tighter hitbox. You can
         // see this when you enable debug mode.
         mesh.set(-size/2.0f,-size/2.0f,size,size);
+
+        //fixture filter for lights
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.filter.categoryBits = CATEGORY_AVATAR; // Object's category
+        fixtureDef.filter.maskBits = CATEGORY_ENVIRONMENT; // Which lights affect it
     }
 
     public void create_Fixture() {

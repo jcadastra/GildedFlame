@@ -10,7 +10,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import edu.cornell.cis3152.physics.level_player.enemies.Enemy;
 import edu.cornell.cis3152.physics.level_player.enemies.Moth;
 import edu.cornell.cis3152.physics.level_player.enemies.Totem;
-import edu.cornell.cis3152.physics.level_player.enviromentals.Light;
+import edu.cornell.cis3152.physics.level_player.enviromentals.Lighting;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
 
@@ -101,16 +101,16 @@ public class legacy_CollisionController implements ContactListener {
                 ((Enemy) bd1).changeDirection();
             }
 
-            if ((bd2 instanceof Light && bd1 instanceof Totem)) {
+            if ((bd2 instanceof Lighting && bd1 instanceof Totem)) {
                 Texture texture = directory.getEntry("rocket-totem03", Texture.class);
                 scene.totem.setTexture(texture);
                 scene.totem.setState(Enemy.EnemyState.IN_LIGHT);
                 scene.totem.resetFreeze();
             }
 
-            if ((bd2 instanceof Light && bd1 instanceof Moth) || (bd2 instanceof Moth
-                && bd1 instanceof Light)) {
-                Light light = (bd1 instanceof Light) ? (Light) bd1 : (Light) bd2;
+            if ((bd2 instanceof Lighting && bd1 instanceof Moth) || (bd2 instanceof Moth
+                && bd1 instanceof Lighting)) {
+                Lighting light = (bd1 instanceof Lighting) ? (Lighting) bd1 : (Lighting) bd2;
                 Enemy moth = (bd1 instanceof Enemy) ? (Enemy) bd1 : (Enemy) bd2;
 
                 float lx = light.getObstacle().getX();
@@ -163,13 +163,13 @@ public class legacy_CollisionController implements ContactListener {
             }
         }
 
-        if ((bd2 instanceof Light && bd1 instanceof Totem)) {
+        if ((bd2 instanceof Lighting && bd1 instanceof Totem)) {
             Texture texture = directory.getEntry("rocket-totem01", Texture.class);
             scene.totem.setTexture(texture);
             scene.totem.setState(Enemy.EnemyState.OUT_OF_LIGHT);
         }
 
-        if ((bd2 instanceof Light && bd1 instanceof Moth)) {
+        if ((bd2 instanceof Lighting && bd1 instanceof Moth)) {
             Texture texture = directory.getEntry("rocket-moth01", Texture.class);
             scene.moth.setTexture(texture);
             scene.moth.setState(Enemy.EnemyState.OUT_OF_LIGHT);
