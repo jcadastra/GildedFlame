@@ -108,10 +108,6 @@ public class Moth extends Enemy {
 
     @Override
     public void creep() {
-        if (rr == null || rr.targetObject instanceof Torch){
-            setState(EnemyState.OUT_OF_LIGHT);
-            System.out.println("SET TO OUT OF LIGHT");
-        }
         if (rr != null){
             System.out.println("creep: "+ rr.targetObject);
         } else {
@@ -119,7 +115,6 @@ public class Moth extends Enemy {
         }
         setSpeed(0.25f);
         move();
-
     }
 
 
