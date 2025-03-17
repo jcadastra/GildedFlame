@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Fire;
-import edu.cornell.cis3152.physics.level_player.enviromentals.Light;
+import edu.cornell.cis3152.physics.level_player.enviromentals.Lighting;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.graphics.SpriteBatch;
 import edu.cornell.gdiac.math.Path2;
@@ -320,7 +320,7 @@ public class Enemy extends ObstacleSprite {
         RayCastCallback callback = (fixture, point, normal, fraction) -> {
             // If the fixture belongs to a Light, ignore it
             Object detectedObject = fixture.getBody().getUserData();
-            if (detectedObject instanceof Light || detectedObject instanceof Fire) {
+            if (detectedObject instanceof Lighting || detectedObject instanceof Fire) {
                 return -1;
             }
             if (fraction < closestFraction[0]) {

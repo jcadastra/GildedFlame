@@ -16,7 +16,7 @@ import edu.cornell.cis3152.physics.level_player.enemies.Enemy;
 import edu.cornell.cis3152.physics.level_player.enemies.Moth;
 import edu.cornell.cis3152.physics.level_player.enemies.Totem;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Door;
-import edu.cornell.cis3152.physics.level_player.enviromentals.Light;
+import edu.cornell.cis3152.physics.level_player.enviromentals.Lighting;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Surface;
 import edu.cornell.cis3152.physics.level_player.player.Bullet;
 import edu.cornell.cis3152.physics.level_player.player.Torch;
@@ -232,7 +232,7 @@ public class Torch_playground extends GameplayScene {
         // Have to do after body is created
         avatar.createSensor();
 
-        Light l = new Light(units, constants.get("light"));
+        Lighting l = new Lighting(units, constants.get("light"));
         l.setTexture(texture);
         addSprite(l);
         l.createSensor();
