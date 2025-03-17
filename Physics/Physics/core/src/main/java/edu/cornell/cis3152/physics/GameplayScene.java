@@ -914,10 +914,9 @@ public class GameplayScene implements Screen {
             for (Fire fire:fireController.getLitFires()){
                 particleEngine.draw(batch,fire);
             }
-        }else{
-            particleEngine.draw(batch,torchFire);
-
         }
+        particleEngine.draw(batch,torchFire);
+
 
         if (debug) {
             // Draw the outlines
