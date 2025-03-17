@@ -1,7 +1,7 @@
 package edu.cornell.cis3152.physics.level_player.enemies;
 
-import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Fire;
@@ -10,15 +10,19 @@ import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.graphics.SpriteBatch;
 import edu.cornell.gdiac.math.Path2;
 import edu.cornell.gdiac.math.PathFactory;
-import edu.cornell.gdiac.physics2.*;
+import edu.cornell.gdiac.physics2.BoxObstacle;
+import edu.cornell.gdiac.physics2.ObstacleSprite;
 
 public class Enemy extends ObstacleSprite {
 
 
+    private final JsonValue data;
+    private final int id;
+    private final float width;
+    private final float height;
     public SpriteBatch batch;
     public RaycastResult rr;
     protected AssetDirectory directory;
-    private final JsonValue data;
     private Path2 sensorOutline;
     // Instance attributes
     private Color sensorColor;
@@ -27,14 +31,11 @@ public class Enemy extends ObstacleSprite {
      * Which direction is the character facing
      */
     private boolean faceRight;
-    private final int id;
     private int freezeTimer;
     private int attackTimer;
     private int attackAnimationTimer;
     private EnemyState state;
     private boolean isGrounded = false;
-    private final float width;
-    private final float height;
     private float x;
     private float y;
     private float speed;
@@ -235,9 +236,9 @@ public class Enemy extends ObstacleSprite {
 
         Vector2 position = body.getPosition();
         float rayLength = 1.0f;
+        float xOffset = isFacingRight() ? (width / 2 - 0.4f) : (-width / 2 + 0.4f);
+        Vector2 rayStart = new Vector2(position.x + xOffset, position.y - height / 2);
 
-        float xOffset = isFacingRight() ? width - 0.4f : -width + 0.4f;
-        Vector2 rayStart = new Vector2(position.x - xOffset, position.y - height / 2);
         Vector2 rayEnd = rayStart.cpy().add(0, -rayLength);
 
         final boolean[] groundDetected = {false};
@@ -266,13 +267,15 @@ public class Enemy extends ObstacleSprite {
         if (body == null) {
             return null;
         }
-        Vector2 start = obstacle.getBody().getPosition();
+        Vector2 pos = obstacle.getBody().getPosition();
+        Vector2 start = new Vector2(pos.x, pos.y - height / 4);
         Vector2 direction;
         if (isFacingRight()) {
-            direction = new Vector2(-1, 0);
-        } else {
             direction = new Vector2(1, 0);
+        } else {
+            direction = new Vector2(-1, 0);
         }
+
         float maxDistance = 5f;
         Vector2 end = start.cpy().add(direction.scl(maxDistance));
         final Object[] closestObject = {null};
@@ -298,29 +301,16 @@ public class Enemy extends ObstacleSprite {
         return null;
     }
 
-//    public void move_to(Vector2 target) {
-//        Body body = obstacle.getBody();
-//        if (body == null) {
-//            System.out.println("R");
-//            return;
-//        }
-//        float direction = speed;
-//        if (target.x < x) {
-//            direction *= -1;
-//        } else if (target.x == x) {
-//            direction *= 0;
-//        }
-//        obstacle.getBody().applyForceToCenter(new Vector2(direction, 0), true);
-//    }
-
     public RaycastResult raycastInLight() {
 //        System.out.println("Using new raycast");
-        Vector2 start = obstacle.getBody().getPosition();
+
+        Vector2 pos = obstacle.getBody().getPosition();
+        Vector2 start = new Vector2(pos.x, pos.y - height / 4);
         Vector2 direction;
         if (isFacingRight()) {
-            direction = new Vector2(-1, 0);
-        } else {
             direction = new Vector2(1, 0);
+        } else {
+            direction = new Vector2(-1, 0);
         }
         float maxDistance = 5f;
         Vector2 end = start.cpy().add(direction.scl(maxDistance));
@@ -354,23 +344,23 @@ public class Enemy extends ObstacleSprite {
     }
 
     public void move() {
-//        System.out.println("MOVE");
+//        System.out.print("MOVE: " );
         Body body = obstacle.getBody();
         float direction;
+        obstacle.setBodyType(BodyDef.BodyType.DynamicBody);
         if (isAboutToFall() && !isGrounded()) {
             changeDirection();
         }
-        if (!isFacingRight()) {
+        if (isFacingRight()) {
+//            System.out.println("Facing right");
             direction = speed;
         } else {
+//            System.out.println("Facing left");
             direction = -speed;
         }
-        if (body == null) {
-            System.out.println("ERROR");
-        } else {
-            System.out.println("Direction : " + direction);
-            body.setLinearVelocity(new Vector2(direction, body.getLinearVelocity().y));
-        }
+
+//        System.out.println("Direction: " + getSpeed());
+        body.setLinearVelocity(new Vector2(direction, body.getLinearVelocity().y));
 
     }
 
@@ -397,7 +387,7 @@ public class Enemy extends ObstacleSprite {
     }
 
     public void stop() {
-        System.out.println("stopping");
+//        System.out.println("stopping");
         float currY = obstacle.getLinearVelocity().y;
         obstacle.getBody().setLinearVelocity(0, currY);
         obstacle.setBodyType(BodyDef.BodyType.StaticBody);

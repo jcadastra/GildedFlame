@@ -138,10 +138,8 @@ public class CollisionController implements ContactListener {
 
             if (isXandY(bd1, bd2, "wall", Enemy.class) == 1) {
                 Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
-//                System.out.println("HERE");
                 enemy.setJustCollided(false);
                 enemy.changeDirection();
-                enemy.setJustCollided(true);
             }
 
             if (isXandY(bd1, bd2, "floor", Enemy.class) == 1) {
@@ -206,23 +204,25 @@ public class CollisionController implements ContactListener {
 
 
             if (isXandY(bd1, bd2, Light.class, Moth.class) == 1) {
-                System.out.println("LIGHT AND MOTH COLLISION");
                 Light light = (Light) idX(bd1, bd2, Light.class);
                 Moth moth = (Moth) idX(bd1, bd2, Moth.class);
+
+                moth.setState(EnemyState.IN_LIGHT);
+
 
                 float lx = light.getObstacle().getX();
                 float mx = moth.getObstacle().getX();
 
-                if (lx < mx && !moth.isFacingRight()) {
-                    System.out.println("TRY TO CHANGE RIGHT");
+                if ((lx < mx && moth.isFacingRight()) || lx > mx && !moth.isFacingRight()) {
                     moth.changeDirection();
-                } else if (lx > mx && moth.isFacingRight()) {
-                    System.out.println("TRY TO CHANGE LEFT");
-                    moth.changeDirection();
+//                } else if (lx < mx && !moth.isFacingRight()){
+//                    System.out.println("Moth is correctly facing left");
+//                } else {
+//                    System.out.println("Moth is correctly facing right");
                 }
 
-                moth.setState(EnemyState.IN_LIGHT);
-                moth.resetAttackTimer();
+
+
             }
 
             if (isXandY(bd1, bd2, Moth.class, Traci.class) == 1) {
@@ -336,6 +336,12 @@ public class CollisionController implements ContactListener {
             Totem totem2 = (Totem) bd2;
             totem1.setJustCollided(false);
             totem2.setJustCollided(false);
+        }
+
+        if (isXandY(bd1, bd2, "wall", Enemy.class) == 1){
+            Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
+            enemy.setJustCollided(false);
+
         }
 
     }
