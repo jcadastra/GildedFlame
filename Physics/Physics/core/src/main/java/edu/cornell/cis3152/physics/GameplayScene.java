@@ -173,6 +173,10 @@ public class GameplayScene implements Screen {
     protected FireController fireController;
     protected SoundEngine soundEngine;
 
+    protected ParticleEngine particleEngine;
+
+    protected Fire torchFire;
+
     /**
      * Flag to add torch to avatar in update
      */
@@ -596,8 +600,11 @@ public class GameplayScene implements Screen {
         l.setTexture(texture);
         addSprite(l);
         l.createSensor();
-        Fire fire = new Fire(units, new Vector2(10,10));
-        addSprite(fire);
+        torchFire = new Fire(units, new Vector2(10,10));
+        addSprite(torchFire);
+
+        particleEngine = new ParticleEngine(torchFire);
+        particleEngine.newFires(fireController);
 //
         // Create Torch
         texture = directory.getEntry("platform-torch", Texture.class);
@@ -605,9 +612,9 @@ public class GameplayScene implements Screen {
         torch.setTexture(texture);
         addSprite(torch);
         l.getObstacle().setPosition(torch.getObstacle().getPosition());
-        fire.getObstacle().setPosition(torch.getObstacle().getPosition());
+        torchFire.getObstacle().setPosition(torch.getObstacle().getPosition());
         activeLightJoint = world.createJoint(torch.attachObj(l));
-        activeFireJoint = world.createJoint(torch.attachObj(fire));
+        activeFireJoint = world.createJoint(torch.attachObj(torchFire));
         // TODO: Optimize the above ^^
 
         JsonValue enemiesJson = levelData.get("enemies");
@@ -895,9 +902,20 @@ public class GameplayScene implements Screen {
         // This shows off how powerful our new SpriteBatch is
         batch.begin(camera);
 
+
         // Draw the meshes (images)
         for(ObstacleSprite obj : sprites) {
             obj.draw(batch);
+        }
+
+        if (fireController.getLitFires().size()!=0){
+            System.out.println("not FIRE!");
+            for (Fire fire:fireController.getLitFires()){
+                particleEngine.draw(batch,fire);
+            }
+        }else{
+            particleEngine.draw(batch,torchFire);
+
         }
 
         if (debug) {
