@@ -53,13 +53,14 @@ public class Rope extends ObstacleGroup {
      */
     public Rope(Vector2 pin1, Vector2 pin2, float depthOfCurve, float units, JsonValue data) {
         this.h = depthOfCurve;
-        this.pin1 = pin1;
-        this.pin2 = pin2;
-        this.d = (pin2.x - pin1.x)/2;
+        this.pin1 = pin1.scl(units);
+        this.pin2 = pin2.scl(units);
+        this.d = (this.pin2.x - this.pin1.x)/2;
         this.units = units;
         this.data = data;
 
-
+        ropeThickness = data.getFloat("thickness");
+        ropePieceLen = data.getFloat("piecelen");
         bottomVertices = genOneRowOnX(-ropeThickness/2);
         topVertices = genOneRowOnX(ropeThickness/2);
         lenOfCurve = lengthOfCurve(bottomVertices);
@@ -83,11 +84,14 @@ public class Rope extends ObstacleGroup {
      * @param data json values
      */
     public Rope(Vector2 pin1, boolean pinBottom, float lenOfCurve, float units, JsonValue data) {
-        this.pin1 = pin1;
+        this.pin1 = pin1.scl(units);
         this.units = units;
         this.data = data;
 
-        this.pin2 = new Vector2(pin1.x, pin1.y - lenOfCurve);
+        this.pin2 = new Vector2(this.pin1.x, this.pin1.y - lenOfCurve * units);
+
+        ropeThickness = data.getFloat("thickness");
+        ropePieceLen = data.getFloat("piecelen");
 
         bottomVertices = genOneRowOnY(-ropeThickness / 2);
         topVertices = genOneRowOnY(ropeThickness / 2);

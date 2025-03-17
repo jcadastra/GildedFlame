@@ -1,0 +1,152 @@
+{
+  "world" : {
+    "bounds"  : [32,18],
+    "gravity" : -14.7,
+    "volume": 0.8
+  },
+  "goal" : {
+    "pos"       : [29.0, 6.0],
+    "size"      : 3.0,
+    "density"   : 0.0,
+    "friction"  : 0.0,
+    "restitution": 0.0
+  },
+  "walls": {
+    "tile"        : 128.0,
+    "friction"    : 0.1,
+    "density"     : 0.0,
+    "restitution" : 0.1,
+    "debug"      : "#ffffff",
+    "positions" : [
+      [  0.0, 18.0, 0.0,  0.0,  1.0,  0.0,
+        1.0, 17.0, 16.0, 17.0, 16.0, 18.0],
+      [ 16.0, 18.0, 16.0, 17.0, 31.0, 17.0,
+        31.0,  0.0, 32.0,  0.0, 32.0, 18.0]
+    ]
+  },
+  "platforms": [
+    {
+      "name": "floor",
+      "tile": 128.0,
+      "friction": 0.1,
+      "density": 0.0,
+      "restitution": 0.1,
+      "debug": "#ffffff",
+      "positions": [1.0, 0.0, 60.0, 0.0, 60.0, 1.0, 1.0, 1.0]
+    },
+    {
+      "name": "wall",
+      "tile": 128.0,
+      "friction": 0.1,
+      "density": 0.0,
+      "restitution": 0.1,
+      "debug": "#ffffff",
+      "positions": [25.0, 0.0, 31.0, 0.0, 31.0, 4.0, 25.0, 4.0]
+    }
+  ],
+  "spinners" : [],
+  "bridges": [],
+  "ropes" : [
+    {
+      "type" : 1,
+      "thickness" : 7,
+      "piecelen" : 14,
+      "pin1" : [4.0, 11.0],
+      "pin2" : [9.0, 11.0],
+      "depth" : 2.0
+    },
+    {
+      "type" : 2,
+      "thickness" : 7,
+      "piecelen" : 14,
+      "pin1" : [5.0, 12.0],
+      "bottom" : true,
+      "len" : 6.0
+    }
+  ],
+  "traci": {
+    "pos": [2.5, 5.0],
+    "inner": [0.7, 0.95],
+    "size": 1.5,
+    "force": 20.0,
+    "damping": 10.0,
+    "density": 0.5,
+    "friction": 0.0,
+    "maxspeed": 5.0,
+    "jump_force": 5.5,
+    "jump_cool": 30,
+    "shot_cool": 40,
+    "sensor": {
+      "shrink": 0.6,
+      "height": 0.05
+    },
+    "debug": {
+      "avatar": "#ffff00ff",
+      "sensor": "#ff0000ff",
+      "tolerance": 0.05
+    }
+  },
+  "torch": {
+    "pos": [15.0, 3.0],
+    "dimensions": [0.4, 0.8],
+    "size": 1,
+    "force": 20.0,
+    "damping": 10.0,
+    "density": 0.5,
+    "friction": 4,
+    "tossForce": [1, 1],
+    "pickUpTimer": 10,
+    "angular_force": 0.1,
+    "sensor": {
+      "shrink": 0.6,
+      "height": 0.05
+    },
+    "debug": {
+      "avatar": "#ffff00ff",
+      "sensor": "#ff0000ff",
+      "tolerance": 0.05
+    }
+  },
+  "light": {
+    "radius": 2.2,
+    "pos": [6.0, 6.0],
+    "debug": "#ffffff",
+    "friction": 0.0,
+    "density": 0.0,
+    "restitution": 0.0
+  },
+  "enemies": {
+    "moths": {
+      "count": 0,
+      "instances": []
+    },
+    "totems": {
+      "count": 1,
+      "instances": [
+        {
+          "pos": [
+            7.0,
+            2.0
+          ],
+          "dimension": [
+            1,
+            1
+          ],
+          "speed": 1,
+          "size": 1,
+          "density": 0.5,
+          "freezeTimer" : 100,
+          "sensor": {
+            "shrink": 0.6,
+            "height": 0.05
+          },
+          "debug": {
+            "avatar": "#ffff00ff",
+            "sensor": "#ff0000ff",
+            "tolerance": 0.05
+          }
+        }
+      ]
+    }
+  }
+}

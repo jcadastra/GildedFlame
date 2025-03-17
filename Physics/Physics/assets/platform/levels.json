@@ -1,0 +1,22 @@
+{
+  "levels": [
+    {
+      "name": "moth_intro",
+      "unlock": true,
+      "complete": false,
+      "path": "assets/platform/moth_intro.json"
+    },
+    {
+      "name": "totem_intro",
+      "unlock": false,
+      "complete": false,
+      "path": "assets/platform/totem_intro.json"
+    },
+    {
+      "name": "spinner_layout",
+      "unlock": false,
+      "complete": false,
+      "path": "assets/platform/spinner_layout.json"
+    }
+  ]
+}

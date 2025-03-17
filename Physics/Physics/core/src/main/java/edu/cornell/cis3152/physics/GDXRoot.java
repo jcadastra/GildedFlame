@@ -159,10 +159,11 @@ public class GDXRoot extends Game implements ScreenListener {
 
             // Initialize the three game worlds
             currentScene = new GameplayScene(directory, soundEngine, "platform");
-            levels = new String[3];
+            levels = new String[4];
             levels[0] = "moth_intro";
             levels[1] = "totem_intro";
             levels[2] = "spinner_layout";
+            levels[3] = "rope_test";
             currentScene.loadLevel(levels[0]);
             currentScene.setScreenListener(this);
             currentScene.setSpriteBatch(batch);
@@ -174,8 +175,8 @@ public class GDXRoot extends Game implements ScreenListener {
 //            controllers[1] = new empty_layout1(directory);
 //            controllers[2] = new empty_layout2(directory);
 //            controllers[0] = new Totem_intro(directory);
-//            controllers[1] = new Moth_intro(directory);
-            // controllers[1] = new Torch_playground(directory);
+//            controllers[0] = new Moth_intro(directory);
+//            controllers[1] = new Torch_playground(directory);
 //            controllers[1] = new GameplayScene_temp(directory, "temp");
             // controllers[0] = new Totem_playground(directory);
 //            controllers[2] = new RagdollScene(directory);
