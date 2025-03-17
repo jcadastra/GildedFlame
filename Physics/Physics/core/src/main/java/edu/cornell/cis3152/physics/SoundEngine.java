@@ -1,96 +1,124 @@
 package edu.cornell.cis3152.physics;
 
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.utils.Sort;
-import edu.cornell.gdiac.assets.MusicParser;
-import edu.cornell.gdiac.audio.MusicQueue;
 import edu.cornell.gdiac.audio.SoundEffect;
-import edu.cornell.gdiac.audio.SoundEffectManager;
 import edu.cornell.gdiac.util.PooledList;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 public class SoundEngine {
 
-    private HashMap<String, SoundEffect> registeredSoundEffect;
+    private HashMap<String, SoundEffect> registeredSoundEffects;
     private HashMap<String, Music> registeredMusic;
-    private PooledList<SoundEffect> activeSoundEffects;
+
+    private HashMap<String, Long> activeLoopingSounds;
+
     private PooledList<Music> activeMusic;
     private int activeMusicIndex;
 
-    public SoundEngine () {
-        registeredSoundEffect = new HashMap<>();
+    private Random random;
+
+    public SoundEngine() {
+        registeredSoundEffects = new HashMap<>();
         registeredMusic = new HashMap<>();
-        activeSoundEffects = new PooledList<>();
+        activeLoopingSounds = new HashMap<>();
         activeMusic = new PooledList<>();
+        random = new Random();
     }
 
     public void registerSoundEffect(String name, SoundEffect soundEffect) {
-        registeredSoundEffect.put(name, soundEffect);
+        registeredSoundEffects.put(name, soundEffect);
     }
 
-    public void registerMusic (String name, Music music) {
+    public void registerMusic(String name, Music music) {
         registeredMusic.put(name, music);
     }
 
-    public void playSoundEffects(String name) {
-        for (SoundEffect se : activeSoundEffects) {
-            if (!se.isPlaying(0)) {
-                activeSoundEffects.remove(se);
-            }
-        }
-
-        SoundEffect sound = registeredSoundEffect.get(name);
-        activeSoundEffects.add(sound);
-        sound.play();
-    }
-
     public void playMusic(String name) {
-        for (Music music : activeMusic) {
-            if (!music.isPlaying()) {
-                activeMusic.remove(music);
-            }
+        activeMusic.removeIf(music -> !music.isPlaying());
+        Music music = registeredMusic.get(name);
+        if (music != null) {
+            activeMusic.add(music);
+            music.play();
         }
-
-        Music sound = registeredMusic.get(name);
-        activeMusic.add(sound);
-        sound.play();
     }
 
     public void tendToMusicLoop() {
+        if (activeMusic.size() == 0) return;
         if (!activeMusic.get(activeMusicIndex).isPlaying()) {
             activeMusicIndex = (activeMusicIndex + 1) % activeMusic.size();
             activeMusic.get(activeMusicIndex).play();
-        } else {
-//            System.out.println(activeMusic.get(activeMusicIndex).getPosition());
         }
     }
+
     public void startMusicLoop(ArrayList<String> musicSet) {
+        activeMusic.clear();
         for (String musicName : musicSet) {
-            activeMusic.add(registeredMusic.get(musicName));
+            Music music = registeredMusic.get(musicName);
+            if (music != null) {
+                activeMusic.add(music);
+            }
         }
-        activeMusic.get(0).play();
-        activeMusicIndex = 0;
+        if (activeMusic.size() > 0) {
+            activeMusic.get(0).play();
+            activeMusicIndex = 0;
+        }
     }
 
-    public void pauseSoundEffects() {
-        for (SoundEffect soundEffect : activeSoundEffects) {
-            soundEffect.pause();
+    public void pauseLoopingSoundEffects() {
+        for (String name : activeLoopingSounds.keySet()) {
+            SoundEffect sound = registeredSoundEffects.get(name);
+            long soundId = activeLoopingSounds.get(name);
+            if (sound != null) {
+                sound.pause(soundId);
+            }
         }
     }
 
-    public void resumeSoundEffects() {
-        for (SoundEffect soundEffect : activeSoundEffects) {
-            soundEffect.play();
+    public void resumeLoopingSoundEffects() {
+        for (String name : activeLoopingSounds.keySet()) {
+            SoundEffect sound = registeredSoundEffects.get(name);
+            long oldId = activeLoopingSounds.get(name);
+            sound.stop(oldId);
+            long newId = sound.loop();
+            activeLoopingSounds.put(name, newId);
+        }
+    }
+
+    public void avatarWalking(float avatarHorizontal, boolean grounded) {
+        String soundName = "dirtFootStep";
+        SoundEffect footStep = registeredSoundEffects.get(soundName);
+        if (footStep == null) return;
+
+        if (avatarHorizontal == 0 || !grounded) {
+            if (activeLoopingSounds.containsKey(soundName)) {
+                long id = activeLoopingSounds.get(soundName);
+                footStep.stop(id);
+                activeLoopingSounds.remove(soundName);
+            }
+        } else {
+            if (!activeLoopingSounds.containsKey(soundName)) {
+                long id = footStep.loop();
+                activeLoopingSounds.put(soundName, id);
+            }
+            long id = activeLoopingSounds.get(soundName);
+            footStep.setPitch(id, random.nextFloat(0.7f, 1.3f));
+        }
+    }
+
+    public void jump() {
+        SoundEffect jumpSound = registeredSoundEffects.get("jump");
+        if (jumpSound != null) {
+            jumpSound.play();
         }
     }
 
     public void dispose() {
-        for (SoundEffect soundEffect : activeSoundEffects) {
+        for (SoundEffect soundEffect : registeredSoundEffects.values()) {
             soundEffect.dispose();
         }
-        for (Music music : activeMusic) {
+        for (Music music : registeredMusic.values()) {
             music.dispose();
         }
     }

@@ -79,7 +79,7 @@ public class Moth extends Enemy {
             System.out.println("angry");
         }
         setSpeed(3.0f);
-        Texture texture = directory.getEntry("rocket-moth02", Texture.class);
+        Texture texture = directory.getEntry("platform-moth02", Texture.class);
         setTexture(texture);
         move();
 
@@ -87,8 +87,8 @@ public class Moth extends Enemy {
 
     @Override
     public void out_of_light() {
-        System.out.println("out of light: ");
-        Texture texture = directory.getEntry("rocket-moth01", Texture.class);
+        System.out.println("out_of_light");
+        Texture texture = directory.getEntry("platform-moth01", Texture.class);
         setTexture(texture);
         setSpeed(2.0f);
         if (!(rr == null) && (!Float.isNaN(rr.targetDistance))) {

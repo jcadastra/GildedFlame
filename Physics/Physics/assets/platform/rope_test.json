@@ -41,39 +41,29 @@
       "density": 0.0,
       "restitution": 0.1,
       "debug": "#ffffff",
-      "positions": [
-        25.0,
-        0.0,
-        31.0,
-        0.0,
-        31.0,
-        4.0,
-        25.0,
-        4.0
-      ]
-    },
-    {
-      "name": "platform",
-      "tile": 128.0,
-      "friction": 0.1,
-      "density": 0.0,
-      "restitution": 0.1,
-      "debug": "#ffffff",
-      "positions": [
-        17.0,
-        5.0,
-        17.0,
-        6.0,
-        12.0,
-        6.0,
-        12.0,
-        5.0
-      ]
+      "positions": [25.0, 0.0, 31.0, 0.0, 31.0, 4.0, 25.0, 4.0]
     }
   ],
   "spinners" : [],
-  "bridges" : [],
-  "ropes" : [],
+  "bridges": [],
+  "ropes" : [
+    {
+      "type" : 1,
+      "thickness" : 7,
+      "piecelen" : 14,
+      "pin1" : [4.0, 11.0],
+      "pin2" : [9.0, 11.0],
+      "depth" : 2.0
+    },
+    {
+      "type" : 2,
+      "thickness" : 7,
+      "piecelen" : 14,
+      "pin1" : [5.0, 12.0],
+      "bottom" : true,
+      "len" : 6.0
+    }
+  ],
   "traci": {
     "pos": [2.5, 5.0],
     "inner": [0.7, 0.95],
@@ -135,108 +125,17 @@
       "instances": [
         {
           "pos": [
-            15.0,
-            7
+            7.0,
+            2.0
           ],
           "dimension": [
             1,
             1
           ],
-          "speed": 3.75,
+          "speed": 1,
           "size": 1,
-          "density": 8,
-          "freezeTimer": 50,
-          "sensor": {
-            "shrink": 0.6,
-            "height": 0.05
-          },
-          "debug": {
-            "avatar": "#ffff00ff",
-            "sensor": "#ff0000ff",
-            "tolerance": 0.05
-          }
-        },
-        {
-          "pos": [
-            20.0,
-            2
-          ],
-          "dimension": [
-            1,
-            1
-          ],
-          "speed": 3.75,
-          "size": 1,
-          "density": 8,
-          "freezeTimer": 50,
-          "sensor": {
-            "shrink": 0.6,
-            "height": 0.05
-          },
-          "debug": {
-            "avatar": "#ffff00ff",
-            "sensor": "#ff0000ff",
-            "tolerance": 0.05
-          }
-        },{
-          "pos": [
-            14.0,
-            1.5
-          ],
-          "dimension": [
-            1,
-            1
-          ],
-          "speed": 4,
-          "size": 1,
-          "density": 8,
-          "freezeTimer": 50,
-          "sensor": {
-            "shrink": 0.6,
-            "height": 0.05
-          },
-          "debug": {
-            "avatar": "#ffff00ff",
-            "sensor": "#ff0000ff",
-            "tolerance": 0.05
-          }
-        },
-        {
-          "pos": [
-            14.0,
-            2.5
-          ],
-          "dimension": [
-            1,
-            1
-          ],
-          "speed": 0,
-          "size": 1,
-          "density": 0,
-          "freezeTimer": 50,
-          "sensor": {
-            "shrink": 0.6,
-            "height": 0.05
-          },
-          "debug": {
-            "avatar": "#ffff00ff",
-            "sensor": "#ff0000ff",
-            "tolerance": 0.05
-          }
-        },
-        {
-          "pos": [
-            14.0,
-            3.5
-          ],
-          "dimension": [
-            1,
-            1
-          ],
-          "speed": 0,
-          "size": 1,
-          "density": 0,
-          "freezeTimer": 50,
+          "density": 0.5,
+          "freezeTimer" : 100,
           "sensor": {
             "shrink": 0.6,
             "height": 0.05
@@ -247,8 +146,6 @@
             "tolerance": 0.05
           }
         }
-
-
       ]
     }
   }

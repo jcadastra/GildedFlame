@@ -535,36 +535,57 @@ public class GameplayScene implements Screen {
             addSprite(platform);
         }
 
-        /*Surface platform;
-        String pname = "platform";
-        JsonValue plats = constants.get("platforms");
-        platform = new Surface(new float[]{1.0f, 0f, 60.0f, 0f, 60.0f, 1f, 1.0f, 1f}, units, walls);
-        platform.getObstacle().setName("floor");
-        platform.setTexture(texture);
-        addSprite(platform);*/
-
         // Add level goal
         texture = directory.getEntry( "shared-goal", Texture.class );
 
         JsonValue goal = levelData.get("goal");
-        // JsonValue goalpos = goal.get("pos");
         goalDoor = new Door(units, goal);
         goalDoor.setTexture( texture );
         goalDoor.getObstacle().setName("goal");
         addSprite(goalDoor);
+
+        // Create rope bridges
+        texture = directory.getEntry( "platform-rope", Texture.class );
+        JsonValue bridges = levelData.get("bridges");
+        for (JsonValue bridgeJson : bridges) {
+            RopeBridge bridge = new RopeBridge(units, bridgeJson);
+            bridge.setTexture(texture);
+            addSpriteGroup(bridge);
+        }
+
+        // Create Ropes
+        texture = directory.getEntry( "platform-rope-end", Texture.class );
+        Texture middle_texture = directory.getEntry( "platform-rope-mid", Texture.class );
+        JsonValue ropes = levelData.get("ropes");
+        for (JsonValue ropeJson : ropes) {
+            if (ropeJson.getInt("type") == 1) {
+                Vector2 pin1 = new Vector2(ropeJson.get("pin1").getFloat(0), ropeJson.get("pin1").getFloat(1));
+                Vector2 pin2 = new Vector2(ropeJson.get("pin2").getFloat(0), ropeJson.get("pin2").getFloat(1));
+                float dep = ropeJson.getFloat("depth");
+                Rope rope = new Rope(pin1, pin2, dep, units, ropeJson);
+                rope.setTextures(texture, middle_texture);
+                addSpriteGroup(rope);
+            } else {
+                Vector2 pin1 = new Vector2(ropeJson.get("pin1").getFloat(0), ropeJson.get("pin1").getFloat(1));
+                boolean bottom = ropeJson.getBoolean("bottom");
+                float len = ropeJson.getFloat("len");
+                Rope rope = new Rope(pin1, bottom, len, units, ropeJson);
+                rope.setTextures(texture, middle_texture);
+                addSpriteGroup(rope);
+            }
+        }
 
         // Create spinners
         texture = directory.getEntry( "platform-barrier", Texture.class );
         JsonValue spinners = levelData.get("spinners");
         for (JsonValue spinnerJson : spinners) {
             Spinner spinner = new Spinner(units, spinnerJson);
-            // spinner.getObstacle().setName(spinnerJson.getString("name"));
             spinner.setTexture(texture);
             addSpriteGroup(spinner);
         }
 
         // Create Traci
-        texture = directory.getEntry("platform-traci", Texture.class);
+        texture = directory.getEntry("platform-player", Texture.class);
         avatar = new Traci(units, levelData.get("traci"));
         avatar.setTexture(texture);
         addSprite(avatar);
@@ -579,6 +600,7 @@ public class GameplayScene implements Screen {
         addSprite(fire);
 //
         // Create Torch
+        texture = directory.getEntry("platform-torch", Texture.class);
         torch = new Torch(units, constants.get("torch"));
         torch.setTexture(texture);
         addSprite(torch);
@@ -591,7 +613,7 @@ public class GameplayScene implements Screen {
         JsonValue enemiesJson = levelData.get("enemies");
 
         // Create Totem
-        texture = directory.getEntry("rocket-totem01", Texture.class);
+        texture = directory.getEntry("platform-totem01", Texture.class);
         JsonValue totemsJson = enemiesJson.get("totems").get("instances");
         for (int i = 0; i < totemsJson.size; i++) {
             Vector2 position = new Vector2(totemsJson.get(i).get("pos").getFloat(0), totemsJson.get(i).get("pos").getFloat(1));
@@ -603,7 +625,7 @@ public class GameplayScene implements Screen {
         }
 
         // Create Moth
-        texture = directory.getEntry("rocket-moth01", Texture.class);
+        texture = directory.getEntry("platform-moth01", Texture.class);
         JsonValue mothsJson = enemiesJson.get("moths").get("instances");
         for (int i = 0; i < mothsJson.size; i++) {
             Vector2 position = new Vector2(mothsJson.get(i).get("pos").getFloat(0), mothsJson.get(i).get("pos").getFloat(1));
@@ -710,6 +732,7 @@ public class GameplayScene implements Screen {
 
         // Process actions in object model
         avatar.setMovement(input.getHorizontal() * avatar.getForce());
+        soundEngine.avatarWalking(input.getHorizontal(), avatar.isGrounded());
         avatar.setJumping(input.didPrimary());
         avatar.setShooting(input.didSecondary());
 
@@ -729,7 +752,7 @@ public class GameplayScene implements Screen {
         avatar.applyForce();
         if (avatar.isJumping()) {
             SoundEffectManager sounds = SoundEffectManager.getInstance();
-            soundEngine.playSoundEffects("jump");
+            soundEngine.jump();
         }
         if ((queueAddTorch && activeTorchJoint == null) || (activeTorchJoint != null &&
             torchOnRight != avatar.isFacingRight())) {
