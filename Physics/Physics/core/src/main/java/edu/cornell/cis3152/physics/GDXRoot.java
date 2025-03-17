@@ -145,14 +145,15 @@ public class GDXRoot extends Game implements ScreenListener {
             soundEngine.registerSoundEffect("jump", directory.getEntry("platform-jump", SoundEffect.class));
             soundEngine.registerSoundEffect("pew", directory.getEntry("platform-pew", SoundEffect.class));
             soundEngine.registerSoundEffect("plop", directory.getEntry("platform-plop", SoundEffect.class));
+            soundEngine.registerSoundEffect("dirtFootStep", directory.getEntry("dirtFootStep", SoundEffect.class));
 
             soundEngine.registerMusic("eerie1", directory.getEntry("eerie", Music.class));
             soundEngine.registerMusic("eerieCriminal", directory.getEntry("eerieCriminal", Music.class));
             soundEngine.registerMusic("tenseSoundscape", directory.getEntry("tenseSoundscape", Music.class));
 
             ArrayList<String> temp = new ArrayList<>();
-            temp.add("eerie1");
             temp.add("eerieCriminal");
+            temp.add("eerie1");
             soundEngine.startMusicLoop(temp);
             //TODO: fine a better place to put these ^
 
