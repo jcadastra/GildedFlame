@@ -24,6 +24,7 @@
  */
 package edu.cornell.cis3152.physics;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.utils.ObjectSet;
 import edu.cornell.cis3152.physics.level_player.CollisionController;
@@ -757,7 +758,35 @@ public class GameplayScene implements Screen {
             torchOnRight != avatar.isFacingRight())) {
             joinTorchtoAvatar();
         }
+        updateCamera();
     }
+
+    private void updateCamera() {
+        Vector2 playerPos = avatar.getObstacle().getPosition();
+        float playerPixelX = playerPos.x * scale.x;
+        float playerPixelY = playerPos.y * scale.y;
+
+        float lerp = 0.3f;
+        camera.position.x += (playerPixelX - camera.position.x) * lerp;
+        camera.position.y += (playerPixelY - camera.position.y) * lerp;
+
+        float effectiveWidth = camera.viewportWidth * camera.zoom;
+        float effectiveHeight = camera.viewportHeight * camera.zoom;
+        float halfWidth = effectiveWidth / 2f;
+        float halfHeight = effectiveHeight / 2f;
+
+        float minXPixel = bounds.x * scale.x;
+        float maxXPixel = (bounds.x + bounds.width) * scale.x;
+        float minYPixel = bounds.y * scale.y;
+        float maxYPixel = (bounds.y + bounds.height) * scale.y;
+
+        camera.position.x = MathUtils.clamp(camera.position.x, minXPixel + halfWidth, maxXPixel - halfWidth);
+        camera.position.y = MathUtils.clamp(camera.position.y, minYPixel + halfHeight, maxYPixel - halfHeight);
+
+        camera.update();
+    }
+
+
 
     private void supplementaryCollisionActions() {
         Stack<Object[]> todos = contactListener.getCollisionFlags();
@@ -931,6 +960,7 @@ public class GameplayScene implements Screen {
         this.height = height;
         if (camera == null) {
             camera = new OrthographicCamera();
+            camera.zoom = 0.8f;
         }
         camera.setToOrtho( false, width, height );
         scale.x = width/bounds.width;
