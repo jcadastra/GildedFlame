@@ -193,7 +193,7 @@ public class CollisionController implements ContactListener {
                     }
 
             }
-            if (isXandY(bd1, bd2, Light.class, Totem.class) == 1) {
+            if (isXandY(bd1, bd2, Lighting.class, Totem.class) == 1) {
                 Totem totem = (Totem) idX(bd1, bd2, Totem.class);
                 totem.setState(Enemy.EnemyState.IN_LIGHT);
             }
@@ -203,8 +203,8 @@ public class CollisionController implements ContactListener {
             }
 
 
-            if (isXandY(bd1, bd2, Light.class, Moth.class) == 1) {
-                Light light = (Light) idX(bd1, bd2, Light.class);
+            if (isXandY(bd1, bd2, Lighting.class, Moth.class) == 1) {
+                Lighting light = (Lighting) idX(bd1, bd2, Lighting.class);
                 Moth moth = (Moth) idX(bd1, bd2, Moth.class);
 
                 moth.setState(EnemyState.IN_LIGHT);
@@ -314,14 +314,14 @@ public class CollisionController implements ContactListener {
             }
         }
 
-        if (isXandY(bd1, bd2, Light.class, Totem.class) == 1) {
+        if (isXandY(bd1, bd2, Lighting.class, Totem.class) == 1) {
 //            System.out.println("CHECK");
             Totem totem = (Totem) idX(bd1, bd2, Totem.class);
             totem.resetFreeze();
             totem.setState(Enemy.EnemyState.OUT_OF_LIGHT);
         }
 
-        if (isXandY(bd1, bd2, Light.class, Moth.class) == 1) {
+        if (isXandY(bd1, bd2, Lighting.class, Moth.class) == 1) {
             Moth moth = (Moth) idX(bd1, bd2, Moth.class);
             moth.setState(EnemyState.OUT_OF_LIGHT);
         }

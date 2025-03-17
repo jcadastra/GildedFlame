@@ -15,7 +15,7 @@ import edu.cornell.cis3152.physics.SoundEngine;
 import edu.cornell.cis3152.physics.level_player.enemies.Enemy;
 import edu.cornell.cis3152.physics.level_player.enemies.Totem;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Door;
-import edu.cornell.cis3152.physics.level_player.enviromentals.Light;
+import edu.cornell.cis3152.physics.level_player.enviromentals.Lighting;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Surface;
 import edu.cornell.cis3152.physics.level_player.player.Bullet;
 import edu.cornell.cis3152.physics.level_player.player.Torch;
@@ -246,7 +246,7 @@ public class Totem_intro extends GameplayScene implements ContactListener {
         // Have to do after body is created
         avatar.createSensor();
 
-        Light l = new Light(units, constants.get("light"));
+        Lighting l = new Lighting(units, constants.get("light"));
         l.setTexture(texture);
         addSprite(l);
         l.createSensor();
@@ -451,7 +451,7 @@ public class Totem_intro extends GameplayScene implements ContactListener {
                 enemy.changeDirection();
             }
 
-            if ((bd2 instanceof Light && bd1 instanceof Totem)) {
+            if ((bd2 instanceof Lighting && bd1 instanceof Totem)) {
                 Texture texture = directory.getEntry("rocket-totem03", Texture.class);
                 totem.setTexture(texture);
                 totem.setState(Enemy.EnemyState.IN_LIGHT);
@@ -490,7 +490,7 @@ public class Totem_intro extends GameplayScene implements ContactListener {
             }
         }
 
-        if ((bd2 instanceof Light && bd1 instanceof Totem)) {
+        if ((bd2 instanceof Lighting && bd1 instanceof Totem)) {
             Texture texture = directory.getEntry("rocket-totem01", Texture.class);
             totem.setTexture(texture);
             totem.setState(Enemy.EnemyState.OUT_OF_LIGHT);

@@ -10,7 +10,7 @@ import edu.cornell.cis3152.physics.InputController;
 import edu.cornell.cis3152.physics.GameplayScene;
 import edu.cornell.cis3152.physics.SoundEngine;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Door;
-import edu.cornell.cis3152.physics.level_player.enviromentals.Light;
+import edu.cornell.cis3152.physics.level_player.enviromentals.Lighting;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Surface;
 import edu.cornell.cis3152.physics.level_player.player.Bullet;
 import edu.cornell.cis3152.physics.level_player.player.Traci;
@@ -133,7 +133,7 @@ public class light_test extends GameplayScene implements ContactListener  {
         }
 
         //texture.
-        Light light = new Light(units, constants.get("light"));
+        Lighting light = new Lighting(units, constants.get("light"));
         light.setTexture(texture);
         addSprite(light);
         //System.out.println(sprites.getTail().getName());

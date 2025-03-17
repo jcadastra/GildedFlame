@@ -7,16 +7,16 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.utils.JsonValue;
-import edu.cornell.cis3152.physics.level_player.enviromentals.Light;
+import edu.cornell.cis3152.physics.level_player.enviromentals.Lighting;
 import edu.cornell.gdiac.assets.ParserUtils;
 import edu.cornell.gdiac.physics2.*;
 
 public class Torch extends ObstacleSprite {
 
     /** The light that the torch emits */
-    private Light internal_light;
-    private Light lightJoint;
-    private Light fireJoint;
+    private Lighting internal_light;
+    private Lighting lightJoint;
+    private Lighting fireJoint;
 
     /** Json file to avoid magic numbers */
     private final JsonValue data;
