@@ -416,3 +416,36 @@ public class CollisionController implements ContactListener {
 
 }
 
+//Exception in thread "main" java.lang.IllegalArgumentException: key cannot be null.
+//at com.badlogic.gdx.utils.ObjectMap.locateKey(ObjectMap.java:128)
+//at com.badlogic.gdx.utils.ObjectMap.get(ObjectMap.java:183)
+//at edu.cornell.gdiac.assets.AssetDirectory.getEntry(AssetDirectory.java:327)
+//at edu.cornell.cis3152.physics.GameplayScene.loadLevel(GameplayScene.java:523)
+//at edu.cornell.cis3152.physics.GDXRoot.exitScreen(GDXRoot.java:199)
+//at edu.cornell.cis3152.physics.GameplayScene.preUpdate(GameplayScene.java:692)
+//at edu.cornell.cis3152.physics.GameplayScene.render(GameplayScene.java:1008)
+//at com.badlogic.gdx.Game.render(Game.java:48)
+//at com.badlogic.gdx.backends.lwjgl3.Lwjgl3Window.update(Lwjgl3Window.java:387)
+//at com.badlogic.gdx.backends.lwjgl3.Lwjgl3AppShiv.loop(Lwjgl3AppShiv.java:197)
+//at com.badlogic.gdx.backends.lwjgl3.Lwjgl3AppShiv.start(Lwjgl3AppShiv.java:171)
+//at edu.cornell.gdiac.backend.GDXApp.<init>(GDXApp.java:73)
+//at edu.cornell.cis3152.physics.lwjgl3.DesktopLauncher.main(DesktopLauncher.java:44)
+//
+//> Task :lwjgl3:DesktopLauncher.main() FAILED
+//[Incubating] Problems report is available at: file:///C:/Users/harve/Documents/cs3152/The-Gilded-Flame/Physics/Physics/build/reports/problems/problems-report.html
+//
+//Execution failed for task ':lwjgl3:DesktopLauncher.main()'.
+//    > Process 'command 'C:\Users\harve\.jdks\temurin-21.0.2\bin\java.exe'' finished with non-zero exit value 1
+//
+//    * Try:
+//    > Run with --stacktrace option to get the stack trace.
+//> Run with --info or --debug option to get more log output.
+//> Run with --scan to get full insights.
+//> Get more help at https://help.gradle.org.
+//Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+//You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+//For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+//BUILD FAILED in 10m 9s
+//5 actionable tasks: 1 executed, 4 up-to-date
+//
+//
