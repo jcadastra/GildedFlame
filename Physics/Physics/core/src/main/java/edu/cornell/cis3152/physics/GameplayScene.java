@@ -24,10 +24,12 @@
  */
 package edu.cornell.cis3152.physics;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.utils.ObjectSet;
 import edu.cornell.cis3152.physics.level_player.CollisionController;
 import edu.cornell.cis3152.physics.level_player.FireController;
+import edu.cornell.cis3152.physics.level_player.LightController;
 import edu.cornell.cis3152.physics.level_player.enemies.Enemy;
 import edu.cornell.cis3152.physics.level_player.enemies.Moth;
 import edu.cornell.cis3152.physics.level_player.enemies.Totem;
@@ -172,6 +174,12 @@ public class GameplayScene implements Screen {
     protected CollisionController contactListener;
     protected FireController fireController;
     protected SoundEngine soundEngine;
+
+    protected LightController lightController;
+
+    protected ParticleEngine particleEngine;
+
+    protected Fire torchFire;
 
     /**
      * Flag to add torch to avatar in update
@@ -355,7 +363,7 @@ public class GameplayScene implements Screen {
         }
 
         soundEngine.dispose();
-
+        lightController.dispose();
         sprites.clear();
         addQueue.clear();
         world.dispose();
@@ -456,6 +464,9 @@ public class GameplayScene implements Screen {
             }
             fireController.resetStorage();
         }
+
+        if (lightController != null){
+            lightController.dispose();}
 
         for (ObstacleSprite sprite : sprites) {
             Obstacle obj = sprite.getObstacle();
@@ -592,12 +603,17 @@ public class GameplayScene implements Screen {
         // Have to do after body is created
         avatar.createSensor();
 
-        Light l = new Light(units, levelData.get("light"));
+        Lighting l = new Lighting(units, levelData.get("light"));
         l.setTexture(texture);
         addSprite(l);
         l.createSensor();
-        Fire fire = new Fire(units, new Vector2(10,10));
-        addSprite(fire);
+        torchFire = new Fire(units, new Vector2(10,10));
+        addSprite(torchFire);
+        lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds);
+        lightController.attachTorchLight(torchFire);
+
+        particleEngine = new ParticleEngine(torchFire);
+        particleEngine.newFires(fireController);
 //
         // Create Torch
         texture = directory.getEntry("platform-torch", Texture.class);
@@ -605,9 +621,9 @@ public class GameplayScene implements Screen {
         torch.setTexture(texture);
         addSprite(torch);
         l.getObstacle().setPosition(torch.getObstacle().getPosition());
-        fire.getObstacle().setPosition(torch.getObstacle().getPosition());
+        torchFire.getObstacle().setPosition(torch.getObstacle().getPosition());
         activeLightJoint = world.createJoint(torch.attachObj(l));
-        activeFireJoint = world.createJoint(torch.attachObj(fire));
+        activeFireJoint = world.createJoint(torch.attachObj(torchFire));
         // TODO: Optimize the above ^^
 
         JsonValue enemiesJson = levelData.get("enemies");
@@ -747,6 +763,7 @@ public class GameplayScene implements Screen {
             activeTorchJoint = null;
             torch.applyThrowForce(avatar.isFacingRight() ? 1 : -1);
             torch.resetPickUp();
+            soundEngine.throwTorch();
         }
 
         avatar.applyForce();
@@ -758,6 +775,32 @@ public class GameplayScene implements Screen {
             torchOnRight != avatar.isFacingRight())) {
             joinTorchtoAvatar();
         }
+        updateCamera();
+    }
+
+    private void updateCamera() {
+        Vector2 playerPos = avatar.getObstacle().getPosition();
+        float playerPixelX = playerPos.x * scale.x;
+        float playerPixelY = playerPos.y * scale.y;
+
+        float lerp = 0.3f;
+        camera.position.x += (playerPixelX - camera.position.x) * lerp;
+        camera.position.y += (playerPixelY - camera.position.y) * lerp;
+
+        float effectiveWidth = camera.viewportWidth * camera.zoom;
+        float effectiveHeight = camera.viewportHeight * camera.zoom;
+        float halfWidth = effectiveWidth / 2f;
+        float halfHeight = effectiveHeight / 2f;
+
+        float minXPixel = bounds.x * scale.x;
+        float maxXPixel = (bounds.x + bounds.width) * scale.x;
+        float minYPixel = bounds.y * scale.y;
+        float maxYPixel = (bounds.y + bounds.height) * scale.y;
+
+        camera.position.x = MathUtils.clamp(camera.position.x, minXPixel + halfWidth, maxXPixel - halfWidth);
+        camera.position.y = MathUtils.clamp(camera.position.y, minYPixel + halfHeight, maxYPixel - halfHeight);
+
+        camera.update();
     }
 
     private void supplementaryCollisionActions() {
@@ -891,15 +934,26 @@ public class GameplayScene implements Screen {
      */
     public void draw(float dt) {
         // Clear the screen (color is homage to the XNA years)
-        ScreenUtils.clear(0.39f, 0.58f, 0.93f, 1.0f);
+        ScreenUtils.clear(0.17f, 0.28f, 0.35f, 1.0f);
 
         // This shows off how powerful our new SpriteBatch is
         batch.begin(camera);
+
 
         // Draw the meshes (images)
         for(ObstacleSprite obj : sprites) {
             obj.draw(batch);
         }
+
+        if (fireController.getLitFires().size()!=0){
+            System.out.println("not FIRE!");
+            for (Fire fire:fireController.getLitFires()){
+                particleEngine.draw(batch,fire);
+            }
+        }
+        particleEngine.draw(batch,torchFire);
+
+
 
         if (debug) {
             // Draw the outlines
@@ -916,6 +970,7 @@ public class GameplayScene implements Screen {
         }
 
         batch.end();
+        lightController.render();
     }
 
     /**
@@ -932,6 +987,7 @@ public class GameplayScene implements Screen {
         this.height = height;
         if (camera == null) {
             camera = new OrthographicCamera();
+            //camera.zoom = 0.8f;
         }
         camera.setToOrtho( false, width, height );
         scale.x = width/bounds.width;
