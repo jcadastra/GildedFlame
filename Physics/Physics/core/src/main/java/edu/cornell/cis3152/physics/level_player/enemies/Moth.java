@@ -2,7 +2,7 @@ package edu.cornell.cis3152.physics.level_player.enemies;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Lighting;
 import edu.cornell.cis3152.physics.level_player.player.Torch;
@@ -90,6 +90,8 @@ public class Moth extends Enemy {
 //            System.out.println("TARGET: " + rr.targetObject);
             if (rr.targetDistance < DETECTION_DISTANCE && rr.targetObject instanceof Lighting) {
                 setState(EnemyState.ANGRY);
+            } else {
+                setState(EnemyState.OUT_OF_LIGHT);
             }
 //            else {
 //                System.out.print("MOVE1 ");

@@ -15,12 +15,13 @@ import java.util.*;
 public class CollisionController implements ContactListener {
 
     private final Stack<Object[]> collisionFlags;
-
-    private boolean directionFlag;
     private final List<Totem[]> pendingTotemMerges = new ArrayList<>();
-    private Map<ContactKey, Integer> sustainedContacts = new HashMap<>();
     private final AssetDirectory directory;
     private final FireController fireController;
+    private boolean directionFlag;
+    private Map<ContactKey, Integer> sustainedContacts = new HashMap<>();
+
+
     public CollisionController(AssetDirectory directory, FireController fireController) {
         this.directory = directory;
         this.fireController = fireController;
@@ -146,10 +147,10 @@ public class CollisionController implements ContactListener {
                 Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
                 enemy.setGrounded(true);
             }
+
             if (isXandY(bd1, bd2, Totem.class, Moth.class) == 1) {
                 Totem totem = (Totem) idX(bd1, bd2, Totem.class);
                 Moth moth = (Moth) idX(bd1, bd2, Moth.class);
-
 
                 Body mothBody = moth.getObstacle().getBody();
                 Body totemBody = totem.getObstacle().getBody();
@@ -169,28 +170,32 @@ public class CollisionController implements ContactListener {
                     totem.changeDirection();
                 }
             }
+
             if (isXandY(bd1, bd2, Totem.class, Totem.class) == 2) {
                 Totem totem1 = (Totem) bd1;
                 Totem totem2 = (Totem) bd2;
 
-                    Vector2 pos1 = body1.getPosition();
-                    Vector2 pos2 = body2.getPosition();
+                Vector2 pos1 = body1.getPosition();
+                Vector2 pos2 = body2.getPosition();
 
-                    float xDiff = Math.abs(pos1.x - pos2.x);
-                    float yDiff = Math.abs(pos1.y - pos2.y);
+                float xDiff = Math.abs(pos1.x - pos2.x);
+                float yDiff = Math.abs(pos1.y - pos2.y);
 
-                    if (xDiff < 0.5f && yDiff > 0.5f) {
-                        Totem topTotem = (pos1.y > pos2.y) ? totem1 : totem2;
-                        Totem bottomTotem = (topTotem == totem1) ? totem2 : totem1;
-                        pendingTotemMerges.add(new Totem[]{topTotem, bottomTotem});
-                    } else if (xDiff > 0.5f && yDiff < 0.5f) {
-                        totem1.setJustCollided(false);
-                        totem2.setJustCollided(false);
+                if (xDiff < 0.5f && yDiff > 0.5f) {
+                    Totem topTotem = (pos1.y > pos2.y) ? totem1 : totem2;
+                    Totem bottomTotem = (topTotem == totem1) ? totem2 : totem1;
+                    pendingTotemMerges.add(new Totem[]{topTotem, bottomTotem});
+                } else if (xDiff > 0.5f && yDiff < 0.5f) {
+                    if (totem1.getState() != EnemyState.CD && totem1.getState() != EnemyState.IN_LIGHT) {
                         totem1.changeDirection();
-                        totem2.changeDirection();
                         totem1.setJustCollided(true);
+                    }
+
+                    if (totem2.getState() != EnemyState.CD && totem2.getState() != EnemyState.IN_LIGHT) {
+                        totem2.changeDirection();
                         totem2.setJustCollided(true);
                     }
+                }
 
             }
             if (isXandY(bd1, bd2, Lighting.class, Totem.class) == 1) {
@@ -200,6 +205,20 @@ public class CollisionController implements ContactListener {
 
             if (isXandY(bd1, bd2, Moth.class, Torch.class) == 1) {
                 collisionFlags.push(new Object[]{"queueFailure"});
+            }
+
+            if (isXandY(bd1, bd2, Moth.class, Moth.class) == 2) {
+                Moth moth1 = (Moth) bd1;
+                Moth moth2 = (Moth) bd2;
+                if (moth1.getState() != EnemyState.IN_LIGHT) {
+                    moth1.changeDirection();
+                    moth1.setJustCollided(true);
+                }
+                if (moth2.getState() != EnemyState.IN_LIGHT) {
+                    moth2.changeDirection();
+                    moth2.setJustCollided(true);
+                }
+
             }
 
 
@@ -220,8 +239,6 @@ public class CollisionController implements ContactListener {
 //                } else {
 //                    System.out.println("Moth is correctly facing right");
                 }
-
-
 
             }
 
@@ -338,7 +355,15 @@ public class CollisionController implements ContactListener {
             totem2.setJustCollided(false);
         }
 
-        if (isXandY(bd1, bd2, "wall", Enemy.class) == 1){
+        if (isXandY(bd1, bd2, Moth.class, Moth.class) == 2) {
+            Moth moth1 = (Moth) bd1;
+            Moth moth2 = (Moth) bd2;
+            moth1.setJustCollided(false);
+            moth2.setJustCollided(false);
+        }
+
+
+        if (isXandY(bd1, bd2, "wall", Enemy.class) == 1) {
             Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
             enemy.setJustCollided(false);
 
@@ -391,39 +416,4 @@ public class CollisionController implements ContactListener {
     private ObstacleSprite idX(ObstacleSprite a, ObstacleSprite b, String x) {
         return (a.getName().contains(x) ? a : b);
     }
-
 }
-
-//Exception in thread "main" java.lang.IllegalArgumentException: key cannot be null.
-//at com.badlogic.gdx.utils.ObjectMap.locateKey(ObjectMap.java:128)
-//at com.badlogic.gdx.utils.ObjectMap.get(ObjectMap.java:183)
-//at edu.cornell.gdiac.assets.AssetDirectory.getEntry(AssetDirectory.java:327)
-//at edu.cornell.cis3152.physics.GameplayScene.loadLevel(GameplayScene.java:523)
-//at edu.cornell.cis3152.physics.GDXRoot.exitScreen(GDXRoot.java:199)
-//at edu.cornell.cis3152.physics.GameplayScene.preUpdate(GameplayScene.java:692)
-//at edu.cornell.cis3152.physics.GameplayScene.render(GameplayScene.java:1008)
-//at com.badlogic.gdx.Game.render(Game.java:48)
-//at com.badlogic.gdx.backends.lwjgl3.Lwjgl3Window.update(Lwjgl3Window.java:387)
-//at com.badlogic.gdx.backends.lwjgl3.Lwjgl3AppShiv.loop(Lwjgl3AppShiv.java:197)
-//at com.badlogic.gdx.backends.lwjgl3.Lwjgl3AppShiv.start(Lwjgl3AppShiv.java:171)
-//at edu.cornell.gdiac.backend.GDXApp.<init>(GDXApp.java:73)
-//at edu.cornell.cis3152.physics.lwjgl3.DesktopLauncher.main(DesktopLauncher.java:44)
-//
-//> Task :lwjgl3:DesktopLauncher.main() FAILED
-//[Incubating] Problems report is available at: file:///C:/Users/harve/Documents/cs3152/The-Gilded-Flame/Physics/Physics/build/reports/problems/problems-report.html
-//
-//Execution failed for task ':lwjgl3:DesktopLauncher.main()'.
-//    > Process 'command 'C:\Users\harve\.jdks\temurin-21.0.2\bin\java.exe'' finished with non-zero exit value 1
-//
-//    * Try:
-//    > Run with --stacktrace option to get the stack trace.
-//> Run with --info or --debug option to get more log output.
-//> Run with --scan to get full insights.
-//> Get more help at https://help.gradle.org.
-//Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
-//You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
-//For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
-//BUILD FAILED in 10m 9s
-//5 actionable tasks: 1 executed, 4 up-to-date
-//
-//
