@@ -57,6 +57,7 @@ public class Enemy extends ObstacleSprite {
 
         this.x = position.x;
         this.y = position.y;
+        this.justCollided = false;
         obstacle = new BoxObstacle(x, y, width, height);
         obstacle.setBodyType(BodyDef.BodyType.DynamicBody);
 

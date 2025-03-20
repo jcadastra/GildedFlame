@@ -22,17 +22,13 @@ public class Moth extends Enemy {
     @Override
     public void in_light() {
         resetAttackTimer();
-        if (rr != null){
+        if (rr != null) {
 //            System.out.println("in light: " + rr.targetObject);
             if (rr.targetObject instanceof Torch && ((Torch) rr.targetObject).canBePickedUp()) {
                 setState(EnemyState.CREEP);
             } else if (rr.targetObject instanceof Traci) {
                 setState(EnemyState.CD);
-            } else {
-                System.out.println("ERROR: " + rr.targetObject);
             }
-        } else {
-//            System.out.println("in light");
         }
     }
 

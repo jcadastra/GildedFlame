@@ -131,7 +131,7 @@
       "instances": []
     },
     "totems": {
-      "count": 1,
+      "count": 3,
       "instances": [
         {
           "pos": [
@@ -142,7 +142,7 @@
             1,
             1
           ],
-          "speed": 3.75,
+          "speed": 2,
           "size": 1,
           "density": 8,
           "freezeTimer": 50,
@@ -165,7 +165,7 @@
             1,
             1
           ],
-          "speed": 3.75,
+          "speed": 2,
           "size": 1,
           "density": 8,
           "freezeTimer": 50,
@@ -180,14 +180,14 @@
           }
         },{
           "pos": [
-            14.0,
+            9.0,
             1.5
           ],
           "dimension": [
             1,
             1
           ],
-          "speed": 4,
+          "speed": 2,
           "size": 1,
           "density": 8,
           "freezeTimer": 50,
@@ -203,7 +203,7 @@
         },
         {
           "pos": [
-            14.0,
+            9.0,
             2.5
           ],
           "dimension": [
@@ -212,7 +212,7 @@
           ],
           "speed": 0,
           "size": 1,
-          "density": 0,
+          "density": 0.1,
           "freezeTimer": 50,
           "sensor": {
             "shrink": 0.6,
@@ -226,7 +226,7 @@
         },
         {
           "pos": [
-            14.0,
+            9.0,
             3.5
           ],
           "dimension": [
@@ -235,7 +235,7 @@
           ],
           "speed": 0,
           "size": 1,
-          "density": 0,
+          "density": 0.01,
           "freezeTimer": 50,
           "sensor": {
             "shrink": 0.6,

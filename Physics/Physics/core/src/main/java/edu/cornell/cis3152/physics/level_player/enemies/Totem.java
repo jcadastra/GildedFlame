@@ -12,6 +12,7 @@ public class Totem extends Enemy {
 
     public Totem(int id, float units, JsonValue value, AssetDirectory directory, Vector2 position) {
         super(id, units, value, directory, position);
+        setJustCollided(false);
     }
 
 
@@ -29,12 +30,8 @@ public class Totem extends Enemy {
 //        System.out.println("OUTOFLIGHT");
         Texture texture = directory.getEntry("platform-totem01", Texture.class);
         setTexture(texture);
-        if (getFreezeTimer() == 0) {
-            obstacle.setBodyType(BodyDef.BodyType.DynamicBody);
-            move();
-        } else {
-            cd();
-        }
+        obstacle.setBodyType(BodyDef.BodyType.DynamicBody);
+        move();
     }
 
     @Override
@@ -42,7 +39,11 @@ public class Totem extends Enemy {
 //        System.out.println("cd");
         Texture texture = directory.getEntry("platform-totem02", Texture.class);
         setTexture(texture);
-        decrementFreezeTimer();
+        if (getFreezeTimer() == 0) {
+            out_of_light();
+        } else {
+            decrementFreezeTimer();
+        }
     }
 
 
