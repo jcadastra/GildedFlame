@@ -63,7 +63,7 @@ public class CollisionController implements ContactListener {
     }
 
     private static boolean isGround(ObstacleSprite sprite) {
-        return sprite.getName().equals("floor") || sprite.getName().equals("platform") || sprite.getName().equals("barrier") || sprite.getName().equals("spinner") || sprite.getName().equals("surface") || sprite instanceof Totem;
+        return sprite.getName().contains("floor") || sprite.getName().contains("platform") || sprite.getName().contains("barrier") || sprite.getName().contains("spinner") || sprite.getName().contains("surface") || sprite instanceof Totem;
     }
 
     public Stack<Object[]> getCollisionFlags() {
@@ -187,13 +187,16 @@ public class CollisionController implements ContactListener {
                     pendingTotemMerges.add(new Totem[]{topTotem, bottomTotem});
                 } else if (xDiff > 0.5f && yDiff < 0.5f) {
                     if (totem1.getState() != EnemyState.CD && totem1.getState() != EnemyState.IN_LIGHT) {
+                        System.out.println("0");
                         totem1.changeDirection();
                         totem1.setJustCollided(true);
                     }
-
                     if (totem2.getState() != EnemyState.CD && totem2.getState() != EnemyState.IN_LIGHT) {
+                        System.out.println("X");
                         totem2.changeDirection();
                         totem2.setJustCollided(true);
+                    } else {
+                        System.out.println(totem2.hasJustCollided() + ", " + totem2.getState());
                     }
                 }
 
@@ -335,7 +338,7 @@ public class CollisionController implements ContactListener {
 //            System.out.println("CHECK");
             Totem totem = (Totem) idX(bd1, bd2, Totem.class);
             totem.resetFreeze();
-            totem.setState(Enemy.EnemyState.OUT_OF_LIGHT);
+            totem.setState(Enemy.EnemyState.CD);
         }
 
         if (isXandY(bd1, bd2, Lighting.class, Moth.class) == 1) {
@@ -399,7 +402,7 @@ public class CollisionController implements ContactListener {
 
         if (isXandY(bd1, bd2, Totem.class, Traci.class) == 1) {
             Totem totem = (Totem) idX(bd1, bd2, Totem.class);
-            if (totem.getState() != Enemy.EnemyState.IN_LIGHT) {
+            if (totem.getState() == EnemyState.OUT_OF_LIGHT) {
                 contact.setEnabled(false);
             }
         }

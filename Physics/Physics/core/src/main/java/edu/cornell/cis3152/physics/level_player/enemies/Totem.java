@@ -36,10 +36,11 @@ public class Totem extends Enemy {
 
     @Override
     public void cd() {
-//        System.out.println("cd");
+        System.out.println("cd");
         Texture texture = directory.getEntry("platform-totem02", Texture.class);
         setTexture(texture);
         if (getFreezeTimer() == 0) {
+            System.out.println("RAHH");
             out_of_light();
         } else {
             decrementFreezeTimer();
