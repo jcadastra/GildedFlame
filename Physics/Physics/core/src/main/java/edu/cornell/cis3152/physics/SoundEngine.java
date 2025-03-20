@@ -103,7 +103,7 @@ public class SoundEngine {
                 activeLoopingSounds.put(soundName, id);
             }
             long id = activeLoopingSounds.get(soundName);
-            footStep.setPitch(id, random.nextFloat(0.7f, 1.3f));
+            footStep.setPitch(id, 0.7f + random.nextFloat() * (1.3f - 0.7f));
         }
     }
 
@@ -111,6 +111,14 @@ public class SoundEngine {
         SoundEffect jumpSound = registeredSoundEffects.get("jump");
         if (jumpSound != null) {
             jumpSound.play();
+        }
+    }
+
+    public void throwTorch() {
+        SoundEffect torchThrow = registeredSoundEffects.get("torchThrow");
+        System.out.println("throwing");
+        if (torchThrow != null) {
+            torchThrow.play();
         }
     }
 
