@@ -133,29 +133,7 @@
     "totems": {
       "count": 3,
       "instances": [
-        {
-          "pos": [
-            15.0,
-            7
-          ],
-          "dimension": [
-            1,
-            1
-          ],
-          "speed": 2,
-          "size": 1,
-          "density": 8,
-          "freezeTimer": 50,
-          "sensor": {
-            "shrink": 0.6,
-            "height": 0.05
-          },
-          "debug": {
-            "avatar": "#ffff00ff",
-            "sensor": "#ff0000ff",
-            "tolerance": 0.05
-          }
-        },
+
         {
           "pos": [
             20.0,
@@ -246,9 +224,30 @@
             "sensor": "#ff0000ff",
             "tolerance": 0.05
           }
+        },
+        {
+          "pos": [
+            15.0,
+            7
+          ],
+          "dimension": [
+            1,
+            1
+          ],
+          "speed": 2,
+          "size": 1,
+          "density": 8,
+          "freezeTimer": 50,
+          "sensor": {
+            "shrink": 0.6,
+            "height": 0.05
+          },
+          "debug": {
+            "avatar": "#ffff00ff",
+            "sensor": "#ff0000ff",
+            "tolerance": 0.05
+          }
         }
-
-
       ]
     }
   }

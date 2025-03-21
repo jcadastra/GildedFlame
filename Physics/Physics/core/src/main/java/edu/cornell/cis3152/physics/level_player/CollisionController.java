@@ -63,7 +63,12 @@ public class CollisionController implements ContactListener {
     }
 
     private static boolean isGround(ObstacleSprite sprite) {
-        return sprite.getName().contains("floor") || sprite.getName().contains("platform") || sprite.getName().contains("barrier") || sprite.getName().contains("spinner") || sprite.getName().contains("surface") || sprite instanceof Totem;
+        return sprite.getName().contains("floor") ||
+            sprite.getName().contains("platform") ||
+            sprite.getName().contains("barrier") ||
+            sprite.getName().contains("spinner") ||
+            (sprite instanceof Surface) ||
+            sprite instanceof Totem;
     }
 
     public Stack<Object[]> getCollisionFlags() {
@@ -341,10 +346,15 @@ public class CollisionController implements ContactListener {
             totem.setState(Enemy.EnemyState.CD);
         }
 
-        if (isXandY(bd1, bd2, Lighting.class, Moth.class) == 1) {
-            Moth moth = (Moth) idX(bd1, bd2, Moth.class);
-            moth.setState(EnemyState.OUT_OF_LIGHT);
+        if (isXandY(bd1, bd2, Lighting.class, Totem.class) == 1) {
+            Totem totem = (Totem) idX(bd1, bd2, Totem.class);
+
+            if (totem.getState() == EnemyState.IN_LIGHT) {
+                totem.resetFreeze();
+                totem.setState(Enemy.EnemyState.CD);
+            }
         }
+
         if (isXandY(bd1, bd2, Fire.class, EnhancedObstacleSprite.class) == 1) {
             ContactKey key = new ContactKey(fix1, fix2);
             sustainedContacts.remove(key);
