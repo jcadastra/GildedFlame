@@ -365,6 +365,20 @@ public class Enemy extends ObstacleSprite {
 
     }
 
+    public void move_to(Vector2 pos) {
+        Body body = obstacle.getBody();
+        float direction;
+        if (pos.x > body.getPosition().x){
+            direction = speed;
+        } else {
+            direction = -speed;
+        }
+
+        obstacle.setBodyType(BodyDef.BodyType.DynamicBody);
+        body.setLinearVelocity(new Vector2(direction, body.getLinearVelocity().y));
+
+    }
+
     public void in_light() {
 
     }

@@ -22,7 +22,7 @@ public class Moth extends Enemy {
     public void in_light() {
         resetAttackTimer();
         if (rr != null) {
-//            System.out.println("in light: " + rr.targetObject);
+            System.out.println("in light: " + rr.targetObject);
             if (rr.targetObject instanceof Torch && ((Torch) rr.targetObject).canBePickedUp()) {
                 setState(EnemyState.CREEP);
             } else if (rr.targetObject instanceof Traci) {
@@ -68,10 +68,20 @@ public class Moth extends Enemy {
     // just follows the torch around.
     @Override
     public void angry() {
-//        if (rr != null){
-//            System.out.println("angry: " + rr.targetObject);
-//        } else {
-//            System.out.println("angry");
+        if (rr != null){
+            System.out.println("angry: " + rr.targetObject);
+        } else {
+            System.out.println("angry");
+        }
+//
+//        if (!(rr == null) && (!Float.isNaN(rr.targetDistance))) {
+//            System.out.println("rah");
+//            if (!(rr.targetDistance < DETECTION_DISTANCE && rr.targetObject instanceof Lighting)) {
+//                System.out.println("HERE");
+//                setState(EnemyState.OUT_OF_LIGHT);
+//            }
+//        } else if (rr == null){
+//            setState(EnemyState.OUT_OF_LIGHT);
 //        }
         setSpeed(3.0f);
         Texture texture = directory.getEntry("platform-moth02", Texture.class);
