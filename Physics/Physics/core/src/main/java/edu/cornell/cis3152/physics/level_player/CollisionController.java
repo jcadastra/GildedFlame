@@ -67,6 +67,7 @@ public class CollisionController implements ContactListener {
             sprite.getName().contains("platform") ||
             sprite.getName().contains("barrier") ||
             sprite.getName().contains("spinner") ||
+            sprite.getName().contains("button") ||
             (sprite instanceof Surface) ||
             sprite instanceof Totem;
     }
@@ -123,10 +124,6 @@ public class CollisionController implements ContactListener {
 
             if (isXandY(bd1, bd2, Fire.class, Fire.class) == 2) {
                 return;
-            }
-
-            if ((isGround(bd1) || isGround(bd2)) && isX(bd1, bd2, Traci.class) == 1) {
-                ((Traci) idX(bd1, bd2, Traci.class)).setGrounded(true);
             }
 
             if (isX(bd1, bd2, Traci.class) == 1) {

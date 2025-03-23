@@ -652,7 +652,8 @@ public class GameplayScene implements Screen {
             enemies.add(moth);
         }
 
-
+        Button button = new Button(new Vector2(3,0.5f), (float) Math.PI, true, false, units);
+        addSpriteGroup(button);
     }
 
     /**
@@ -763,6 +764,7 @@ public class GameplayScene implements Screen {
             activeTorchJoint = null;
             torch.applyThrowForce(avatar.isFacingRight() ? 1 : -1);
             torch.resetPickUp();
+            torch.getObstacle().setSensor(false);
             soundEngine.throwTorch();
         }
 
@@ -871,6 +873,7 @@ public class GameplayScene implements Screen {
             avatar.getHeight() / 4));
         torch.getObstacle().setPosition(avatar.getObstacle().getPosition().add(offset));
         activeTorchJoint = world.createJoint(avatar.attachTorchToAvatar(torch));
+        torch.getObstacle().setSensor(true);
         queueAddTorch = false;
         torchOnRight = avatar.isFacingRight();
     }
