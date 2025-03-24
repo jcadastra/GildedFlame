@@ -31,15 +31,37 @@ public class Enemy extends ObstacleSprite {
      * Which direction is the character facing
      */
     private boolean faceRight;
+
+    /**
+     * Time it takes for a totem to transition from a CD state to a OUT_OF_LIGHT state.
+     */
     private int freezeTimer;
+
+    /**
+     * Time it takes for a moth to transition from a CD state to an ATTACK state.
+     */
     private int attackTimer;
+
+    /**
+     * Time it takes between moth attacks.
+     */
     private int attackAnimationTimer;
+
+    /**
+     * Time it takes to smother the torch.
+     */
+    private int smotherTimer;
+
+    /**
+     * Time it takes for the moth to come back alive.
+     */
+    private int dazedTimer;
     private EnemyState state;
     private boolean isGrounded = false;
     private float x;
     private float y;
     private float speed;
-    private float size;
+    private final float size;
     private Fixture fixture;
     private boolean justCollided = false;
 
@@ -105,10 +127,6 @@ public class Enemy extends ObstacleSprite {
         this.justCollided = collided;
     }
 
-    public int getId() {
-        return id;
-    }
-
     public float getX() {
         return x;
     }
@@ -149,6 +167,7 @@ public class Enemy extends ObstacleSprite {
         freezeTimer = data.getInt("freezeTimer");
     }
 
+
     public int getAttackTimer() {
         return attackTimer;
     }
@@ -173,12 +192,29 @@ public class Enemy extends ObstacleSprite {
         attackAnimationTimer = data.getInt("attackAnimationTimer");
     }
 
-    public float getSize() {
-        return size;
+
+    public int getSmotherTimer() {
+        return smotherTimer;
     }
 
-    public void setSize(float val) {
-        size = val;
+    public void decrementSmotherTimer() {
+        smotherTimer--;
+    }
+
+    public void resetSmotherTimer() {
+        smotherTimer = data.getInt("smotherTimer");
+    }
+
+    public int getDazedTimer() {
+        return dazedTimer;
+    }
+
+    public void decrementDazedTimer() {
+        dazedTimer--;
+    }
+
+    public void resetDazedTimer() {
+        dazedTimer = data.getInt("dazedTimer");
     }
 
     public float getSpeed() {
@@ -207,18 +243,22 @@ public class Enemy extends ObstacleSprite {
             case CD:
                 cd();
                 break;
-            case CREEP:
-                creep();
+            case TRANCE:
+                trance();
                 break;
             case DAZED:
                 dazed();
+                break;
+            case SMOTHER:
+                smother();
+                break;
             default:
                 break;
         }
     }
 
     public void updateRayCast() {
-        if (getState() == EnemyState.CREEP || getState() == EnemyState.IN_LIGHT || getState() == EnemyState.CD) {
+        if (getState() == EnemyState.TRANCE || getState() == EnemyState.IN_LIGHT || getState() == EnemyState.CD) {
             rr = raycastInLight();
         } else {
             rr = raycast();
@@ -226,6 +266,10 @@ public class Enemy extends ObstacleSprite {
     }
 
     public void out_of_light() {
+
+    }
+
+    public void smother() {
 
     }
 
@@ -368,7 +412,7 @@ public class Enemy extends ObstacleSprite {
     public void move_to(Vector2 pos) {
         Body body = obstacle.getBody();
         float direction;
-        if (pos.x > body.getPosition().x){
+        if (pos.x > body.getPosition().x) {
             direction = speed;
         } else {
             direction = -speed;
@@ -398,7 +442,7 @@ public class Enemy extends ObstacleSprite {
     public void cd() {
     }
 
-    public void creep() {
+    public void trance() {
     }
 
     public void stop() {
@@ -444,7 +488,7 @@ public class Enemy extends ObstacleSprite {
 
         ANGRY, CD,
 
-        ATTACK, CREEP, DAZED
+        ATTACK, TRANCE, DAZED, SMOTHER
     }
 
     public class RaycastResult {

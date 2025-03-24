@@ -44,10 +44,7 @@ import java.util.Stack;
 
 /**
  * The game scene for the platformer game.
- * <p>
- * Look at the method {@link #populateLevel} for how we initialize the scene. Beyond that, a lot of
- * work is done in the method for the ContactListener interface. That is the method that is called
- * upon collisions, giving us a chance to define a response.
+ *
  */
 public class Torch_playground extends GameplayScene {
 

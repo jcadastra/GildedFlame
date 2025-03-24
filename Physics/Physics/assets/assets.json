@@ -99,14 +99,50 @@
         "magfilter": "linear mipmap linear"
       },
 
-      "platform-moth01": {
-        "file" : "platform/mothNorm.png",
+      "platform-mothOUTOFLIGHT": {
+        "file" : "platform/mothOutOfLight.png",
         "mipmaps" : true,
         "minfilter": "linear mipmap linear",
         "magfilter": "linear mipmap linear"
       },
-      "platform-moth02": {
+      "platform-mothANGRY": {
         "file" : "platform/mothAngry.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+      "platform-mothDAZED": {
+        "file" : "platform/mothDazed.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+      "platform-mothCD": {
+        "file" : "platform/mothCD.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+      "platform-mothTRANCE": {
+        "file" : "platform/mothTrance.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+      "platform-mothSMOTHER": {
+        "file" : "platform/mothSmother.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+      "platform-mothATTACK": {
+        "file" : "platform/mothAttack.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+      "platform-mothINLIGHT": {
+        "file" : "platform/mothInLight.png",
         "mipmaps" : true,
         "minfilter": "linear mipmap linear",
         "magfilter": "linear mipmap linear"

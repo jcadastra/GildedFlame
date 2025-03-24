@@ -63,12 +63,7 @@ public class CollisionController implements ContactListener {
     }
 
     private static boolean isGround(ObstacleSprite sprite) {
-        return sprite.getName().contains("floor") ||
-            sprite.getName().contains("platform") ||
-            sprite.getName().contains("barrier") ||
-            sprite.getName().contains("spinner") ||
-            (sprite instanceof Surface) ||
-            sprite instanceof Totem;
+        return sprite.getName().contains("floor") || sprite.getName().contains("platform") || sprite.getName().contains("barrier") || sprite.getName().contains("spinner") || (sprite instanceof Surface) || sprite instanceof Totem;
     }
 
     public Stack<Object[]> getCollisionFlags() {
@@ -176,6 +171,11 @@ public class CollisionController implements ContactListener {
                 }
             }
 
+            /**
+             * Totem to Totem collision:
+             * If the totem collision is left to right, the totems just bounce off and switch direction
+             * If the totem collision is top to bottom, the totems combine through a joint and become a totem stack.
+             */
             if (isXandY(bd1, bd2, Totem.class, Totem.class) == 2) {
                 Totem totem1 = (Totem) bd1;
                 Totem totem2 = (Totem) bd2;
@@ -192,12 +192,12 @@ public class CollisionController implements ContactListener {
                     pendingTotemMerges.add(new Totem[]{topTotem, bottomTotem});
                 } else if (xDiff > 0.5f && yDiff < 0.5f) {
                     if (totem1.getState() != EnemyState.CD && totem1.getState() != EnemyState.IN_LIGHT) {
-                        System.out.println("0");
+//                        System.out.println("0");
                         totem1.changeDirection();
                         totem1.setJustCollided(true);
                     }
                     if (totem2.getState() != EnemyState.CD && totem2.getState() != EnemyState.IN_LIGHT) {
-                        System.out.println("X");
+//                        System.out.println("X");
                         totem2.changeDirection();
                         totem2.setJustCollided(true);
                     } else {
@@ -206,13 +206,28 @@ public class CollisionController implements ContactListener {
                 }
 
             }
+
+            /**
+             * Totem and Light collision
+             * While the totem is in light, it changes to the IN_LIGHT state.
+             */
             if (isXandY(bd1, bd2, Lighting.class, Totem.class) == 1) {
                 Totem totem = (Totem) idX(bd1, bd2, Totem.class);
-                totem.setState(Enemy.EnemyState.IN_LIGHT);
+                totem.setState(EnemyState.IN_LIGHT);
             }
 
+            /**
+             * Moth and Torch collision
+             * If the moth comes into contact with the torch, then the moth changes to the SMOTHER state.
+             */
             if (isXandY(bd1, bd2, Moth.class, Torch.class) == 1) {
-                collisionFlags.push(new Object[]{"queueFailure"});
+                Moth moth = (Moth) idX(bd1, bd2, Moth.class);
+                if (moth.getState() != EnemyState.DAZED) {
+//                    System.out.println("AHA");
+                    moth.resetSmotherTimer();
+                    moth.setState(EnemyState.SMOTHER);
+                }
+//                collisionFlags.push(new Object[]{"addTorch", idX(bd1, bd2, Traci.class)});
             }
 
             if (isXandY(bd1, bd2, Moth.class, Moth.class) == 2) {
@@ -229,30 +244,60 @@ public class CollisionController implements ContactListener {
 
             }
 
-
+            /**
+             * Moth and Light Collision
+             * Whenever the moth is in the light radius, the moth changes in to an IN_LIGHT stage, and follows the
+             * light.
+             */
             if (isXandY(bd1, bd2, Lighting.class, Moth.class) == 1) {
                 Lighting light = (Lighting) idX(bd1, bd2, Lighting.class);
                 Moth moth = (Moth) idX(bd1, bd2, Moth.class);
+//                System.out.print("CONTACT WITH LIGHT AND MOTH");
+                if (moth.getState() != EnemyState.TRANCE && moth.getState() != EnemyState.SMOTHER && moth.getState() != EnemyState.DAZED) {
+                    moth.setState(EnemyState.IN_LIGHT);
 
-                moth.setState(EnemyState.IN_LIGHT);
+                    float lx = light.getObstacle().getX();
+                    float mx = moth.getObstacle().getX();
 
-
-                float lx = light.getObstacle().getX();
-                float mx = moth.getObstacle().getX();
-
-                if ((lx < mx && moth.isFacingRight()) || lx > mx && !moth.isFacingRight()) {
-                    moth.changeDirection();
-//                } else if (lx < mx && !moth.isFacingRight()){
-//                    System.out.println("Moth is correctly facing left");
-//                } else {
-//                    System.out.println("Moth is correctly facing right");
+                    if ((lx < mx && moth.isFacingRight()) || lx > mx && !moth.isFacingRight()) {
+                        moth.changeDirection();
+                    }
                 }
 
             }
 
+            /**
+             * Player and Moth Collision
+             * Whenever the player hits a moth entity, they die.
+             */
             if (isXandY(bd1, bd2, Moth.class, Traci.class) == 1) {
-                collisionFlags.push(new Object[]{"queueFailure"});
+                Moth moth = (Moth) idX(bd1, bd2, Moth.class);
+                Traci player = (Traci) idX(bd1, bd2, Traci.class);
+
+                if (moth.getState() != EnemyState.DAZED) {
+
+                    Vector2 mothPos = moth.getObstacle().getBody().getPosition();
+                    Vector2 playerPos = player.getObstacle().getBody().getPosition();
+
+                    float xDiff = Math.abs(mothPos.x - playerPos.x);
+                    float yDiff = Math.abs(mothPos.y - playerPos.y);
+
+                    if (yDiff > xDiff) {
+                        if ((moth.getState() == EnemyState.SMOTHER) && playerPos.y > mothPos.y) {
+                            moth.resetDazedTimer();
+//                            System.out.println("CONTACT WITH MOTH");
+                            moth.setState(EnemyState.DAZED);
+                        } else {
+                            collisionFlags.push(new Object[]{"queueFailure"});
+                        }
+                    } else {
+                        collisionFlags.push(new Object[]{"queueFailure"});
+                    }
+
+
+                }
             }
+
 
             if (isXandY(bd1, bd2, EnhancedObstacleSprite.class, Fire.class) == 1) {
                 Fire f = (Fire) idX(bd1, bd2, Fire.class);
@@ -339,12 +384,11 @@ public class CollisionController implements ContactListener {
             }
         }
 
-        if (isXandY(bd1, bd2, Lighting.class, Totem.class) == 1) {
-//            System.out.println("CHECK");
-            Totem totem = (Totem) idX(bd1, bd2, Totem.class);
-            totem.resetFreeze();
-            totem.setState(Enemy.EnemyState.CD);
-        }
+        /**
+         * Totem and Light collision:
+         * When the totem leaves the light radius, it will go to the CD stage for FreezeTimer seconds, then it
+         * transitions to the OUT_OF_LIGHT stage. While in the CD stage, it behaves exactly like IN_LIGHT stage.
+         */
 
         if (isXandY(bd1, bd2, Lighting.class, Totem.class) == 1) {
             Totem totem = (Totem) idX(bd1, bd2, Totem.class);
@@ -355,31 +399,51 @@ public class CollisionController implements ContactListener {
             }
         }
 
+
+        /**
+         * Moth and Light collision:
+         * When the moth leaves the light radius, it changes back to OUT_OF_LIGHT stage.
+         */
+        if (isXandY(bd1, bd2, Lighting.class, Moth.class) == 1) {
+            Moth moth = (Moth) idX(bd1, bd2, Moth.class);
+            if (moth.getState() != EnemyState.DAZED){
+                moth.setState(EnemyState.OUT_OF_LIGHT);
+
+            }
+        }
+
         if (isXandY(bd1, bd2, Fire.class, EnhancedObstacleSprite.class) == 1) {
             ContactKey key = new ContactKey(fix1, fix2);
             sustainedContacts.remove(key);
 
         }
 
-        if (isXandY(bd1, bd2, Totem.class, Totem.class) == 2) {
-            Totem totem1 = (Totem) bd1;
-            Totem totem2 = (Totem) bd2;
-            totem1.setJustCollided(false);
-            totem2.setJustCollided(false);
+        /**
+         * Whenever enemies bump into each other, they just turn the other way
+         */
+        if (isXandY(bd1, bd2, Enemy.class, Enemy.class) == 2) {
+            Enemy enemy1 = (Enemy) bd1;
+            Enemy enemy2 = (Enemy) bd2;
+            enemy1.setJustCollided(false);
+            enemy2.setJustCollided(false);
         }
-
-        if (isXandY(bd1, bd2, Moth.class, Moth.class) == 2) {
-            Moth moth1 = (Moth) bd1;
-            Moth moth2 = (Moth) bd2;
-            moth1.setJustCollided(false);
-            moth2.setJustCollided(false);
-        }
-
 
         if (isXandY(bd1, bd2, "wall", Enemy.class) == 1) {
             Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
             enemy.setJustCollided(false);
 
+        }
+
+        /**
+         * Moth and Torch collision
+         * If the moth comes into contact with the torch, then the moth changes to the SMOTHER state.
+         */
+        if (isXandY(bd1, bd2, Moth.class, Torch.class) == 1) {
+            Moth moth = (Moth) idX(bd1, bd2, Moth.class);
+            if (moth.getState() != EnemyState.DAZED) {
+                moth.setState(EnemyState.OUT_OF_LIGHT);
+            }
+//                collisionFlags.push(new Object[]{"addTorch", idX(bd1, bd2, Traci.class)});
         }
 
     }
@@ -413,6 +477,34 @@ public class CollisionController implements ContactListener {
         if (isXandY(bd1, bd2, Totem.class, Traci.class) == 1) {
             Totem totem = (Totem) idX(bd1, bd2, Totem.class);
             if (totem.getState() == EnemyState.OUT_OF_LIGHT) {
+                contact.setEnabled(false);
+            }
+        }
+
+        if (isXandY(bd1, bd2, Moth.class, Torch.class) == 1) {
+            Moth moth = (Moth) idX(bd1, bd2, Moth.class);
+            if (moth.getState() == EnemyState.DAZED) {
+                contact.setEnabled(false);
+            }
+        }
+
+        if (isXandY(bd1, bd2, Moth.class, Traci.class) == 1) {
+            Moth moth = (Moth) idX(bd1, bd2, Moth.class);
+            if (moth.getState() == EnemyState.DAZED) {
+                contact.setEnabled(false);
+            }
+        }
+
+        if (isXandY(bd1, bd2, Moth.class, Lighting.class) == 1) {
+            Moth moth = (Moth) idX(bd1, bd2, Moth.class);
+            if (moth.getState() == EnemyState.DAZED) {
+                contact.setEnabled(false);
+            }
+        }
+
+        if (isXandY(bd1, bd2, Moth.class, Torch.class) == 1) {
+            Moth moth = (Moth) idX(bd1, bd2, Moth.class);
+            if (moth.getState() == EnemyState.SMOTHER) {
                 contact.setEnabled(false);
             }
         }

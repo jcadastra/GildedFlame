@@ -8,7 +8,6 @@ import edu.cornell.gdiac.assets.AssetDirectory;
 
 public class Totem extends Enemy {
 
-    boolean isGrounded;
 
     public Totem(int id, float units, JsonValue value, AssetDirectory directory, Vector2 position) {
         super(id, units, value, directory, position);
