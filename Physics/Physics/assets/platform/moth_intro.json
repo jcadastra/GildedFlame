@@ -109,7 +109,7 @@
           "size": 1,
           "density": 6,
           "attackTimer": 75,
-          "attackAnimationTimer": 10,
+          "attackAnimationTimer": 20,
           "smotherTimer": 300,
           "dazedTimer": 200,
           "sensor": {

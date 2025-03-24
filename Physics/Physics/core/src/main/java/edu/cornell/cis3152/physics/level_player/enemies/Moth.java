@@ -59,9 +59,9 @@ public class Moth extends Enemy {
             obstacle.getBody().setType(BodyDef.BodyType.DynamicBody);
             obstacle.setBullet(true);
             if (isFacingRight()) {
-                obstacle.getBody().applyForceToCenter(new Vector2(15000, 0), true);
+                obstacle.getBody().applyForceToCenter(new Vector2(50000, 0), true);
             } else {
-                obstacle.getBody().applyForceToCenter(new Vector2(-15000, 0), true);
+                obstacle.getBody().applyForceToCenter(new Vector2(-50000, 0), true);
             }
 
             obstacle.setBullet(false);
