@@ -15,6 +15,7 @@ public class Button extends ObstacleGroup {
 
     private Vector2 pos;
     private float rotatationRads;
+    private float adjustedRotationRads;
     private float len;
     private float height;
     private float internal_button_offset;
@@ -53,6 +54,7 @@ public class Button extends ObstacleGroup {
 
         this.pos = pos;
         this.rotatationRads = rotatationRads;
+        adjustedRotationRads = -rotatationRads;
         this.len = 2;
         this.height = .5f;
         this.internal_button_offset = .2f;
@@ -101,17 +103,21 @@ public class Button extends ObstacleGroup {
         setRelativeButtonPos();
 
         PrismaticJointDef prismaticJointDef = new PrismaticJointDef();
-        Vector2 axis = new Vector2((float) Math.sin(rotatationRads),(float) Math.cos(rotatationRads));
+        Vector2 axis = new Vector2((float) Math.sin(adjustedRotationRads),(float) Math.cos(adjustedRotationRads));
+        System.out.println(axis);
+        System.out.println(rotatationRads);
         prismaticJointDef.initialize(base.getObstacle().getBody(),button.getObstacle().getBody(),base.getObstacle().getBody().getPosition(),
             axis
         );
+
         prismaticJointDef.enableLimit = true;
+        float adjustedButtonDepth = (float) (height);
 
         prismaticJointDef.upperTranslation = 0;
-        prismaticJointDef.lowerTranslation = -height / (doubleSided ? 1 : 2);
+        prismaticJointDef.lowerTranslation = -adjustedButtonDepth / (doubleSided ? 1 : 2);
         if (direction < 0) {
-            prismaticJointDef.upperTranslation += height;
-            prismaticJointDef.lowerTranslation += height;
+            prismaticJointDef.upperTranslation += adjustedButtonDepth;
+            prismaticJointDef.lowerTranslation += adjustedButtonDepth;
         }
 
         prismaticJointDef.enableMotor = true;
@@ -124,7 +130,6 @@ public class Button extends ObstacleGroup {
     }
 
     public void toggleButton(World world) {
-        System.out.println("toggiling");
         if (doubleSided) {
             direction = direction > 0 ? -1 : 1;
             createJoints(world);
@@ -137,8 +142,8 @@ public class Button extends ObstacleGroup {
     }
 
     private void setRelativeButtonPos() {
-        float offsetX = (float)((height) / 2 * Math.sin(rotatationRads));
-        float offsetY = direction * (float)((height) / 2 * Math.cos(rotatationRads));
+        float offsetX = direction * (float)((height) / 2 * Math.sin(adjustedRotationRads));
+        float offsetY = direction * (float)((height) / 2 * Math.cos(adjustedRotationRads));
         button.getObstacle().setPosition(pos.x + offsetX, pos.y + offsetY);
     }
 

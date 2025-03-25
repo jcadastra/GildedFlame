@@ -25,6 +25,7 @@
 package edu.cornell.cis3152.physics;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectSet;
@@ -667,10 +668,12 @@ public class GameplayScene implements Screen {
         temp.setPhysicsUnits(units);
         temp.setName("temp");
         ObstacleSprite thing = new ObstacleSprite(temp);
+        thing.getObstacle().setBodyType(BodyType.KinematicBody);
         addSprite(thing);
 
-        Button button = new Button(new Vector2(20,3.75f), 0, true, true, units);
-        Array<Object> actionArray = new Array<>(new Object[]{thing, "move", temp.getPosition(), new Vector2(10, 10)});
+        Button button = new Button(new Vector2(20,3.75f), (float) Math.PI/2, true, true, units);
+        Array<Object> actionArray = new Array<>(new Object[]{thing, "move", new Vector2(8, 10), new Vector2(10, 10)});
+
         RegisteredEvent<Integer> event = new RegisteredEvent<Integer>(button, button::getState,
             state -> state == 1, "button", actionArray);
         addSpriteGroup(button);
