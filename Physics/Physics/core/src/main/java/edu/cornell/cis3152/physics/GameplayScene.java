@@ -26,10 +26,13 @@ package edu.cornell.cis3152.physics;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectSet;
 import edu.cornell.cis3152.physics.level_player.CollisionController;
+import edu.cornell.cis3152.physics.level_player.EventHandler;
 import edu.cornell.cis3152.physics.level_player.FireController;
 import edu.cornell.cis3152.physics.level_player.LightController;
+import edu.cornell.cis3152.physics.level_player.RegisteredEvent;
 import edu.cornell.cis3152.physics.level_player.enemies.Enemy;
 import edu.cornell.cis3152.physics.level_player.enemies.Moth;
 import edu.cornell.cis3152.physics.level_player.enemies.Totem;
@@ -173,6 +176,7 @@ public class GameplayScene implements Screen {
     private Joint activeFireJoint;
     protected CollisionController contactListener;
     protected FireController fireController;
+    protected EventHandler eventHandler;
     protected SoundEngine soundEngine;
 
     protected LightController lightController;
@@ -318,6 +322,7 @@ public class GameplayScene implements Screen {
         JsonValue defaults = constants.get("world");
         fireController = new FireController();
         contactListener = new CollisionController(directory, fireController);
+        this.eventHandler = new EventHandler();
         this.soundEngine = soundEngine;
 
         // pull out sounds
@@ -364,6 +369,7 @@ public class GameplayScene implements Screen {
 
         soundEngine.dispose();
         lightController.dispose();
+        eventHandler.dispose();
         sprites.clear();
         addQueue.clear();
         world.dispose();
@@ -463,6 +469,10 @@ public class GameplayScene implements Screen {
                 }
             }
             fireController.resetStorage();
+        }
+
+        if (eventHandler != null) {
+            eventHandler.dispose();
         }
 
         if (lightController != null){
@@ -652,10 +662,20 @@ public class GameplayScene implements Screen {
             enemies.add(moth);
         }
 
-        Button button = new Button(new Vector2(3,0.5f), (float) Math.PI, true, false, units);
-        addSpriteGroup(button);
-    }
+//        Button button = new Button(new Vector2(24,2.75f), 0, true, true, units);
+        BoxObstacle temp = new BoxObstacle(5,5,2,2);
+        temp.setPhysicsUnits(units);
+        temp.setName("temp");
+        ObstacleSprite thing = new ObstacleSprite(temp);
+        addSprite(thing);
 
+        Button button = new Button(new Vector2(20,3.75f), 0, true, true, units);
+        Array<Object> actionArray = new Array<>(new Object[]{thing, "move", temp.getPosition(), new Vector2(10, 10)});
+        RegisteredEvent<Integer> event = new RegisteredEvent<Integer>(button, button::getState,
+            state -> state == 1, "button", actionArray);
+        addSpriteGroup(button);
+        eventHandler.registerEvent(event);
+    }
     /**
      * Returns whether to process the update loop
      *
@@ -736,6 +756,7 @@ public class GameplayScene implements Screen {
         soundEngine.tendToMusicLoop();
         supplementaryCollisionActions();
         supplementaryFireActions();
+        supplementaryEventActions();
         if (enemies != null) {
             for (Enemy e : enemies) {
                 e.update();
@@ -743,6 +764,7 @@ public class GameplayScene implements Screen {
         }
         torch.update();
         fireController.update();
+        eventHandler.update();
         contactListener.sustainedContact();
 
         InputController input = InputController.getInstance();
@@ -854,6 +876,45 @@ public class GameplayScene implements Screen {
                     ((EnhancedObstacleSprite) todo_action[1]).getObstacle().markRemoved(true);
                     fireController.cleanObj((EnhancedObstacleSprite) todo_action[1]);
                     break;
+            }
+        }
+    }
+
+    private void supplementaryEventActions() {
+        Stack<Object[]> todos = eventHandler.getEventFlags();
+        while (!todos.isEmpty()) {
+            Object[] todo_action = todos.pop();
+            Array<Object> action = (Array<Object>) todo_action[2];
+
+            switch ((String) todo_action[0]) {
+                case "button":
+                    Array<Object> undo_action = new Array<>(action);
+                    Object temp = undo_action.get(2);
+                    undo_action.set(2, undo_action.get(3));
+                    undo_action.set(3, temp);
+
+                    Button button = (Button) todo_action[1];
+                    ((Button) todo_action[1]).toggleButton(world);
+
+                    int nextState;
+                    if (button.getDoubleSided()) {
+                        nextState = 1;
+                    } else {
+                        nextState = button.getState() == 0 ? 1 : 0;
+                    }
+
+                    if (button.getDoubleSided() || (!button.getDoubleSided() && !button.getLatch())) {
+                        RegisteredEvent<Integer> event = new RegisteredEvent<Integer>(button, button::getState,
+                            state -> (state == nextState), "button", undo_action);
+                        eventHandler.registerEvent(event);
+                    }
+                    break;
+            }
+
+            switch ((String) action.get(1)) {
+                case "move":
+                    ObstacleSprite target = (ObstacleSprite) action.get(0);
+                    target.getObstacle().setPosition((Vector2) action.get(3));
             }
         }
     }
