@@ -19,7 +19,7 @@ public class EventHandler {
         registeredEvents = new ArrayList<>();
     }
 
-    public <T> void registerEvent(RegisteredEvent registeredEvent) {
+    public <T> void registerEvent(RegisteredEvent<T> registeredEvent) {
         registeredEvents.add(registeredEvent);
     }
 
@@ -27,7 +27,7 @@ public class EventHandler {
         for (Iterator<RegisteredEvent> iter = registeredEvents.iterator(); iter.hasNext(); ) {
             RegisteredEvent registeredEvent = iter.next();
             if (registeredEvent.conditional.test(registeredEvent.getter.get())) {
-                eventFlags.add(new Object[]{registeredEvent.caller, registeredEvent.source, registeredEvent.target});
+                eventFlags.add(new Object[]{registeredEvent.caller, registeredEvent.source, registeredEvent.action});
                 iter.remove();
             }
         }

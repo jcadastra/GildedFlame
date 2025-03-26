@@ -24,12 +24,16 @@
  */
 package edu.cornell.cis3152.physics;
 
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectSet;
+import com.badlogic.gdx.utils.PooledLinkedList;
 import edu.cornell.cis3152.physics.level_player.CollisionController;
+import edu.cornell.cis3152.physics.level_player.ContactKey;
 import edu.cornell.cis3152.physics.level_player.EventHandler;
 import edu.cornell.cis3152.physics.level_player.FireController;
 import edu.cornell.cis3152.physics.level_player.LightController;
@@ -42,6 +46,7 @@ import edu.cornell.cis3152.physics.level_player.player.Traci;
 import edu.cornell.cis3152.physics.level_player.utils.ObstacleGroup;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -60,8 +65,10 @@ import edu.cornell.gdiac.util.*;
 import edu.cornell.gdiac.graphics.*;
 import edu.cornell.gdiac.physics2.*;
 import edu.cornell.cis3152.physics.level_player.enviromentals.*;
+import java.util.Set;
 import java.util.Stack;
-
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * Base class for a world-specific controller.
@@ -179,6 +186,7 @@ public class GameplayScene implements Screen {
     protected FireController fireController;
     protected EventHandler eventHandler;
     protected SoundEngine soundEngine;
+    protected PooledList<Object[]> tweenedMovmentObjects;
 
     protected LightController lightController;
 
@@ -325,6 +333,7 @@ public class GameplayScene implements Screen {
         contactListener = new CollisionController(directory, fireController);
         this.eventHandler = new EventHandler();
         this.soundEngine = soundEngine;
+        tweenedMovmentObjects = new PooledList<>();
 
         // pull out sounds
         volume = constants.getFloat("volume", 1.0f);
@@ -664,20 +673,38 @@ public class GameplayScene implements Screen {
         }
 
 //        Button button = new Button(new Vector2(24,2.75f), 0, true, true, units);
-        BoxObstacle temp = new BoxObstacle(5,5,2,2);
+        BoxObstacle temp = new BoxObstacle(5,5,5,.5f);
         temp.setPhysicsUnits(units);
-        temp.setName("temp");
+        temp.setName("floor");
         ObstacleSprite thing = new ObstacleSprite(temp);
         thing.getObstacle().setBodyType(BodyType.KinematicBody);
+        thing.getObstacle().setFriction(.5f);
         addSprite(thing);
 
-        Button button = new Button(new Vector2(20,3.75f), (float) Math.PI/2, true, true, units);
-        Array<Object> actionArray = new Array<>(new Object[]{thing, "move", new Vector2(8, 10), new Vector2(10, 10)});
+        Button button = new Button(new Vector2(20,3.75f), 0, false, false, units);
+//        Array<Object> actionArray = new Array<>(new Object[]{thing, "move", new Vector2(8, 10), new Vector2(10, 10)});
+        Function<Float, Float> movementFunc = progress -> Interpolation.circleIn.apply(progress);
+        Object[] actionArray = new Object[]{thing, "move", new Vector2(8, 10), new Vector2(16, 5), 100, movementFunc};
+//        Object[] actionArray = new Object[]{thing, "rotate", 0f, (float) (Math.PI), 300, movementFunc};
+//        Object[] actionArray = new Object[]{thing, "move", new Vector2(8, 10), new Vector2(16, 5), 100, movementFunc};
 
         RegisteredEvent<Integer> event = new RegisteredEvent<Integer>(button, button::getState,
             state -> state == 1, "button", actionArray);
-        addSpriteGroup(button);
+//        eventHandler.registerEvent(event);
+
+
+        movementFunc = progress -> Interpolation.linear.apply(progress);
+        actionArray = new Object[]{thing, "rotate", 0f, (float) (Math.PI), 100, movementFunc};
+        event = new RegisteredEvent<Integer>(button, button::getState,
+            state -> state == 1, "button", actionArray);
+//        eventHandler.registerEvent(event);
+
+        actionArray = new Object[]{null, "spawn", null, null};
+        event = new RegisteredEvent<Integer>(button, button::getState,
+            state -> state == 1, "button", actionArray);
         eventHandler.registerEvent(event);
+
+        addSpriteGroup(button);
     }
     /**
      * Returns whether to process the update loop
@@ -760,11 +787,14 @@ public class GameplayScene implements Screen {
         supplementaryCollisionActions();
         supplementaryFireActions();
         supplementaryEventActions();
+        updateTweenedMovmentObjects();
+
         if (enemies != null) {
             for (Enemy e : enemies) {
                 e.update();
             }
         }
+
         torch.update();
         fireController.update();
         eventHandler.update();
@@ -855,6 +885,7 @@ public class GameplayScene implements Screen {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void supplementaryFireActions() {
         Stack<Object[]> todos = fireController.getFireFlags();
         while (!todos.isEmpty()) {
@@ -883,18 +914,20 @@ public class GameplayScene implements Screen {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void supplementaryEventActions() {
         Stack<Object[]> todos = eventHandler.getEventFlags();
         while (!todos.isEmpty()) {
             Object[] todo_action = todos.pop();
-            Array<Object> action = (Array<Object>) todo_action[2];
+            Object[] action = (Object[]) todo_action[2];
+            String caller = (String) todo_action[0];
 
-            switch ((String) todo_action[0]) {
+            switch (caller) {
                 case "button":
-                    Array<Object> undo_action = new Array<>(action);
-                    Object temp = undo_action.get(2);
-                    undo_action.set(2, undo_action.get(3));
-                    undo_action.set(3, temp);
+                    Object[] undo_action = action.clone();
+                    Object temp = undo_action[2];
+                    undo_action[2] = undo_action[3];
+                    undo_action[3] = temp;
 
                     Button button = (Button) todo_action[1];
                     ((Button) todo_action[1]).toggleButton(world);
@@ -908,20 +941,98 @@ public class GameplayScene implements Screen {
 
                     if (button.getDoubleSided() || (!button.getDoubleSided() && !button.getLatch())) {
                         RegisteredEvent<Integer> event = new RegisteredEvent<Integer>(button, button::getState,
-                            state -> (state == nextState), "button", undo_action);
+                            state -> (state == nextState), caller, undo_action);
                         eventHandler.registerEvent(event);
                     }
                     break;
             }
 
-            switch ((String) action.get(1)) {
+            ObstacleSprite target = (ObstacleSprite) action[0];
+            String actionName = (String) action[1];
+            float progress;
+            switch (actionName) {
                 case "move":
-                    ObstacleSprite target = (ObstacleSprite) action.get(0);
-                    target.getObstacle().setPosition((Vector2) action.get(3));
+                    removeFromTweened(target, actionName);
+
+//                    progress = (((Vector2) action[3]).cpy()).sub(target.getObstacle().getPosition()).len() /
+//                        ((((Vector2) action[3]).cpy()).sub((Vector2) action[2]).cpy()).len();
+//                    progress = ((Function <Float,Float>) action[5]).apply(1 - progress);
+
+                    tweenedMovmentObjects.add(new Object[]{target, actionName, target.getObstacle().getPosition(),
+                        action[3], new Vector2(((int) 0), (int) action[4]), action[5],
+                        (Consumer<Vector2>) target.getObstacle()::setPosition});
+                    break;
+
+                case "rotate":
+                    removeFromTweened(target, actionName);
+
+                    progress = ((Function <Float,Float>) action[5]).apply((target.getObstacle().getAngle() - (float) action[2]) ) / ((float) action[3] - (float) action[2]);
+//                    System.out.println(progress);
+
+                    tweenedMovmentObjects.add(new Object[]{ target, actionName, target.getObstacle().getAngle(),
+                        action[3], new Vector2(((int) 0), (int) action[4]), action[5],
+                        (Consumer<Float>) target.getObstacle()::setAngle});
+                    break;
+
+                case "spawn":
+                    float units = height / bounds.height;
+                    JsonValue levelData = directory.getEntry(levelName,JsonValue.class);
+                    JsonValue enemiesJson = levelData.get("enemies");
+                    Texture texture = directory.getEntry("platform-moth01", Texture.class);
+                    JsonValue mothsJson = enemiesJson.get("moths").get("instances");
+                    for (int i = 0; i < mothsJson.size; i++) {
+                        Vector2 position = new Vector2(mothsJson.get(i).get("pos").getFloat(0), mothsJson.get(i).get("pos").getFloat(1));
+                        Moth moth = new Moth(i, units, mothsJson.get(i), directory, position);
+                        moth.setTexture(texture);
+                        addSprite(moth);
+                        moth.createSensor();
+                        enemies.add(moth);
+                    }
             }
         }
     }
 
+    private void removeFromTweened(Object target, String actionName) {
+        for (Iterator<Object[]> it = tweenedMovmentObjects.iterator(); it.hasNext(); ) {
+            Object[] tweenSet = it.next();
+            if (tweenSet[0] == target && ((String) tweenSet[1]).equals(actionName)) {
+                it.remove();
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void updateTweenedMovmentObjects() {
+        for (Iterator<Object[]> it = tweenedMovmentObjects.iterator(); it.hasNext(); ) {
+            Object[] tweenSet = it.next();
+
+            Object og = tweenSet[2];
+            Object goal = tweenSet[3];
+            Vector2 timer = (Vector2) tweenSet[4];
+            Function<Float, Float> function = (Function<Float, Float>) tweenSet[5];
+            Consumer<Object> setter = (Consumer<Object>) tweenSet[6];
+
+            float factor = function.apply(timer.x / timer.y);
+            System.out.println("--------------");
+            System.out.println(timer);
+            System.out.println(factor);
+            Object newValue;
+            if (og instanceof Vector2) {
+                newValue = ((Vector2) og).cpy().add(((Vector2) goal).cpy().sub((Vector2) og).scl(factor));
+            } else {
+                newValue = (Float) og + ((Float) goal - (Float) og) * factor;
+            }
+
+            setter.accept(newValue);
+            System.out.println(newValue);
+            System.out.println("--------------");
+            timer.x += 1;
+            if (timer.x > timer.y) {
+                it.remove();
+                setter.accept(goal);
+            }
+        }
+    }
 
     /**
      * Generates torch joint and connects the avatar to the torch Also used to flip the torch round

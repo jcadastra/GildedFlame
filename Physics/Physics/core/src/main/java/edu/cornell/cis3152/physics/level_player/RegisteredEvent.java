@@ -10,14 +10,14 @@ public class RegisteredEvent<T> {
     public Supplier<T> getter;
     public Predicate<T> conditional;
     public String caller;
-    public Object target;
+    public Object[] action;
 
-    public RegisteredEvent(Object source, Supplier<T> getter, Predicate<T> conditional, String caller, Object target) {
+    public RegisteredEvent(Object source, Supplier<T> getter, Predicate<T> conditional, String caller, Object[] action) {
         this.source = source;
         this.getter = getter;
         this.conditional = conditional;
         this.caller = caller;
-        this.target = target;
+        this.action = action;
     }
 
 }
