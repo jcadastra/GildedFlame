@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class TweenElement <T> {
     public ObstacleSprite target;
@@ -12,14 +13,16 @@ public class TweenElement <T> {
     public T finalState;
     public Vector2 timerVector;
     public Function<Float,Float> interpolator;
+    public Supplier<T> supplier;
     public Consumer<T> updater;
-    public TweenElement (ObstacleSprite target, String name, T initialState, T finalState, float maxTimeSec, Function<Float,Float> interpolator, Consumer<T> updater) {
+    public TweenElement (ObstacleSprite target, String name, T initialState, T finalState, float maxTimeSec, Function<Float,Float> interpolator, Supplier<T> supplier, Consumer<T> updater) {
         this.target = target;
         this.name = name;
         this.initalState = initialState;
         this.finalState = finalState;
         this.timerVector = new Vector2(0, maxTimeSec);
         this.interpolator = interpolator;
+        this.supplier = supplier;
         this.updater = updater;
     }
 

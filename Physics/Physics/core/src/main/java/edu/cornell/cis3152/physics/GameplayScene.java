@@ -69,6 +69,7 @@ import java.util.Stack;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * Base class for a world-specific controller.
@@ -946,18 +947,21 @@ public class GameplayScene implements Screen {
             }
 
             U initialState = null;
+            Supplier<U> supplier = null;
             Consumer<U> consumer = null;
 
             switch (action.getName()) {
                 case "move":
                     removeFromTweened(action.getTarget(), action.getName());
                     initialState = (U) action.getTarget().getObstacle().getPosition();
+                    supplier = () -> (U) action.getTarget().getObstacle().getPosition();
                     consumer = (U value) -> action.getTarget().getObstacle().setLinearVelocity((Vector2) value);
                     break;
 
                 case "rotate":
                     removeFromTweened(action.getTarget(), action.getName());
                     initialState = (U) (Float) action.getTarget().getObstacle().getAngle();  // Ensure U is Float
+                    supplier = () -> (U) (Float) action.getTarget().getObstacle().getAngle();
                     consumer = (U value) -> action.getTarget().getObstacle().setAngle((float) value);
                     break;
 
@@ -980,7 +984,7 @@ public class GameplayScene implements Screen {
 
             if (initialState != null) {
                 TweenElement<U> tweenElement = new TweenElement<U>(action.getTarget(), action.getName(),
-                    initialState, action.getFinalPoint(), action.getTime(),action.getInterpolator(), consumer);
+                    initialState, action.getFinalPoint(), action.getTime(),action.getInterpolator(), supplier, consumer);
                 tweenedMovmentObjects.add(tweenElement);
             }
         }
@@ -1014,9 +1018,9 @@ public class GameplayScene implements Screen {
 //            System.out.println(oldFactor);
             T newValue;
             if (og instanceof Vector2) {
-                Vector2 currentPos = tweenElement.target.getObstacle().getPosition();
+                T currentPos = tweenElement.supplier.get();
                 Vector2 distance = (((Vector2) goal).cpy().sub((Vector2) og));
-                newValue = (T) (distance.cpy().scl(factor)).sub((currentPos.cpy().sub((Vector2) og)));
+                newValue = (T) (distance.cpy().scl(factor)).sub((((Vector2) currentPos).cpy().sub((Vector2) og)));
 //                Vector2 currentValue = ((Vector2) og).cpy().lerp((Vector2) goal, factor);
 //                Vector2 nextValue = ((Vector2) og).cpy().lerp((Vector2) goal, futureFactor);
                 System.out.println("current pos ->" + currentPos);
