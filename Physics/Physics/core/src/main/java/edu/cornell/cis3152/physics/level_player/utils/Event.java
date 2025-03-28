@@ -1,18 +1,17 @@
-package edu.cornell.cis3152.physics.level_player;
+package edu.cornell.cis3152.physics.level_player.utils;
 
-import edu.cornell.cis3152.physics.level_player.enviromentals.Button;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public class RegisteredEvent<T> {
+public class Event<T,U> {
 
     public Object source;
     public Supplier<T> getter;
     public Predicate<T> conditional;
     public String caller;
-    public Object[] action;
+    public EventAction action;
 
-    public RegisteredEvent(Object source, Supplier<T> getter, Predicate<T> conditional, String caller, Object[] action) {
+    public Event(Object source, Supplier<T> getter, Predicate<T> conditional, String caller, EventAction<U> action) {
         this.source = source;
         this.getter = getter;
         this.conditional = conditional;

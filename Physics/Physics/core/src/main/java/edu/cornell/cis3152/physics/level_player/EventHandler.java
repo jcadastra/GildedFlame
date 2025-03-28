@@ -1,38 +1,42 @@
 package edu.cornell.cis3152.physics.level_player;
 
-import edu.cornell.cis3152.physics.level_player.enviromentals.Button;
+import edu.cornell.cis3152.physics.level_player.utils.Event;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Stack;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 public class EventHandler {
 
 
-    private ArrayList<RegisteredEvent> registeredEvents;
-    private Stack<Object[]> eventFlags;
-    public Stack<Object[]> getEventFlags() {return eventFlags;}
+    private ArrayList<Event<?,?>> registeredEvents;
+    private Stack<Event<?,?>> eventFlags;
+    public Stack<Event<?,?>> getEventFlags() {return eventFlags;}
 
     public EventHandler() {
         eventFlags = new Stack<>();
         registeredEvents = new ArrayList<>();
     }
 
-    public <T> void registerEvent(RegisteredEvent<T> registeredEvent) {
-        registeredEvents.add(registeredEvent);
+    public void registerEvent(Event<?,?> eventFlag) {
+        registeredEvents.add(eventFlag);
     }
 
     public void update() {
-        for (Iterator<RegisteredEvent> iter = registeredEvents.iterator(); iter.hasNext(); ) {
-            RegisteredEvent registeredEvent = iter.next();
-            if (registeredEvent.conditional.test(registeredEvent.getter.get())) {
-                eventFlags.add(new Object[]{registeredEvent.caller, registeredEvent.source, registeredEvent.action});
+        for (Iterator<Event<?,?>> iter = registeredEvents.iterator(); iter.hasNext(); ) {
+            Event<?,?> registeredEvent = iter.next();
+            if (testEvent(registeredEvent)) {
+                eventFlags.add(registeredEvent);
                 iter.remove();
             }
         }
     }
 
+    private static boolean testEvent(Event<?,?> event) {
+        return testEventHelper(event);
+    }
+    private static <T> boolean testEventHelper(Event<T,?> event) {
+        return  event.conditional.test(event.getter.get());
+    }
     public void dispose() {
         registeredEvents.clear();
     }

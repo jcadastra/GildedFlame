@@ -7,6 +7,7 @@ import edu.cornell.cis3152.physics.level_player.enemies.*;
 import edu.cornell.cis3152.physics.level_player.enemies.Enemy.EnemyState;
 import edu.cornell.cis3152.physics.level_player.enviromentals.*;
 import edu.cornell.cis3152.physics.level_player.player.*;
+import edu.cornell.cis3152.physics.level_player.utils.CollisionFlag;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
 
@@ -14,7 +15,7 @@ import java.util.*;
 
 public class CollisionController implements ContactListener {
 
-    private final Stack<Object[]> collisionFlags;
+    private final Stack<CollisionFlag> collisionFlags;
     private final List<Totem[]> pendingTotemMerges = new ArrayList<>();
     private final AssetDirectory directory;
     private final FireController fireController;
@@ -72,7 +73,7 @@ public class CollisionController implements ContactListener {
             sprite instanceof Totem;
     }
 
-    public Stack<Object[]> getCollisionFlags() {
+    public Stack<CollisionFlag> getCollisionFlags() {
         return collisionFlags;
     }
 
@@ -130,13 +131,13 @@ public class CollisionController implements ContactListener {
                 Traci t = (Traci) idX(bd1, bd2, Traci.class);
                 if ((t.getSensorName().equals(fd2) && t != bd1 && isGround(bd1)) || (t.getSensorName().equals(fd1) && t != bd2 && isGround(bd2))) {
                     t.setGrounded(true);
-                    collisionFlags.push(new Object[]{"traciGrounded", bd1 instanceof Traci ? fix2 : fix1});
+                    collisionFlags.push(new CollisionFlag("traciGrounded", bd1 instanceof Traci ? fix2 : fix1));
                 }
             }
 
             if (isX(bd1, bd2, Torch.class) + isX(bd1, bd2, Traci.class) == 2) {
                 ((Traci) idX(bd1, bd2, Traci.class)).setHasTorch(true);
-                collisionFlags.push(new Object[]{"addTorch", idX(bd1, bd2, Traci.class)});
+                collisionFlags.push(new CollisionFlag("addTorch", idX(bd1, bd2, Traci.class)));
             }
 
             if (isXandY(bd1, bd2, "wall", Enemy.class) == 1) {
@@ -209,7 +210,7 @@ public class CollisionController implements ContactListener {
             }
 
             if (isXandY(bd1, bd2, Moth.class, Torch.class) == 1) {
-                collisionFlags.push(new Object[]{"queueFailure"});
+                collisionFlags.push(new CollisionFlag("queueFailure"));
             }
 
             if (isXandY(bd1, bd2, Moth.class, Moth.class) == 2) {
@@ -248,7 +249,7 @@ public class CollisionController implements ContactListener {
             }
 
             if (isXandY(bd1, bd2, Moth.class, Traci.class) == 1) {
-                collisionFlags.push(new Object[]{"queueFailure"});
+                collisionFlags.push(new CollisionFlag("queueFailure"));
             }
 
             if (isXandY(bd1, bd2, EnhancedObstacleSprite.class, Fire.class) == 1) {
@@ -332,7 +333,7 @@ public class CollisionController implements ContactListener {
         if (isX(bd1, bd2, Traci.class) == 1) {
             Traci t = (Traci) idX(bd1, bd2, Traci.class);
             if ((t.getSensorName().equals(fd2) && t != bd1) || (t.getSensorName().equals(fd1) && t != bd2)) {
-                collisionFlags.push(new Object[]{"traciAirborne", bd1 instanceof Traci ? fix2 : fix1});
+                collisionFlags.push(new CollisionFlag("traciAirborne", bd1 instanceof Traci ? fix2 : fix1));
             }
         }
 
