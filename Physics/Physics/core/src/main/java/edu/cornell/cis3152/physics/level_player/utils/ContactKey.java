@@ -1,4 +1,4 @@
-package edu.cornell.cis3152.physics.level_player;
+package edu.cornell.cis3152.physics.level_player.utils;
 
 import com.badlogic.gdx.physics.box2d.Fixture;
 

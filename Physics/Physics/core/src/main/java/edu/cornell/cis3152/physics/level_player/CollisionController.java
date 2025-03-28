@@ -8,6 +8,7 @@ import edu.cornell.cis3152.physics.level_player.enemies.Enemy.EnemyState;
 import edu.cornell.cis3152.physics.level_player.enviromentals.*;
 import edu.cornell.cis3152.physics.level_player.player.*;
 import edu.cornell.cis3152.physics.level_player.utils.CollisionFlag;
+import edu.cornell.cis3152.physics.level_player.utils.ContactKey;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
 
