@@ -45,7 +45,6 @@ import edu.cornell.cis3152.physics.level_player.utils.FireFlag;
 import edu.cornell.cis3152.physics.level_player.utils.ObstacleGroup;
 
 import edu.cornell.cis3152.physics.level_player.utils.TweenElement;
-import edu.cornell.gdiac.util.PooledList.Entry;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -68,7 +67,6 @@ import edu.cornell.cis3152.physics.level_player.enviromentals.*;
 import java.util.Stack;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
@@ -682,7 +680,7 @@ public class GameplayScene implements Screen {
         thing.getObstacle().setFriction(.5f);
         addSprite(thing);
 
-        Button button = new Button(new Vector2(20,3.75f), 0, false, false, units);
+        Button button = new Button(new Vector2(20,3.75f), 0, true, false, units);
 //        Array<Object> actionArray = new Array<>(new Object[]{thing, "move", new Vector2(8, 10), new Vector2(10, 10)});
         Function<Float, Float> movementFunc = Interpolation.circleIn::apply;
         EventAction<Vector2> eventAction = new EventAction<Vector2>(thing, "move", new Vector2(8, 10), new Vector2(16, 5), 2, movementFunc);
@@ -691,19 +689,19 @@ public class GameplayScene implements Screen {
 
         Event<Integer,Vector2> event = new Event<Integer,Vector2>(button, button::getState,
             state -> state == 1, "button", eventAction);
-        eventHandler.registerEvent(event);
+//        eventHandler.registerEvent(event);
 
 
         movementFunc = Interpolation.linear::apply;
         EventAction<Float> eventAction2 = new EventAction<Float>(thing, "rotate", 0f, (float) (Math.PI), 100, movementFunc);
         Event<Integer,Float> event2 = new Event<Integer, Float>(button, button::getState,
             state -> state == 1, "button", eventAction2);
-//        eventHandler.registerEvent(event);
+        eventHandler.registerEvent(event);
 
         eventAction = new EventAction<>("spawn");
         event = new Event<Integer,Vector2>(button, button::getState,
             state -> state == 1, "button", eventAction);
-//        eventHandler.registerEvent(event);
+        eventHandler.registerEvent(event);
 
         addSpriteGroup(button);
     }
@@ -788,7 +786,7 @@ public class GameplayScene implements Screen {
         supplementaryCollisionActions();
         supplementaryFireActions();
         supplementaryEventActions();
-        updateTweenedMovmentObjects(dt);
+        updateTweenedMovementObjects(dt);
 
         if (enemies != null) {
             for (Enemy e : enemies) {
@@ -865,7 +863,7 @@ public class GameplayScene implements Screen {
         Stack<CollisionFlag> todos = contactListener.getCollisionFlags();
         while ( !todos.isEmpty() ) {
             CollisionFlag todo_action = todos.pop();
-            switch ((String) todo_action.getName()) {
+            switch (todo_action.getName()) {
                 case "addTorch":
                     if (torch.canBePickedUp()) {
                         queueAddTorch = true;
@@ -960,7 +958,7 @@ public class GameplayScene implements Screen {
 
                 case "rotate":
                     removeFromTweened(action.getTarget(), action.getName());
-                    initialState = (U) (Float) action.getTarget().getObstacle().getAngle();  // Ensure U is Float
+                    initialState = (U) (Float) action.getTarget().getObstacle().getAngle();
                     supplier = () -> (U) (Float) action.getTarget().getObstacle().getAngle();
                     consumer = (U value) -> action.getTarget().getObstacle().setAngle((float) value);
                     break;
@@ -1000,7 +998,7 @@ public class GameplayScene implements Screen {
     }
 
     @SuppressWarnings("unchecked")
-    private <T> void updateTweenedMovmentObjects(float dt) {
+    private <T> void updateTweenedMovementObjects(float dt) {
         for (Iterator<TweenElement<?>> it = tweenedMovmentObjects.iterator(); it.hasNext(); ) {
             TweenElement<T> tweenElement = (TweenElement<T>) it.next();
 
