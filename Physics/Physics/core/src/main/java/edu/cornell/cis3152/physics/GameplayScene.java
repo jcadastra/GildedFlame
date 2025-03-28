@@ -24,10 +24,13 @@
  */
 package edu.cornell.cis3152.physics;
 
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.utils.ObjectSet;
 import edu.cornell.cis3152.physics.level_player.CollisionController;
+import edu.cornell.cis3152.physics.level_player.EventHandler;
 import edu.cornell.cis3152.physics.level_player.FireController;
 import edu.cornell.cis3152.physics.level_player.LightController;
 import edu.cornell.cis3152.physics.level_player.enemies.Enemy;
@@ -35,8 +38,13 @@ import edu.cornell.cis3152.physics.level_player.enemies.Moth;
 import edu.cornell.cis3152.physics.level_player.enemies.Totem;
 import edu.cornell.cis3152.physics.level_player.player.Torch;
 import edu.cornell.cis3152.physics.level_player.player.Traci;
+import edu.cornell.cis3152.physics.level_player.utils.CollisionFlag;
+import edu.cornell.cis3152.physics.level_player.utils.EventAction;
+import edu.cornell.cis3152.physics.level_player.utils.Event;
+import edu.cornell.cis3152.physics.level_player.utils.FireFlag;
 import edu.cornell.cis3152.physics.level_player.utils.ObstacleGroup;
 
+import edu.cornell.cis3152.physics.level_player.utils.TweenElement;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -57,7 +65,9 @@ import edu.cornell.gdiac.graphics.*;
 import edu.cornell.gdiac.physics2.*;
 import edu.cornell.cis3152.physics.level_player.enviromentals.*;
 import java.util.Stack;
-
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Base class for a world-specific controller.
@@ -173,7 +183,9 @@ public class GameplayScene implements Screen {
     private Joint activeFireJoint;
     protected CollisionController contactListener;
     protected FireController fireController;
+    protected EventHandler eventHandler;
     protected SoundEngine soundEngine;
+    protected PooledList<TweenElement<?>> tweenedMovmentObjects;
 
     protected LightController lightController;
 
@@ -278,17 +290,6 @@ public class GameplayScene implements Screen {
     }
 
     /**
-     * Returns the sprite batch associated with this scene
-     *
-     * The canvas is shared across all scenes.
-     *
-     * @return the sprite batch associated with this scene
-     */
-    public SpriteBatch getSpriteBatch() {
-        return batch;
-    }
-
-    /**
      * Sets the sprite batch associated with this scene
      *
      * The sprite batch is shared across all scenes.
@@ -318,7 +319,9 @@ public class GameplayScene implements Screen {
         JsonValue defaults = constants.get("world");
         fireController = new FireController();
         contactListener = new CollisionController(directory, fireController);
+        this.eventHandler = new EventHandler();
         this.soundEngine = soundEngine;
+        tweenedMovmentObjects = new PooledList<>();
 
         // pull out sounds
         volume = constants.getFloat("volume", 1.0f);
@@ -352,6 +355,17 @@ public class GameplayScene implements Screen {
     }
 
     /**
+     * Returns the sprite batch associated with this scene
+     *
+     * The canvas is shared across all scenes.
+     *
+     * @return the sprite batch associated with this scene
+     */
+    public SpriteBatch getSpriteBatch() {
+        return batch;
+    }
+
+    /**
      * Disposes of all (non-static) resources allocated to this mode.
      */
     public void dispose() {
@@ -364,6 +378,7 @@ public class GameplayScene implements Screen {
 
         soundEngine.dispose();
         lightController.dispose();
+        eventHandler.dispose();
         sprites.clear();
         addQueue.clear();
         world.dispose();
@@ -463,6 +478,10 @@ public class GameplayScene implements Screen {
                 }
             }
             fireController.resetStorage();
+        }
+
+        if (eventHandler != null) {
+            eventHandler.dispose();
         }
 
         if (lightController != null){
@@ -652,9 +671,40 @@ public class GameplayScene implements Screen {
             enemies.add(moth);
         }
 
+//        Button button = new Button(new Vector2(24,2.75f), 0, true, true, units);
+        BoxObstacle temp = new BoxObstacle(5,5,5,.5f);
+        temp.setPhysicsUnits(units);
+        temp.setName("floor");
+        ObstacleSprite thing = new ObstacleSprite(temp);
+        thing.getObstacle().setBodyType(BodyType.KinematicBody);
+        thing.getObstacle().setFriction(.5f);
+//        addSprite(thing);
 
+        Button button = new Button(new Vector2(20,3.75f), 0, true, false, units);
+//        Array<Object> actionArray = new Array<>(new Object[]{thing, "move", new Vector2(8, 10), new Vector2(10, 10)});
+        Function<Float, Float> movementFunc = Interpolation.circleIn::apply;
+        EventAction<Vector2> eventAction = new EventAction<Vector2>(thing, "move", new Vector2(8, 10), new Vector2(16, 5), 2, movementFunc);
+//        Object[] actionArray = new Object[]{thing, "rotate", 0f, (float) (Math.PI), 300, movementFunc};
+//        Object[] actionArray = new Object[]{thing, "move", new Vector2(8, 10), new Vector2(16, 5), 100, movementFunc};
+
+        Event<Integer,Vector2> event = new Event<Integer,Vector2>(button, button::getState,
+            state -> state == 1, "button", eventAction);
+//        eventHandler.registerEvent(event);
+
+
+        movementFunc = Interpolation.linear::apply;
+        EventAction<Float> eventAction2 = new EventAction<Float>(thing, "rotate", 0f, (float) (Math.PI), 100, movementFunc);
+        Event<Integer,Float> event2 = new Event<Integer, Float>(button, button::getState,
+            state -> state == 1, "button", eventAction2);
+        eventHandler.registerEvent(event);
+
+        eventAction = new EventAction<>("spawn");
+        event = new Event<Integer,Vector2>(button, button::getState,
+            state -> state == 1, "button", eventAction);
+        eventHandler.registerEvent(event);
+
+//        addSpriteGroup(button);
     }
-
     /**
      * Returns whether to process the update loop
      *
@@ -735,13 +785,18 @@ public class GameplayScene implements Screen {
         soundEngine.tendToMusicLoop();
         supplementaryCollisionActions();
         supplementaryFireActions();
+        supplementaryEventActions();
+        updateTweenedMovementObjects(dt);
+
         if (enemies != null) {
             for (Enemy e : enemies) {
                 e.update();
             }
         }
+
         torch.update();
         fireController.update();
+        eventHandler.update();
         contactListener.sustainedContact();
 
         InputController input = InputController.getInstance();
@@ -763,6 +818,7 @@ public class GameplayScene implements Screen {
             activeTorchJoint = null;
             torch.applyThrowForce(avatar.isFacingRight() ? 1 : -1);
             torch.resetPickUp();
+            torch.getObstacle().setSensor(false);
             soundEngine.throwTorch();
         }
 
@@ -804,20 +860,20 @@ public class GameplayScene implements Screen {
     }
 
     private void supplementaryCollisionActions() {
-        Stack<Object[]> todos = contactListener.getCollisionFlags();
+        Stack<CollisionFlag> todos = contactListener.getCollisionFlags();
         while ( !todos.isEmpty() ) {
-            Object[] todo_action = todos.pop();
-            switch ((String) todo_action[0]) {
+            CollisionFlag todo_action = todos.pop();
+            switch (todo_action.getName()) {
                 case "addTorch":
                     if (torch.canBePickedUp()) {
                         queueAddTorch = true;
                     }
                     break;
                 case "traciGrounded":
-                    sensorFixtures.add((Fixture) todo_action[1]);
+                    sensorFixtures.add(todo_action.getFixture());
                     break;
                 case "traciAirborne":
-                    sensorFixtures.remove((Fixture) todo_action[1]);
+                    sensorFixtures.remove(todo_action.getFixture());
                     if (sensorFixtures.size == 0) {
                         avatar.setGrounded(false);
                     }
@@ -829,33 +885,166 @@ public class GameplayScene implements Screen {
     }
 
     private void supplementaryFireActions() {
-        Stack<Object[]> todos = fireController.getFireFlags();
+        Stack<FireFlag> todos = fireController.getFireFlags();
         while (!todos.isEmpty()) {
-            Object[] todo_action = todos.pop();
-            switch ((String) todo_action[0]) {
+            FireFlag fireFlag = todos.pop();
+            switch (fireFlag.getName()) {
                 case "attachFire":
-                    Fire fire = (Fire) todo_action[2];
+                    Fire fire = fireFlag.getFire();
                     addSprite(fire);
-                    if (((EnhancedObstacleSprite) todo_action[1]).getObstacle().getBody() == null) {
+                    if ((fireFlag.getSubject()).getObstacle().getBody() == null) {
                         break;
                     }
-                    joinFireToObject((ObstacleSprite) todo_action[1], fire);
+                    joinFireToObject(fireFlag.getSubject(), fire);
                     break;
                 case "expireObj":
-                    for (Fire f : (ArrayList<Fire>) todo_action[2]) {
+                    for (Fire f : fireFlag.getFires()) {
                         if (f.getFixtureJoint() != null) {
                             world.destroyJoint(f.getFixtureJoint());
                             f.setFixtureJoint(null);
                         }
                         f.dispose();
                     }
-                    ((EnhancedObstacleSprite) todo_action[1]).getObstacle().markRemoved(true);
-                    fireController.cleanObj((EnhancedObstacleSprite) todo_action[1]);
+                    (fireFlag.getFire()).getObstacle().markRemoved(true);
+                    fireController.cleanObj(fireFlag.getSubject());
                     break;
             }
         }
     }
 
+    @SuppressWarnings("unchecked")
+    private <T,U> void supplementaryEventActions() {
+        Stack<Event<?,?>> todos = eventHandler.getEventFlags();
+        while (!todos.isEmpty()) {
+            Event<T,U> event = (Event<T, U>) todos.pop();
+            EventAction<U> action = event.action;
+
+            switch (event.caller) {
+                case "button":
+                    EventAction<U> undo_action = action.clone();
+                    U temp = undo_action.getInitialPoint();
+                    undo_action.setInitialPoint(undo_action.getFinalPoint());
+                    undo_action.setFinalPoint(temp);
+
+                    Button button = (Button) event.source;
+                    button.toggleButton(world);
+
+                    int nextState;
+                    if (button.getDoubleSided()) {
+                        nextState = 1;
+                    } else {
+                        nextState = button.getState() == 0 ? 1 : 0;
+                    }
+
+                    if (button.getDoubleSided() || (!button.getDoubleSided() && !button.getLatch())) {
+                        event.conditional = (T state) -> state.equals(nextState);
+                        event.action = undo_action;
+                        eventHandler.registerEvent(event);
+                    }
+                    break;
+            }
+
+            U initialState = null;
+            Supplier<U> supplier = null;
+            Consumer<U> consumer = null;
+
+            switch (action.getName()) {
+                case "move":
+                    removeFromTweened(action.getTarget(), action.getName());
+                    initialState = (U) action.getTarget().getObstacle().getPosition();
+                    supplier = () -> (U) action.getTarget().getObstacle().getPosition();
+                    consumer = (U value) -> action.getTarget().getObstacle().setLinearVelocity((Vector2) value);
+                    break;
+
+                case "rotate":
+                    removeFromTweened(action.getTarget(), action.getName());
+                    initialState = (U) (Float) action.getTarget().getObstacle().getAngle();
+                    supplier = () -> (U) (Float) action.getTarget().getObstacle().getAngle();
+                    consumer = (U value) -> action.getTarget().getObstacle().setAngle((float) value);
+                    break;
+
+                case "spawn":
+                    float units = height / bounds.height;
+                    JsonValue levelData = directory.getEntry("moth_intro",JsonValue.class);
+                    JsonValue enemiesJson = levelData.get("enemies");
+                    Texture texture = directory.getEntry("platform-moth01", Texture.class);
+                    JsonValue mothsJson = enemiesJson.get("moths").get("instances");
+                    for (int i = 0; i < mothsJson.size; i++) {
+                        Vector2 position = new Vector2(mothsJson.get(i).get("pos").getFloat(0), mothsJson.get(i).get("pos").getFloat(1));
+                        Moth moth = new Moth(i, units, mothsJson.get(i), directory, position);
+                        moth.setTexture(texture);
+                        addSprite(moth);
+                        moth.createSensor();
+                        enemies.add(moth);
+                    }
+                    break;
+            }
+
+            if (initialState != null) {
+                TweenElement<U> tweenElement = new TweenElement<U>(action.getTarget(), action.getName(),
+                    initialState, action.getFinalPoint(), action.getTime(),action.getInterpolator(), supplier, consumer);
+                tweenedMovmentObjects.add(tweenElement);
+            }
+        }
+    }
+
+    private <T> void removeFromTweened(Object target, String actionName) {
+        for (Iterator<TweenElement<?>> it = tweenedMovmentObjects.iterator(); it.hasNext(); ) {
+            TweenElement<T> tweenElement = (TweenElement<T>) it.next();
+            if (tweenElement.target == target && tweenElement.name.equals(actionName)) {
+                it.remove();
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> void updateTweenedMovementObjects(float dt) {
+        for (Iterator<TweenElement<?>> it = tweenedMovmentObjects.iterator(); it.hasNext(); ) {
+            TweenElement<T> tweenElement = (TweenElement<T>) it.next();
+
+            T og = tweenElement.initalState;
+            T goal = tweenElement.finalState;
+            Vector2 timer = tweenElement.timerVector;
+            Function<Float, Float> function = tweenElement.interpolator;
+            Consumer<T> setter = tweenElement.updater;
+
+            float factor = function.apply(timer.x / timer.y);
+            float oldFactor = function.apply(Math.max(timer.x - 1, 0)/ timer.y);
+            System.out.println("--------------");
+            System.out.println(timer);
+//            System.out.println(factor);
+//            System.out.println(oldFactor);
+            T newValue;
+            if (og instanceof Vector2) {
+                T currentPos = tweenElement.supplier.get();
+                Vector2 distance = (((Vector2) goal).cpy().sub((Vector2) og));
+                newValue = (T) (distance.cpy().scl(factor)).sub((((Vector2) currentPos).cpy().sub((Vector2) og)));
+//                Vector2 currentValue = ((Vector2) og).cpy().lerp((Vector2) goal, factor);
+//                Vector2 nextValue = ((Vector2) og).cpy().lerp((Vector2) goal, futureFactor);
+                System.out.println("current pos ->" + currentPos);
+                System.out.println("new val ->" + newValue);
+
+//                newValue = ((Vector2) og).cpy().add(((Vector2) goal).cpy().sub((Vector2) og).scl(futureFactor)).sub((Vector2) og).cpy().add(((Vector2) goal).cpy().sub((Vector2) og).scl(factor));
+            } else if (og instanceof Float) {
+                newValue = (T) (Float) ((Float) og + ((Float) goal - (Float) og) * factor);
+            } else {
+                throw new IllegalArgumentException("Unsupported type: " + og.getClass());
+            }
+
+            setter.accept(newValue);
+            System.out.println(newValue);
+            System.out.println("--------------");
+            timer.x += dt;
+            if (timer.x > timer.y) {
+                it.remove();
+                if (tweenElement.name.equals("move")) {
+                    setter.accept((T) (Vector2.Zero));
+                } else {
+                    setter.accept(goal);
+                }
+            }
+        }
+    }
 
     /**
      * Generates torch joint and connects the avatar to the torch Also used to flip the torch round
@@ -871,6 +1060,7 @@ public class GameplayScene implements Screen {
             avatar.getHeight() / 4));
         torch.getObstacle().setPosition(avatar.getObstacle().getPosition().add(offset));
         activeTorchJoint = world.createJoint(avatar.attachTorchToAvatar(torch));
+        torch.getObstacle().setSensor(true);
         queueAddTorch = false;
         torchOnRight = avatar.isFacingRight();
     }

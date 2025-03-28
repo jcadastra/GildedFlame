@@ -30,14 +30,24 @@ public class ObstacleMaterial {
 
     public ObstacleMaterial (String name, JsonValue data) {
         this.name = name;
+        switch (name) {
+            case "wood":
+                this.flammability = 0.05f;
+                this.burnTimerLimit = 80f;
+                this.ignitionTimerLimit = 15f;
+                break;
 
-        //TODO: process from json
-        this.flammability =  .05f;
-        this.burnTimerLimit = 80f;
-        if (!Objects.equals(name, "rope")) {
-            this.ignitionTimerLimit = 15f;
-        } else {
-            this.ignitionTimerLimit = 8f;
+            case "rope":
+                this.flammability = 0.05f;
+                this.burnTimerLimit = 80f;
+                this.ignitionTimerLimit = 8f;
+                break;
+
+            default:
+                this.flammability = 0f;
+                this.burnTimerLimit = 0f;
+                this.ignitionTimerLimit = 0f;
+                break;
         }
         this.burnTimer = 0f;
         this.ignitionTimer = 0f;
