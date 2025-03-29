@@ -185,7 +185,8 @@ public class GameplayScene implements Screen {
     protected FireController fireController;
     protected EventHandler eventHandler;
     protected SoundEngine soundEngine;
-    protected PooledList<TweenElement<?>> tweenedMovmentObjects;
+    protected PooledList<TweenElement<Float>> tweenedMovmentObjectsFloat;
+    protected PooledList<TweenElement<Vector2>> tweenedMovmentObjectsVec2;
 
     protected LightController lightController;
 
@@ -321,7 +322,8 @@ public class GameplayScene implements Screen {
         contactListener = new CollisionController(directory, fireController);
         this.eventHandler = new EventHandler();
         this.soundEngine = soundEngine;
-        tweenedMovmentObjects = new PooledList<>();
+        tweenedMovmentObjectsVec2 = new PooledList<>();
+        tweenedMovmentObjectsFloat = new PooledList<>();
 
         // pull out sounds
         volume = constants.getFloat("volume", 1.0f);
@@ -678,32 +680,31 @@ public class GameplayScene implements Screen {
         ObstacleSprite thing = new ObstacleSprite(temp);
         thing.getObstacle().setBodyType(BodyType.KinematicBody);
         thing.getObstacle().setFriction(.5f);
-//        addSprite(thing);
+        addSprite(thing);
 
-        Button button = new Button(new Vector2(20,3.75f), 0, true, false, units);
+        Button button = new Button(new Vector2(20,3.75f), 0, false, false, units);
 //        Array<Object> actionArray = new Array<>(new Object[]{thing, "move", new Vector2(8, 10), new Vector2(10, 10)});
-        Function<Float, Float> movementFunc = Interpolation.circleIn::apply;
-        EventAction<Vector2> eventAction = new EventAction<Vector2>(thing, "move", new Vector2(8, 10), new Vector2(16, 5), 2, movementFunc);
+        Function<Float, Float> movementFunc = Interpolation.swing::apply;
+        EventAction<Vector2> eventAction = new EventAction<Vector2>(thing, "move", new Vector2(8, 10), new Vector2(16, 5), 4f, movementFunc);
 //        Object[] actionArray = new Object[]{thing, "rotate", 0f, (float) (Math.PI), 300, movementFunc};
 //        Object[] actionArray = new Object[]{thing, "move", new Vector2(8, 10), new Vector2(16, 5), 100, movementFunc};
 
         Event<Integer,Vector2> event = new Event<Integer,Vector2>(button, button::getState,
             state -> state == 1, "button", eventAction);
-//        eventHandler.registerEvent(event);
+        eventHandler.registerEvent(event);
 
 
-        movementFunc = Interpolation.linear::apply;
-        EventAction<Float> eventAction2 = new EventAction<Float>(thing, "rotate", 0f, (float) (Math.PI), 100, movementFunc);
+        EventAction<Float> eventAction2 = new EventAction<Float>(thing, "rotate", 0f, (float) (Math.PI), 4, movementFunc);
         Event<Integer,Float> event2 = new Event<Integer, Float>(button, button::getState,
             state -> state == 1, "button", eventAction2);
-        eventHandler.registerEvent(event);
+        eventHandler.registerEvent(event2);
 
         eventAction = new EventAction<>("spawn");
         event = new Event<Integer,Vector2>(button, button::getState,
             state -> state == 1, "button", eventAction);
-        eventHandler.registerEvent(event);
+//        eventHandler.registerEvent(event);
 
-//        addSpriteGroup(button);
+        addSpriteGroup(button);
     }
     /**
      * Returns whether to process the update loop
@@ -786,7 +787,8 @@ public class GameplayScene implements Screen {
         supplementaryCollisionActions();
         supplementaryFireActions();
         supplementaryEventActions();
-        updateTweenedMovementObjects(dt);
+        updateTweenedMovementObjectsVec2(dt);
+        updateTweenedMovementObjectsFloat(dt);
 
         if (enemies != null) {
             for (Enemy e : enemies) {
@@ -806,11 +808,6 @@ public class GameplayScene implements Screen {
         soundEngine.avatarWalking(input.getHorizontal(), avatar.isGrounded());
         avatar.setJumping(input.didPrimary());
         avatar.setShooting(input.didSecondary());
-
-        // Add a bullet if we fire
-        /*if (avatar.isShooting()) {
-            createBullet();
-        }*/
 
         if (input.getThrowing() && avatar.getHasTorch() && activeTorchJoint != null) {
             avatar.setHasTorch(false);
@@ -905,7 +902,7 @@ public class GameplayScene implements Screen {
                         }
                         f.dispose();
                     }
-                    (fireFlag.getFire()).getObstacle().markRemoved(true);
+                    (fireFlag.getSubject()).getObstacle().markRemoved(true);
                     fireController.cleanObj(fireFlag.getSubject());
                     break;
             }
@@ -944,23 +941,30 @@ public class GameplayScene implements Screen {
                     break;
             }
 
-            U initialState = null;
-            Supplier<U> supplier = null;
-            Consumer<U> consumer = null;
 
             switch (action.getName()) {
                 case "move":
-                    removeFromTweened(action.getTarget(), action.getName());
-                    initialState = (U) action.getTarget().getObstacle().getPosition();
-                    supplier = () -> (U) action.getTarget().getObstacle().getPosition();
-                    consumer = (U value) -> action.getTarget().getObstacle().setLinearVelocity((Vector2) value);
+                    tweenedMovmentObjectsVec2.removeIf(a -> a.target == action.getTarget() && a.name.equals(action.getName()));
+
+                    Vector2 initialStateVec2 = action.getTarget().getObstacle().getPosition().cpy();
+                    Supplier<Vector2> supplierVec2 = () -> action.getTarget().getObstacle().getPosition();
+                    Consumer<Vector2> consumerVec2 = (value) -> action.getTarget().getObstacle().setLinearVelocity(value);
+
+                    TweenElement<Vector2> tweenElementVec2 = new TweenElement<Vector2>(action.getTarget(), action.getName(),
+                        initialStateVec2, (Vector2) action.getFinalPoint(), action.getTime(),action.getInterpolator(), supplierVec2, consumerVec2);
+                    tweenedMovmentObjectsVec2.add(tweenElementVec2);
                     break;
 
                 case "rotate":
-                    removeFromTweened(action.getTarget(), action.getName());
-                    initialState = (U) (Float) action.getTarget().getObstacle().getAngle();
-                    supplier = () -> (U) (Float) action.getTarget().getObstacle().getAngle();
-                    consumer = (U value) -> action.getTarget().getObstacle().setAngle((float) value);
+                    tweenedMovmentObjectsFloat.removeIf(a -> a.target == action.getTarget() && a.name.equals(action.getName()));
+                    
+                    Float initialStateFloat = action.getTarget().getObstacle().getAngle();
+                    Supplier<Float> supplierFloat = () -> action.getTarget().getObstacle().getAngle();
+                    Consumer<Float> consumerFloat = (value) -> action.getTarget().getObstacle().setAngle(value);
+
+                    TweenElement<Float> tweenElementFloat = new TweenElement<Float>(action.getTarget(), action.getName(),
+                        initialStateFloat, (Float) action.getFinalPoint(), action.getTime(),action.getInterpolator(), supplierFloat, consumerFloat);
+                    tweenedMovmentObjectsFloat.add(tweenElementFloat);
                     break;
 
                 case "spawn":
@@ -979,72 +983,62 @@ public class GameplayScene implements Screen {
                     }
                     break;
             }
-
-            if (initialState != null) {
-                TweenElement<U> tweenElement = new TweenElement<U>(action.getTarget(), action.getName(),
-                    initialState, action.getFinalPoint(), action.getTime(),action.getInterpolator(), supplier, consumer);
-                tweenedMovmentObjects.add(tweenElement);
-            }
         }
     }
 
-    private <T> void removeFromTweened(Object target, String actionName) {
-        for (Iterator<TweenElement<?>> it = tweenedMovmentObjects.iterator(); it.hasNext(); ) {
-            TweenElement<T> tweenElement = (TweenElement<T>) it.next();
-            if (tweenElement.target == target && tweenElement.name.equals(actionName)) {
-                it.remove();
-            }
-        }
-    }
+    private void updateTweenedMovementObjectsVec2(float dt) {
+        for (Iterator<TweenElement<Vector2>> it = tweenedMovmentObjectsVec2.iterator(); it.hasNext(); ) {
+            TweenElement<Vector2> tweenElement = it.next();
 
-    @SuppressWarnings("unchecked")
-    private <T> void updateTweenedMovementObjects(float dt) {
-        for (Iterator<TweenElement<?>> it = tweenedMovmentObjects.iterator(); it.hasNext(); ) {
-            TweenElement<T> tweenElement = (TweenElement<T>) it.next();
-
-            T og = tweenElement.initalState;
-            T goal = tweenElement.finalState;
             Vector2 timer = tweenElement.timerVector;
-            Function<Float, Float> function = tweenElement.interpolator;
-            Consumer<T> setter = tweenElement.updater;
+            Function<Float, Float> interpolator = tweenElement.interpolator;
+            Consumer<Vector2> setter = tweenElement.updater;
 
-            float factor = function.apply(timer.x / timer.y);
-            float oldFactor = function.apply(Math.max(timer.x - 1, 0)/ timer.y);
-            System.out.println("--------------");
-            System.out.println(timer);
-//            System.out.println(factor);
-//            System.out.println(oldFactor);
-            T newValue;
-            if (og instanceof Vector2) {
-                T currentPos = tweenElement.supplier.get();
-                Vector2 distance = (((Vector2) goal).cpy().sub((Vector2) og));
-                newValue = (T) (distance.cpy().scl(factor)).sub((((Vector2) currentPos).cpy().sub((Vector2) og)));
-//                Vector2 currentValue = ((Vector2) og).cpy().lerp((Vector2) goal, factor);
-//                Vector2 nextValue = ((Vector2) og).cpy().lerp((Vector2) goal, futureFactor);
-                System.out.println("current pos ->" + currentPos);
-                System.out.println("new val ->" + newValue);
+            Vector2 endPointZeroed = (tweenElement.finalState.cpy()).sub(tweenElement.initalState);
 
-//                newValue = ((Vector2) og).cpy().add(((Vector2) goal).cpy().sub((Vector2) og).scl(futureFactor)).sub((Vector2) og).cpy().add(((Vector2) goal).cpy().sub((Vector2) og).scl(factor));
-            } else if (og instanceof Float) {
-                newValue = (T) (Float) ((Float) og + ((Float) goal - (Float) og) * factor);
-            } else {
-                throw new IllegalArgumentException("Unsupported type: " + og.getClass());
+            float factor = interpolator.apply(timer.x / timer.y);
+            float oldFactor = interpolator.apply(Math.max(timer.x - dt, 0)/ timer.y);
+            Vector2 delta = ( (endPointZeroed.cpy()).scl(factor) ).sub( ((endPointZeroed.cpy()).scl(oldFactor)) );
+            delta.scl(1/dt);
+            setter.accept(delta);
+
+            //physics correction
+            if (tweenElement.name.equals("move")) {
+                tweenElement.target.getObstacle().setPosition(endPointZeroed.scl(oldFactor).add(tweenElement.initalState));
             }
 
-            setter.accept(newValue);
-            System.out.println(newValue);
-            System.out.println("--------------");
             timer.x += dt;
             if (timer.x > timer.y) {
                 it.remove();
                 if (tweenElement.name.equals("move")) {
-                    setter.accept((T) (Vector2.Zero));
-                } else {
-                    setter.accept(goal);
+                    setter.accept(Vector2.Zero);
+                    tweenElement.target.getObstacle().setPosition(tweenElement.finalState);
                 }
             }
         }
     }
+
+    private void updateTweenedMovementObjectsFloat(float dt) {
+        for (Iterator<TweenElement<Float>> it = tweenedMovmentObjectsFloat.iterator(); it.hasNext(); ) {
+            TweenElement<Float> tweenElement = it.next();
+
+            Vector2 timer = tweenElement.timerVector;
+            Function<Float, Float> interpolator = tweenElement.interpolator;
+            Consumer<Float> setter = tweenElement.updater;
+
+            Float endPointZeroed = tweenElement.finalState - tweenElement.initalState;
+
+            float factor = interpolator.apply(timer.x / timer.y);
+            Float delta = (endPointZeroed * factor);
+            setter.accept(delta);
+            timer.x += dt;
+            if (timer.x >= timer.y) {
+                it.remove();
+                tweenElement.updater.accept(tweenElement.finalState);
+            }
+        }
+    }
+
 
     /**
      * Generates torch joint and connects the avatar to the torch Also used to flip the torch round

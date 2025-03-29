@@ -9,7 +9,7 @@ public class Event<T,U> {
     public Supplier<T> getter;
     public Predicate<T> conditional;
     public String caller;
-    public EventAction action;
+    public EventAction<U> action;
 
     public Event(Object source, Supplier<T> getter, Predicate<T> conditional, String caller, EventAction<U> action) {
         this.source = source;

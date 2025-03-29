@@ -80,7 +80,7 @@ public class FireController {
             }
             if (testIfFullyBurning(s)) {
                 if (s.getMaterial().isExpiredBurnTimer()) {
-                    fireFlags.push(new FireFlag("expiredObj", s, firesOnShape.get(s)));
+                    fireFlags.push(new FireFlag("expireObj", s, firesOnShape.get(s)));
                 } else {
                     s.getMaterial().incrementBurnTimer();
                 }
