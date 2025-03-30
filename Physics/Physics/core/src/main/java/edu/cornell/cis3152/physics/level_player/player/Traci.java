@@ -22,12 +22,15 @@ import com.badlogic.gdx.physics.box2d.*;
 
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.utils.JsonValue;
+import edu.cornell.cis3152.physics.level_player.enviromentals.EnhancedObstacleSprite;
 import edu.cornell.gdiac.assets.ParserUtils;
 import edu.cornell.gdiac.graphics.SpriteBatch;
 import edu.cornell.gdiac.graphics.Texture2D;
 import edu.cornell.gdiac.math.Path2;
 import edu.cornell.gdiac.math.PathFactory;
 import edu.cornell.gdiac.physics2.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Traci's avatar for the platform game.
@@ -45,6 +48,13 @@ import edu.cornell.gdiac.physics2.*;
  * simple fixture so that we can attach it to the obstacle WITHOUT using joints.
  */
 public class Traci extends ObstacleSprite {
+    public enum GroundState {
+        GROUNDED,
+        AIRBORNE,
+        CLIMBING;
+    }
+    private GroundState groundState;
+    private Set<EnhancedObstacleSprite> attachedClimbables;
     public static final int PLAYER = 0x00000001;
     public static final int WALL = 0x00000002;
     public static final int TORCH = 0x00000004;
@@ -80,8 +90,6 @@ public class Traci extends ObstacleSprite {
     private boolean isJumping;
     /** How long until we can shoot again */
     private int shootCooldown;
-    /** Whether our feet are on the ground */
-    private boolean isGrounded;
     /** Whether we are actively shooting */
     private boolean isShooting;
 
@@ -158,7 +166,7 @@ public class Traci extends ObstacleSprite {
      * @return true if Traci is actively jumping.
      */
     public boolean isJumping() {
-        return isJumping && isGrounded && jumpCooldown <= 0;
+        return isJumping && groundState.equals(GroundState.GROUNDED) && jumpCooldown <= 0;
     }
 
     /**
@@ -193,16 +201,14 @@ public class Traci extends ObstacleSprite {
      * @return true if Traci is on the ground.
      */
     public boolean isGrounded() {
-        return isGrounded;
+        return groundState.equals(GroundState.GROUNDED);
     }
 
     /**
      * Sets whether Traci is on the ground.
-     *
-     * @param value whether Traci is on the ground.
      */
-    public void setGrounded(boolean value) {
-        isGrounded = value;
+    public void setGroundedState(GroundState state) {
+        groundState = state;
     }
 
     /**
@@ -309,7 +315,7 @@ public class Traci extends ObstacleSprite {
         shotLimit = data.getInt( "shot_cool", 0 );
 
         // Gameplay attributes
-        isGrounded = false;
+        groundState = GroundState.AIRBORNE;
         isShooting = false;
         isJumping = false;
         faceRight = true;
@@ -328,6 +334,8 @@ public class Traci extends ObstacleSprite {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.filter.categoryBits = CATEGORY_AVATAR; // Object's category
         fixtureDef.filter.maskBits = CATEGORY_ENVIRONMENT; // Which lights affect it
+
+        this.attachedClimbables = new HashSet<>();
     }
 
     public void create_Fixture() {
@@ -521,6 +529,13 @@ public class Traci extends ObstacleSprite {
             //
             batch.outline( sensorOutline, transform );
         }
+    }
+
+    public void registerClimbable(EnhancedObstacleSprite obj) {
+        attachedClimbables.add(obj);
+    }
+    public void removeClimbable(EnhancedObstacleSprite obj) {
+        attachedClimbables.remove(obj);
     }
 }
 

@@ -15,6 +15,7 @@ import java.awt.Shape;
 public class EnhancedObstacleSprite extends ObstacleSprite {
 
     private ObstacleMaterial material;
+    private boolean climbable;
 
     public EnhancedObstacleSprite() {
         super();
@@ -32,5 +33,7 @@ public class EnhancedObstacleSprite extends ObstacleSprite {
     public ObstacleMaterial getMaterial() {
         return material;
     }
+    public void setClimbable(boolean value) {climbable = value;}
+    public boolean getClimbable() {return climbable;}
 
 }

@@ -7,6 +7,7 @@ import edu.cornell.cis3152.physics.level_player.enemies.*;
 import edu.cornell.cis3152.physics.level_player.enemies.Enemy.EnemyState;
 import edu.cornell.cis3152.physics.level_player.enviromentals.*;
 import edu.cornell.cis3152.physics.level_player.player.*;
+import edu.cornell.cis3152.physics.level_player.player.Traci.GroundState;
 import edu.cornell.cis3152.physics.level_player.utils.CollisionFlag;
 import edu.cornell.cis3152.physics.level_player.utils.ContactKey;
 import edu.cornell.gdiac.assets.AssetDirectory;
@@ -131,7 +132,7 @@ public class CollisionController implements ContactListener {
             if (isX(bd1, bd2, Traci.class) == 1) {
                 Traci t = (Traci) idX(bd1, bd2, Traci.class);
                 if ((t.getSensorName().equals(fd2) && t != bd1 && isGround(bd1)) || (t.getSensorName().equals(fd1) && t != bd2 && isGround(bd2))) {
-                    t.setGrounded(true);
+                    t.setGroundedState(GroundState.GROUNDED);
                     collisionFlags.push(new CollisionFlag("traciGrounded", bd1 instanceof Traci ? fix2 : fix1));
                 }
             }

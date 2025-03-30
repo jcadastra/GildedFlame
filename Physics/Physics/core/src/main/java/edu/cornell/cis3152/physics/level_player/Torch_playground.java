@@ -21,6 +21,7 @@ import edu.cornell.cis3152.physics.level_player.enviromentals.Surface;
 import edu.cornell.cis3152.physics.level_player.player.Bullet;
 import edu.cornell.cis3152.physics.level_player.player.Torch;
 import edu.cornell.cis3152.physics.level_player.player.Traci;
+import edu.cornell.cis3152.physics.level_player.player.Traci.GroundState;
 import edu.cornell.cis3152.physics.level_player.utils.CollisionFlag;
 import java.util.List;
 import com.badlogic.gdx.graphics.Texture;
@@ -346,7 +347,7 @@ public class Torch_playground extends GameplayScene {
                 case "traciAirborne":
                     sensorFixtures.remove(todo_action.getFixture());
                     if (sensorFixtures.size == 0) {
-                        avatar.setGrounded(false);
+                        avatar.setGroundedState(GroundState.AIRBORNE);
                     }
                     break;
                 case "queueFailure":

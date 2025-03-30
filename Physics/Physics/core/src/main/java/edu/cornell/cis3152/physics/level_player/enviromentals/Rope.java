@@ -213,6 +213,7 @@ public class Rope extends ObstacleGroup {
             s.setMaterial(new ObstacleMaterial("rope", data.get(1)));
             returnSet.add(s);
             s.setDebugColor( Color.PURPLE );
+            s.setClimbable(true);
             sprites.add(s);
         }
         return returnSet;

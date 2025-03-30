@@ -38,6 +38,7 @@ import edu.cornell.cis3152.physics.level_player.enemies.Moth;
 import edu.cornell.cis3152.physics.level_player.enemies.Totem;
 import edu.cornell.cis3152.physics.level_player.player.Torch;
 import edu.cornell.cis3152.physics.level_player.player.Traci;
+import edu.cornell.cis3152.physics.level_player.player.Traci.GroundState;
 import edu.cornell.cis3152.physics.level_player.utils.CollisionFlag;
 import edu.cornell.cis3152.physics.level_player.utils.EventAction;
 import edu.cornell.cis3152.physics.level_player.utils.Event;
@@ -872,7 +873,7 @@ public class GameplayScene implements Screen {
                 case "traciAirborne":
                     sensorFixtures.remove(todo_action.getFixture());
                     if (sensorFixtures.size == 0) {
-                        avatar.setGrounded(false);
+                        avatar.setGroundedState(GroundState.AIRBORNE);
                     }
                     break;
                 case "queueFailure":
@@ -957,7 +958,7 @@ public class GameplayScene implements Screen {
 
                 case "rotate":
                     tweenedMovmentObjectsFloat.removeIf(a -> a.target == action.getTarget() && a.name.equals(action.getName()));
-                    
+
                     Float initialStateFloat = action.getTarget().getObstacle().getAngle();
                     Supplier<Float> supplierFloat = () -> action.getTarget().getObstacle().getAngle();
                     Consumer<Float> consumerFloat = (value) -> action.getTarget().getObstacle().setAngle(value);
