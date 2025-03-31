@@ -137,8 +137,7 @@ public class CollisionController implements ContactListener {
                 }
             }
 
-            if (isX(bd1, bd2, Torch.class) + isX(bd1, bd2, Traci.class) == 2) {
-                ((Traci) idX(bd1, bd2, Traci.class)).setHasTorch(true);
+            if (isXandY(bd1, bd2, Traci.class, Torch.class )== 1) {
                 collisionFlags.push(new CollisionFlag("addTorch", idX(bd1, bd2, Traci.class)));
             }
 
@@ -323,6 +322,18 @@ public class CollisionController implements ContactListener {
                 }
             }
 
+            /**
+             * Collision detection to see if the player is overlapping with any climbable entities
+             * then stores them within the player for future joint creation
+             */
+            if (isXandY(bd1, bd2, Traci.class, EnhancedObstacleSprite.class) == 1) {
+                EnhancedObstacleSprite eos = (EnhancedObstacleSprite) idX(bd1, bd2, EnhancedObstacleSprite.class);
+
+                if (eos.getClimbable()) {
+                    collisionFlags.add(new CollisionFlag("addClimbingJoint", eos));
+                }
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -407,7 +418,7 @@ public class CollisionController implements ContactListener {
 
         if (isX(bd1, bd2, Traci.class) == 1) {
             Traci t = (Traci) idX(bd1, bd2, Traci.class);
-            if ((t.getSensorName().equals(fd2) && t != bd1) || (t.getSensorName().equals(fd1) && t != bd2)) {
+            if (((t.getSensorName().equals(fd2) && t != bd1) || (t.getSensorName().equals(fd1) && t != bd2) && t.getGroundedState().equals(GroundState.GROUNDED))) {
                 collisionFlags.push(new CollisionFlag("traciAirborne", bd1 instanceof Traci ? fix2 : fix1));
             }
         }
@@ -478,6 +489,18 @@ public class CollisionController implements ContactListener {
 //                collisionFlags.push(new Object[]{"addTorch", idX(bd1, bd2, Traci.class)});
         }
 
+        /**
+         * End contact collision detection to remove a climbable object from the player's
+         * repository of such, mainly to handle joint creation/destruction as its sister
+         * method in begin contact
+         */
+        if (isXandY(bd1, bd2, Traci.class, EnhancedObstacleSprite.class) == 1) {
+            EnhancedObstacleSprite eos = (EnhancedObstacleSprite) idX(bd1, bd2, EnhancedObstacleSprite.class);
+
+            if (eos.getClimbable()) {
+                collisionFlags.add(new CollisionFlag("removeClimbingJoint", eos));
+            }
+        }
     }
 
     /**

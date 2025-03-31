@@ -65,6 +65,7 @@ import edu.cornell.gdiac.util.*;
 import edu.cornell.gdiac.graphics.*;
 import edu.cornell.gdiac.physics2.*;
 import edu.cornell.cis3152.physics.level_player.enviromentals.*;
+import java.util.Set;
 import java.util.Stack;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -805,10 +806,25 @@ public class GameplayScene implements Screen {
         InputController input = InputController.getInstance();
 
         // Process actions in object model
-        avatar.setMovement(input.getHorizontal() * avatar.getForce());
-        soundEngine.avatarWalking(input.getHorizontal(), avatar.isGrounded());
+        avatar.setMovement(new Vector2(input.getHorizontal() * avatar.getForce(), input.getVertical() * avatar.getForce()));
+        soundEngine.avatarWalking(input.getHorizontal(), avatar.getGroundedState().equals(GroundState.GROUNDED));
         avatar.setJumping(input.didPrimary());
         avatar.setShooting(input.didSecondary());
+
+        if (!(avatar.getAttachedClimbables().isEmpty()) && !avatar.getHasTorch() && !avatar.getGroundedState().equals(GroundState.CLIMBING)
+             && input.getVertical() != 0) {
+            if (input.getVertical() > 0.1 || (input.getVertical() < -0.1 && !avatar.getGroundedState().equals(GroundState.GROUNDED))) {
+                avatar.setGroundedState(GroundState.CLIMBING);
+                avatar.getObstacle().getBody().setLinearVelocity(Vector2.Zero);
+                System.out.println("running");
+                avatar.applyClimbingPhysics();
+            }
+        }
+
+        if (avatar.getGroundedState().equals(GroundState.CLIMBING) && avatar.getAttachedClimbables().isEmpty()) {
+            avatar.setGroundedState(GroundState.AIRBORNE);
+            avatar.removeClimbingPhysics();
+        }
 
         if (input.getThrowing() && avatar.getHasTorch() && activeTorchJoint != null) {
             avatar.setHasTorch(false);
@@ -821,14 +837,17 @@ public class GameplayScene implements Screen {
         }
 
         avatar.applyForce();
+
         if (avatar.isJumping()) {
             SoundEffectManager sounds = SoundEffectManager.getInstance();
             soundEngine.jump();
         }
+
         if ((queueAddTorch && activeTorchJoint == null) || (activeTorchJoint != null &&
             torchOnRight != avatar.isFacingRight())) {
             joinTorchtoAvatar();
         }
+
         updateCamera();
     }
 
@@ -876,8 +895,15 @@ public class GameplayScene implements Screen {
                         avatar.setGroundedState(GroundState.AIRBORNE);
                     }
                     break;
+                case "addClimbingJoint":
+                    avatar.registerClimbable((EnhancedObstacleSprite) todo_action.getSubject());
+                    break;
+                case "removeClimbingJoint":
+                    avatar.removeClimbable((EnhancedObstacleSprite) todo_action.getSubject());
+                    break;
                 case "queueFailure":
                     queueFailure = true;
+                    break;
             }
         }
     }
@@ -1057,6 +1083,7 @@ public class GameplayScene implements Screen {
         activeTorchJoint = world.createJoint(avatar.attachTorchToAvatar(torch));
         torch.getObstacle().setSensor(true);
         queueAddTorch = false;
+        avatar.setHasTorch(true);
         torchOnRight = avatar.isFacingRight();
     }
 

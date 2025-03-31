@@ -81,7 +81,7 @@ public class Traci extends ObstacleSprite {
     private int shotLimit;
 
     /** The current horizontal movement of the character */
-    private float   movement;
+    private Vector2   movement;
     /** Which direction is the character facing */
     private boolean faceRight;
     /** How long until we can jump again */
@@ -121,7 +121,7 @@ public class Traci extends ObstacleSprite {
      *
      * @return the left/right movement of this character.
      */
-    public float getMovement() {
+    public Vector2 getMovement() {
         return movement;
     }
 
@@ -132,12 +132,12 @@ public class Traci extends ObstacleSprite {
      *
      * @param value the left/right movement of this character.
      */
-    public void setMovement(float value) {
+    public void setMovement(Vector2 value) {
         movement = value;
         // Change facing if appropriate
-        if (movement < 0) {
+        if (movement.x < 0) {
             faceRight = false;
-        } else if (movement > 0) {
+        } else if (movement.x > 0) {
             faceRight = true;
         }
     }
@@ -200,8 +200,8 @@ public class Traci extends ObstacleSprite {
      *
      * @return true if Traci is on the ground.
      */
-    public boolean isGrounded() {
-        return groundState.equals(GroundState.GROUNDED);
+    public GroundState getGroundedState() {
+        return groundState;
     }
 
     /**
@@ -414,43 +414,77 @@ public class Traci extends ObstacleSprite {
 
         Vector2 pos = obstacle.getPosition();
         float vx = obstacle.getVX();
+        float vy = obstacle.getVY();
         Body body = obstacle.getBody();
 
-        // Don't want to be moving. Damp out player motion
-        if (getMovement() == 0f) {
-            forceCache.set(-getDamping()*vx,0);
-            body.applyForce(forceCache,pos,true);
-        }
+        if (getGroundedState().equals(GroundState.CLIMBING)) {
+            System.out.println(getMovement());
 
-        // Velocity too high, clamp it
-        if (Math.abs(vx) >= getMaxSpeed()) {
-            obstacle.setVX(Math.signum(vx)*getMaxSpeed());
+            int count = attachedClimbables.size();
+            Vector2 avgDeltaV =Vector2.Zero;
+//            float avgAngle = 0;
+            for (EnhancedObstacleSprite eos : attachedClimbables) {
+                avgDeltaV.add(eos.getObstacle().getLinearVelocity());
+//                avgAngle += eos.getObstacle().getAngle();
+            }
+            avgDeltaV.scl(1f/count);
+            obstacle.setLinearVelocity(avgDeltaV);
+//            avgAngle /= (1f/count);
+//            obstacle.setAngle(avgAngle);
+
+//            if (getMovement().x == 0f) {
+//                obstacle.setVX(0);
+//            } else {
+//                System.out.println("running");
+//                forceCache.set((getMovement().x) * 1, 0);
+//                body.applyForce(forceCache, pos, true);
+//            }
+//            if (getMovement().y == 0f) {
+//                obstacle.setVY(0);
+//            } else {
+//                forceCache.set(0, (getMovement().y) * 1);
+//                body.applyForce(forceCache, pos, true);
+//            }
+//
+            forceCache.set(getMovement());
+            body.applyForce(forceCache,pos,true);
+
         } else {
-            forceCache.set(getMovement(),0);
-            body.applyForce(forceCache,pos,true);
+            // TYPICAL MOVEMENT LOGIC
+            getObstacle().getBody().setGravityScale(1);
+
+            if (getMovement().x == 0f) {
+                forceCache.set(-getDamping()*vx,0);
+                body.applyForce(forceCache,pos,true);
+            }
+
+            if (Math.abs(vx) >= getMaxSpeed()) {
+                obstacle.setVX(Math.signum(vx)*getMaxSpeed());
+            } else {
+                forceCache.set(getMovement().x,0);
+                body.applyForce(forceCache,pos,true);
+            }
+
+            if (isJumping()) {
+                forceCache.set(0, jump_force);
+                body.applyLinearImpulse(forceCache,pos,true);
+            }
         }
 
-        // Jump!
-        if (isJumping()) {
-            forceCache.set(0, jump_force);
-            body.applyLinearImpulse(forceCache,pos,true);
-        }
+
+    }
+
+    public void applyClimbingPhysics() {
+        getObstacle().getBody().setGravityScale(0);
+    }
+    public void removeClimbingPhysics() {
+        getObstacle().getBody().setGravityScale(1);
     }
 
     public JointDef attachTorchToAvatar(Torch t) {
         WeldJointDef jointDef = new WeldJointDef();
         Vector2 anchor = new Vector2(obstacle.getX(), obstacle.getY());
         jointDef.initialize(obstacle.getBody(), t.getObstacle().getBody(), anchor);
-        jointDef.collideConnected = false;
-        return jointDef;
-    }
-
-    public JointDef flipTorchJoint(World world, Body characterBody, Body torchBody) {
-        WeldJointDef jointDef = new WeldJointDef();
-        float flippedOffsetX = -1;
-        Vector2 newAnchor = new Vector2(characterBody.getPosition().x + flippedOffsetX, characterBody.getPosition().y + 9);
-
-        jointDef.initialize(characterBody, torchBody, newAnchor);
         jointDef.collideConnected = false;
         return jointDef;
     }
@@ -536,6 +570,9 @@ public class Traci extends ObstacleSprite {
     }
     public void removeClimbable(EnhancedObstacleSprite obj) {
         attachedClimbables.remove(obj);
+    }
+    public Set<EnhancedObstacleSprite> getAttachedClimbables () {
+        return attachedClimbables;
     }
 }
 
