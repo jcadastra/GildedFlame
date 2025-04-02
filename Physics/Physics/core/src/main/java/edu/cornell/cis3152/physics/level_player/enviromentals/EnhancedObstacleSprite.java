@@ -1,5 +1,6 @@
 package edu.cornell.cis3152.physics.level_player.enviromentals;
 
+import edu.cornell.gdiac.graphics.SpriteBatch;
 import edu.cornell.gdiac.graphics.SpriteMesh;
 import edu.cornell.gdiac.physics2.Obstacle;
 import edu.cornell.gdiac.physics2.ObstacleSprite;

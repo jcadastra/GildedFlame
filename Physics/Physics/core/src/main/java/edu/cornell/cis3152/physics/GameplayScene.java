@@ -65,7 +65,6 @@ import edu.cornell.gdiac.util.*;
 import edu.cornell.gdiac.graphics.*;
 import edu.cornell.gdiac.physics2.*;
 import edu.cornell.cis3152.physics.level_player.enviromentals.*;
-import java.util.Set;
 import java.util.Stack;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -538,7 +537,7 @@ public class GameplayScene implements Screen {
     }
 
     private void populateLevel() {}
-
+    private Rope temp;
     public void loadLevel(String levelName) {
         this.levelName = levelName;
         float units = height / bounds.height;
@@ -598,6 +597,7 @@ public class GameplayScene implements Screen {
                 float dep = ropeJson.getFloat("depth");
                 Rope rope = new Rope(pin1, pin2, dep, units, ropeJson);
                 rope.setTextures(texture, middle_texture);
+                temp = rope;
                 addSpriteGroup(rope);
             } else {
                 Vector2 pin1 = new Vector2(ropeJson.get("pin1").getFloat(0), ropeJson.get("pin1").getFloat(1));
@@ -693,7 +693,7 @@ public class GameplayScene implements Screen {
 
         Event<Integer,Vector2> event = new Event<Integer,Vector2>(button, button::getState,
             state -> state == 1, "button", eventAction);
-        eventHandler.registerEvent(event);
+//        eventHandler.registerEvent(event);
 
 
         EventAction<Float> eventAction2 = new EventAction<Float>(thing, "rotate", 0f, (float) (Math.PI), 4, movementFunc);
@@ -706,7 +706,9 @@ public class GameplayScene implements Screen {
             state -> state == 1, "button", eventAction);
 //        eventHandler.registerEvent(event);
 
-        addSpriteGroup(button);
+//        addSpriteGroup(button);
+
+
     }
     /**
      * Returns whether to process the update loop
@@ -792,6 +794,13 @@ public class GameplayScene implements Screen {
         updateTweenedMovementObjectsVec2(dt);
         updateTweenedMovementObjectsFloat(dt);
 
+        if (temp != null) {
+//            for (EnhancedObstacleSprite eos : temp.getTopEntities()) {
+//                System.out.println(eos.getObstacle().getAngle());
+//            }
+        }
+//        System.out.println("-----------");
+
         if (enemies != null) {
             for (Enemy e : enemies) {
                 e.update();
@@ -811,17 +820,16 @@ public class GameplayScene implements Screen {
         avatar.setJumping(input.didPrimary());
         avatar.setShooting(input.didSecondary());
 
-        if (!(avatar.getAttachedClimbables().isEmpty()) && !avatar.getHasTorch() && !avatar.getGroundedState().equals(GroundState.CLIMBING)
-             && input.getVertical() != 0) {
+        if (!(avatar.getBodyTouchedClimbables().isEmpty()) && !avatar.getHasTorch() && !avatar.getGroundedState().equals(GroundState.CLIMBING)
+             && input.didVertical()) {
             if (input.getVertical() > 0.1 || (input.getVertical() < -0.1 && !avatar.getGroundedState().equals(GroundState.GROUNDED))) {
                 avatar.setGroundedState(GroundState.CLIMBING);
                 avatar.getObstacle().getBody().setLinearVelocity(Vector2.Zero);
-                System.out.println("running");
                 avatar.applyClimbingPhysics();
             }
         }
 
-        if (avatar.getGroundedState().equals(GroundState.CLIMBING) && avatar.getAttachedClimbables().isEmpty()) {
+        if (avatar.getGroundedState().equals(GroundState.CLIMBING) && avatar.getBodyTouchedClimbables().isEmpty()) {
             avatar.setGroundedState(GroundState.AIRBORNE);
             avatar.removeClimbingPhysics();
         }
@@ -839,6 +847,7 @@ public class GameplayScene implements Screen {
         avatar.applyForce();
 
         if (avatar.isJumping()) {
+            avatar.setGroundedState(GroundState.AIRBORNE);
             SoundEffectManager sounds = SoundEffectManager.getInstance();
             soundEngine.jump();
         }
@@ -1157,8 +1166,8 @@ public class GameplayScene implements Screen {
             obj.draw(batch);
         }
 
-        if (fireController.getLitFires().size()!=0){
-            System.out.println("not FIRE!");
+        if (!fireController.getLitFires().isEmpty()){
+//            System.out.println("not FIRE!");
             for (Fire fire:fireController.getLitFires()){
                 particleEngine.draw(batch,fire);
             }

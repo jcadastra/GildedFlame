@@ -359,23 +359,31 @@ public class CollisionController implements ContactListener {
                 EnhancedObstacleSprite b = (EnhancedObstacleSprite) idX(bd1, bd2, EnhancedObstacleSprite.class);
                 int contactTime = sustainedContacts.get(key);
 
-                Vector2 delta = ((b.getObstacle().getBody().getPosition().cpy()).sub(f.getObstacle().getBody().getPosition()));
 
-                if (b.getMaterial().getFlammability() > 0 && b.getMaterial().surpassIgnitionTimer(contactTime) && !fireController.testIfFullyBurning(b)) {
+                Vector2 f_pos = f.getObstacle().getPosition().cpy();
+                Vector2 b_pos = b.getObstacle().getPosition().cpy();
+                Vector2 delta = (b_pos.cpy()).sub(f_pos);
+                if (b.getMaterial().surpassIgnitionTimer(contactTime) && !fireController.testIfFullyBurning(b)) {
 
-                    Vector2 f_pos = f.getObstacle().getPosition().cpy();
-                    Vector2 b_pos = b.getObstacle().getPosition().cpy();
-                    b_pos.sub(f_pos);
-                    b_pos.nor().scl(f.getRadius());
-                    fireController.lightAnew(b, delta.len() < b_pos.len() ? f_pos.add(delta) : f_pos.add(b_pos));
+                    Vector2 newFirePos;
+                    if (b.getName().contains("rope")) {
+                        newFirePos = b_pos;
+                    } else {
+                        b_pos.sub(f_pos);
+                        b_pos.nor().scl(f.getRadius());
+                        newFirePos = delta.len() < b_pos.len() ? f_pos.add(delta) : f_pos.add(b_pos);
+                    }
+
+                    fireController.lightAnew(b, newFirePos);
                     it.remove();
                 } else {
                     float modif;
                     if (Objects.equals(b.getMaterial().getName(), "rope")) {
-                        modif = (float) (1 / (Math.PI * Math.pow(delta.len(), 2.3) * 4));
+                        modif = (float) (1 / (Math.PI * Math.pow(delta.len(), 4) * 4));
                     } else {
                         modif = 1;
                     }
+//                    System.out.println(modif + ", " + contactTime + modif);
                     sustainedContacts.put(key, (int) (contactTime + modif));
                 }
             }

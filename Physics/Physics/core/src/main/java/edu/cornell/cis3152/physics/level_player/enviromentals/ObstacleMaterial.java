@@ -39,7 +39,7 @@ public class ObstacleMaterial {
 
             case "rope":
                 this.flammability = 0.05f;
-                this.burnTimerLimit = 600f;
+                this.burnTimerLimit = 80f;
                 this.ignitionTimerLimit = 8f;
                 break;
 
