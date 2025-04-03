@@ -111,7 +111,7 @@ public class Button extends ObstacleGroup {
         );
 
         prismaticJointDef.enableLimit = true;
-        float adjustedButtonDepth = (float) (height);
+        float adjustedButtonDepth = height;
 
         prismaticJointDef.upperTranslation = 0;
         prismaticJointDef.lowerTranslation = -adjustedButtonDepth / (doubleSided ? 1 : 2);
