@@ -129,6 +129,10 @@ public class CollisionController implements ContactListener {
                 return;
             }
 
+//            if (isXandY(bd1,bd2,Traci.class,EnhancedObstacleSprite.class) == 1) {
+//                collisionFlags.push(new CollisionFlag("debugKillObj", bd1 instanceof Traci ? bd2 : bd1));
+//            }
+
             if (isX(bd1, bd2, Traci.class) == 1) {
                 Traci t = (Traci) idX(bd1, bd2, Traci.class);
                 if ((t.getSensorName().equals(fd2) && t != bd1 && isGround(bd1)) || (t.getSensorName().equals(fd1) && t != bd2 && isGround(bd2))) {

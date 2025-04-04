@@ -48,20 +48,46 @@
   "bridges": [],
   "ropes" : [
     {
-      "type" : 1,
       "thickness" : 10,
       "piecelen" : 14,
-      "pin1" : [4.0, 11.0],
-      "pin2" : [28.0, 11.0],
+      "pin1" : [14.0, 11.0],
+      "pin2" : [27.0, 1.0],
       "depth" : 2.0
     },
     {
-      "type" : 2,
       "thickness" : 10,
       "piecelen" : 14,
-      "pin1" : [5.0, 12.0],
-      "bottom" : true,
-      "len" : 6.0
+      "pin1" : [14.0, 3.0],
+      "pin2" : [14.0, 13.0],
+      "depth" : 2.0
+    },
+    {
+      "thickness" : 10,
+      "piecelen" : 14,
+      "pin1" : [4.0, 13.0],
+      "pin2" : [28.0, 13.0],
+      "depth" : 2.0
+    },
+    {
+      "thickness" : 10,
+      "piecelen" : 14,
+      "pin1" : [11.0, 12.0],
+      "pin2" : [14.0, 13.0],
+      "depth" : 2.0
+    },
+    {
+      "thickness" : 10,
+      "piecelen" : 14,
+      "pin1" : [2.0, 16.0],
+      "pin2" : [32.0, 0.0],
+      "depth" : 2.0
+    },
+    {
+      "thickness" : 10,
+      "piecelen" : 14,
+      "pin1" : [3.0, 11.0],
+      "pin2" : [3.0, 11.5],
+      "depth" : 2.0
     }
   ],
   "traci": {

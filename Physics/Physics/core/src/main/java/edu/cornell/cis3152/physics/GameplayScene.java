@@ -591,22 +591,13 @@ public class GameplayScene implements Screen {
         Texture middle_texture = directory.getEntry( "platform-rope-mid", Texture.class );
         JsonValue ropes = levelData.get("ropes");
         for (JsonValue ropeJson : ropes) {
-            if (ropeJson.getInt("type") == 1) {
-                Vector2 pin1 = new Vector2(ropeJson.get("pin1").getFloat(0), ropeJson.get("pin1").getFloat(1));
-                Vector2 pin2 = new Vector2(ropeJson.get("pin2").getFloat(0), ropeJson.get("pin2").getFloat(1));
-                float dep = ropeJson.getFloat("depth");
-                Rope rope = new Rope(pin1, pin2, dep, units, ropeJson);
-                rope.setTextures(texture, middle_texture);
-                temp = rope;
-                addSpriteGroup(rope);
-            } else {
-                Vector2 pin1 = new Vector2(ropeJson.get("pin1").getFloat(0), ropeJson.get("pin1").getFloat(1));
-                boolean bottom = ropeJson.getBoolean("bottom");
-                float len = ropeJson.getFloat("len");
-                Rope rope = new Rope(pin1, bottom, len, units, ropeJson);
-                rope.setTextures(texture, middle_texture);
-                addSpriteGroup(rope);
-            }
+            Vector2 pin1 = new Vector2(ropeJson.get("pin1").getFloat(0), ropeJson.get("pin1").getFloat(1));
+            Vector2 pin2 = new Vector2(ropeJson.get("pin2").getFloat(0), ropeJson.get("pin2").getFloat(1));
+            float dep = ropeJson.getFloat("depth");
+            Rope rope = new Rope(pin1, pin2, dep, units, ropeJson);
+            rope.setTextures(texture, middle_texture);
+            temp = rope;
+            addSpriteGroup(rope);
         }
 
         // Create spinners
@@ -912,6 +903,10 @@ public class GameplayScene implements Screen {
                     break;
                 case "queueFailure":
                     queueFailure = true;
+                    break;
+                case "debugKillObj":
+                    // not safe operation, for now will kill game on reload
+                    world.destroyBody(todo_action.getSubject().getObstacle().getBody());
                     break;
             }
         }

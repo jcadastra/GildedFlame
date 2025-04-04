@@ -31,7 +31,9 @@ import edu.cornell.gdiac.math.PathFactory;
 import edu.cornell.gdiac.physics2.*;
 import edu.cornell.gdiac.util.RandomGenerator;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -495,8 +497,10 @@ public class Traci extends ObstacleSprite {
 
     public void applyClimbingPhysics() {
         getObstacle().getBody().setGravityScale(0);
+        applyWeightToClimbable(bodyTouchedClimbables);
     }
     public void removeClimbingPhysics() {
+        removeWeightToClimbable(bodyTouchedClimbables);
         getObstacle().getBody().setGravityScale(1);
     }
 
@@ -585,27 +589,42 @@ public class Traci extends ObstacleSprite {
     }
 
     public void registerClimbable(EnhancedObstacleSprite obj) {
-        if (!bodyTouchedClimbables.contains(obj)) {
+        if (!bodyTouchedClimbables.contains(obj) && groundState.equals(GroundState.CLIMBING) ) {
+            applyWeightToClimbable(new HashSet<>(List.of(obj)));
+        }
+        bodyTouchedClimbables.add(obj);
+    }
+    public void removeClimbable(EnhancedObstacleSprite obj) {
+        if (bodyTouchedClimbables.contains(obj) && groundState.equals(GroundState.CLIMBING)) {
+            removeWeightToClimbable(new HashSet<>(List.of(obj)));
+        }
+        bodyTouchedClimbables.remove(obj);
+    }
+    private void applyWeightToClimbable(Set<EnhancedObstacleSprite> set) {
+        System.out.println("adding weight to # objects -> " + set.size());
+        for (EnhancedObstacleSprite obj : set) {
+            System.out.println("appyly weight");
             System.out.println(obj +" pre -> " +obj.getObstacle().getDensity());
             System.out.println(obj +" pre -> " +obj.getObstacle().getMass());
-            bodyTouchedClimbables.add(obj);
             Fixture fixture = obj.getObstacle().getBody().getFixtureList().first();
+            //TODO: fix with updated masses later
             float currentDensity = fixture.getDensity();
-            float adjustment = (getObstacle().getMass() * .10f);
+            float adjustment = (getObstacle().getMass() * .15f);
             fixture.setDensity(currentDensity + adjustment);
             obj.getObstacle().getBody().resetMassData();
         }
     }
-    public void removeClimbable(EnhancedObstacleSprite obj) {
-        if (bodyTouchedClimbables.contains(obj)) {
+    private void removeWeightToClimbable(Set<EnhancedObstacleSprite> set) {
+        System.out.println("removing weight to # objects -> " + set.size());
+        for (EnhancedObstacleSprite obj : set) {
+            System.out.println("remove weight");
             Fixture fixture = obj.getObstacle().getBody().getFixtureList().first();
             float currentDensity = fixture.getDensity();
-            float adjustment = (getObstacle().getMass() * .10f);
+            float adjustment = (getObstacle().getMass() * .15f);
             fixture.setDensity(currentDensity - adjustment);
             obj.getObstacle().getBody().resetMassData();
             System.out.println(obj + " post -> " +obj.getObstacle().getDensity());
             System.out.println(obj +" post -> " +obj.getObstacle().getMass());
-            bodyTouchedClimbables.remove(obj);
         }
     }
     public Set<EnhancedObstacleSprite> getBodyTouchedClimbables() {

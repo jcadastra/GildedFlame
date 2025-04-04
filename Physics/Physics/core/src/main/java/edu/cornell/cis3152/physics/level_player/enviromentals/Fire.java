@@ -44,14 +44,15 @@ public class Fire extends ObstacleSprite {
         obstacle.setPosition(point);
         obstacle.setUserData( this );
         obstacle.setSensor(true);
-        obstacle.setDensity(0.0000001f);
+        obstacle.setDensity(0.00000001f);
         obstacle.setMass(0.0000001f);
         obstacle.setInertia(0.0000001f);
         obstacle.setPhysicsUnits(units);
         obstacle.setName("fire");
-        obstacle.setBodyType( BodyType.DynamicBody );
+//        obstacle.setBodyType( BodyType.DynamicBody );
         mesh.set( -radius, -radius, 2 * radius, 2 * radius );
         debug = Color.RED;
+        obstacle.setGravityScale(0.001f);
     }
 
     // cleans up the fire
