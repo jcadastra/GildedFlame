@@ -142,24 +142,30 @@ public class Rope extends ObstacleGroup {
         ArrayList<EnhancedObstacleSprite> anchorList = new ArrayList<>();
 
         // Create left (start) anchor.
-        WheelObstacle anchorDef = new WheelObstacle(pin1.x / units, pin1.y / units, ropeThickness / units);
-        anchorDef.setBodyType(BodyType.StaticBody);
-        anchorDef.setMass(0.1f);
-        anchorDef.setDensity(1f);
-        anchorDef.setFixedRotation(false);
-        anchorDef.setPhysicsUnits(units);
-        anchorDef.setSensor(true);
-        anchorDef.setName("ropeAnchorLeft");
-        EnhancedObstacleSprite leftAnchor = new EnhancedObstacleSprite(anchorDef);
+        WheelObstacle leftAnchorObs = new WheelObstacle(pin1.x / units, pin1.y / units, ropeThickness / units);
+        leftAnchorObs.setBodyType(BodyType.StaticBody);
+        leftAnchorObs.setMass(0.1f);
+        leftAnchorObs.setDensity(1f);
+        leftAnchorObs.setFixedRotation(false);
+        leftAnchorObs.setPhysicsUnits(units);
+        leftAnchorObs.setSensor(true);
+        leftAnchorObs.setName("ropeAnchorLeft");
+        EnhancedObstacleSprite leftAnchor = new EnhancedObstacleSprite(leftAnchorObs);
         leftAnchor.setMaterial(new ObstacleMaterial("rope", data.get(1)));
         leftAnchor.setDebugColor(Color.GREEN);
         sprites.add(leftAnchor);
         anchorList.add(leftAnchor);
 
         // Create right (end) anchor.
-        anchorDef.setPosition(pin2.x / units, pin2.y / units);
-        anchorDef.setName("ropeAnchorRight");
-        EnhancedObstacleSprite rightAnchor = new EnhancedObstacleSprite(anchorDef);
+        WheelObstacle rightAnchorObs = new WheelObstacle(pin2.x / units, pin2.y / units, ropeThickness / units);
+        rightAnchorObs.setBodyType(BodyType.StaticBody);
+        rightAnchorObs.setMass(0.1f);
+        rightAnchorObs.setDensity(1f);
+        rightAnchorObs.setFixedRotation(false);
+        rightAnchorObs.setPhysicsUnits(units);
+        rightAnchorObs.setSensor(true);
+        rightAnchorObs.setName("ropeAnchorRight");
+        EnhancedObstacleSprite rightAnchor = new EnhancedObstacleSprite(rightAnchorObs);
         rightAnchor.setMaterial(new ObstacleMaterial("rope", data.get(1)));
         rightAnchor.setDebugColor(Color.GREEN);
         sprites.add(rightAnchor);
