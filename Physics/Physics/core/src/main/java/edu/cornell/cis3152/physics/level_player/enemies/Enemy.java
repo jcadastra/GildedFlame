@@ -8,6 +8,7 @@ import edu.cornell.cis3152.physics.level_player.enviromentals.Fire;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Lighting;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.graphics.SpriteBatch;
+import edu.cornell.gdiac.graphics.SpriteSheet;
 import edu.cornell.gdiac.math.Path2;
 import edu.cornell.gdiac.math.PathFactory;
 import edu.cornell.gdiac.physics2.BoxObstacle;
@@ -27,6 +28,7 @@ public class Enemy extends ObstacleSprite {
     // Instance attributes
     private Color sensorColor;
     private String sensorName;
+    private int frameCount;
     /**
      * Which direction is the character facing
      */
@@ -65,8 +67,24 @@ public class Enemy extends ObstacleSprite {
     private Fixture fixture;
     private boolean justCollided = false;
 
+    private float units;
+    public float getUnits(){
+        return units;
+    }
+    public float getWidth() {
+        return width;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
+
+    private SpriteSheet enemySprite;
+
     public Enemy(int id, float units, JsonValue data, AssetDirectory directory, Vector2 position) {
         this.directory = directory;
+        this.units = units;
         this.id = id;
         this.data = data;
         this.state = EnemyState.OUT_OF_LIGHT;
@@ -225,6 +243,9 @@ public class Enemy extends ObstacleSprite {
         speed = value;
     }
 
+    public void processCD(float frame){
+
+    }
     public void update() {
         updateRayCast();
         switch (state) {
@@ -451,11 +472,24 @@ public class Enemy extends ObstacleSprite {
         obstacle.getBody().setLinearVelocity(0, currY);
         obstacle.setBodyType(BodyDef.BodyType.StaticBody);
     }
-
     @Override
     public void draw(SpriteBatch batch) {
-        super.draw(batch);
+//        if (enemySprite == null){
+//            System.out.println("enemySprite = null");
+//        }
+//        if (enemySprite != null && getState() == EnemyState.CD) {
+//            System.out.println("RAH");
+//            // Calculate drawing position (you may need to adjust these based on your coordinate system)
+//            float drawX = obstacle.getX() - getWidth() / 2f;
+//            float drawY = obstacle.getY() - getHeight() / 2f;
+//            batch.draw(enemySprite, drawX, drawY, getWidth(), getHeight());
+//        } else {
+//            // Default drawing (or call the superclass draw)
+            super.draw(batch);
+//        }
     }
+
+
 
     public void createSensor() {
         Vector2 sensorCenter = new Vector2(0, -height / 2);

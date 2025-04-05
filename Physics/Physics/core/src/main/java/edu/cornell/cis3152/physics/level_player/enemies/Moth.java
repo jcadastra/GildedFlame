@@ -9,16 +9,34 @@ import edu.cornell.cis3152.physics.level_player.enviromentals.Lighting;
 import edu.cornell.cis3152.physics.level_player.player.Torch;
 import edu.cornell.cis3152.physics.level_player.player.Traci;
 import edu.cornell.gdiac.assets.AssetDirectory;
+import edu.cornell.gdiac.graphics.SpriteSheet;
+import edu.cornell.gdiac.physics2.ObstacleSprite;
 
 public class Moth extends Enemy {
+    /**
+     * Distance in which enemy will become angry
+     */
     float DETECTION_DISTANCE = 5;
 
 
+    /**
+     *
+     * @param id
+     * @param units
+     * @param value
+     * @param directory
+     * @param position
+     */
     public Moth(int id, float units, JsonValue value, AssetDirectory directory, Vector2 position) {
         super(id, units, value, directory, position);
         rr = null;
     }
 
+    /**
+     * in_light() is the state of the moth upon contact with the light.
+     * If the moth detects a torch entity, then it becomes intranced.
+     * If the moth detects a player entity, then it changes into a cooldown, which will lead to an angry state.
+     */
     @Override
     public void in_light() {
         resetAttackTimer();
@@ -39,9 +57,6 @@ public class Moth extends Enemy {
 
     @Override
     public void cd() {
-//        System.out.println("cd : " + getAttackTimer());
-        Texture texture = directory.getEntry("platform-mothCD", Texture.class);
-        setTexture(texture);
         if (getAttackTimer() == 0) {
             setState(EnemyState.ATTACK);
         } else {
@@ -49,6 +64,7 @@ public class Moth extends Enemy {
             decrementAttackTimer();
         }
     }
+
 
     @Override
     public void attack() {

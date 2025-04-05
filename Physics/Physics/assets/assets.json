@@ -147,14 +147,50 @@
         "minfilter": "linear mipmap linear",
         "magfilter": "linear mipmap linear"
       },
-      "platform-totem01": {
-        "file" : "platform/totem.png",
+      "platform-totemLIGHTANIMATION": {
+        "file" : "platform/totemInLightAnimation.png",
         "mipmaps" : true,
         "minfilter": "linear mipmap linear",
         "magfilter": "linear mipmap linear"
       },
-      "platform-totem02": {
-        "file" : "platform/totemLight.png",
+      "platform-totemINLIGHT": {
+        "file" : "platform/totemInLight.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+      "platform-totemLIGHTLEFT": {
+        "file" : "platform/totemLightLeft.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+      "platform-totemLIGHTRIGHT": {
+        "file" : "platform/totemLightRight.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+      "platform-totemDARKLEFT": {
+        "file" : "platform/totemDarkLeft.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+      "platform-totemDARKRIGHT": {
+        "file" : "platform/totemDarkRight.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+      "platform-totemOUTOFLIGHT": {
+        "file" : "platform/totemOutOfLight.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+      "platform-totemTEST": {
+        "file" : "platform/totemLIGHT.png",
         "mipmaps" : true,
         "minfilter": "linear mipmap linear",
         "magfilter": "linear mipmap linear"

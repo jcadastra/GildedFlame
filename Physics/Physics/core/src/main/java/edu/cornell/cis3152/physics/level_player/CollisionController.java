@@ -417,6 +417,7 @@ public class CollisionController implements ContactListener {
 
             if (totem.getState() == EnemyState.IN_LIGHT) {
                 totem.resetFreeze();
+                totem.enemySprite = null;
                 totem.setState(Enemy.EnemyState.CD);
             }
         }
