@@ -17,73 +17,33 @@ import edu.cornell.gdiac.physics2.ObstacleSprite;
 public class Enemy extends ObstacleSprite {
 
 
-    private final JsonValue data;
+    protected static AssetDirectory directory;
+    protected final JsonValue data;
     private final int id;
     private final float width;
     private final float height;
+    private final float size;
     public SpriteBatch batch;
     public RaycastResult rr;
-    protected AssetDirectory directory;
+    /**
+     * Which direction is the character facing
+     */
+    protected boolean faceRight;
+    protected boolean justCollided;
     private Path2 sensorOutline;
     // Instance attributes
     private Color sensorColor;
     private String sensorName;
     private int frameCount;
-    /**
-     * Which direction is the character facing
-     */
-    private boolean faceRight;
-
-    /**
-     * Time it takes for a totem to transition from a CD state to a OUT_OF_LIGHT state.
-     */
-    private int freezeTimer;
-
-    /**
-     * Time it takes for a moth to transition from a CD state to an ATTACK state.
-     */
-    private int attackTimer;
-
-    /**
-     * Time it takes between moth attacks.
-     */
-    private int attackAnimationTimer;
-
-    /**
-     * Time it takes to smother the torch.
-     */
-    private int smotherTimer;
-
-    /**
-     * Time it takes for the moth to come back alive.
-     */
-    private int dazedTimer;
     private EnemyState state;
     private boolean isGrounded = false;
     private float x;
     private float y;
     private float speed;
-    private final float size;
-    private Fixture fixture;
-    private boolean justCollided = false;
-
-    private float units;
-    public float getUnits(){
-        return units;
-    }
-    public float getWidth() {
-        return width;
-    }
-
-    public float getHeight() {
-        return height;
-    }
-
-
-    private SpriteSheet enemySprite;
+    private final float units;
 
     public Enemy(int id, float units, JsonValue data, AssetDirectory directory, Vector2 position) {
-        this.directory = directory;
+        Enemy.directory = directory;
         this.units = units;
         this.id = id;
         this.data = data;
@@ -112,6 +72,18 @@ public class Enemy extends ObstacleSprite {
 
 
         mesh.set(-size / 2.0f, -size / 2.0f, size, size);
+    }
+
+    public float getUnits() {
+        return units;
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public float getHeight() {
+        return height;
     }
 
     /**
@@ -173,67 +145,6 @@ public class Enemy extends ObstacleSprite {
         state = value;
     }
 
-    public int getFreezeTimer() {
-        return freezeTimer;
-    }
-
-    public void decrementFreezeTimer() {
-        freezeTimer--;
-    }
-
-    public void resetFreeze() {
-        freezeTimer = data.getInt("freezeTimer");
-    }
-
-
-    public int getAttackTimer() {
-        return attackTimer;
-    }
-
-    public void decrementAttackTimer() {
-        attackTimer--;
-    }
-
-    public void resetAttackTimer() {
-        attackTimer = data.getInt("attackTimer");
-    }
-
-    public int getAttackAnimationTimer() {
-        return attackAnimationTimer;
-    }
-
-    public void decrementAttackAnimationTimer() {
-        attackAnimationTimer--;
-    }
-
-    public void resetAttackAnimationTimer() {
-        attackAnimationTimer = data.getInt("attackAnimationTimer");
-    }
-
-
-    public int getSmotherTimer() {
-        return smotherTimer;
-    }
-
-    public void decrementSmotherTimer() {
-        smotherTimer--;
-    }
-
-    public void resetSmotherTimer() {
-        smotherTimer = data.getInt("smotherTimer");
-    }
-
-    public int getDazedTimer() {
-        return dazedTimer;
-    }
-
-    public void decrementDazedTimer() {
-        dazedTimer--;
-    }
-
-    public void resetDazedTimer() {
-        dazedTimer = data.getInt("dazedTimer");
-    }
 
     public float getSpeed() {
         return speed;
@@ -243,9 +154,10 @@ public class Enemy extends ObstacleSprite {
         speed = value;
     }
 
-    public void processCD(float frame){
+    public void processCD(float frame) {
 
     }
+
     public void update() {
         updateRayCast();
         switch (state) {
@@ -368,7 +280,6 @@ public class Enemy extends ObstacleSprite {
     }
 
     public RaycastResult raycastInLight() {
-//        System.out.println("Using new raycast");
 
         Vector2 pos = obstacle.getBody().getPosition();
         Vector2 start = new Vector2(pos.x, pos.y - height / 4);
@@ -472,23 +383,11 @@ public class Enemy extends ObstacleSprite {
         obstacle.getBody().setLinearVelocity(0, currY);
         obstacle.setBodyType(BodyDef.BodyType.StaticBody);
     }
+
     @Override
     public void draw(SpriteBatch batch) {
-//        if (enemySprite == null){
-//            System.out.println("enemySprite = null");
-//        }
-//        if (enemySprite != null && getState() == EnemyState.CD) {
-//            System.out.println("RAH");
-//            // Calculate drawing position (you may need to adjust these based on your coordinate system)
-//            float drawX = obstacle.getX() - getWidth() / 2f;
-//            float drawY = obstacle.getY() - getHeight() / 2f;
-//            batch.draw(enemySprite, drawX, drawY, getWidth(), getHeight());
-//        } else {
-//            // Default drawing (or call the superclass draw)
-            super.draw(batch);
-//        }
+        super.draw(batch);
     }
-
 
 
     public void createSensor() {

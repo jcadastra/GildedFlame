@@ -486,7 +486,7 @@ public class spinner_layout extends GameplayScene implements ContactListener {
 
                 moth.setTexture(texture);
                 moth.setState(Enemy.EnemyState.IN_LIGHT);
-                moth.resetAttackTimer();
+//                moth.resetAttackTimer();
             }
 
 

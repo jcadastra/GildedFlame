@@ -126,7 +126,7 @@ public class legacy_CollisionController implements ContactListener {
 
                 moth.setTexture(texture);
                 moth.setState(Enemy.EnemyState.IN_LIGHT);
-                moth.resetAttackTimer();
+//                moth.resetAttackTimer();
             }
 
 
