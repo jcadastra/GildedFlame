@@ -24,10 +24,13 @@
  */
 package edu.cornell.cis3152.physics;
 
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.utils.ObjectSet;
 import edu.cornell.cis3152.physics.level_player.CollisionController;
+import edu.cornell.cis3152.physics.level_player.EventHandler;
 import edu.cornell.cis3152.physics.level_player.FireController;
 import edu.cornell.cis3152.physics.level_player.LightController;
 import edu.cornell.cis3152.physics.level_player.enemies.Enemy;
@@ -35,8 +38,14 @@ import edu.cornell.cis3152.physics.level_player.enemies.Moth;
 import edu.cornell.cis3152.physics.level_player.enemies.Totem;
 import edu.cornell.cis3152.physics.level_player.player.Torch;
 import edu.cornell.cis3152.physics.level_player.player.Traci;
+import edu.cornell.cis3152.physics.level_player.player.Traci.GroundState;
+import edu.cornell.cis3152.physics.level_player.utils.CollisionFlag;
+import edu.cornell.cis3152.physics.level_player.utils.EventAction;
+import edu.cornell.cis3152.physics.level_player.utils.Event;
+import edu.cornell.cis3152.physics.level_player.utils.FireFlag;
 import edu.cornell.cis3152.physics.level_player.utils.ObstacleGroup;
 
+import edu.cornell.cis3152.physics.level_player.utils.TweenElement;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -56,8 +65,11 @@ import edu.cornell.gdiac.util.*;
 import edu.cornell.gdiac.graphics.*;
 import edu.cornell.gdiac.physics2.*;
 import edu.cornell.cis3152.physics.level_player.enviromentals.*;
+import java.util.Optional;
 import java.util.Stack;
-
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Base class for a world-specific controller.
@@ -173,7 +185,10 @@ public class GameplayScene implements Screen {
     private Joint activeFireJoint;
     protected CollisionController contactListener;
     protected FireController fireController;
+    protected EventHandler eventHandler;
     protected SoundEngine soundEngine;
+    protected PooledList<TweenElement<Float>> tweenedMovmentObjectsFloat;
+    protected PooledList<TweenElement<Vector2>> tweenedMovmentObjectsVec2;
 
     protected LightController lightController;
 
@@ -278,17 +293,6 @@ public class GameplayScene implements Screen {
     }
 
     /**
-     * Returns the sprite batch associated with this scene
-     *
-     * The canvas is shared across all scenes.
-     *
-     * @return the sprite batch associated with this scene
-     */
-    public SpriteBatch getSpriteBatch() {
-        return batch;
-    }
-
-    /**
      * Sets the sprite batch associated with this scene
      *
      * The sprite batch is shared across all scenes.
@@ -318,7 +322,10 @@ public class GameplayScene implements Screen {
         JsonValue defaults = constants.get("world");
         fireController = new FireController();
         contactListener = new CollisionController(directory, fireController);
+        this.eventHandler = new EventHandler();
         this.soundEngine = soundEngine;
+        tweenedMovmentObjectsVec2 = new PooledList<>();
+        tweenedMovmentObjectsFloat = new PooledList<>();
 
         // pull out sounds
         volume = constants.getFloat("volume", 1.0f);
@@ -352,6 +359,17 @@ public class GameplayScene implements Screen {
     }
 
     /**
+     * Returns the sprite batch associated with this scene
+     *
+     * The canvas is shared across all scenes.
+     *
+     * @return the sprite batch associated with this scene
+     */
+    public SpriteBatch getSpriteBatch() {
+        return batch;
+    }
+
+    /**
      * Disposes of all (non-static) resources allocated to this mode.
      */
     public void dispose() {
@@ -364,6 +382,7 @@ public class GameplayScene implements Screen {
 
         soundEngine.dispose();
         lightController.dispose();
+        eventHandler.dispose();
         sprites.clear();
         addQueue.clear();
         world.dispose();
@@ -465,6 +484,10 @@ public class GameplayScene implements Screen {
             fireController.resetStorage();
         }
 
+        if (eventHandler != null) {
+            eventHandler.dispose();
+        }
+
         if (lightController != null){
             lightController.dispose();}
 
@@ -515,7 +538,7 @@ public class GameplayScene implements Screen {
     }
 
     private void populateLevel() {}
-
+    private Rope temp;
     public void loadLevel(String levelName) {
         this.levelName = levelName;
         float units = height / bounds.height;
@@ -568,22 +591,16 @@ public class GameplayScene implements Screen {
         texture = directory.getEntry( "platform-rope-end", Texture.class );
         Texture middle_texture = directory.getEntry( "platform-rope-mid", Texture.class );
         JsonValue ropes = levelData.get("ropes");
+        int ropeId = 0;
         for (JsonValue ropeJson : ropes) {
-            if (ropeJson.getInt("type") == 1) {
-                Vector2 pin1 = new Vector2(ropeJson.get("pin1").getFloat(0), ropeJson.get("pin1").getFloat(1));
-                Vector2 pin2 = new Vector2(ropeJson.get("pin2").getFloat(0), ropeJson.get("pin2").getFloat(1));
-                float dep = ropeJson.getFloat("depth");
-                Rope rope = new Rope(pin1, pin2, dep, units, ropeJson);
-                rope.setTextures(texture, middle_texture);
-                addSpriteGroup(rope);
-            } else {
-                Vector2 pin1 = new Vector2(ropeJson.get("pin1").getFloat(0), ropeJson.get("pin1").getFloat(1));
-                boolean bottom = ropeJson.getBoolean("bottom");
-                float len = ropeJson.getFloat("len");
-                Rope rope = new Rope(pin1, bottom, len, units, ropeJson);
-                rope.setTextures(texture, middle_texture);
-                addSpriteGroup(rope);
-            }
+            Vector2 pin1 = new Vector2(ropeJson.get("pin1").getFloat(0), ropeJson.get("pin1").getFloat(1));
+            Vector2 pin2 = new Vector2(ropeJson.get("pin2").getFloat(0), ropeJson.get("pin2").getFloat(1));
+            float dep = ropeJson.getFloat("depth");
+            Rope rope = new Rope(pin1, pin2, dep, units, ropeJson);
+            rope.setTextures(texture, middle_texture);
+            temp = rope;
+            addSpriteGroup(rope);
+            ropeId++;
         }
 
         // Create spinners
@@ -652,9 +669,43 @@ public class GameplayScene implements Screen {
             enemies.add(moth);
         }
 
-
+        // SAMPLE BUTTON CODE BELOW::
+//        Button button = new Button(new Vector2(24,2.75f), 0, true, true, units);
+//        BoxObstacle temp = new BoxObstacle(5,5,5,.5f);
+//        temp.setPhysicsUnits(units);
+//        temp.setName("floor");
+//        ObstacleSprite thing = new ObstacleSprite(temp);
+//        thing.getObstacle().setBodyType(BodyType.KinematicBody);
+//        thing.getObstacle().setFriction(.5f);
+////        addSprite(thing);
+//
+//        Button button = new Button(new Vector2(20,3.75f), 0, false, false, units);
+////        Array<Object> actionArray = new Array<>(new Object[]{thing, "move", new Vector2(8, 10), new Vector2(10, 10)});
+//        Function<Float, Float> movementFunc = Interpolation.swing::apply;
+//        EventAction<Vector2> eventAction = new EventAction<Vector2>(thing, "move", new Vector2(8, 10), new Vector2(16, 5), 4f, movementFunc);
+////        Object[] actionArray = new Object[]{thing, "rotate", 0f, (float) (Math.PI), 300, movementFunc};
+////        Object[] actionArray = new Object[]{thing, "move", new Vector2(8, 10), new Vector2(16, 5), 100, movementFunc};
+//
+//        Event<Integer,Vector2> event = new Event<Integer,Vector2>(button, button::getState,
+//            state -> state == 1, "button", eventAction);
+////        eventHandler.registerEvent(event);
+//
+//
+//        EventAction<Float> eventAction2 = new EventAction<Float>(thing, "rotate", 0f, (float) (Math.PI), 4, movementFunc);
+//        Event<Integer,Float> event2 = new Event<Integer, Float>(button, button::getState,
+//            state -> state == 1, "button", eventAction2);
+//        eventHandler.registerEvent(event2);
+//
+//        eventAction = new EventAction<>("spawn");
+//        event = new Event<Integer,Vector2>(button, button::getState,
+//            state -> state == 1, "button", eventAction);
+////        eventHandler.registerEvent(event);
+//
+////        addSpriteGroup(button);
+//
+//        Ladder tempLadder = new Ladder(3,3,5f, units);
+////        addSprite(tempLadder);
     }
-
     /**
      * Returns whether to process the update loop
      *
@@ -735,27 +786,47 @@ public class GameplayScene implements Screen {
         soundEngine.tendToMusicLoop();
         supplementaryCollisionActions();
         supplementaryFireActions();
+        supplementaryEventActions(dt);
+        updateTweenedMovementObjectsVec2(dt);
+        updateTweenedMovementObjectsFloat(dt);
+
+        if (temp != null) {
+//            for (EnhancedObstacleSprite eos : temp.getTopEntities()) {
+//                System.out.println(eos.getObstacle().getAngle());
+//            }
+        }
+//        System.out.println("-----------");
+
         if (enemies != null) {
             for (Enemy e : enemies) {
                 e.update();
             }
         }
+
         torch.update();
         fireController.update();
+        eventHandler.update();
         contactListener.sustainedContact();
 
         InputController input = InputController.getInstance();
 
         // Process actions in object model
-        avatar.setMovement(input.getHorizontal() * avatar.getForce());
-        soundEngine.avatarWalking(input.getHorizontal(), avatar.isGrounded());
+        avatar.setMovement(new Vector2(input.getHorizontal() * avatar.getForce(), input.getVertical() * avatar.getForce()));
+        soundEngine.avatarWalking(input.getHorizontal(), avatar.getGroundedState().equals(GroundState.GROUNDED));
         avatar.setJumping(input.didPrimary());
         avatar.setShooting(input.didSecondary());
 
-        // Add a bullet if we fire
-        /*if (avatar.isShooting()) {
-            createBullet();
-        }*/
+        if (!(avatar.getBodyTouchedClimbables().isEmpty()) && !avatar.getHasTorch() && !avatar.getGroundedState().equals(GroundState.CLIMBING)
+             && input.didVertical()) {
+            avatar.setGroundedState(GroundState.CLIMBING);
+            avatar.getObstacle().getBody().setLinearVelocity(Vector2.Zero);
+            avatar.applyClimbingPhysics();
+        }
+
+        if (avatar.getGroundedState().equals(GroundState.CLIMBING) && avatar.getBodyTouchedClimbables().isEmpty()) {
+            avatar.setGroundedState(GroundState.AIRBORNE);
+            avatar.removeClimbingPhysics();
+        }
 
         if (input.getThrowing() && avatar.getHasTorch() && activeTorchJoint != null) {
             avatar.setHasTorch(false);
@@ -763,18 +834,23 @@ public class GameplayScene implements Screen {
             activeTorchJoint = null;
             torch.applyThrowForce(avatar.isFacingRight() ? 1 : -1);
             torch.resetPickUp();
+            torch.getObstacle().setSensor(false);
             soundEngine.throwTorch();
         }
 
         avatar.applyForce();
+
         if (avatar.isJumping()) {
+            avatar.setGroundedState(GroundState.AIRBORNE);
             SoundEffectManager sounds = SoundEffectManager.getInstance();
             soundEngine.jump();
         }
+
         if ((queueAddTorch && activeTorchJoint == null) || (activeTorchJoint != null &&
             torchOnRight != avatar.isFacingRight())) {
             joinTorchtoAvatar();
         }
+
         updateCamera();
     }
 
@@ -813,55 +889,291 @@ public class GameplayScene implements Screen {
         lightController.updateCamera(dx,dy);
     }
 
+    /**
+     * function that pulls the collision flags from the collision controller and porcesses them as needed
+     * mainly comprises items that cannot bbe done within the cotnroller or are expected in the
+     * super, like destroying joints
+     */
     private void supplementaryCollisionActions() {
-        Stack<Object[]> todos = contactListener.getCollisionFlags();
+        Stack<CollisionFlag> todos = contactListener.getCollisionFlags();
         while ( !todos.isEmpty() ) {
-            Object[] todo_action = todos.pop();
-            switch ((String) todo_action[0]) {
+            CollisionFlag todo_action = todos.pop();
+            switch (todo_action.getName()) {
                 case "addTorch":
                     if (torch.canBePickedUp()) {
                         queueAddTorch = true;
                     }
                     break;
                 case "traciGrounded":
-                    sensorFixtures.add((Fixture) todo_action[1]);
+                    if (avatar.getGroundedState().equals(GroundState.CLIMBING)) {
+                        avatar.removeClimbingPhysics();
+                    }
+                    avatar.setGroundedState(GroundState.GROUNDED);
+                    sensorFixtures.add(todo_action.getFixture());
                     break;
                 case "traciAirborne":
-                    sensorFixtures.remove((Fixture) todo_action[1]);
+                    sensorFixtures.remove(todo_action.getFixture());
                     if (sensorFixtures.size == 0) {
-                        avatar.setGrounded(false);
+                        if (avatar.getGroundedState().equals(GroundState.CLIMBING)) {
+                            avatar.removeClimbingPhysics();
+                        }
+                        avatar.setGroundedState(GroundState.AIRBORNE);
                     }
+                    break;
+                case "addClimbingJoint":
+                    avatar.registerClimbable((EnhancedObstacleSprite) todo_action.getSubject());
+                    break;
+                case "removeClimbingJoint":
+                    avatar.removeClimbable((EnhancedObstacleSprite) todo_action.getSubject());
+                    break;
+                case "queueWin":
+                    setComplete(true);
                     break;
                 case "queueFailure":
                     queueFailure = true;
+                    break;
+                case "debugKillObj":
+                    // not safe operation, for now will kill game on reload
+                    world.destroyBody(todo_action.getSubject().getObstacle().getBody());
+                    break;
             }
         }
     }
 
+    /**
+     * function that pulls the fire flags from the fire controller and porcesses them as needed
+     * mainly comprises items that cannot bbe done within the cotnroller or are expected in the
+     * super, like destroying joints
+     */
     private void supplementaryFireActions() {
-        Stack<Object[]> todos = fireController.getFireFlags();
+        Stack<FireFlag> todos = fireController.getFireFlags();
         while (!todos.isEmpty()) {
-            Object[] todo_action = todos.pop();
-            switch ((String) todo_action[0]) {
+            FireFlag fireFlag = todos.pop();
+            switch (fireFlag.getName()) {
                 case "attachFire":
-                    Fire fire = (Fire) todo_action[2];
+                    Fire fire = fireFlag.getFire();
                     addSprite(fire);
-                    if (((EnhancedObstacleSprite) todo_action[1]).getObstacle().getBody() == null) {
+                    if ((fireFlag.getSubject()).getObstacle().getBody() == null) {
                         break;
                     }
-                    joinFireToObject((ObstacleSprite) todo_action[1], fire);
+                    joinFireToObject(fireFlag.getSubject(), fire);
                     break;
                 case "expireObj":
-                    for (Fire f : (ArrayList<Fire>) todo_action[2]) {
+                    for (Fire f : fireFlag.getFires()) {
                         if (f.getFixtureJoint() != null) {
                             world.destroyJoint(f.getFixtureJoint());
                             f.setFixtureJoint(null);
                         }
                         f.dispose();
                     }
-                    ((EnhancedObstacleSprite) todo_action[1]).getObstacle().markRemoved(true);
-                    fireController.cleanObj((EnhancedObstacleSprite) todo_action[1]);
+                    (fireFlag.getSubject()).getObstacle().markRemoved(true);
+                    fireController.cleanObj(fireFlag.getSubject());
                     break;
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    /**
+     * Function that pulls the stack of event action from the event handler and goes through each one
+     * if there needs to be any upkeep in caller, like resetting a button, it occurs in the first part
+     * then the event is actual action is pulled out of the event, any changes made, then processed ie
+     * either running the event now or putting it into the tween handler
+     *
+     * @param dt delta time
+     */
+    private <T,U> void supplementaryEventActions(float dt) {
+        Stack<Event<?,?>> todos = eventHandler.getEventFlags();
+        while (!todos.isEmpty()) {
+            Event<T,U> event = (Event<T, U>) todos.pop();
+            EventAction<U> action = event.action;
+            System.out.println(event.source.getClass());
+
+            // if the caller of the event needs any upkeep, in the case of a button the inverse of the
+            // event will be added to be called after the button's state changes again, to act like a
+            // true button
+            if (event.source instanceof Button){
+                EventAction<U> undo_action = action.cloneTweenEvent();
+                U temp = undo_action.getInitialValue();
+                undo_action.setInitialValue(undo_action.getFinalValue());
+                undo_action.setFinalValue(temp);
+
+                Button button = (Button) event.source;
+                button.toggleButton(world);
+
+                int nextState;
+                if (button.getDoubleSided()) {
+                    nextState = 1;
+                } else {
+                    nextState = button.getState() == 0 ? 1 : 0;
+                }
+
+                if (button.getDoubleSided() || (!button.getDoubleSided() && !button.getLatch())) {
+                    Event newEvent = event.clone();
+                    event.conditional = (T state) -> state.equals(nextState);
+                    event.action = undo_action;
+                    eventHandler.registerEvent(event);
+                }
+            }
+
+            // register the tween from the event to do an action
+            float timeTill = action.getTime();
+            switch (action.getName()) {
+                case "move":
+                    // the whooole point of this and its ocunterpart in "flaot" is to one, prevent two diff
+                    // tweens of the same class (CAREFUL ABOUT CHAINING!!)  to affect the same object
+                    // but also such that if a tween is interupted at point m on path A -> B, then
+                    // it will return to A state in the same time it took to get to m regardless of
+                    // where m is along the path (and more importantly because this gave me a headacche:
+                    // how many times the tween was interupted along the path hence the calculation from origin each time)
+                    // can be done better/optimzied but unsure if needed atm
+                    Optional<TweenElement<Vector2>> oldEvent = tweenedMovmentObjectsVec2.stream().filter
+                        (a -> a.target == action.getTarget() && a.name.equals(action.getName())).findFirst();
+                    if (oldEvent.isPresent()) {
+                        Vector2 start = ((Vector2) action.getInitialValue()).cpy();
+                        Vector2 travellingPoint = start.cpy();
+                        float stepCounter = 0;
+                        Vector2 end = (Vector2) action.getFinalValue();
+                        float terminalToDist = oldEvent.get().supplier.get().dst(end);
+
+                        //loop should be safe as this is a rare action run only when a tween of this class is interupted
+                        while (travellingPoint.dst(end) > terminalToDist) {
+                            stepCounter += dt;
+                            // no new vector creation cause that takes memory
+                            travellingPoint.set((end.x - start.x) * action.interpolator.apply(stepCounter / action.getTime()) + start.x,
+                                                (end.y - start.y) * action.interpolator.apply(stepCounter / action.getTime()) + start.y);
+                        }
+                        timeTill = action.getTime() - stepCounter;
+                        tweenedMovmentObjectsVec2.remove(oldEvent.get());
+                    }
+
+                    // adjust new values for tween from aciton
+                    Vector2 initialStateVec2 = action.getTarget().getObstacle().getPosition().cpy();
+                    Supplier<Vector2> supplierVec2 = () -> action.getTarget().getObstacle().getPosition();
+                    Consumer<Vector2> consumerVec2 = (value) -> action.getTarget().getObstacle().setLinearVelocity(value);
+
+                    // attach tween to movement objects to be ran
+                    TweenElement<Vector2> tweenElementVec2 = new TweenElement<Vector2>(action.getTarget(), action.getName(),
+                        initialStateVec2, (Vector2) action.getFinalValue(), timeTill,
+                        action.getInterpolator(), supplierVec2, consumerVec2);
+                    tweenedMovmentObjectsVec2.add(tweenElementVec2);
+                    break;
+
+                case "rotate":
+                    // see mirrored documentation in "move"
+                    Optional<TweenElement<Float>> oldEventF = tweenedMovmentObjectsFloat.stream().filter
+                        (a -> a.target == action.getTarget() && a.name.equals(action.getName())).findFirst();
+
+
+                    if (oldEventF.isPresent()) {
+                        Float start = (Float) action.getInitialValue();
+                        Float travellingPoint = start;
+                        float stepCounter = 0;
+                        Float end = (Float) action.getFinalValue();
+                        float terminalDist = end - oldEventF.get().supplier.get();
+
+                        while (end - travellingPoint > terminalDist) {
+                            stepCounter += dt;
+                            travellingPoint = (end - start) * action.interpolator.apply(stepCounter / action.getTime()) + start;
+                        }
+
+                        timeTill = action.getTime() - stepCounter;
+                        tweenedMovmentObjectsVec2.remove(oldEventF.get());
+                    }
+
+                    Float initialStateFloat = action.getTarget().getObstacle().getAngle();
+                    Supplier<Float> supplierFloat = () -> action.getTarget().getObstacle().getAngle();
+                    Consumer<Float> consumerFloat = (value) -> action.getTarget().getObstacle().setAngle(value);
+
+                    TweenElement<Float> tweenElementFloat = new TweenElement<Float>(action.getTarget(), action.getName(),
+                        initialStateFloat, (Float) action.getFinalValue(), timeTill,action.getInterpolator(), supplierFloat, consumerFloat);
+                    tweenedMovmentObjectsFloat.add(tweenElementFloat);
+                    break;
+
+                case "spawn":
+                    float units = height / bounds.height;
+                    JsonValue levelData = directory.getEntry("moth_intro",JsonValue.class);
+                    JsonValue enemiesJson = levelData.get("enemies");
+                    Texture texture = directory.getEntry("platform-moth01", Texture.class);
+                    JsonValue mothsJson = enemiesJson.get("moths").get("instances");
+                    for (int i = 0; i < mothsJson.size; i++) {
+                        Vector2 position = new Vector2(mothsJson.get(i).get("pos").getFloat(0), mothsJson.get(i).get("pos").getFloat(1));
+                        Moth moth = new Moth(i, units, mothsJson.get(i), directory, position);
+                        moth.setTexture(texture);
+                        addSprite(moth);
+                        moth.createSensor();
+                        enemies.add(moth);
+                    }
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Dedicated method to update Vec2 tweens, should be applicable for any vector change in attribute
+     * not just movements
+     *
+     * The reason behind splitting Vec2 and Flaot instead of abstracting itno one, is because, most likely,
+     * we aren't going to be tweening anything more than that and the generalization/casting was becoming
+     * tedious and unsafe
+     *
+     * @param dt deltatime
+     */
+    private void updateTweenedMovementObjectsVec2(float dt) {
+        for (Iterator<TweenElement<Vector2>> it = tweenedMovmentObjectsVec2.iterator(); it.hasNext(); ) {
+            TweenElement<Vector2> tweenElement = it.next();
+
+            // extract info from tween for readability and to prevent duplicate pulls later
+            Vector2 timer = tweenElement.timerVector;
+            Function<Float, Float> interpolator = tweenElement.interpolator;
+            Consumer<Vector2> setter = tweenElement.updater;
+
+            Vector2 endPointZeroed = (tweenElement.finalState.cpy()).sub(tweenElement.initalState);
+
+            // get the interpolater value from time elapsed (x) / total time (y) as factor, then
+            // apply the value to the getter for the funcction
+            float factor = interpolator.apply(timer.x / timer.y);
+            float oldFactor = interpolator.apply(Math.max(timer.x - dt, 0)/ timer.y);
+            Vector2 delta = ( (endPointZeroed.cpy()).scl(factor) ).sub( ((endPointZeroed.cpy()).scl(oldFactor)) );
+            delta.scl(1/dt);
+            setter.accept(delta);
+
+            timer.x += dt;
+
+            // if elapsed>total allowed time
+            if (timer.x > timer.y) {
+                it.remove();
+
+                // just a fail safe if the velocity does something weird
+                if (tweenElement.name.equals("move")) {
+                    setter.accept(Vector2.Zero);
+                    tweenElement.target.getObstacle().setPosition(tweenElement.finalState);
+                }
+            }
+        }
+    }
+
+    /**
+     * see mirror documentation for updateTweenedMovementObjectsVec2
+     * @param dt deltatime
+     */
+    private void updateTweenedMovementObjectsFloat(float dt) {
+        for (Iterator<TweenElement<Float>> it = tweenedMovmentObjectsFloat.iterator(); it.hasNext(); ) {
+            TweenElement<Float> tweenElement = it.next();
+
+            Vector2 timer = tweenElement.timerVector;
+            Function<Float, Float> interpolator = tweenElement.interpolator;
+            Consumer<Float> setter = tweenElement.updater;
+
+            Float endPointZeroed = (tweenElement.finalState - tweenElement.initalState);
+
+            float factor = interpolator.apply(timer.x / timer.y);
+            Float delta = (endPointZeroed * factor) + tweenElement.initalState;
+            setter.accept(delta);
+            timer.x += dt;
+            if (timer.x >= timer.y) {
+                it.remove();
+                tweenElement.updater.accept(tweenElement.finalState);
             }
         }
     }
@@ -881,7 +1193,9 @@ public class GameplayScene implements Screen {
             avatar.getHeight() / 4));
         torch.getObstacle().setPosition(avatar.getObstacle().getPosition().add(offset));
         activeTorchJoint = world.createJoint(avatar.attachTorchToAvatar(torch));
+        torch.getObstacle().setSensor(true);
         queueAddTorch = false;
+        avatar.setHasTorch(true);
         torchOnRight = avatar.isFacingRight();
     }
 
@@ -945,7 +1259,7 @@ public class GameplayScene implements Screen {
     public void draw(float dt) {
         // Clear the screen (color is homage to the XNA years)
         ScreenUtils.clear(0.17f, 0.28f, 0.35f, 1.0f);
-
+//        ScreenUtils.clear(1.0f, 1.0f, 1.0f, 1.0f);
         // This shows off how powerful our new SpriteBatch is
         batch.begin(camera);
 
@@ -955,8 +1269,8 @@ public class GameplayScene implements Screen {
             obj.draw(batch);
         }
 
-        if (fireController.getLitFires().size()!=0){
-            System.out.println("not FIRE!");
+        if (!fireController.getLitFires().isEmpty()){
+//            System.out.println("not FIRE!");
             for (Fire fire:fireController.getLitFires()){
                 particleEngine.draw(batch,fire);
             }

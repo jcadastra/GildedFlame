@@ -101,6 +101,7 @@ public class Lighting extends ObstacleSprite {
         obstacle.setBodyType( BodyType.DynamicBody );
 //        obstacle.setPhysicsUnits(units);
         obstacle.setRestitution( 0 );
+        obstacle.setGravityScale(0);
         obstacle.setPhysicsUnits( units );
         obstacle.setUserData( this );
         obstacle.setSensor(true);

@@ -14,6 +14,7 @@ import edu.cornell.cis3152.physics.level_player.enviromentals.Lighting;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Surface;
 import edu.cornell.cis3152.physics.level_player.player.Bullet;
 import edu.cornell.cis3152.physics.level_player.player.Traci;
+import edu.cornell.cis3152.physics.level_player.player.Traci.GroundState;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.audio.SoundEffect;
 import edu.cornell.gdiac.audio.SoundEffectManager;
@@ -179,7 +180,7 @@ public class light_test extends GameplayScene implements ContactListener  {
         InputController input = InputController.getInstance();
 
         // Process actions in object model
-        avatar.setMovement(input.getHorizontal() *avatar.getForce());
+        avatar.setMovement(new Vector2(input.getHorizontal() * avatar.getForce(), input.getVertical() * avatar.getForce()));
         avatar.setJumping(input.didPrimary());
         avatar.setShooting(input.didSecondary());
 
@@ -260,7 +261,7 @@ public class light_test extends GameplayScene implements ContactListener  {
             // See if we have landed on the ground.
             if ((avatar.getSensorName().equals(fd2) && avatar != bd1) ||
                 (avatar.getSensorName().equals(fd1) && avatar != bd2)) {
-                avatar.setGrounded(true);
+                avatar.setGroundedState(GroundState.GROUNDED);
                 sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
             }
 
@@ -298,7 +299,7 @@ public class light_test extends GameplayScene implements ContactListener  {
             (avatar.getSensorName().equals(fd1) && avatar != bd2)) {
             sensorFixtures.remove(avatar == bd1 ? fix2 : fix1);
             if (sensorFixtures.size == 0) {
-                avatar.setGrounded(false);
+                avatar.setGroundedState(GroundState.AIRBORNE);
             }
         }
     }

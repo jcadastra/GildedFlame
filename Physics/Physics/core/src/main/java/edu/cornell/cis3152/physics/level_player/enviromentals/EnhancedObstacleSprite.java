@@ -1,5 +1,6 @@
 package edu.cornell.cis3152.physics.level_player.enviromentals;
 
+import edu.cornell.gdiac.graphics.SpriteBatch;
 import edu.cornell.gdiac.graphics.SpriteMesh;
 import edu.cornell.gdiac.physics2.Obstacle;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
@@ -15,6 +16,7 @@ import java.awt.Shape;
 public class EnhancedObstacleSprite extends ObstacleSprite {
 
     private ObstacleMaterial material;
+    private boolean climbable;
 
     public EnhancedObstacleSprite() {
         super();
@@ -32,5 +34,7 @@ public class EnhancedObstacleSprite extends ObstacleSprite {
     public ObstacleMaterial getMaterial() {
         return material;
     }
+    public void setClimbable(boolean value) {climbable = value;}
+    public boolean getClimbable() {return climbable;}
 
 }

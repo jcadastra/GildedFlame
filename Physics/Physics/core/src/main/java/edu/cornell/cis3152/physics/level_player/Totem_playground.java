@@ -30,6 +30,7 @@ import edu.cornell.cis3152.physics.level_player.enviromentals.Surface;
 import edu.cornell.cis3152.physics.level_player.player.Bullet;
 import edu.cornell.cis3152.physics.level_player.player.Torch;
 import edu.cornell.cis3152.physics.level_player.player.Traci;
+import edu.cornell.cis3152.physics.level_player.player.Traci.GroundState;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.audio.SoundEffect;
 import edu.cornell.gdiac.audio.SoundEffectManager;
@@ -339,7 +340,7 @@ public class Totem_playground extends GameplayScene {
         InputController input = InputController.getInstance();
 
         // Process actions in object model
-        avatar.setMovement(input.getHorizontal() * avatar.getForce());
+        avatar.setMovement(new Vector2(input.getHorizontal() * avatar.getForce(), input.getVertical() * avatar.getForce()));
         avatar.setJumping(input.didPrimary());
         avatar.setShooting(input.didSecondary());
 
@@ -378,13 +379,13 @@ public class Totem_playground extends GameplayScene {
                 removeBullet((ObstacleSprite) event[1]);
                 break;
             case "traciGrounded":
-                avatar.setGrounded(true);
+                avatar.setGroundedState(GroundState.GROUNDED);
                 sensorFixtures.add((Fixture) event[1]);
                 break;
             case "traciAirborne":
                 sensorFixtures.remove((Fixture) event[1]);
                 if (sensorFixtures.isEmpty()) {
-                    avatar.setGrounded(false);
+                    avatar.setGroundedState(GroundState.AIRBORNE);
                 }
                 break;
             case "addTorch":

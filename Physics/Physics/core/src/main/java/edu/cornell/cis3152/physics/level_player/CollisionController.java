@@ -7,6 +7,9 @@ import edu.cornell.cis3152.physics.level_player.enemies.*;
 import edu.cornell.cis3152.physics.level_player.enemies.Enemy.EnemyState;
 import edu.cornell.cis3152.physics.level_player.enviromentals.*;
 import edu.cornell.cis3152.physics.level_player.player.*;
+import edu.cornell.cis3152.physics.level_player.player.Traci.GroundState;
+import edu.cornell.cis3152.physics.level_player.utils.CollisionFlag;
+import edu.cornell.cis3152.physics.level_player.utils.ContactKey;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
 
@@ -14,7 +17,7 @@ import java.util.*;
 
 public class CollisionController implements ContactListener {
 
-    private final Stack<Object[]> collisionFlags;
+    private final Stack<CollisionFlag> collisionFlags;
     private final List<Totem[]> pendingTotemMerges = new ArrayList<>();
     private final AssetDirectory directory;
     private final FireController fireController;
@@ -63,10 +66,10 @@ public class CollisionController implements ContactListener {
     }
 
     private static boolean isGround(ObstacleSprite sprite) {
-        return sprite.getName().contains("floor") || sprite.getName().contains("platform") || sprite.getName().contains("barrier") || sprite.getName().contains("spinner") || (sprite instanceof Surface) || sprite instanceof Totem;
+        return sprite.getName().contains("floor") || sprite.getName().contains("platform") || sprite.getName().contains("barrier") || sprite.getName().contains("spinner") || sprite.getName().contains("button") || (sprite instanceof Surface) || sprite instanceof Totem;
     }
 
-    public Stack<Object[]> getCollisionFlags() {
+    public Stack<CollisionFlag> getCollisionFlags() {
         return collisionFlags;
     }
 
@@ -120,21 +123,19 @@ public class CollisionController implements ContactListener {
                 return;
             }
 
-            if ((isGround(bd1) || isGround(bd2)) && isX(bd1, bd2, Traci.class) == 1) {
-                ((Traci) idX(bd1, bd2, Traci.class)).setGrounded(true);
-            }
+//            if (isXandY(bd1,bd2,Traci.class,EnhancedObstacleSprite.class) == 1) {
+//                collisionFlags.push(new CollisionFlag("debugKillObj", bd1 instanceof Traci ? bd2 : bd1));
+//            }
 
             if (isX(bd1, bd2, Traci.class) == 1) {
                 Traci t = (Traci) idX(bd1, bd2, Traci.class);
                 if ((t.getSensorName().equals(fd2) && t != bd1 && isGround(bd1)) || (t.getSensorName().equals(fd1) && t != bd2 && isGround(bd2))) {
-                    t.setGrounded(true);
-                    collisionFlags.push(new Object[]{"traciGrounded", bd1 instanceof Traci ? fix2 : fix1});
+                    collisionFlags.push(new CollisionFlag("traciGrounded", bd1 instanceof Traci ? fix2 : fix1));
                 }
             }
 
-            if (isX(bd1, bd2, Torch.class) + isX(bd1, bd2, Traci.class) == 2) {
-                ((Traci) idX(bd1, bd2, Traci.class)).setHasTorch(true);
-                collisionFlags.push(new Object[]{"addTorch", idX(bd1, bd2, Traci.class)});
+            if (isXandY(bd1, bd2, Traci.class, Torch.class )== 1) {
+                collisionFlags.push(new CollisionFlag("addTorch", idX(bd1, bd2, Traci.class)));
             }
 
             if (isXandY(bd1, bd2, "wall", Enemy.class) == 1) {
@@ -190,18 +191,15 @@ public class CollisionController implements ContactListener {
                     Totem topTotem = (pos1.y > pos2.y) ? totem1 : totem2;
                     Totem bottomTotem = (topTotem == totem1) ? totem2 : totem1;
                     pendingTotemMerges.add(new Totem[]{topTotem, bottomTotem});
+                    topTotem.addLinkedTotem(bottomTotem);
                 } else if (xDiff > 0.5f && yDiff < 0.5f) {
                     if (totem1.getState() != EnemyState.CD && totem1.getState() != EnemyState.IN_LIGHT) {
-//                        System.out.println("0");
                         totem1.changeDirection();
                         totem1.setJustCollided(true);
                     }
                     if (totem2.getState() != EnemyState.CD && totem2.getState() != EnemyState.IN_LIGHT) {
-//                        System.out.println("X");
                         totem2.changeDirection();
                         totem2.setJustCollided(true);
-                    } else {
-                        System.out.println(totem2.hasJustCollided() + ", " + totem2.getState());
                     }
                 }
 
@@ -223,11 +221,11 @@ public class CollisionController implements ContactListener {
             if (isXandY(bd1, bd2, Moth.class, Torch.class) == 1) {
                 Moth moth = (Moth) idX(bd1, bd2, Moth.class);
                 if (moth.getState() != EnemyState.DAZED) {
-//                    System.out.println("AHA");
                     moth.resetSmotherTimer();
                     moth.setState(EnemyState.SMOTHER);
                 }
 //                collisionFlags.push(new Object[]{"addTorch", idX(bd1, bd2, Traci.class)});
+//                collisionFlags.push(new CollisionFlag("queueFailure"));
             }
 
             if (isXandY(bd1, bd2, Moth.class, Moth.class) == 2) {
@@ -252,7 +250,6 @@ public class CollisionController implements ContactListener {
             if (isXandY(bd1, bd2, Lighting.class, Moth.class) == 1) {
                 Lighting light = (Lighting) idX(bd1, bd2, Lighting.class);
                 Moth moth = (Moth) idX(bd1, bd2, Moth.class);
-//                System.out.print("CONTACT WITH LIGHT AND MOTH");
                 if (moth.getState() != EnemyState.TRANCE && moth.getState() != EnemyState.SMOTHER && moth.getState() != EnemyState.DAZED) {
                     moth.setState(EnemyState.IN_LIGHT);
 
@@ -285,16 +282,13 @@ public class CollisionController implements ContactListener {
                     if (yDiff > xDiff) {
                         if ((moth.getState() == EnemyState.SMOTHER) && playerPos.y > mothPos.y) {
                             moth.resetDazedTimer();
-//                            System.out.println("CONTACT WITH MOTH");
                             moth.setState(EnemyState.DAZED);
                         } else {
-                            collisionFlags.push(new Object[]{"queueFailure"});
+                            collisionFlags.push(new CollisionFlag("queueFailure"));
                         }
-                    } else {
-                        collisionFlags.push(new Object[]{"queueFailure"});
+                    }else {
+                        collisionFlags.push(new CollisionFlag("queueFailure"));
                     }
-
-
                 }
             }
 
@@ -314,6 +308,25 @@ public class CollisionController implements ContactListener {
                 if (moth.getState() == EnemyState.SMOTHER) {
                     ContactKey key2 = new ContactKey(fix1, fix2);
                     sustainedContacts.put(key2, 300);
+                }
+            }
+
+            if (isXandY(bd1, bd2, Traci.class, Door.class) == 1 ) {
+                ContactKey key = new ContactKey(fix1, fix2);
+                sustainedContacts.put(key, -1);
+            }
+
+            /**
+             * Collision detection to see if the player is overlapping with any climbable entities
+             * then stores them within the player for future joint creation
+             */
+            if (isXandY(bd1, bd2, Traci.class, EnhancedObstacleSprite.class) == 1) {
+                EnhancedObstacleSprite eos = (EnhancedObstacleSprite) idX(bd1, bd2, EnhancedObstacleSprite.class);
+                Traci traci = (Traci) idX(bd1, bd2, Traci.class);
+                Fixture subjectFixture = (bd1.getClass().equals(Traci.class)) ? fix1 : fix2;
+
+                if (eos.getClimbable() && (subjectFixture.getUserData() == null || !subjectFixture.getUserData().equals(traci.getSensorName()))) {
+                    collisionFlags.add(new CollisionFlag("addClimbingJoint", eos));
                 }
             }
 
@@ -342,23 +355,31 @@ public class CollisionController implements ContactListener {
                 EnhancedObstacleSprite b = (EnhancedObstacleSprite) idX(bd1, bd2, EnhancedObstacleSprite.class);
                 int contactTime = sustainedContacts.get(key);
 
-                Vector2 delta = ((b.getObstacle().getBody().getPosition().cpy()).sub(f.getObstacle().getBody().getPosition()));
 
-                if (b.getMaterial().getFlammability() > 0 && b.getMaterial().surpassIgnitionTimer(contactTime) && !fireController.testIfFullyBurning(b)) {
+                Vector2 f_pos = f.getObstacle().getPosition().cpy();
+                Vector2 b_pos = b.getObstacle().getPosition().cpy();
+                Vector2 delta = (b_pos.cpy()).sub(f_pos);
+                if (b.getMaterial().surpassIgnitionTimer(contactTime) && !fireController.testIfFullyBurning(b)) {
 
-                    Vector2 f_pos = f.getObstacle().getPosition().cpy();
-                    Vector2 b_pos = b.getObstacle().getPosition().cpy();
-                    b_pos.sub(f_pos);
-                    b_pos.nor().scl(f.getRadius());
-                    fireController.lightAnew(b, delta.len() < b_pos.len() ? f_pos.add(delta) : f_pos.add(b_pos));
+                    Vector2 newFirePos;
+                    if (b.getName().contains("rope")) {
+                        newFirePos = b_pos;
+                    } else {
+                        b_pos.sub(f_pos);
+                        b_pos.nor().scl(f.getRadius());
+                        newFirePos = delta.len() < b_pos.len() ? f_pos.add(delta) : f_pos.add(b_pos);
+                    }
+
+                    fireController.lightAnew(b, newFirePos);
                     it.remove();
                 } else {
                     float modif;
                     if (Objects.equals(b.getMaterial().getName(), "rope")) {
-                        modif = (float) (1 / (Math.PI * Math.pow(delta.len(), 2.3) * 4));
+                        modif = (float) (1 / (Math.PI * Math.pow(delta.len(), 4) * 4));
                     } else {
                         modif = 1;
                     }
+//                    System.out.println(modif + ", " + contactTime + modif);
                     sustainedContacts.put(key, (int) (contactTime + modif));
                 }
             }
@@ -369,10 +390,19 @@ public class CollisionController implements ContactListener {
                 int contactTime = sustainedContacts.get(key);
                 if (moth.getState() == EnemyState.SMOTHER) {
                     if (contactTime == 0) {
-                        collisionFlags.push(new Object[]{"queueFailure"});
+                        collisionFlags.push(new CollisionFlag("queueFailure"));
                     } else {
                         sustainedContacts.put(key, contactTime - 1);
                     }
+                }
+            }
+
+            if (isXandY(bd1, bd2, Traci.class, Door.class) == 1) {
+                Traci traci = (Traci) idX(bd1, bd2, Traci.class);
+                if (traci.getHasTorch()) {
+                    collisionFlags.push(new CollisionFlag("queueWin"));
+                } else {
+                    sustainedContacts.put(key, -1);
                 }
             }
         }
@@ -401,8 +431,8 @@ public class CollisionController implements ContactListener {
 
         if (isX(bd1, bd2, Traci.class) == 1) {
             Traci t = (Traci) idX(bd1, bd2, Traci.class);
-            if ((t.getSensorName().equals(fd2) && t != bd1) || (t.getSensorName().equals(fd1) && t != bd2)) {
-                collisionFlags.push(new Object[]{"traciAirborne", bd1 instanceof Traci ? fix2 : fix1});
+            if ((isGround(bd1) || isGround(bd2)) && ((t.getSensorName().equals(fd2) && t != bd1) || (t.getSensorName().equals(fd1) && t != bd2) && t.getGroundedState().equals(GroundState.GROUNDED))) {
+                collisionFlags.push(new CollisionFlag("traciAirborne", bd1 instanceof Traci ? fix2 : fix1));
             }
         }
 
@@ -438,7 +468,11 @@ public class CollisionController implements ContactListener {
         if (isXandY(bd1, bd2, Fire.class, EnhancedObstacleSprite.class) == 1) {
             ContactKey key = new ContactKey(fix1, fix2);
             sustainedContacts.remove(key);
+        }
 
+        if (isXandY(bd1, bd2, Traci.class, Door.class) == 1) {
+            ContactKey key = new ContactKey(fix1, fix2);
+            sustainedContacts.remove(key);
         }
 
         /**
@@ -472,6 +506,20 @@ public class CollisionController implements ContactListener {
 //                collisionFlags.push(new Object[]{"addTorch", idX(bd1, bd2, Traci.class)});
         }
 
+        /**
+         * End contact collision detection to remove a climbable object from the player's
+         * repository of such, mainly to handle joint creation/destruction as its sister
+         * method in begin contact
+         */
+        if (isXandY(bd1, bd2, Traci.class, EnhancedObstacleSprite.class) == 1) {
+            EnhancedObstacleSprite eos = (EnhancedObstacleSprite) idX(bd1, bd2, EnhancedObstacleSprite.class);
+            Traci traci = (Traci) idX(bd1,bd2, Traci.class);
+            Fixture subjectFixture = (bd1.getClass().equals(Traci.class)) ? fix1 : fix2;
+
+            if (eos.getClimbable() && (subjectFixture.getUserData() == null || !subjectFixture.getUserData().equals(traci.getSensorName()))) {
+                collisionFlags.add(new CollisionFlag("removeClimbingJoint", eos));
+            }
+        }
     }
 
     /**
