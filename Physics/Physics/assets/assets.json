@@ -99,26 +99,98 @@
         "magfilter": "linear mipmap linear"
       },
 
-      "platform-moth01": {
-        "file" : "platform/mothNorm.png",
+      "platform-mothOUTOFLIGHT": {
+        "file" : "platform/mothOutOfLight.png",
         "mipmaps" : true,
         "minfilter": "linear mipmap linear",
         "magfilter": "linear mipmap linear"
       },
-      "platform-moth02": {
+      "platform-mothANGRY": {
         "file" : "platform/mothAngry.png",
         "mipmaps" : true,
         "minfilter": "linear mipmap linear",
         "magfilter": "linear mipmap linear"
       },
-      "platform-totem01": {
-        "file" : "platform/totem.png",
+      "platform-mothDAZED": {
+        "file" : "platform/mothDazed.png",
         "mipmaps" : true,
         "minfilter": "linear mipmap linear",
         "magfilter": "linear mipmap linear"
       },
-      "platform-totem02": {
-        "file" : "platform/totemLight.png",
+      "platform-mothCD": {
+        "file" : "platform/mothCD.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+      "platform-mothTRANCE": {
+        "file" : "platform/mothTrance.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+      "platform-mothSMOTHER": {
+        "file" : "platform/mothSmother.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+      "platform-mothATTACK": {
+        "file" : "platform/mothAttack.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+      "platform-mothINLIGHT": {
+        "file" : "platform/mothInLight.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+      "platform-totemLIGHTANIMATION": {
+        "file" : "platform/totemInLightAnimation.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+      "platform-totemINLIGHT": {
+        "file" : "platform/totemInLight.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+      "platform-totemLIGHTLEFT": {
+        "file" : "platform/totemLightLeft.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+      "platform-totemLIGHTRIGHT": {
+        "file" : "platform/totemLightRight.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+      "platform-totemDARKLEFT": {
+        "file" : "platform/totemDarkLeft.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+      "platform-totemDARKRIGHT": {
+        "file" : "platform/totemDarkRight.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+      "platform-totemOUTOFLIGHT": {
+        "file" : "platform/totemOutOfLight.png",
+        "mipmaps" : true,
+        "minfilter": "linear mipmap linear",
+        "magfilter": "linear mipmap linear"
+      },
+      "platform-totemTEST": {
+        "file" : "platform/totemLIGHT.png",
         "mipmaps" : true,
         "minfilter": "linear mipmap linear",
         "magfilter": "linear mipmap linear"
@@ -190,6 +262,8 @@
       "tenseSoundscape": "music/tenseAtmosphereHauntingSoundscapes.wav"
     },
     "soundfx" : {
+      "dirtFootStep"       : "soundEffects/dirtFootStep.wav",
+      "torchThrow"       : "soundEffects/torchThrow.wav",
         "rocket-bump"       : "rocket/bump.wav",
         "rocket-mainburn"   : "rocket/afterburner.wav",
         "rocket-leftburn"   : "rocket/sideburner-left.wav",

@@ -2,298 +2,271 @@ package edu.cornell.cis3152.physics.level_player.enviromentals;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
+import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.cis3152.physics.level_player.utils.ObstacleGroup;
+import edu.cornell.gdiac.physics2.BoxObstacle;
+import edu.cornell.gdiac.physics2.ObstacleSprite;
 import edu.cornell.gdiac.physics2.WheelObstacle;
 import java.util.ArrayList;
 
 /**
- * A  group that resents a rope, it is made out of a latice interwoven structure found at the end
- * of the slides for box2d, atm starts horrixontal but will implement beizer curves, of material rope
- *
- * rope is not interactable with surroundings other than to check for collision
+ * A single-line rope made of nodes along a (potentially curved) path with anchors at both ends.
+ * The rope is constructed as a chain of nodes connected by weld joints,
+ * and two anchor obstacles at the endpoints hold the rope in place.
  */
 public class Rope extends ObstacleGroup {
     private Vector2 pin1;
     private Vector2 pin2;
-    private float d;
+    private float internalAngle;
     private float units;
+    private float depthOfCurve;
+    private float x_c;
     private JsonValue data;
-    private float lenOfCurve;
 
-    private float ropeThickness = 7;
-    private float ropePieceLen = 14;
-//        from json
-    private ArrayList <EnhancedObstacleSprite> bottomEntities;
-    private ArrayList <EnhancedObstacleSprite> topEntities;
-    private ArrayList <EnhancedObstacleSprite> anchors;
-    private float h;
+    private float ropeThickness;
+    private float ropePieceLen;
+    private Vector2 step;
 
-    public float[] topVertices;
-    public float[] bottomVertices;
+    // Single row of rope nodes.
+    private ArrayList<EnhancedObstacleSprite> nodes;
+    // Anchor objects at the endpoints.
+    private ArrayList<EnhancedObstacleSprite> anchors;
+    public FloatArray nodeVertices;
 
     /**
-     * Helper method to create a whole rope from two points
-     * Ensure that pin1 comes before pin2 in that pin1.x < pin2.x and same with .y
+     * Constructs a rope as a single chain of nodes with end anchors.
      *
-     * provide PIN1 and PIN2 cords in terms of global cords, ie not box2d, ie * units
-     * pin2.x - pin1.x >= 2
-     *
-     * @param pin1
-     * @param pin2
-     * @param depthOfCurve
-     * @param units
+     * @param pin1          starting point (in physics units)
+     * @param pin2          ending point (in physics units)
+     * @param depthOfCurve  depth of the curve, atm not used
+     * @param units         physics unit scale factor
+     * @param data          JSON data containing rope properties ("thickness", "piecelen", etc.)
      */
     public Rope(Vector2 pin1, Vector2 pin2, float depthOfCurve, float units, JsonValue data) {
-        this.h = depthOfCurve;
         this.pin1 = pin1.scl(units);
         this.pin2 = pin2.scl(units);
-        this.d = (this.pin2.x - this.pin1.x)/2;
         this.units = units;
         this.data = data;
+        this.depthOfCurve = depthOfCurve;
+        this.x_c = pin2.x-pin1.x;
 
+        // Calculate the rope’s direction.
+        this.internalAngle = (pin2.cpy().sub(pin1)).angleRad();
         ropeThickness = data.getFloat("thickness");
         ropePieceLen = data.getFloat("piecelen");
-        bottomVertices = genOneRowOnX(-ropeThickness/2);
-        topVertices = genOneRowOnX(ropeThickness/2);
-        lenOfCurve = lengthOfCurve(bottomVertices);
+        // Step along the rope direction.
+        this.step = ((pin2.cpy().sub(pin1)).nor()).scl(ropePieceLen);
+
+        // Generate one row of vertices; offset = 0 gives a centered line.
+        nodeVertices = genOneRow();
+        adjustNodeVertices();
+        nodes = genFixtures(nodeVertices);
         anchors = genAnchors();
-        bottomEntities = genFixtures(bottomVertices);
-        topEntities = genFixtures(topVertices);
-        fixAnchors();
     }
 
     /**
-     * Helper method to create a whole rope from one point and length
-     * Will hang downard from x y of length y
+     * Placeholder for a catenary curve function.
+     * Currently, returns 0 so the rope is straight.
      *
-     * provide PIN1 and PIN2 cords in terms of global cords, ie not box2d, ie * units
-     * pin2.x - pin1.x >= 2
+     * @param x_pos the x-position (in physics units)
+     * @return a y offset (in physics units)
+     */
+    private float catenaryCurveFunc(float x_pos) {
+        double y_0 = -depthOfCurve * Math.cosh(-x_c/depthOfCurve);
+        System.out.println(y_0);
+        System.out.println(x_pos - x_c);
+        System.out.println( Math.cosh( (x_pos - x_c)));
+        System.out.println((depthOfCurve * Math.cosh( (x_pos - x_c) / depthOfCurve ) + y_0));
+        return (float) (depthOfCurve * Math.cosh( (x_pos - x_c) / depthOfCurve ) + y_0) / units;
+//        return 0;
+    }
+
+    /**
+     * Generates a row of vertices along the rope's path.
+     * The provided offset is applied perpendicular to the rope's direction.
      *
-     * @param pin1 point at which the rope hangs
-     * @param pinBottom if the bottom is pinned or not, ie static or swinging
-     * @param lenOfCurve total len of curve in pixels not phys cords
-     * @param units physics units
-     * @param data json values
+     * @return an array of float values (x, y, x, y, ...)
      */
-    public Rope(Vector2 pin1, boolean pinBottom, float lenOfCurve, float units, JsonValue data) {
-        this.pin1 = pin1.scl(units);
-        this.units = units;
-        this.data = data;
-
-        this.pin2 = new Vector2(this.pin1.x, this.pin1.y - lenOfCurve * units);
-
-        ropeThickness = data.getFloat("thickness");
-        ropePieceLen = data.getFloat("piecelen");
-
-        bottomVertices = genOneRowOnY(-ropeThickness / 2);
-        topVertices = genOneRowOnY(ropeThickness / 2);
-        this.lenOfCurve = lenOfCurve;
-
-        anchors = genAnchors();
-        bottomEntities = genFixtures(bottomVertices);
-        topEntities = genFixtures(topVertices);
-
-        if (!pinBottom) {
-            anchors.get(1).getObstacle().setBodyType(BodyType.DynamicBody);
-        }
-    }
-
-    public static double acosh(double x) {
-        return Math.log(x + Math.sqrt(x * x - 1));
-    }
-
-    /**
-     * Given an x value, returns a y value at that point on the curve, non functional
-     * @return
-     */
-    private float caternaryCurveFunc(float x_pos, float y_offset) {
-        //TODO: FIX CATERNARY EQ
-//        return (float) (h * ((Math.cosh((x_pos - (pin1.x + d)) / 1000) - 1) / (Math.cosh(d / 1000) - 1))) + y_offset;
-        return y_offset;
-    }
-
-    /**
-     * Generates a given row of points (with a given offset for up or down) and returns array of
-     * points to generate the info, iterates from te x value of a cord
-     * @param offset the offset from ideal line that the poitns are generated on
-     * @return a float array of x y cords describing position
-     */
-    private float[] genOneRowOnX(float offset) {
+    private FloatArray genOneRow() {
+        // For a tangent (cos(angle), sin(angle)), the perpendicular normal is (-sin(angle), cos(angle)).
+        float x_internalOffset = (float)Math.sin(internalAngle);
+        float y_internalOffset = (float)Math.cos(internalAngle);
         FloatArray vertexSet = new FloatArray();
-        for (float i = pin1.x; i < pin2.x; i += ropePieceLen/2) {
-            vertexSet.add(i);
-            vertexSet.add(pin1.y + caternaryCurveFunc(i, offset));
+
+        // Start a half-step from the first pin.
+        Vector2 i = new Vector2(pin1).add(step.cpy().scl(0.5f));
+        vertexSet.add(i.x + x_internalOffset);
+        vertexSet.add(i.y + y_internalOffset);
+        // Continue adding vertices until we reach near pin2.
+        while (pin2.dst(i) > ropePieceLen) {
+            i.add(step);
+            vertexSet.add(i.x + x_internalOffset);
+            vertexSet.add(i.y + y_internalOffset);
         }
-        return vertexSet.toArray();
+        return vertexSet;
     }
+
+    private void adjustNodeVertices() {
+//        for (int i=0; i < nodeVertices.size; i += 2) {
+//            System.out.println("x: " + nodeVertices.get(i) + ", y: " + nodeVertices.get(i+1) + ", catheter: " + catenaryCurveFunc(nodeVertices.get(i)));
+//            nodeVertices.set(i + 1, catenaryCurveFunc(nodeVertices.get(i)));
+//        }
+    }
+
     /**
+     * Given an array of vertices, create rope node fixtures.
      *
-     * Generates a given row of points (with a given offset for up or down) and returns array of
-     * points to generate the info, iterates from te x value of a cord
-     * @param offset the offset from ideal line that the poitns are generated on
-     * @return a float array of x y cords describing position
+     * @param vertices x, y coordinates of the rope nodes
+     * @return an ArrayList of EnhancedObstacleSprite nodes.
      */
-    private float[] genOneRowOnY(float offset) {
-        FloatArray vertexSet = new FloatArray();
-        for (float y = pin1.y; y > pin2.y; y -= ropePieceLen / 2) {
-            float x = pin1.x + caternaryCurveFunc(y, offset);
-            vertexSet.add(x);
-            vertexSet.add(y);
+    private ArrayList<EnhancedObstacleSprite> genFixtures(FloatArray vertices) {
+        ArrayList<EnhancedObstacleSprite> nodes = new ArrayList<>();
+        for (int i = 0; i < vertices.size; i += 2) {
+            BoxObstacle ropeNode = new BoxObstacle(vertices.get(i) / units, vertices.get(i + 1) / units,
+                (ropePieceLen * 1.3f) / units, (ropeThickness) / (units));
+            ropeNode.setPhysicsUnits(units);
+            ropeNode.setBodyType(BodyType.DynamicBody);
+            ropeNode.setAngle(internalAngle);
+            ropeNode.setDensity(0.01f);
+            ropeNode.setAngularDamping(10000f);
+            ropeNode.setSensor(true);
+            ropeNode.setName("ropeNode");
+            EnhancedObstacleSprite sprite = new EnhancedObstacleSprite(ropeNode);
+            sprite.setMaterial(new ObstacleMaterial("rope", data.get(1)));
+            sprite.setDebugColor(Color.PURPLE);
+            sprite.setClimbable(true);
+            nodes.add(sprite);
+            sprites.add(sprite);
         }
-        return vertexSet.toArray();
+        return nodes;
     }
 
     /**
-     * Given the vertices of a generated set, what is the length of the curve
-     * @param vertexSet
-     * @return
-     */
-    private float lengthOfCurve(float[] vertexSet) {
-        Polyline temp = new Polyline(vertexSet);
-        return temp.getLength();
-    }
-
-    /**
-     * Generates the two anchors of rope pin and stores them in an ArrayList
-     * @return
+     * Creates two anchor objects at the endpoints.
+     *
+     * @return an ArrayList of two EnhancedObstacleSprite anchors.
      */
     private ArrayList<EnhancedObstacleSprite> genAnchors() {
-        ArrayList<EnhancedObstacleSprite> returnSet = new ArrayList<>();
+        ArrayList<EnhancedObstacleSprite> anchorList = new ArrayList<>();
 
-        WheelObstacle wheel = new WheelObstacle(pin1.x / units, pin1.y / units, ropeThickness/(2 * units));
-        wheel.setBodyType(BodyType.StaticBody);
-        wheel.setMass(0.1f);
-        wheel.setPhysicsUnits(units);
-        wheel.setSensor(true);
-        wheel.setName("leftRopeAnchor");
-        EnhancedObstacleSprite s = new EnhancedObstacleSprite(wheel);
-        s.setMaterial(new ObstacleMaterial("rope", data.get(1)));
-        returnSet.add(s);
-        s.setDebugColor( Color.GREEN );
-        sprites.add(s);
+        // Create left (start) anchor.
+        WheelObstacle leftAnchorObs = new WheelObstacle(pin1.x / units, pin1.y / units, ropeThickness / units);
+        leftAnchorObs.setBodyType(BodyType.StaticBody);
+        leftAnchorObs.setMass(0.1f);
+        leftAnchorObs.setDensity(1f);
+        leftAnchorObs.setFixedRotation(false);
+        leftAnchorObs.setPhysicsUnits(units);
+        leftAnchorObs.setSensor(true);
+        leftAnchorObs.setName("ropeAnchorLeft");
+        EnhancedObstacleSprite leftAnchor = new EnhancedObstacleSprite(leftAnchorObs);
+        leftAnchor.setMaterial(new ObstacleMaterial("rope", data.get(1)));
+        leftAnchor.setDebugColor(Color.GREEN);
+        sprites.add(leftAnchor);
+        anchorList.add(leftAnchor);
 
-        wheel = new WheelObstacle(pin2.x / units, pin2.y / units, ropeThickness/(2 * units));
-        wheel.setBodyType(BodyType.StaticBody);
-        wheel.setMass(0.1f);
-        wheel.setPhysicsUnits(units);
-        wheel.setSensor(true);
-        wheel.setName("rightRopeAnchor");
-        s = new EnhancedObstacleSprite(wheel);
-        s.setMaterial(new ObstacleMaterial("rope", data.get(1)));
-        returnSet.add(s);
-        s.setDebugColor( Color.GREEN );
-        sprites.add(s);
-        return returnSet;
+        // Create right (end) anchor.
+        WheelObstacle rightAnchorObs = new WheelObstacle(pin2.x / units, pin2.y / units, ropeThickness / units);
+        rightAnchorObs.setBodyType(BodyType.StaticBody);
+        rightAnchorObs.setMass(0.1f);
+        rightAnchorObs.setDensity(1f);
+        rightAnchorObs.setFixedRotation(false);
+        rightAnchorObs.setPhysicsUnits(units);
+        rightAnchorObs.setSensor(true);
+        rightAnchorObs.setName("ropeAnchorRight");
+        EnhancedObstacleSprite rightAnchor = new EnhancedObstacleSprite(rightAnchorObs);
+        rightAnchor.setMaterial(new ObstacleMaterial("rope", data.get(1)));
+        rightAnchor.setDebugColor(Color.GREEN);
+        sprites.add(rightAnchor);
+        anchorList.add(rightAnchor);
+
+        return anchorList;
     }
 
     /**
-     * Generates the fixtures alone on set of vertices for a rope lattice
-     * @param vertices x y format of float for vertices
-     * @return
-     */
-    private ArrayList<EnhancedObstacleSprite> genFixtures(float[] vertices) {
-        int tempLen = vertices.length;
-        ArrayList<EnhancedObstacleSprite> returnSet = new ArrayList<>();
-        for (int i = 0; i < tempLen; i += 2) {
-            WheelObstacle wheel = new WheelObstacle(vertices[i] / units, vertices[i+1] / units, ropeThickness/(2 * units));
-            wheel.setBodyType(BodyType.DynamicBody);
-            wheel.setMass(0.3f);
-            wheel.setSensor(true);
-            wheel.setPhysicsUnits(units);
-            wheel.setName("ropeSegment");
-            EnhancedObstacleSprite s = new EnhancedObstacleSprite(wheel);
-            s.setMaterial(new ObstacleMaterial("rope", data.get(1)));
-            returnSet.add(s);
-            s.setDebugColor( Color.PURPLE );
-            sprites.add(s);
-        }
-        return returnSet;
-    }
-
-    /**
-     * Actually generates the joints that merges the lattice together
-     * @param world the box2d world referencing the obstacles
+     * Creates weld joints between consecutive rope nodes and attaches the end nodes to anchors.
      *
-     * @return
+     * @param world the Box2D world instance.
+     * @return true upon successful creation of joints.
      */
     @Override
     protected boolean createJoints(World world) {
-        DistanceJointDef externalJoint = new DistanceJointDef();
-        externalJoint.frequencyHz = 32f;
-        externalJoint.dampingRatio = .5f;
-        externalJoint.collideConnected = false;
-        externalJoint.length = (ropePieceLen * 2) / units;
+        WeldJointDef jointDef = new WeldJointDef();
+        jointDef.frequencyHz = 5f;
+        jointDef.dampingRatio = 0.5f;
+        jointDef.collideConnected = false;
 
-//        DistanceJointDef internalJoint = new DistanceJointDef();
-//        internalJoint.frequencyHz = 15f;  // Stiffer than external
-//        internalJoint.dampingRatio = 5f;  // Less oscillation
-//        internalJoint.length = (ropePieceLen / 2) / units; // Shorter constraint
+        // Connect each node to its following neighbor.
+        for (int i = 0; i < nodes.size() - 1; i++) {
+            Body current = nodes.get(i).getObstacle().getBody();
+            Body next = nodes.get(i + 1).getObstacle().getBody();
+            Vector2 anchor = current.getPosition().cpy().add(next.getPosition()).scl(0.5f);
+            jointDef.initialize(current, next, anchor);
+            joints.add(world.createJoint(jointDef));
+        }
 
-        int totalNumOfUnits = topEntities.size();
+        // Attach left anchor to the first node.
+        if (!nodes.isEmpty() && !anchors.isEmpty()) {
+            Body leftAnchorBody = anchors.get(0).getObstacle().getBody();
+            Body firstNode = nodes.get(0).getObstacle().getBody();
+            jointDef.initialize(leftAnchorBody, firstNode, leftAnchorBody.getPosition());
+            joints.add(world.createJoint(jointDef));
 
-        for (int i = 0; i < totalNumOfUnits; i++) {
-            Body top = topEntities.get(i).getObstacle().getBody();
-            Body bottom = bottomEntities.get(i).getObstacle().getBody();
-
-            externalJoint.initialize(top, bottom, top.getWorldCenter(), bottom.getWorldCenter());
-            joints.add(world.createJoint(externalJoint));
-
-            if (i == totalNumOfUnits - 1) {
-                Body rightAnchor = anchors.get(1).getObstacle().getBody();
-                externalJoint.initialize(rightAnchor, top, rightAnchor.getPosition(), top.getPosition());
-                joints.add(world.createJoint(externalJoint));
-                externalJoint.initialize(rightAnchor, bottom, rightAnchor.getPosition(), bottom.getPosition());
-                joints.add(world.createJoint(externalJoint));
-            } else {
-                if (i == 0) {
-                    Body leftAnchor = anchors.get(0).getObstacle().getBody();
-                    externalJoint.initialize(leftAnchor, top, leftAnchor.getPosition(), top.getPosition());
-                    joints.add(world.createJoint(externalJoint));
-                    externalJoint.initialize(leftAnchor, bottom, leftAnchor.getPosition(), bottom.getPosition());
-                    joints.add(world.createJoint(externalJoint));
-                }
-
-                Body topRight = topEntities.get(i + 1).getObstacle().getBody();
-                Body bottomRight = bottomEntities.get(i + 1).getObstacle().getBody();
-
-                externalJoint.initialize(top, topRight, top.getPosition(), topRight.getPosition());
-                joints.add(world.createJoint(externalJoint));
-                externalJoint.initialize(bottom, bottomRight, bottom.getPosition(), bottomRight.getPosition());
-                joints.add(world.createJoint(externalJoint));
-
-                externalJoint.initialize(top, bottomRight, top.getPosition(), bottomRight.getPosition());
-                joints.add(world.createJoint(externalJoint));
-                externalJoint.initialize(bottom, topRight, bottom.getPosition(), topRight.getPosition());
-                joints.add(world.createJoint(externalJoint));
-            }
+            // Attach right anchor to the last node.
+            Body rightAnchorBody = anchors.get(1).getObstacle().getBody();
+            Body lastNode = nodes.get(nodes.size() - 1).getObstacle().getBody();
+            jointDef.initialize(rightAnchorBody, lastNode, rightAnchorBody.getPosition());
+            joints.add(world.createJoint(jointDef));
         }
         return true;
     }
 
-    private void fixAnchors() {
-//        for (EnhancedObstacleSprite ebs : anchors) {
-//            ebs.getObstacle().setBodyType(BodyType.StaticBody);
-//        }
-//        anchors.get(0).getObstacle().setBodyType(BodyType.DynamicBody);
+    /**
+     * Sets the texture for all rope nodes and anchors.
+     *
+     * @param ropeTexture the texture to apply.
+     */
+    public void setTextures(Texture endTexture, Texture ropeTexture) {
+        for (EnhancedObstacleSprite sprite : nodes) {
+            sprite.setTexture(ropeTexture);
+        }
+        for (EnhancedObstacleSprite anchor : anchors) {
+            anchor.setTexture(endTexture);
+        }
     }
 
-    public void setTextures(Texture endRopeTexture, Texture midRopeTexture) {
-        for (EnhancedObstacleSprite eos : anchors) {
-            eos.setTexture(endRopeTexture);
-        }
-        for (EnhancedObstacleSprite eos : bottomEntities) {
-            eos.setTexture(midRopeTexture);
-        }
-        for (EnhancedObstacleSprite eos : topEntities) {
-            eos.setTexture(midRopeTexture);
-        }
+    /**
+     * Returns the list of rope nodes.
+     *
+     * @return an ArrayList of EnhancedObstacleSprite nodes.
+     */
+    public ArrayList<EnhancedObstacleSprite> getNodes() {
+        return nodes;
+    }
+
+    /**
+     * Attaches a specified rope node to an external object.
+     *
+     * @param obj       the external object to attach to.
+     * @param nodeIndex the index of the node in the rope.
+     * @param world     the Box2D world.
+     * @return the created joint.
+     */
+    public Joint attachNodeToObj(ObstacleSprite obj, int nodeIndex, World world) {
+        EnhancedObstacleSprite node = nodes.get(nodeIndex);
+        node.getObstacle().setBodyType(BodyType.DynamicBody);
+        WeldJointDef weldJointDef = new WeldJointDef();
+        weldJointDef.initialize(node.getObstacle().getBody(), obj.getObstacle().getBody(), node.getObstacle().getPosition());
+        Joint joint = world.createJoint(weldJointDef);
+        joints.add(joint);
+        return joint;
     }
 }

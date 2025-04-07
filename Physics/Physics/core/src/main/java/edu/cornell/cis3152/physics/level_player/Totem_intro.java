@@ -15,11 +15,12 @@ import edu.cornell.cis3152.physics.SoundEngine;
 import edu.cornell.cis3152.physics.level_player.enemies.Enemy;
 import edu.cornell.cis3152.physics.level_player.enemies.Totem;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Door;
-import edu.cornell.cis3152.physics.level_player.enviromentals.Light;
+import edu.cornell.cis3152.physics.level_player.enviromentals.Lighting;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Surface;
 import edu.cornell.cis3152.physics.level_player.player.Bullet;
 import edu.cornell.cis3152.physics.level_player.player.Torch;
 import edu.cornell.cis3152.physics.level_player.player.Traci;
+import edu.cornell.cis3152.physics.level_player.player.Traci.GroundState;
 import java.util.List;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -246,7 +247,7 @@ public class Totem_intro extends GameplayScene implements ContactListener {
         // Have to do after body is created
         avatar.createSensor();
 
-        Light l = new Light(units, constants.get("light"));
+        Lighting l = new Lighting(units, constants.get("light"));
         l.setTexture(texture);
         addSprite(l);
         l.createSensor();
@@ -318,7 +319,7 @@ public class Totem_intro extends GameplayScene implements ContactListener {
         InputController input = InputController.getInstance();
 
         // Process actions in object model
-        avatar.setMovement(input.getHorizontal() * avatar.getForce());
+        avatar.setMovement(new Vector2(input.getHorizontal() * avatar.getForce(), input.getVertical() * avatar.getForce()));
         avatar.setJumping(input.didPrimary());
         avatar.setShooting(input.didSecondary());
 
@@ -430,7 +431,7 @@ public class Totem_intro extends GameplayScene implements ContactListener {
             if ((avatar.getSensorName().equals(fd2) && avatar != bd1 && (bd1.getName().equals("floor") || bd1 instanceof Enemy) ||
                 (avatar.getSensorName().equals(fd1) && avatar != bd2 && (bd2.getName().equals("floor") || bd2 instanceof Enemy)
                 )) ) {
-                avatar.setGrounded(true);
+                avatar.setGroundedState(GroundState.GROUNDED);
                 sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
             }
 
@@ -451,7 +452,7 @@ public class Totem_intro extends GameplayScene implements ContactListener {
                 enemy.changeDirection();
             }
 
-            if ((bd2 instanceof Light && bd1 instanceof Totem)) {
+            if ((bd2 instanceof Lighting && bd1 instanceof Totem)) {
                 Texture texture = directory.getEntry("rocket-totem03", Texture.class);
                 totem.setTexture(texture);
                 totem.setState(Enemy.EnemyState.IN_LIGHT);
@@ -486,11 +487,11 @@ public class Totem_intro extends GameplayScene implements ContactListener {
             (avatar.getSensorName().equals(fd1) && avatar != bd2)) {
             sensorFixtures.remove(avatar == bd1 ? fix2 : fix1);
             if (sensorFixtures.size == 0) {
-                avatar.setGrounded(false);
+                avatar.setGroundedState(GroundState.AIRBORNE);
             }
         }
 
-        if ((bd2 instanceof Light && bd1 instanceof Totem)) {
+        if ((bd2 instanceof Lighting && bd1 instanceof Totem)) {
             Texture texture = directory.getEntry("rocket-totem01", Texture.class);
             totem.setTexture(texture);
             totem.setState(Enemy.EnemyState.OUT_OF_LIGHT);

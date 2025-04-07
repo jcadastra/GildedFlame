@@ -22,12 +22,23 @@ import com.badlogic.gdx.physics.box2d.*;
 
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.Predicate;
+import edu.cornell.cis3152.physics.level_player.enviromentals.EnhancedObstacleSprite;
+import edu.cornell.cis3152.physics.level_player.enviromentals.Ladder;
 import edu.cornell.gdiac.assets.ParserUtils;
 import edu.cornell.gdiac.graphics.SpriteBatch;
 import edu.cornell.gdiac.graphics.Texture2D;
 import edu.cornell.gdiac.math.Path2;
 import edu.cornell.gdiac.math.PathFactory;
 import edu.cornell.gdiac.physics2.*;
+import edu.cornell.gdiac.util.RandomGenerator;
+import java.nio.file.StandardOpenOption;
+import java.rmi.MarshalException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Traci's avatar for the platform game.
@@ -45,6 +56,13 @@ import edu.cornell.gdiac.physics2.*;
  * simple fixture so that we can attach it to the obstacle WITHOUT using joints.
  */
 public class Traci extends ObstacleSprite {
+    public enum GroundState {
+        GROUNDED,
+        AIRBORNE,
+        CLIMBING;
+    }
+    private GroundState groundState;
+    private Set<EnhancedObstacleSprite> bodyTouchedClimbables;
     public static final int PLAYER = 0x00000001;
     public static final int WALL = 0x00000002;
     public static final int TORCH = 0x00000004;
@@ -71,7 +89,7 @@ public class Traci extends ObstacleSprite {
     private int shotLimit;
 
     /** The current horizontal movement of the character */
-    private float   movement;
+    private Vector2   movement;
     /** Which direction is the character facing */
     private boolean faceRight;
     /** How long until we can jump again */
@@ -80,8 +98,6 @@ public class Traci extends ObstacleSprite {
     private boolean isJumping;
     /** How long until we can shoot again */
     private int shootCooldown;
-    /** Whether our feet are on the ground */
-    private boolean isGrounded;
     /** Whether we are actively shooting */
     private boolean isShooting;
 
@@ -97,6 +113,10 @@ public class Traci extends ObstacleSprite {
     private float x;
     private float y;
 
+    public static final short CATEGORY_AVATAR = 0x0002;  // 00000010
+    public static final short CATEGORY_ENVIRONMENT = 0x0004;  // 00000100
+    public static final short CATEGORY_LIGHT = 0x0008;  // 00001000
+
     /** Cache for internal force calculations */
     private final Vector2 forceCache = new Vector2();
     /** Cache for the affine flip */
@@ -109,7 +129,7 @@ public class Traci extends ObstacleSprite {
      *
      * @return the left/right movement of this character.
      */
-    public float getMovement() {
+    public Vector2 getMovement() {
         return movement;
     }
 
@@ -120,12 +140,12 @@ public class Traci extends ObstacleSprite {
      *
      * @param value the left/right movement of this character.
      */
-    public void setMovement(float value) {
+    public void setMovement(Vector2 value) {
         movement = value;
         // Change facing if appropriate
-        if (movement < 0) {
+        if (movement.x < 0) {
             faceRight = false;
-        } else if (movement > 0) {
+        } else if (movement.x > 0) {
             faceRight = true;
         }
     }
@@ -154,7 +174,7 @@ public class Traci extends ObstacleSprite {
      * @return true if Traci is actively jumping.
      */
     public boolean isJumping() {
-        return isJumping && isGrounded && jumpCooldown <= 0;
+        return isJumping && !groundState.equals(GroundState.AIRBORNE) && jumpCooldown <= 0;
     }
 
     /**
@@ -188,17 +208,15 @@ public class Traci extends ObstacleSprite {
      *
      * @return true if Traci is on the ground.
      */
-    public boolean isGrounded() {
-        return isGrounded;
+    public GroundState getGroundedState() {
+        return groundState;
     }
 
     /**
      * Sets whether Traci is on the ground.
-     *
-     * @param value whether Traci is on the ground.
      */
-    public void setGrounded(boolean value) {
-        isGrounded = value;
+    public void setGroundedState(GroundState state) {
+        groundState = state;
     }
 
     /**
@@ -305,7 +323,7 @@ public class Traci extends ObstacleSprite {
         shotLimit = data.getInt( "shot_cool", 0 );
 
         // Gameplay attributes
-        isGrounded = false;
+        groundState = GroundState.AIRBORNE;
         isShooting = false;
         isJumping = false;
         faceRight = true;
@@ -319,6 +337,13 @@ public class Traci extends ObstacleSprite {
         // actually smaller than the image, making a tighter hitbox. You can
         // see this when you enable debug mode.
         mesh.set(-size/2.0f,-size/2.0f,size,size);
+
+        //fixture filter for lights
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.filter.categoryBits = CATEGORY_AVATAR; // Object's category
+        fixtureDef.filter.maskBits = CATEGORY_ENVIRONMENT; // Which lights affect it
+
+        this.bodyTouchedClimbables = new HashSet<>();
     }
 
     public void create_Fixture() {
@@ -394,46 +419,105 @@ public class Traci extends ObstacleSprite {
         if (!obstacle.isActive()) {
             return;
         }
-
         Vector2 pos = obstacle.getPosition();
         float vx = obstacle.getVX();
+        float vy = obstacle.getVY();
         Body body = obstacle.getBody();
 
-        // Don't want to be moving. Damp out player motion
-        if (getMovement() == 0f) {
-            forceCache.set(-getDamping()*vx,0);
-            body.applyForce(forceCache,pos,true);
-        }
+        if (groundState.equals(GroundState.CLIMBING)) {
+            int count = bodyTouchedClimbables.size();
+            Vector2 maxVel = new Vector2();
+            Vector2 avgVel = new Vector2();
+            float avgAngle = 0;
+//            System.out.println("pre loop" + obstacle.getLinearVelocity());
 
-        // Velocity too high, clamp it
-        if (Math.abs(vx) >= getMaxSpeed()) {
-            obstacle.setVX(Math.signum(vx)*getMaxSpeed());
+            /*Avg pos used and calculated as a way to prevent player from hopping of the top of a rope accidentally*/
+            Vector2 avgPos = new Vector2();
+//            Vector2 avgPos = Vector2.Zero;
+            for (EnhancedObstacleSprite eos : bodyTouchedClimbables) {
+                Vector2 eosVel = eos.getObstacle().getLinearVelocity();
+                if (eosVel.len2() > maxVel.len2()) {
+                    maxVel.set(eosVel);
+                }
+                avgVel.add(eosVel);
+                avgAngle += eos.getObstacle().getAngle();
+                avgPos.add(eos.getObstacle().getPosition().cpy());
+            }
+            avgVel.scl(1f/count);
+            avgPos.scl(1f/count);
+            avgAngle /= (count);
+            obstacle.setAngle((float) ((Math.PI/2)-Math.abs(avgAngle)));
+//            System.out.println("angle -> " + avgAngle);
+//            System.out.println(count);
+
+            Vector2 ropeDir = new Vector2((float)Math.cos(avgAngle), (float)Math.sin(avgAngle));
+            Vector2 perpDir = new Vector2(-ropeDir.y, ropeDir.x);
+
+            java.util.function.Predicate<EnhancedObstacleSprite> testLadder = (item) -> item instanceof Ladder;
+            int topProtector = 1;
+            if (!bodyTouchedClimbables.stream().allMatch(testLadder) && avgPos.y < (pos.y - height/4) && getMovement().y > 0) {
+                topProtector= 0;
+            }
+            if (avgPos.y > pos.y) {
+                maxVel.scl(Math.signum(avgPos.x - pos.x) , Math.signum(avgPos.y - pos.x));
+            }
+            if (topProtector == 0) {
+                pos.y = avgPos.y;
+            }
+
+            Vector2 playerMovement = new Vector2(ropeDir).scl(-getMovement().y * (1f/7 * topProtector))
+                .add(new Vector2(perpDir).scl(getMovement().x * (1f/10)));
+
+            if (playerMovement.len() == 0 && bodyTouchedClimbables.size() > 1) {
+                playerMovement = avgPos.cpy().sub(getObstacle().getPosition());
+            }
+            obstacle.setLinearVelocity(avgVel.add(playerMovement));
+
+            if (isJumping()) {
+                removeClimbingPhysics();
+                obstacle.setLinearVelocity(Vector2.Zero);
+                forceCache.set(0, jump_force);
+                body.applyLinearImpulse(forceCache,pos,true);
+            }
         } else {
-            forceCache.set(getMovement(),0);
-            body.applyForce(forceCache,pos,true);
-        }
+            // TYPICAL MOVEMENT LOGIC
+//            getObstacle().getBody().setGravityScale(1);
 
-        // Jump!
-        if (isJumping()) {
-            forceCache.set(0, jump_force);
-            body.applyLinearImpulse(forceCache,pos,true);
+            if (getMovement().x == 0f) {
+                forceCache.set(-getDamping()*vx,0);
+                body.applyForce(forceCache,pos,true);
+            }
+
+            if (Math.abs(vx) >= getMaxSpeed()) {
+                obstacle.setVX(Math.signum(vx)*getMaxSpeed());
+            } else {
+                forceCache.set(getMovement().x,0);
+                body.applyForce(forceCache,pos,true);
+            }
+
+            if (isJumping()) {
+                forceCache.set(0, jump_force);
+                body.applyLinearImpulse(forceCache,pos,true);
+            }
         }
+    }
+
+    public void applyClimbingPhysics() {
+        getObstacle().getBody().setGravityScale(0);
+        getObstacle().setFixedRotation(false);
+        applyWeightToClimbable(bodyTouchedClimbables);
+    }
+    public void removeClimbingPhysics() {
+        getObstacle().setAngle(0);
+        getObstacle().setFixedRotation(true);
+        removeWeightToClimbable(bodyTouchedClimbables);
+        getObstacle().getBody().setGravityScale(1);
     }
 
     public JointDef attachTorchToAvatar(Torch t) {
         WeldJointDef jointDef = new WeldJointDef();
         Vector2 anchor = new Vector2(obstacle.getX(), obstacle.getY());
         jointDef.initialize(obstacle.getBody(), t.getObstacle().getBody(), anchor);
-        jointDef.collideConnected = false;
-        return jointDef;
-    }
-
-    public JointDef flipTorchJoint(World world, Body characterBody, Body torchBody) {
-        WeldJointDef jointDef = new WeldJointDef();
-        float flippedOffsetX = -1;
-        Vector2 newAnchor = new Vector2(characterBody.getPosition().x + flippedOffsetX, characterBody.getPosition().y + 9);
-
-        jointDef.initialize(characterBody, torchBody, newAnchor);
         jointDef.collideConnected = false;
         return jointDef;
     }
@@ -512,6 +596,50 @@ public class Traci extends ObstacleSprite {
             //
             batch.outline( sensorOutline, transform );
         }
+    }
+
+    public void registerClimbable(EnhancedObstacleSprite obj) {
+        if (!bodyTouchedClimbables.contains(obj) && groundState.equals(GroundState.CLIMBING) ) {
+            applyWeightToClimbable(new HashSet<>(List.of(obj)));
+        }
+        bodyTouchedClimbables.add(obj);
+    }
+    public void removeClimbable(EnhancedObstacleSprite obj) {
+        if (bodyTouchedClimbables.contains(obj) && groundState.equals(GroundState.CLIMBING)) {
+            removeWeightToClimbable(new HashSet<>(List.of(obj)));
+        }
+        bodyTouchedClimbables.remove(obj);
+    }
+    private void applyWeightToClimbable(Set<EnhancedObstacleSprite> set) {
+//        System.out.println("adding weight to # objects -> " + set.size());
+        for (EnhancedObstacleSprite obj : set) {
+//            System.out.println("appyly weight");
+            Fixture fixture = obj.getObstacle().getBody().getFixtureList().first();
+            //TODO: fix with updated masses later
+            float currentDensity = fixture.getDensity();
+            float adjustment = (getObstacle().getMass() * .05f);
+            fixture.setDensity(currentDensity + adjustment);
+            obj.getObstacle().getBody().resetMassData();
+        }
+    }
+    private void removeWeightToClimbable(Set<EnhancedObstacleSprite> set) {
+//        System.out.println("removing weight to # objects -> " + set.size());
+        for (EnhancedObstacleSprite obj : set) {
+            if (obj.getObstacle().isRemoved()) {
+                continue;
+            }
+//            System.out.println("remove weight");
+            Fixture fixture = obj.getObstacle().getBody().getFixtureList().first();
+            float currentDensity = fixture.getDensity();
+            float adjustment = (getObstacle().getMass() * .05f);
+            fixture.setDensity(currentDensity - adjustment);
+            obj.getObstacle().getBody().resetMassData();
+//            System.out.println(obj + " post -> " +obj.getObstacle().getDensity());
+//            System.out.println(obj +" post -> " +obj.getObstacle().getMass());
+        }
+    }
+    public Set<EnhancedObstacleSprite> getBodyTouchedClimbables() {
+        return bodyTouchedClimbables;
     }
 }
 
