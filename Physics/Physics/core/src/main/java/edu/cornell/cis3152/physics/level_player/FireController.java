@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import edu.cornell.cis3152.physics.level_player.enviromentals.*;
+import edu.cornell.cis3152.physics.level_player.utils.FireFlag;
 import edu.cornell.gdiac.graphics.SpriteMesh;
 import java.util.HashMap;
 import com.badlogic.gdx.math.EarClippingTriangulator;
@@ -24,9 +25,9 @@ public class FireController {
      */
     private HashMap<EnhancedObstacleSprite, Vector2[]> nFireDiagrams;
     private HashMap<EnhancedObstacleSprite, ArrayList<Fire>> firesOnShape;
-    private Stack<Object[]> fireFlags;
+    private Stack<FireFlag> fireFlags;
 
-    public Stack<Object[]> getFireFlags() {
+    public Stack<FireFlag> getFireFlags() {
         return fireFlags;
     }
 
@@ -79,7 +80,7 @@ public class FireController {
             }
             if (testIfFullyBurning(s)) {
                 if (s.getMaterial().isExpiredBurnTimer()) {
-                    fireFlags.push(new Object[]{"expireObj", s, firesOnShape.get(s)});
+                    fireFlags.push(new FireFlag("expireObj", s, firesOnShape.get(s)));
                 } else {
                     s.getMaterial().incrementBurnTimer();
                 }
@@ -89,7 +90,7 @@ public class FireController {
                     if (rand.nextFloat() < s.getMaterial().getFlammability()) {
                         Fire f = new Fire(s.getObstacle().getPhysicsUnits(), p.cpy());
                         firesOnShape.get(s).add(f);
-                        fireFlags.push(new Object[]{"attachFire", s, f});
+                        fireFlags.push(new FireFlag("attachFire", s, f));
                     }
                 }
             }
@@ -213,7 +214,7 @@ public class FireController {
 
         Fire f = new Fire(s.getObstacle().getPhysicsUnits(), point.cpy());
         firesOnShape.computeIfAbsent(s, k -> new ArrayList<>()).add(f);
-        fireFlags.push(new Object[]{"attachFire", s, f});
+        fireFlags.push(new FireFlag("attachFire", s, f));
     }
 
     /**

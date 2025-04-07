@@ -32,11 +32,12 @@ import edu.cornell.cis3152.physics.level_player.enemies.Enemy;
 import edu.cornell.cis3152.physics.level_player.enemies.Moth;
 import edu.cornell.cis3152.physics.level_player.enemies.Totem;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Door;
-import edu.cornell.cis3152.physics.level_player.enviromentals.Light;
+import edu.cornell.cis3152.physics.level_player.enviromentals.Lighting;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Surface;
 import edu.cornell.cis3152.physics.level_player.player.Bullet;
 import edu.cornell.cis3152.physics.level_player.player.Torch;
 import edu.cornell.cis3152.physics.level_player.player.Traci;
+import edu.cornell.cis3152.physics.level_player.player.Traci.GroundState;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.audio.SoundEffect;
 import edu.cornell.gdiac.audio.SoundEffectManager;
@@ -291,7 +292,7 @@ public class Moth_intro extends GameplayScene implements ContactListener {
         // Have to do after body is created
         avatar.createSensor();
 
-        Light l = new Light(units, constants.get("light"));
+        Lighting l = new Lighting(units, constants.get("light"));
         l.setTexture(texture);
         addSprite(l);
         l.createSensor();
@@ -368,7 +369,7 @@ public class Moth_intro extends GameplayScene implements ContactListener {
         InputController input = InputController.getInstance();
 
         // Process actions in object model
-        avatar.setMovement(input.getHorizontal() * avatar.getForce());
+        avatar.setMovement(new Vector2(input.getHorizontal() * avatar.getForce(), input.getVertical() * avatar.getForce()));
         avatar.setJumping(input.didPrimary());
         avatar.setShooting(input.didSecondary());
 
@@ -480,19 +481,19 @@ public class Moth_intro extends GameplayScene implements ContactListener {
             // See if we have landed on a platform.
             if ((avatar.getSensorName().equals(fd2) && avatar != bd1 && (bd1.getName().equals("floor")) ||
                 (avatar.getSensorName().equals(fd1) && avatar != bd2 && (bd2.getName().equals("floor"))))) {
-                avatar.setGrounded(true);
+                avatar.setGroundedState(GroundState.GROUNDED);
                 sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
             }
 
             if ((avatar.getSensorName().equals(fd2) && avatar != bd1 && (bd1.getName().equals("platform")) ||
                 (avatar.getSensorName().equals(fd1) && avatar != bd2 && (bd2.getName().equals("platform"))))) {
-                avatar.setGrounded(true);
+                avatar.setGroundedState(GroundState.GROUNDED);
                 sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
             }
 
             if ((avatar.getSensorName().equals(fd2) && avatar != bd1 && (bd1.getName().equals("totem")) ||
                 (avatar.getSensorName().equals(fd1) && avatar != bd2 && (bd2.getName().equals("totem"))))) {
-                avatar.setGrounded(true);
+                avatar.setGroundedState(GroundState.GROUNDED);
                 sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
             }
 
@@ -529,13 +530,13 @@ public class Moth_intro extends GameplayScene implements ContactListener {
 
 
 
-            if (bd2 instanceof Light && bd1 instanceof Totem) {
+            if (bd2 instanceof Lighting && bd1 instanceof Totem) {
                 Totem collidedTotem = (Totem) bd1;
                 Texture texture = directory.getEntry("rocket-totem03", Texture.class);
                 collidedTotem.setTexture(texture);
                 collidedTotem.setState(Enemy.EnemyState.IN_LIGHT);
                 collidedTotem.resetFreeze();
-            } else if (bd1 instanceof Light && bd2 instanceof Totem) {
+            } else if (bd1 instanceof Lighting && bd2 instanceof Totem) {
                 Totem collidedTotem = (Totem) bd2;
                 Texture texture = directory.getEntry("rocket-totem03", Texture.class);
                 collidedTotem.setTexture(texture);
@@ -543,8 +544,8 @@ public class Moth_intro extends GameplayScene implements ContactListener {
                 collidedTotem.resetFreeze();
             }
 
-            if ((bd2 instanceof Light && bd1 instanceof Moth) || (bd2 instanceof Moth && bd1 instanceof Light) ){
-                Light light = (bd1 instanceof Light) ? (Light) bd1 : (Light) bd2;
+            if ((bd2 instanceof Lighting && bd1 instanceof Moth) || (bd2 instanceof Moth && bd1 instanceof Lighting) ){
+                Lighting light = (bd1 instanceof Lighting) ? (Lighting) bd1 : (Lighting) bd2;
                 Enemy moth = (bd1 instanceof Enemy) ? (Enemy) bd1 : (Enemy) bd2;
 
                 float lx = light.getObstacle().getX();
@@ -560,7 +561,7 @@ public class Moth_intro extends GameplayScene implements ContactListener {
 
                 moth.setTexture(texture);
                 moth.setState(Enemy.EnemyState.IN_LIGHT);
-                moth.resetAttackTimer();
+//                moth.resetAttackTimer();
             }
 
 
@@ -592,31 +593,31 @@ public class Moth_intro extends GameplayScene implements ContactListener {
             (avatar.getSensorName().equals(fd1) && avatar != bd2)) {
             sensorFixtures.remove(avatar == bd1 ? fix2 : fix1);
             if (sensorFixtures.size == 0) {
-                avatar.setGrounded(false);
+                avatar.setGroundedState(GroundState.AIRBORNE);
             }
         }
 
-        if (bd2 instanceof Light && bd1 instanceof Totem) {
+        if (bd2 instanceof Lighting && bd1 instanceof Totem) {
             Totem collidedTotem = (Totem) bd1;
             Texture texture = directory.getEntry("rocket-totem01", Texture.class);
             collidedTotem.setTexture(texture);
             collidedTotem.setState(Enemy.EnemyState.OUT_OF_LIGHT);
             collidedTotem.resetFreeze();
 
-        } else if (bd1 instanceof Light && bd2 instanceof Totem) {
+        } else if (bd1 instanceof Lighting && bd2 instanceof Totem) {
             Totem collidedTotem = (Totem) bd2;
             Texture texture = directory.getEntry("rocket-totem01", Texture.class);
             collidedTotem.setTexture(texture);
             collidedTotem.setState(Enemy.EnemyState.OUT_OF_LIGHT);
             collidedTotem.resetFreeze();
         }
-        if ((bd2 instanceof Light && bd1 instanceof Moth)) {
+        if ((bd2 instanceof Lighting && bd1 instanceof Moth)) {
             Moth collidedMoth = (Moth) bd1;
             Texture texture = directory.getEntry("rocket-moth01", Texture.class);
             collidedMoth.setTexture(texture);
             collidedMoth.setState(Enemy.EnemyState.OUT_OF_LIGHT);
         }
-        if ((bd2 instanceof Moth && bd1 instanceof Light)) {
+        if ((bd2 instanceof Moth && bd1 instanceof Lighting)) {
             Moth collidedMoth = (Moth) bd2;
             Texture texture = directory.getEntry("rocket-moth01", Texture.class);
             collidedMoth.setTexture(texture);

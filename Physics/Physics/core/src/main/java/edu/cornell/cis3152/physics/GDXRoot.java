@@ -146,6 +146,7 @@ public class GDXRoot extends Game implements ScreenListener {
             soundEngine.registerSoundEffect("pew", directory.getEntry("platform-pew", SoundEffect.class));
             soundEngine.registerSoundEffect("plop", directory.getEntry("platform-plop", SoundEffect.class));
             soundEngine.registerSoundEffect("dirtFootStep", directory.getEntry("dirtFootStep", SoundEffect.class));
+            soundEngine.registerSoundEffect("torchThrow", directory.getEntry("torchThrow", SoundEffect.class));
 
             soundEngine.registerMusic("eerie1", directory.getEntry("eerie", Music.class));
             soundEngine.registerMusic("eerieCriminal", directory.getEntry("eerieCriminal", Music.class));
@@ -159,11 +160,11 @@ public class GDXRoot extends Game implements ScreenListener {
 
             // Initialize the three game worlds
             currentScene = new GameplayScene(directory, soundEngine, "platform");
-            levels = new String[4];
+            levels = new String[3];
             levels[0] = "moth_intro";
             levels[1] = "totem_intro";
-            levels[2] = "spinner_layout";
-            levels[3] = "rope_test";
+            //levels[2] = "spinner_layout";
+            levels[2] = "rope_test";
             currentScene.loadLevel(levels[0]);
             currentScene.setScreenListener(this);
             currentScene.setSpriteBatch(batch);

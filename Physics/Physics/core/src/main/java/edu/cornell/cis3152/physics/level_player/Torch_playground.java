@@ -16,11 +16,13 @@ import edu.cornell.cis3152.physics.level_player.enemies.Enemy;
 import edu.cornell.cis3152.physics.level_player.enemies.Moth;
 import edu.cornell.cis3152.physics.level_player.enemies.Totem;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Door;
-import edu.cornell.cis3152.physics.level_player.enviromentals.Light;
+import edu.cornell.cis3152.physics.level_player.enviromentals.Lighting;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Surface;
 import edu.cornell.cis3152.physics.level_player.player.Bullet;
 import edu.cornell.cis3152.physics.level_player.player.Torch;
 import edu.cornell.cis3152.physics.level_player.player.Traci;
+import edu.cornell.cis3152.physics.level_player.player.Traci.GroundState;
+import edu.cornell.cis3152.physics.level_player.utils.CollisionFlag;
 import java.util.List;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -44,10 +46,7 @@ import java.util.Stack;
 
 /**
  * The game scene for the platformer game.
- * <p>
- * Look at the method {@link #populateLevel} for how we initialize the scene. Beyond that, a lot of
- * work is done in the method for the ContactListener interface. That is the method that is called
- * upon collisions, giving us a chance to define a response.
+ *
  */
 public class Torch_playground extends GameplayScene {
 
@@ -232,7 +231,7 @@ public class Torch_playground extends GameplayScene {
         // Have to do after body is created
         avatar.createSensor();
 
-        Light l = new Light(units, constants.get("light"));
+        Lighting l = new Lighting(units, constants.get("light"));
         l.setTexture(texture);
         addSprite(l);
         l.createSensor();
@@ -304,7 +303,7 @@ public class Torch_playground extends GameplayScene {
         moth.update();
         InputController input = InputController.getInstance();
         // Process actions in object model
-        avatar.setMovement(input.getHorizontal() * avatar.getForce());
+        avatar.setMovement(new Vector2(input.getHorizontal() * avatar.getForce(), input.getVertical() * avatar.getForce()));
         avatar.setJumping(input.didPrimary());
         avatar.setShooting(input.didSecondary());
 
@@ -333,27 +332,25 @@ public class Torch_playground extends GameplayScene {
     }
 
     private void supplementaryCollisionActions() {
-        Stack<Object[]> todos = contactListener.getCollisionFlags();
+        Stack<CollisionFlag> todos = contactListener.getCollisionFlags();
         while ( !todos.isEmpty() ) {
-            Object[] todo_action = todos.pop();
-            switch ((String) todo_action[0]) {
-                case "removeBullet":
-                    removeBullet((Bullet) todo_action[1]);
-                    break;
+            CollisionFlag todo_action = todos.pop();
+            switch ((String) todo_action.getName()) {
                 case "addTorch":
                     if (torch.canBePickedUp()) {
                         queueAddTorch = true;
                     }
                     break;
                 case "traciGrounded":
-                    sensorFixtures.add((Fixture) todo_action[1]);
+                    sensorFixtures.add(todo_action.getFixture());
                     break;
                 case "traciAirborne":
-                    sensorFixtures.remove((Fixture) todo_action[1]);
+                    sensorFixtures.remove(todo_action.getFixture());
                     if (sensorFixtures.size == 0) {
-                        avatar.setGrounded(false);
+                        avatar.setGroundedState(GroundState.AIRBORNE);
                     }
                     break;
+                case "queueFailure":
             }
         }
     }
