@@ -311,6 +311,11 @@ public class CollisionController implements ContactListener {
                 }
             }
 
+            if (isXandY(bd1, bd2, Traci.class, Door.class) == 1 ) {
+                ContactKey key = new ContactKey(fix1, fix2);
+                sustainedContacts.put(key, -1);
+            }
+
             /**
              * Collision detection to see if the player is overlapping with any climbable entities
              * then stores them within the player for future joint creation
@@ -391,6 +396,15 @@ public class CollisionController implements ContactListener {
                     }
                 }
             }
+
+            if (isXandY(bd1, bd2, Traci.class, Door.class) == 1) {
+                Traci traci = (Traci) idX(bd1, bd2, Traci.class);
+                if (traci.getHasTorch()) {
+                    collisionFlags.push(new CollisionFlag("queueWin"));
+                } else {
+                    sustainedContacts.put(key, -1);
+                }
+            }
         }
     }
 
@@ -454,7 +468,11 @@ public class CollisionController implements ContactListener {
         if (isXandY(bd1, bd2, Fire.class, EnhancedObstacleSprite.class) == 1) {
             ContactKey key = new ContactKey(fix1, fix2);
             sustainedContacts.remove(key);
+        }
 
+        if (isXandY(bd1, bd2, Traci.class, Door.class) == 1) {
+            ContactKey key = new ContactKey(fix1, fix2);
+            sustainedContacts.remove(key);
         }
 
         /**
