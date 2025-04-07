@@ -65,6 +65,7 @@ import edu.cornell.gdiac.util.*;
 import edu.cornell.gdiac.graphics.*;
 import edu.cornell.gdiac.physics2.*;
 import edu.cornell.cis3152.physics.level_player.enviromentals.*;
+import java.util.Optional;
 import java.util.Stack;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -668,41 +669,42 @@ public class GameplayScene implements Screen {
             enemies.add(moth);
         }
 
+        // SAMPLE BUTTON CODE BELOW::
 //        Button button = new Button(new Vector2(24,2.75f), 0, true, true, units);
-        BoxObstacle temp = new BoxObstacle(5,5,5,.5f);
-        temp.setPhysicsUnits(units);
-        temp.setName("floor");
-        ObstacleSprite thing = new ObstacleSprite(temp);
-        thing.getObstacle().setBodyType(BodyType.KinematicBody);
-        thing.getObstacle().setFriction(.5f);
-//        addSprite(thing);
-
-        Button button = new Button(new Vector2(20,3.75f), 0, false, false, units);
-//        Array<Object> actionArray = new Array<>(new Object[]{thing, "move", new Vector2(8, 10), new Vector2(10, 10)});
-        Function<Float, Float> movementFunc = Interpolation.swing::apply;
-        EventAction<Vector2> eventAction = new EventAction<Vector2>(thing, "move", new Vector2(8, 10), new Vector2(16, 5), 4f, movementFunc);
-//        Object[] actionArray = new Object[]{thing, "rotate", 0f, (float) (Math.PI), 300, movementFunc};
-//        Object[] actionArray = new Object[]{thing, "move", new Vector2(8, 10), new Vector2(16, 5), 100, movementFunc};
-
-        Event<Integer,Vector2> event = new Event<Integer,Vector2>(button, button::getState,
-            state -> state == 1, "button", eventAction);
-//        eventHandler.registerEvent(event);
-
-
-        EventAction<Float> eventAction2 = new EventAction<Float>(thing, "rotate", 0f, (float) (Math.PI), 4, movementFunc);
-        Event<Integer,Float> event2 = new Event<Integer, Float>(button, button::getState,
-            state -> state == 1, "button", eventAction2);
-        eventHandler.registerEvent(event2);
-
-        eventAction = new EventAction<>("spawn");
-        event = new Event<Integer,Vector2>(button, button::getState,
-            state -> state == 1, "button", eventAction);
-//        eventHandler.registerEvent(event);
-
-//        addSpriteGroup(button);
-
-        Ladder tempLadder = new Ladder(3,3,5f, units);
-//        addSprite(tempLadder);
+//        BoxObstacle temp = new BoxObstacle(5,5,5,.5f);
+//        temp.setPhysicsUnits(units);
+//        temp.setName("floor");
+//        ObstacleSprite thing = new ObstacleSprite(temp);
+//        thing.getObstacle().setBodyType(BodyType.KinematicBody);
+//        thing.getObstacle().setFriction(.5f);
+////        addSprite(thing);
+//
+//        Button button = new Button(new Vector2(20,3.75f), 0, false, false, units);
+////        Array<Object> actionArray = new Array<>(new Object[]{thing, "move", new Vector2(8, 10), new Vector2(10, 10)});
+//        Function<Float, Float> movementFunc = Interpolation.swing::apply;
+//        EventAction<Vector2> eventAction = new EventAction<Vector2>(thing, "move", new Vector2(8, 10), new Vector2(16, 5), 4f, movementFunc);
+////        Object[] actionArray = new Object[]{thing, "rotate", 0f, (float) (Math.PI), 300, movementFunc};
+////        Object[] actionArray = new Object[]{thing, "move", new Vector2(8, 10), new Vector2(16, 5), 100, movementFunc};
+//
+//        Event<Integer,Vector2> event = new Event<Integer,Vector2>(button, button::getState,
+//            state -> state == 1, "button", eventAction);
+////        eventHandler.registerEvent(event);
+//
+//
+//        EventAction<Float> eventAction2 = new EventAction<Float>(thing, "rotate", 0f, (float) (Math.PI), 4, movementFunc);
+//        Event<Integer,Float> event2 = new Event<Integer, Float>(button, button::getState,
+//            state -> state == 1, "button", eventAction2);
+//        eventHandler.registerEvent(event2);
+//
+//        eventAction = new EventAction<>("spawn");
+//        event = new Event<Integer,Vector2>(button, button::getState,
+//            state -> state == 1, "button", eventAction);
+////        eventHandler.registerEvent(event);
+//
+////        addSpriteGroup(button);
+//
+//        Ladder tempLadder = new Ladder(3,3,5f, units);
+////        addSprite(tempLadder);
     }
     /**
      * Returns whether to process the update loop
@@ -784,7 +786,7 @@ public class GameplayScene implements Screen {
         soundEngine.tendToMusicLoop();
         supplementaryCollisionActions();
         supplementaryFireActions();
-        supplementaryEventActions();
+        supplementaryEventActions(dt);
         updateTweenedMovementObjectsVec2(dt);
         updateTweenedMovementObjectsFloat(dt);
 
@@ -877,6 +879,11 @@ public class GameplayScene implements Screen {
         camera.update();
     }
 
+    /**
+     * function that pulls the collision flags from the collision controller and porcesses them as needed
+     * mainly comprises items that cannot bbe done within the cotnroller or are expected in the
+     * super, like destroying joints
+     */
     private void supplementaryCollisionActions() {
         Stack<CollisionFlag> todos = contactListener.getCollisionFlags();
         while ( !todos.isEmpty() ) {
@@ -920,6 +927,11 @@ public class GameplayScene implements Screen {
         }
     }
 
+    /**
+     * function that pulls the fire flags from the fire controller and porcesses them as needed
+     * mainly comprises items that cannot bbe done within the cotnroller or are expected in the
+     * super, like destroying joints
+     */
     private void supplementaryFireActions() {
         Stack<FireFlag> todos = fireController.getFireFlags();
         while (!todos.isEmpty()) {
@@ -949,60 +961,119 @@ public class GameplayScene implements Screen {
     }
 
     @SuppressWarnings("unchecked")
-    private <T,U> void supplementaryEventActions() {
+    /**
+     * Function that pulls the stack of event action from the event handler and goes through each one
+     * if there needs to be any upkeep in caller, like resetting a button, it occurs in the first part
+     * then the event is actual action is pulled out of the event, any changes made, then processed ie
+     * either running the event now or putting it into the tween handler
+     *
+     * @param dt delta time
+     */
+    private <T,U> void supplementaryEventActions(float dt) {
         Stack<Event<?,?>> todos = eventHandler.getEventFlags();
         while (!todos.isEmpty()) {
             Event<T,U> event = (Event<T, U>) todos.pop();
             EventAction<U> action = event.action;
+            System.out.println(event.source.getClass());
 
-            switch (event.caller) {
-                case "button":
-                    EventAction<U> undo_action = action.clone();
-                    U temp = undo_action.getInitialPoint();
-                    undo_action.setInitialPoint(undo_action.getFinalPoint());
-                    undo_action.setFinalPoint(temp);
+            // if the caller of the event needs any upkeep, in the case of a button the inverse of the
+            // event will be added to be called after the button's state changes again, to act like a
+            // true button
+            if (event.source instanceof Button){
+                EventAction<U> undo_action = action.cloneTweenEvent();
+                U temp = undo_action.getInitialValue();
+                undo_action.setInitialValue(undo_action.getFinalValue());
+                undo_action.setFinalValue(temp);
 
-                    Button button = (Button) event.source;
-                    button.toggleButton(world);
+                Button button = (Button) event.source;
+                button.toggleButton(world);
 
-                    int nextState;
-                    if (button.getDoubleSided()) {
-                        nextState = 1;
-                    } else {
-                        nextState = button.getState() == 0 ? 1 : 0;
-                    }
+                int nextState;
+                if (button.getDoubleSided()) {
+                    nextState = 1;
+                } else {
+                    nextState = button.getState() == 0 ? 1 : 0;
+                }
 
-                    if (button.getDoubleSided() || (!button.getDoubleSided() && !button.getLatch())) {
-                        event.conditional = (T state) -> state.equals(nextState);
-                        event.action = undo_action;
-                        eventHandler.registerEvent(event);
-                    }
-                    break;
+                if (button.getDoubleSided() || (!button.getDoubleSided() && !button.getLatch())) {
+                    Event newEvent = event.clone();
+                    event.conditional = (T state) -> state.equals(nextState);
+                    event.action = undo_action;
+                    eventHandler.registerEvent(event);
+                }
             }
 
-
+            // register the tween from the event to do an action
+            float timeTill = action.getTime();
             switch (action.getName()) {
                 case "move":
-                    tweenedMovmentObjectsVec2.removeIf(a -> a.target == action.getTarget() && a.name.equals(action.getName()));
+                    // the whooole point of this and its ocunterpart in "flaot" is to one, prevent two diff
+                    // tweens of the same class (CAREFUL ABOUT CHAINING!!)  to affect the same object
+                    // but also such that if a tween is interupted at point m on path A -> B, then
+                    // it will return to A state in the same time it took to get to m regardless of
+                    // where m is along the path (and more importantly because this gave me a headacche:
+                    // how many times the tween was interupted along the path hence the calculation from origin each time)
+                    // can be done better/optimzied but unsure if needed atm
+                    Optional<TweenElement<Vector2>> oldEvent = tweenedMovmentObjectsVec2.stream().filter
+                        (a -> a.target == action.getTarget() && a.name.equals(action.getName())).findFirst();
+                    if (oldEvent.isPresent()) {
+                        Vector2 start = ((Vector2) action.getInitialValue()).cpy();
+                        Vector2 travellingPoint = start.cpy();
+                        float stepCounter = 0;
+                        Vector2 end = (Vector2) action.getFinalValue();
+                        float terminalToDist = oldEvent.get().supplier.get().dst(end);
 
+                        //loop should be safe as this is a rare action run only when a tween of this class is interupted
+                        while (travellingPoint.dst(end) > terminalToDist) {
+                            stepCounter += dt;
+                            // no new vector creation cause that takes memory
+                            travellingPoint.set((end.x - start.x) * action.interpolator.apply(stepCounter / action.getTime()) + start.x,
+                                                (end.y - start.y) * action.interpolator.apply(stepCounter / action.getTime()) + start.y);
+                        }
+                        timeTill = action.getTime() - stepCounter;
+                        tweenedMovmentObjectsVec2.remove(oldEvent.get());
+                    }
+
+                    // adjust new values for tween from aciton
                     Vector2 initialStateVec2 = action.getTarget().getObstacle().getPosition().cpy();
                     Supplier<Vector2> supplierVec2 = () -> action.getTarget().getObstacle().getPosition();
                     Consumer<Vector2> consumerVec2 = (value) -> action.getTarget().getObstacle().setLinearVelocity(value);
 
+                    // attach tween to movement objects to be ran
                     TweenElement<Vector2> tweenElementVec2 = new TweenElement<Vector2>(action.getTarget(), action.getName(),
-                        initialStateVec2, (Vector2) action.getFinalPoint(), action.getTime(),action.getInterpolator(), supplierVec2, consumerVec2);
+                        initialStateVec2, (Vector2) action.getFinalValue(), timeTill,
+                        action.getInterpolator(), supplierVec2, consumerVec2);
                     tweenedMovmentObjectsVec2.add(tweenElementVec2);
                     break;
 
                 case "rotate":
-                    tweenedMovmentObjectsFloat.removeIf(a -> a.target == action.getTarget() && a.name.equals(action.getName()));
+                    // see mirrored documentation in "move"
+                    Optional<TweenElement<Float>> oldEventF = tweenedMovmentObjectsFloat.stream().filter
+                        (a -> a.target == action.getTarget() && a.name.equals(action.getName())).findFirst();
+
+
+                    if (oldEventF.isPresent()) {
+                        Float start = (Float) action.getInitialValue();
+                        Float travellingPoint = start;
+                        float stepCounter = 0;
+                        Float end = (Float) action.getFinalValue();
+                        float terminalDist = end - oldEventF.get().supplier.get();
+
+                        while (end - travellingPoint > terminalDist) {
+                            stepCounter += dt;
+                            travellingPoint = (end - start) * action.interpolator.apply(stepCounter / action.getTime()) + start;
+                        }
+
+                        timeTill = action.getTime() - stepCounter;
+                        tweenedMovmentObjectsVec2.remove(oldEventF.get());
+                    }
 
                     Float initialStateFloat = action.getTarget().getObstacle().getAngle();
                     Supplier<Float> supplierFloat = () -> action.getTarget().getObstacle().getAngle();
                     Consumer<Float> consumerFloat = (value) -> action.getTarget().getObstacle().setAngle(value);
 
                     TweenElement<Float> tweenElementFloat = new TweenElement<Float>(action.getTarget(), action.getName(),
-                        initialStateFloat, (Float) action.getFinalPoint(), action.getTime(),action.getInterpolator(), supplierFloat, consumerFloat);
+                        initialStateFloat, (Float) action.getFinalValue(), timeTill,action.getInterpolator(), supplierFloat, consumerFloat);
                     tweenedMovmentObjectsFloat.add(tweenElementFloat);
                     break;
 
@@ -1025,30 +1096,42 @@ public class GameplayScene implements Screen {
         }
     }
 
+    /**
+     * Dedicated method to update Vec2 tweens, should be applicable for any vector change in attribute
+     * not just movements
+     *
+     * The reason behind splitting Vec2 and Flaot instead of abstracting itno one, is because, most likely,
+     * we aren't going to be tweening anything more than that and the generalization/casting was becoming
+     * tedious and unsafe
+     *
+     * @param dt deltatime
+     */
     private void updateTweenedMovementObjectsVec2(float dt) {
         for (Iterator<TweenElement<Vector2>> it = tweenedMovmentObjectsVec2.iterator(); it.hasNext(); ) {
             TweenElement<Vector2> tweenElement = it.next();
 
+            // extract info from tween for readability and to prevent duplicate pulls later
             Vector2 timer = tweenElement.timerVector;
             Function<Float, Float> interpolator = tweenElement.interpolator;
             Consumer<Vector2> setter = tweenElement.updater;
 
             Vector2 endPointZeroed = (tweenElement.finalState.cpy()).sub(tweenElement.initalState);
 
+            // get the interpolater value from time elapsed (x) / total time (y) as factor, then
+            // apply the value to the getter for the funcction
             float factor = interpolator.apply(timer.x / timer.y);
             float oldFactor = interpolator.apply(Math.max(timer.x - dt, 0)/ timer.y);
             Vector2 delta = ( (endPointZeroed.cpy()).scl(factor) ).sub( ((endPointZeroed.cpy()).scl(oldFactor)) );
             delta.scl(1/dt);
             setter.accept(delta);
 
-            //physics correction
-            if (tweenElement.name.equals("move")) {
-                tweenElement.target.getObstacle().setPosition(endPointZeroed.scl(oldFactor).add(tweenElement.initalState));
-            }
-
             timer.x += dt;
+
+            // if elapsed>total allowed time
             if (timer.x > timer.y) {
                 it.remove();
+
+                // just a fail safe if the velocity does something weird
                 if (tweenElement.name.equals("move")) {
                     setter.accept(Vector2.Zero);
                     tweenElement.target.getObstacle().setPosition(tweenElement.finalState);
@@ -1057,6 +1140,10 @@ public class GameplayScene implements Screen {
         }
     }
 
+    /**
+     * see mirror documentation for updateTweenedMovementObjectsVec2
+     * @param dt deltatime
+     */
     private void updateTweenedMovementObjectsFloat(float dt) {
         for (Iterator<TweenElement<Float>> it = tweenedMovmentObjectsFloat.iterator(); it.hasNext(); ) {
             TweenElement<Float> tweenElement = it.next();
@@ -1065,10 +1152,10 @@ public class GameplayScene implements Screen {
             Function<Float, Float> interpolator = tweenElement.interpolator;
             Consumer<Float> setter = tweenElement.updater;
 
-            Float endPointZeroed = tweenElement.finalState - tweenElement.initalState;
+            Float endPointZeroed = (tweenElement.finalState - tweenElement.initalState);
 
             float factor = interpolator.apply(timer.x / timer.y);
-            Float delta = (endPointZeroed * factor);
+            Float delta = (endPointZeroed * factor) + tweenElement.initalState;
             setter.accept(delta);
             timer.x += dt;
             if (timer.x >= timer.y) {
