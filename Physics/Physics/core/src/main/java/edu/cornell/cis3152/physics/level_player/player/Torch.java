@@ -83,7 +83,6 @@ public class Torch extends ObstacleSprite {
         if (!obstacle.isActive()) {
             return;
         }
-
         Vector2 pos = obstacle.getPosition();
         Vector2 appliedForce;
         Body body = obstacle.getBody();

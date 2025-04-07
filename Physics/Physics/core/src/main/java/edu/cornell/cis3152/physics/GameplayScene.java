@@ -454,6 +454,11 @@ public class GameplayScene implements Screen {
      * This method disposes of the world and creates a new one.
      */
     public void reset() {
+        clearLevel();
+        loadLevel(levelName);
+    };
+
+    public void clearLevel() {
         JsonValue values = constants.get("world");
         Vector2 gravity = new Vector2(0, values.getFloat("gravity"));
         if (queueFailure) {
@@ -491,35 +496,6 @@ public class GameplayScene implements Screen {
         if (lightController != null){
             lightController.dispose();}
 
-        for (ObstacleSprite sprite : sprites) {
-            Obstacle obj = sprite.getObstacle();
-            sprite.getObstacle().deactivatePhysics(world);
-        }
-        sprites.clear();
-        addQueue.clear();
-        if (world != null) {
-            world.dispose();
-        }
-
-        world = new World(gravity, false);
-        world.setContactListener(contactListener);
-        setComplete(false);
-        setFailure(false);
-        loadLevel(levelName);
-    };
-
-    public void clearLevel() {
-        JsonValue values = constants.get("world");
-        Vector2 gravity = new Vector2(0, values.getFloat("gravity"));
-
-        if (activeTorchJoint != null) {
-            world.destroyJoint(activeTorchJoint);
-            activeTorchJoint = null;
-        }
-        if (activeLightJoint != null) {
-            world.destroyJoint(activeLightJoint);
-            activeLightJoint = null;
-        }
 
         for (ObstacleSprite sprite : sprites) {
             Obstacle obj = sprite.getObstacle();
