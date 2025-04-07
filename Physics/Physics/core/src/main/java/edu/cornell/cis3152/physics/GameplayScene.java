@@ -916,6 +916,9 @@ public class GameplayScene implements Screen {
                 case "removeClimbingJoint":
                     avatar.removeClimbable((EnhancedObstacleSprite) todo_action.getSubject());
                     break;
+                case "queueWin":
+                    setComplete(true);
+                    break;
                 case "queueFailure":
                     queueFailure = true;
                     break;
