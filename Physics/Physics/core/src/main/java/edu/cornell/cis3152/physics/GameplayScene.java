@@ -590,6 +590,7 @@ public class GameplayScene implements Screen {
         texture = directory.getEntry( "platform-rope-end", Texture.class );
         Texture middle_texture = directory.getEntry( "platform-rope-mid", Texture.class );
         JsonValue ropes = levelData.get("ropes");
+        int ropeId = 0;
         for (JsonValue ropeJson : ropes) {
             Vector2 pin1 = new Vector2(ropeJson.get("pin1").getFloat(0), ropeJson.get("pin1").getFloat(1));
             Vector2 pin2 = new Vector2(ropeJson.get("pin2").getFloat(0), ropeJson.get("pin2").getFloat(1));
@@ -598,6 +599,7 @@ public class GameplayScene implements Screen {
             rope.setTextures(texture, middle_texture);
             temp = rope;
             addSpriteGroup(rope);
+            ropeId++;
         }
 
         // Create spinners
@@ -673,7 +675,7 @@ public class GameplayScene implements Screen {
         ObstacleSprite thing = new ObstacleSprite(temp);
         thing.getObstacle().setBodyType(BodyType.KinematicBody);
         thing.getObstacle().setFriction(.5f);
-        addSprite(thing);
+//        addSprite(thing);
 
         Button button = new Button(new Vector2(20,3.75f), 0, false, false, units);
 //        Array<Object> actionArray = new Array<>(new Object[]{thing, "move", new Vector2(8, 10), new Vector2(10, 10)});
@@ -699,7 +701,8 @@ public class GameplayScene implements Screen {
 
 //        addSpriteGroup(button);
 
-
+        Ladder tempLadder = new Ladder(3,3,5f, units);
+//        addSprite(tempLadder);
     }
     /**
      * Returns whether to process the update loop
@@ -813,11 +816,9 @@ public class GameplayScene implements Screen {
 
         if (!(avatar.getBodyTouchedClimbables().isEmpty()) && !avatar.getHasTorch() && !avatar.getGroundedState().equals(GroundState.CLIMBING)
              && input.didVertical()) {
-            if (input.getVertical() > 0.1 || (input.getVertical() < -0.1 && !avatar.getGroundedState().equals(GroundState.GROUNDED))) {
-                avatar.setGroundedState(GroundState.CLIMBING);
-                avatar.getObstacle().getBody().setLinearVelocity(Vector2.Zero);
-                avatar.applyClimbingPhysics();
-            }
+            avatar.setGroundedState(GroundState.CLIMBING);
+            avatar.getObstacle().getBody().setLinearVelocity(Vector2.Zero);
+            avatar.applyClimbingPhysics();
         }
 
         if (avatar.getGroundedState().equals(GroundState.CLIMBING) && avatar.getBodyTouchedClimbables().isEmpty()) {
@@ -887,11 +888,18 @@ public class GameplayScene implements Screen {
                     }
                     break;
                 case "traciGrounded":
+                    if (avatar.getGroundedState().equals(GroundState.CLIMBING)) {
+                        avatar.removeClimbingPhysics();
+                    }
+                    avatar.setGroundedState(GroundState.GROUNDED);
                     sensorFixtures.add(todo_action.getFixture());
                     break;
                 case "traciAirborne":
                     sensorFixtures.remove(todo_action.getFixture());
                     if (sensorFixtures.size == 0) {
+                        if (avatar.getGroundedState().equals(GroundState.CLIMBING)) {
+                            avatar.removeClimbingPhysics();
+                        }
                         avatar.setGroundedState(GroundState.AIRBORNE);
                     }
                     break;

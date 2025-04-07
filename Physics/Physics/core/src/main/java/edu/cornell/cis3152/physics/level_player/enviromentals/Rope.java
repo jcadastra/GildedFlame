@@ -2,6 +2,7 @@ package edu.cornell.cis3152.physics.level_player.enviromentals;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -27,6 +28,8 @@ public class Rope extends ObstacleGroup {
     private Vector2 pin2;
     private float internalAngle;
     private float units;
+    private float depthOfCurve;
+    private float x_c;
     private JsonValue data;
 
     private float ropeThickness;
@@ -37,7 +40,7 @@ public class Rope extends ObstacleGroup {
     private ArrayList<EnhancedObstacleSprite> nodes;
     // Anchor objects at the endpoints.
     private ArrayList<EnhancedObstacleSprite> anchors;
-    public float[] nodeVertices;
+    public FloatArray nodeVertices;
 
     /**
      * Constructs a rope as a single chain of nodes with end anchors.
@@ -53,6 +56,8 @@ public class Rope extends ObstacleGroup {
         this.pin2 = pin2.scl(units);
         this.units = units;
         this.data = data;
+        this.depthOfCurve = depthOfCurve;
+        this.x_c = pin2.x-pin1.x;
 
         // Calculate the rope’s direction.
         this.internalAngle = (pin2.cpy().sub(pin1)).angleRad();
@@ -62,7 +67,8 @@ public class Rope extends ObstacleGroup {
         this.step = ((pin2.cpy().sub(pin1)).nor()).scl(ropePieceLen);
 
         // Generate one row of vertices; offset = 0 gives a centered line.
-        nodeVertices = genOneRow(0);
+        nodeVertices = genOneRow();
+        adjustNodeVertices();
         nodes = genFixtures(nodeVertices);
         anchors = genAnchors();
     }
@@ -75,34 +81,45 @@ public class Rope extends ObstacleGroup {
      * @return a y offset (in physics units)
      */
     private float catenaryCurveFunc(float x_pos) {
-        // TODO: implement a proper catenary curve if desired.
-        return 0;
+        double y_0 = -depthOfCurve * Math.cosh(-x_c/depthOfCurve);
+        System.out.println(y_0);
+        System.out.println(x_pos - x_c);
+        System.out.println( Math.cosh( (x_pos - x_c)));
+        System.out.println((depthOfCurve * Math.cosh( (x_pos - x_c) / depthOfCurve ) + y_0));
+        return (float) (depthOfCurve * Math.cosh( (x_pos - x_c) / depthOfCurve ) + y_0) / units;
+//        return 0;
     }
 
     /**
      * Generates a row of vertices along the rope's path.
      * The provided offset is applied perpendicular to the rope's direction.
      *
-     * @param offset the perpendicular offset (0 for the centered line)
      * @return an array of float values (x, y, x, y, ...)
      */
-    private float[] genOneRow(float offset) {
+    private FloatArray genOneRow() {
         // For a tangent (cos(angle), sin(angle)), the perpendicular normal is (-sin(angle), cos(angle)).
-        float x_internalOffset = -offset * (float)Math.sin(internalAngle);
-        float y_internalOffset = offset * (float)Math.cos(internalAngle);
+        float x_internalOffset = (float)Math.sin(internalAngle);
+        float y_internalOffset = (float)Math.cos(internalAngle);
         FloatArray vertexSet = new FloatArray();
 
         // Start a half-step from the first pin.
         Vector2 i = new Vector2(pin1).add(step.cpy().scl(0.5f));
         vertexSet.add(i.x + x_internalOffset);
-        vertexSet.add(i.y + y_internalOffset + catenaryCurveFunc(i.x));
+        vertexSet.add(i.y + y_internalOffset);
         // Continue adding vertices until we reach near pin2.
         while (pin2.dst(i) > ropePieceLen) {
             i.add(step);
             vertexSet.add(i.x + x_internalOffset);
-            vertexSet.add(i.y + y_internalOffset + catenaryCurveFunc(i.x));
+            vertexSet.add(i.y + y_internalOffset);
         }
-        return vertexSet.toArray();
+        return vertexSet;
+    }
+
+    private void adjustNodeVertices() {
+//        for (int i=0; i < nodeVertices.size; i += 2) {
+//            System.out.println("x: " + nodeVertices.get(i) + ", y: " + nodeVertices.get(i+1) + ", catheter: " + catenaryCurveFunc(nodeVertices.get(i)));
+//            nodeVertices.set(i + 1, catenaryCurveFunc(nodeVertices.get(i)));
+//        }
     }
 
     /**
@@ -111,10 +128,10 @@ public class Rope extends ObstacleGroup {
      * @param vertices x, y coordinates of the rope nodes
      * @return an ArrayList of EnhancedObstacleSprite nodes.
      */
-    private ArrayList<EnhancedObstacleSprite> genFixtures(float[] vertices) {
+    private ArrayList<EnhancedObstacleSprite> genFixtures(FloatArray vertices) {
         ArrayList<EnhancedObstacleSprite> nodes = new ArrayList<>();
-        for (int i = 0; i < vertices.length; i += 2) {
-            BoxObstacle ropeNode = new BoxObstacle(vertices[i] / units, vertices[i + 1] / units,
+        for (int i = 0; i < vertices.size; i += 2) {
+            BoxObstacle ropeNode = new BoxObstacle(vertices.get(i) / units, vertices.get(i + 1) / units,
                 (ropePieceLen * 1.3f) / units, (ropeThickness) / (units));
             ropeNode.setPhysicsUnits(units);
             ropeNode.setBodyType(BodyType.DynamicBody);

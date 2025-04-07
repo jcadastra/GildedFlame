@@ -136,7 +136,6 @@ public class CollisionController implements ContactListener {
             if (isX(bd1, bd2, Traci.class) == 1) {
                 Traci t = (Traci) idX(bd1, bd2, Traci.class);
                 if ((t.getSensorName().equals(fd2) && t != bd1 && isGround(bd1)) || (t.getSensorName().equals(fd1) && t != bd2 && isGround(bd2))) {
-                    t.setGroundedState(GroundState.GROUNDED);
                     collisionFlags.push(new CollisionFlag("traciGrounded", bd1 instanceof Traci ? fix2 : fix1));
                 }
             }
@@ -332,8 +331,10 @@ public class CollisionController implements ContactListener {
              */
             if (isXandY(bd1, bd2, Traci.class, EnhancedObstacleSprite.class) == 1) {
                 EnhancedObstacleSprite eos = (EnhancedObstacleSprite) idX(bd1, bd2, EnhancedObstacleSprite.class);
+                Traci traci = (Traci) idX(bd1, bd2, Traci.class);
+                Fixture subjectFixture = (bd1.getClass().equals(Traci.class)) ? fix1 : fix2;
 
-                if (eos.getClimbable()) {
+                if (eos.getClimbable() && (subjectFixture.getUserData() == null || !subjectFixture.getUserData().equals(traci.getSensorName()))) {
                     collisionFlags.add(new CollisionFlag("addClimbingJoint", eos));
                 }
             }
@@ -430,7 +431,7 @@ public class CollisionController implements ContactListener {
 
         if (isX(bd1, bd2, Traci.class) == 1) {
             Traci t = (Traci) idX(bd1, bd2, Traci.class);
-            if (((t.getSensorName().equals(fd2) && t != bd1) || (t.getSensorName().equals(fd1) && t != bd2) && t.getGroundedState().equals(GroundState.GROUNDED))) {
+            if ((isGround(bd1) || isGround(bd2)) && ((t.getSensorName().equals(fd2) && t != bd1) || (t.getSensorName().equals(fd1) && t != bd2) && t.getGroundedState().equals(GroundState.GROUNDED))) {
                 collisionFlags.push(new CollisionFlag("traciAirborne", bd1 instanceof Traci ? fix2 : fix1));
             }
         }
@@ -508,8 +509,10 @@ public class CollisionController implements ContactListener {
          */
         if (isXandY(bd1, bd2, Traci.class, EnhancedObstacleSprite.class) == 1) {
             EnhancedObstacleSprite eos = (EnhancedObstacleSprite) idX(bd1, bd2, EnhancedObstacleSprite.class);
+            Traci traci = (Traci) idX(bd1,bd2, Traci.class);
+            Fixture subjectFixture = (bd1.getClass().equals(Traci.class)) ? fix1 : fix2;
 
-            if (eos.getClimbable()) {
+            if (eos.getClimbable() && (subjectFixture.getUserData() == null || !subjectFixture.getUserData().equals(traci.getSensorName()))) {
                 collisionFlags.add(new CollisionFlag("removeClimbingJoint", eos));
             }
         }
