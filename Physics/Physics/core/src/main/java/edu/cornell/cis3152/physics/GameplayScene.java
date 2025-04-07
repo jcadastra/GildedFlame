@@ -779,28 +779,38 @@ public class GameplayScene implements Screen {
     }
 
     private void updateCamera() {
+
+        float prevX = camera.position.x;
+        float prevY = camera.position.y;
+
         Vector2 playerPos = avatar.getObstacle().getPosition();
-        float playerPixelX = playerPos.x * scale.x;
-        float playerPixelY = playerPos.y * scale.y;
+        float playerX = playerPos.x*scale.x;
+        float playerY = playerPos.y*scale.y;
 
         float lerp = 0.3f;
-        camera.position.x += (playerPixelX - camera.position.x) * lerp;
-        camera.position.y += (playerPixelY - camera.position.y) * lerp;
+        camera.position.x += (playerX - camera.position.x) * lerp;
+        camera.position.y += (playerY - camera.position.y) * lerp;
 
-        float effectiveWidth = camera.viewportWidth * camera.zoom;
-        float effectiveHeight = camera.viewportHeight * camera.zoom;
-        float halfWidth = effectiveWidth / 2f;
-        float halfHeight = effectiveHeight / 2f;
+//
+//        float visibleW =  (bounds.x + bounds.width) * scale.x/2*0.8f; //half of world visible
+//        float visibleH = (bounds.y + bounds.height) * scale.y/2*0.8f;
 
-        float minXPixel = bounds.x * scale.x;
-        float maxXPixel = (bounds.x + bounds.width) * scale.x;
-        float minYPixel = bounds.y * scale.y;
-        float maxYPixel = (bounds.y + bounds.height) * scale.y;
 
-        camera.position.x = MathUtils.clamp(camera.position.x, minXPixel + halfWidth, maxXPixel - halfWidth);
-        camera.position.y = MathUtils.clamp(camera.position.y, minYPixel + halfHeight, maxYPixel - halfHeight);
+        float visibleW =  camera.viewportWidth/2*0.8f; //half of world visible
+        float visibleH = camera.viewportHeight/2*0.8f;
+
+        camera.position.x = MathUtils.clamp(camera.position.x,
+            bounds.x*scale.x + visibleW,
+            bounds.width*scale.x - visibleW);
+        camera.position.y = MathUtils.clamp(camera.position.y,
+            bounds.y*scale.y+visibleH,
+            bounds.height*scale.x-visibleH);
 
         camera.update();
+
+        float dx = camera.position.x-prevX;
+        float dy = camera.position.y-prevY;
+        lightController.updateCamera(dx,dy);
     }
 
     private void supplementaryCollisionActions() {
