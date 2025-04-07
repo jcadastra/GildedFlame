@@ -790,6 +790,9 @@ public class GameplayScene implements Screen {
         updateTweenedMovementObjectsVec2(dt);
         updateTweenedMovementObjectsFloat(dt);
 
+        Smoke smoke = new Smoke(torchFire.getObstacle().getX(), torchFire.getObstacle().getY(), 32, new Vector2(0,0.5f));
+        addSprite(smoke);
+
         if (temp != null) {
 //            for (EnhancedObstacleSprite eos : temp.getTopEntities()) {
 //                System.out.println(eos.getObstacle().getAngle());

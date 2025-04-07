@@ -1,0 +1,28 @@
+package edu.cornell.cis3152.physics.level_player.enviromentals;
+
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import edu.cornell.gdiac.assets.ParserUtils;
+import edu.cornell.gdiac.physics2.ObstacleSprite;
+import edu.cornell.gdiac.physics2.WheelObstacle;
+
+public class Smoke extends ObstacleSprite {
+
+    public Smoke(float x,float y, float units, Vector2 velocity) {
+        super();
+
+        float s = 0.6f;
+
+        obstacle = new WheelObstacle(x, y, s);
+
+        obstacle.setGravityScale(0);
+        obstacle.setPhysicsUnits( units );
+        obstacle.setBodyType( BodyType.DynamicBody);
+        obstacle.setUserData( this );
+        obstacle.setName("smoke");
+        obstacle.setVX(velocity.x);
+        obstacle.setVY(velocity.y);
+    }
+}
