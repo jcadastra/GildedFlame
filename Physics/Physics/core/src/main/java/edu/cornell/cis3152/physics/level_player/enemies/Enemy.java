@@ -8,6 +8,7 @@ import edu.cornell.cis3152.physics.level_player.enviromentals.Fire;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Lighting;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.graphics.SpriteBatch;
+import edu.cornell.gdiac.graphics.SpriteSheet;
 import edu.cornell.gdiac.math.Path2;
 import edu.cornell.gdiac.math.PathFactory;
 import edu.cornell.gdiac.physics2.BoxObstacle;
@@ -16,57 +17,34 @@ import edu.cornell.gdiac.physics2.ObstacleSprite;
 public class Enemy extends ObstacleSprite {
 
 
-    private final JsonValue data;
+    protected static AssetDirectory directory;
+    protected final JsonValue data;
     private final int id;
     private final float width;
     private final float height;
+    private final float size;
     public SpriteBatch batch;
     public RaycastResult rr;
-    protected AssetDirectory directory;
+    /**
+     * Which direction is the character facing
+     */
+    protected boolean faceRight;
+    protected boolean justCollided;
     private Path2 sensorOutline;
     // Instance attributes
     private Color sensorColor;
     private String sensorName;
-    /**
-     * Which direction is the character facing
-     */
-    private boolean faceRight;
-
-    /**
-     * Time it takes for a totem to transition from a CD state to a OUT_OF_LIGHT state.
-     */
-    private int freezeTimer;
-
-    /**
-     * Time it takes for a moth to transition from a CD state to an ATTACK state.
-     */
-    private int attackTimer;
-
-    /**
-     * Time it takes between moth attacks.
-     */
-    private int attackAnimationTimer;
-
-    /**
-     * Time it takes to smother the torch.
-     */
-    private int smotherTimer;
-
-    /**
-     * Time it takes for the moth to come back alive.
-     */
-    private int dazedTimer;
+    private int frameCount;
     private EnemyState state;
     private boolean isGrounded = false;
     private float x;
     private float y;
     private float speed;
-    private final float size;
-    private Fixture fixture;
-    private boolean justCollided = false;
+    private final float units;
 
     public Enemy(int id, float units, JsonValue data, AssetDirectory directory, Vector2 position) {
-        this.directory = directory;
+        Enemy.directory = directory;
+        this.units = units;
         this.id = id;
         this.data = data;
         this.state = EnemyState.OUT_OF_LIGHT;
@@ -94,6 +72,18 @@ public class Enemy extends ObstacleSprite {
 
 
         mesh.set(-size / 2.0f, -size / 2.0f, size, size);
+    }
+
+    public float getUnits() {
+        return units;
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public float getHeight() {
+        return height;
     }
 
     /**
@@ -155,67 +145,6 @@ public class Enemy extends ObstacleSprite {
         state = value;
     }
 
-    public int getFreezeTimer() {
-        return freezeTimer;
-    }
-
-    public void decrementFreezeTimer() {
-        freezeTimer--;
-    }
-
-    public void resetFreeze() {
-        freezeTimer = data.getInt("freezeTimer");
-    }
-
-
-    public int getAttackTimer() {
-        return attackTimer;
-    }
-
-    public void decrementAttackTimer() {
-        attackTimer--;
-    }
-
-    public void resetAttackTimer() {
-        attackTimer = data.getInt("attackTimer");
-    }
-
-    public int getAttackAnimationTimer() {
-        return attackAnimationTimer;
-    }
-
-    public void decrementAttackAnimationTimer() {
-        attackAnimationTimer--;
-    }
-
-    public void resetAttackAnimationTimer() {
-        attackAnimationTimer = data.getInt("attackAnimationTimer");
-    }
-
-
-    public int getSmotherTimer() {
-        return smotherTimer;
-    }
-
-    public void decrementSmotherTimer() {
-        smotherTimer--;
-    }
-
-    public void resetSmotherTimer() {
-        smotherTimer = data.getInt("smotherTimer");
-    }
-
-    public int getDazedTimer() {
-        return dazedTimer;
-    }
-
-    public void decrementDazedTimer() {
-        dazedTimer--;
-    }
-
-    public void resetDazedTimer() {
-        dazedTimer = data.getInt("dazedTimer");
-    }
 
     public float getSpeed() {
         return speed;
@@ -223,6 +152,10 @@ public class Enemy extends ObstacleSprite {
 
     public void setSpeed(float value) {
         speed = value;
+    }
+
+    public void processCD(float frame) {
+
     }
 
     public void update() {
@@ -347,7 +280,6 @@ public class Enemy extends ObstacleSprite {
     }
 
     public RaycastResult raycastInLight() {
-//        System.out.println("Using new raycast");
 
         Vector2 pos = obstacle.getBody().getPosition();
         Vector2 start = new Vector2(pos.x, pos.y - height / 4);
@@ -456,6 +388,7 @@ public class Enemy extends ObstacleSprite {
     public void draw(SpriteBatch batch) {
         super.draw(batch);
     }
+
 
     public void createSensor() {
         Vector2 sensorCenter = new Vector2(0, -height / 2);

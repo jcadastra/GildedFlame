@@ -561,7 +561,7 @@ public class Moth_intro extends GameplayScene implements ContactListener {
 
                 moth.setTexture(texture);
                 moth.setState(Enemy.EnemyState.IN_LIGHT);
-                moth.resetAttackTimer();
+//                moth.resetAttackTimer();
             }
 
 

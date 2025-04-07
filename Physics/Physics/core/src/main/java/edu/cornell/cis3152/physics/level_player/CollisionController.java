@@ -66,13 +66,7 @@ public class CollisionController implements ContactListener {
     }
 
     private static boolean isGround(ObstacleSprite sprite) {
-        return sprite.getName().contains("floor") ||
-            sprite.getName().contains("platform") ||
-            sprite.getName().contains("barrier") ||
-            sprite.getName().contains("spinner") ||
-            sprite.getName().contains("button") ||
-            (sprite instanceof Surface) ||
-            sprite instanceof Totem;
+        return sprite.getName().contains("floor") || sprite.getName().contains("platform") || sprite.getName().contains("barrier") || sprite.getName().contains("spinner") || sprite.getName().contains("button") || (sprite instanceof Surface) || sprite instanceof Totem;
     }
 
     public Stack<CollisionFlag> getCollisionFlags() {
@@ -197,18 +191,15 @@ public class CollisionController implements ContactListener {
                     Totem topTotem = (pos1.y > pos2.y) ? totem1 : totem2;
                     Totem bottomTotem = (topTotem == totem1) ? totem2 : totem1;
                     pendingTotemMerges.add(new Totem[]{topTotem, bottomTotem});
+                    topTotem.addLinkedTotem(bottomTotem);
                 } else if (xDiff > 0.5f && yDiff < 0.5f) {
                     if (totem1.getState() != EnemyState.CD && totem1.getState() != EnemyState.IN_LIGHT) {
-//                        System.out.println("0");
                         totem1.changeDirection();
                         totem1.setJustCollided(true);
                     }
                     if (totem2.getState() != EnemyState.CD && totem2.getState() != EnemyState.IN_LIGHT) {
-//                        System.out.println("X");
                         totem2.changeDirection();
                         totem2.setJustCollided(true);
-                    } else {
-                        System.out.println(totem2.hasJustCollided() + ", " + totem2.getState());
                     }
                 }
 
@@ -230,7 +221,6 @@ public class CollisionController implements ContactListener {
             if (isXandY(bd1, bd2, Moth.class, Torch.class) == 1) {
                 Moth moth = (Moth) idX(bd1, bd2, Moth.class);
                 if (moth.getState() != EnemyState.DAZED) {
-//                    System.out.println("AHA");
                     moth.resetSmotherTimer();
                     moth.setState(EnemyState.SMOTHER);
                 }
@@ -260,7 +250,6 @@ public class CollisionController implements ContactListener {
             if (isXandY(bd1, bd2, Lighting.class, Moth.class) == 1) {
                 Lighting light = (Lighting) idX(bd1, bd2, Lighting.class);
                 Moth moth = (Moth) idX(bd1, bd2, Moth.class);
-//                System.out.print("CONTACT WITH LIGHT AND MOTH");
                 if (moth.getState() != EnemyState.TRANCE && moth.getState() != EnemyState.SMOTHER && moth.getState() != EnemyState.DAZED) {
                     moth.setState(EnemyState.IN_LIGHT);
 
@@ -293,16 +282,13 @@ public class CollisionController implements ContactListener {
                     if (yDiff > xDiff) {
                         if ((moth.getState() == EnemyState.SMOTHER) && playerPos.y > mothPos.y) {
                             moth.resetDazedTimer();
-//                            System.out.println("CONTACT WITH MOTH");
                             moth.setState(EnemyState.DAZED);
                         } else {
-                            ;
+                            collisionFlags.push(new CollisionFlag("queueFailure"));
                         }
-                    } else {
+                    }else {
                         collisionFlags.push(new CollisionFlag("queueFailure"));
                     }
-
-
                 }
             }
 
