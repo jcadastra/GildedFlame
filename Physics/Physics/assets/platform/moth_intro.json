@@ -46,7 +46,8 @@
   ],
   "spinners" : [],
   "bridges" : [],
-  "ropes" : [],
+  "ropes" : [
+  ],
   "traci" : {
     "pos"       : [2.5, 5.0],
     "inner"     : [0.7, 0.95],
