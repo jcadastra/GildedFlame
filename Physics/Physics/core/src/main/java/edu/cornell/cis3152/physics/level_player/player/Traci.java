@@ -441,34 +441,30 @@ public class Traci extends ObstacleSprite {
                 }
                 avgVel.add(eosVel);
                 avgAngle += eos.getObstacle().getAngle();
-                System.out.println(eos.getObstacle().getAngle());
                 avgPos.add(eos.getObstacle().getPosition().cpy());
             }
             avgVel.scl(1f/count);
-            System.out.println(count);
-            System.out.println(avgPos);
             avgPos.scl(1f/count);
             avgAngle /= (count);
             obstacle.setAngle((float) ((Math.PI/2)-Math.abs(avgAngle)));
 //            System.out.println("angle -> " + avgAngle);
 //            System.out.println(count);
+
+            Vector2 ropeDir = new Vector2((float)Math.cos(avgAngle), (float)Math.sin(avgAngle));
+            Vector2 perpDir = new Vector2(-ropeDir.y, ropeDir.x);
+
             java.util.function.Predicate<EnhancedObstacleSprite> testLadder = (item) -> item instanceof Ladder;
             int topProtector = 1;
-            System.out.println(bodyTouchedClimbables.stream().allMatch(testLadder));
             if (!bodyTouchedClimbables.stream().allMatch(testLadder) && avgPos.y < (pos.y - height/4) && getMovement().y > 0) {
                 topProtector= 0;
             }
             if (avgPos.y > pos.y) {
                 maxVel.scl(Math.signum(avgPos.x - pos.x) , Math.signum(avgPos.y - pos.x));
             }
-//            System.out.println("lhs" + avgPos.y);
-//            System.out.println("rhs" + (pos.y - height/4));
             if (topProtector == 0) {
                 pos.y = avgPos.y;
             }
 
-            Vector2 ropeDir = new Vector2((float)Math.cos(avgAngle), (float)Math.sin(avgAngle));
-            Vector2 perpDir = new Vector2(-ropeDir.y, ropeDir.x);
             Vector2 playerMovement = new Vector2(ropeDir).scl(-getMovement().y * (1f/7 * topProtector))
                 .add(new Vector2(perpDir).scl(getMovement().x * (1f/10)));
 
@@ -476,10 +472,6 @@ public class Traci extends ObstacleSprite {
                 playerMovement = avgPos.cpy().sub(getObstacle().getPosition());
             }
             obstacle.setLinearVelocity(avgVel.add(playerMovement));
-//            System.out.println("Max Vel: " + maxVel);
-//            System.out.println("avg Vel: " + avgVel);
-//            System.out.println("avg rotation: " + avgAngle);
-//            System.out.println("Player Vel: " + obstacle.getLinearVelocity());
 
             if (isJumping()) {
                 removeClimbingPhysics();
@@ -622,8 +614,6 @@ public class Traci extends ObstacleSprite {
 //        System.out.println("adding weight to # objects -> " + set.size());
         for (EnhancedObstacleSprite obj : set) {
 //            System.out.println("appyly weight");
-            System.out.println(obj +" pre -> " +obj.getObstacle().getDensity());
-            System.out.println(obj +" pre -> " +obj.getObstacle().getMass());
             Fixture fixture = obj.getObstacle().getBody().getFixtureList().first();
             //TODO: fix with updated masses later
             float currentDensity = fixture.getDensity();
