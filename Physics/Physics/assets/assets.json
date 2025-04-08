@@ -86,9 +86,7 @@
     },
     "platform-rope-end": "platform/ropeEnd.png",
     "platform-rope-mid": "platform/ropeBodyRec.png",
-    "platform-player": "platform/player.png",
     "platform-torch": "platform/torch.png",
-    "platform-traci": "platform/traci.png",
     "platform-rope": "platform/ropebridge.png",
     "platform-barrier": "platform/barrier.png",
     "platform-bullet": "platform/bullet.png"
