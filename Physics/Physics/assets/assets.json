@@ -60,10 +60,32 @@
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
     },
+    "platform-playerMOVEMENTTORCH": {
+      "file": "platform/playerMovementTorch.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-playerMOVEMENTNOTORCH": {
+      "file": "platform/playerMovementNoTorch.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-playerIDLETORCH": {
+      "file": "platform/playerIdleTorch.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-playerIDLENOTORCH": {
+      "file": "platform/playerIdleNoTorch.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
     "platform-rope-end": "platform/ropeEnd.png",
     "platform-rope-mid": "platform/ropeBodyRec.png",
-    "platform-player-torch": "platform/playerTorch.png",
-    "platform-player-no-torch": "platform/playerNoTorch.png",
     "platform-player": "platform/player.png",
     "platform-torch": "platform/torch.png",
     "platform-traci": "platform/traci.png",

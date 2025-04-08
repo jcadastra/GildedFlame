@@ -614,7 +614,7 @@ public class GameplayScene implements Screen {
 
         // Create Traci
         texture = directory.getEntry("platform-player", Texture.class);
-        avatar = new Traci(units, levelData.get("traci"));
+        avatar = new Traci(directory, units, levelData.get("traci"));
         avatar.setTexture(texture);
         addSprite(avatar);
         // Have to do after body is created

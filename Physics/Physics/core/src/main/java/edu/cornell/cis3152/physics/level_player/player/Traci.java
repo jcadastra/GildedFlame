@@ -131,15 +131,15 @@ public class Traci extends ObstacleSprite {
     /** Cache for the affine flip */
     private final Affine2 flipCache = new Affine2();
 
-//    protected static AssetDirectory directory;
-
-//    private static final Texture animationTextureTorch = directory.getEntry("platform-player-torch", Texture.class);
-//    private static final Texture animationTextureNoTorch = directory.getEntry("platform-player-no-torch", Texture.class);
-
+    protected static AssetDirectory directory;
+    private static Texture animationTextureIdleTorch;
+    private static Texture animationTextureIdleNoTorch;
+    private static Texture animationTextureMovementTorch;
+    private static Texture animationTextureMovementNoTorch;
     public static final int TOTAL_FRAMES = 6;
 
-    public static final int FRAME_HEIGHT = 500;
-    public static final int FRAME_WIDTH = 320;
+    public static final int FRAME_HEIGHT = 600;
+    public static final int FRAME_WIDTH = 300;
 
     private static final int FRAME_DURATION = 12;
 
@@ -318,10 +318,10 @@ public class Traci extends ObstacleSprite {
      * @param data      The physics constants for Traci
      */
 //    public Traci(float units, JsonValue data, AssetDirectory directory) {
-    public Traci(float units, JsonValue data) {
+    public Traci(AssetDirectory directory, float units, JsonValue data) {
+        Traci.directory = directory;
         this.data = data;
         this.units = units;
-//        Traci.directory = directory;
         JsonValue debugInfo = data.get("debug");
 
         x = data.get("pos").getFloat(0);
@@ -329,6 +329,8 @@ public class Traci extends ObstacleSprite {
         float s = data.getFloat( "size" );
         float size = s*units;
 
+        animationTextureIdleTorch = directory.getEntry("platform-playerIDLETORCH", Texture.class);
+        animationTextureIdleNoTorch = directory.getEntry("platform-playerIDLENOTORCH", Texture.class);
 
         // The capsule is smaller than the image
         // "inner" is the fraction of the original size for the capsule
@@ -602,20 +604,20 @@ public class Traci extends ObstacleSprite {
 
         int srcIndex = frameIndex * FRAME_WIDTH;
 
-//        Texture animationTexture;
-//        if (hasTorch){
-//            animationTexture = animationTextureTorch;
-//        } else {
-//            animationTexture = animationTextureNoTorch;
-//        }
-//        batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits(), srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, isFacingRight(), false);
-        if (faceRight) {
-            flipCache.setToScaling( 1,1 );
+        Texture animationTexture;
+        if (hasTorch){
+            animationTexture = animationTextureIdleTorch;
         } else {
-            flipCache.setToScaling( -1,1 );
+            animationTexture = animationTextureIdleNoTorch;
         }
+        batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits()*1.5f, srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, !isFacingRight(), false);
+//        if (faceRight) {
+//            flipCache.setToScaling( 1,1 );
+//        } else {
+//            flipCache.setToScaling( -1,1 );
+//        }
 //        System.out.println("Current position " + obstacle.getPosition().x + "," + obstacle.getPosition().y + ".");
-        super.draw(batch,flipCache);
+//        super.draw(batch,flipCache);
     }
 
     /**
