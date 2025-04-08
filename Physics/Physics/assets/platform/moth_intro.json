@@ -109,7 +109,7 @@
           "speed": 2,
           "size": 1,
           "density": 6,
-          "attackTimer": 75,
+          "attackTimer": 200,
           "attackAnimationTimer": 20,
           "smotherTimer": 300,
           "dazedTimer": 200,
