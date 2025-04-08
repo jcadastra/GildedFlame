@@ -156,6 +156,8 @@
 
       "platform-rope-end" : "platform/ropeEnd.png",
       "platform-rope-mid" : "platform/ropeBodyRec.png",
+      "platform-player-torch" : "platform/playerTorch.png",
+      "platform-player-no-torch" : "platform/playerNoTorch.png",
       "platform-player" : "platform/player.png",
       "platform-torch" : "platform/torch.png",
 

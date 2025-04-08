@@ -23,8 +23,10 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.Predicate;
+import edu.cornell.cis3152.physics.level_player.enemies.Enemy;
 import edu.cornell.cis3152.physics.level_player.enviromentals.EnhancedObstacleSprite;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Ladder;
+import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.assets.ParserUtils;
 import edu.cornell.gdiac.graphics.SpriteBatch;
 import edu.cornell.gdiac.graphics.Texture2D;
@@ -113,6 +115,13 @@ public class Traci extends ObstacleSprite {
     private float x;
     private float y;
 
+    private final float units;
+
+    public float getUnits() {
+        return units;
+    }
+
+
     public static final short CATEGORY_AVATAR = 0x0002;  // 00000010
     public static final short CATEGORY_ENVIRONMENT = 0x0004;  // 00000100
     public static final short CATEGORY_LIGHT = 0x0008;  // 00001000
@@ -121,6 +130,26 @@ public class Traci extends ObstacleSprite {
     private final Vector2 forceCache = new Vector2();
     /** Cache for the affine flip */
     private final Affine2 flipCache = new Affine2();
+
+//    protected static AssetDirectory directory;
+
+//    private static final Texture animationTextureTorch = directory.getEntry("platform-player-torch", Texture.class);
+//    private static final Texture animationTextureNoTorch = directory.getEntry("platform-player-no-torch", Texture.class);
+
+    public static final int TOTAL_FRAMES = 6;
+
+    public static final int FRAME_HEIGHT = 500;
+    public static final int FRAME_WIDTH = 320;
+
+    private static final int FRAME_DURATION = 12;
+
+    private int cdFrameCount = 0;
+    private int frameIndex = 0;
+
+    private void resetFrames() {
+        cdFrameCount = 0;
+        frameIndex = 0;
+    }
 
     /**
      * Returns the left/right movement of this character.
@@ -288,14 +317,18 @@ public class Traci extends ObstacleSprite {
      * @param units     The physics units
      * @param data      The physics constants for Traci
      */
+//    public Traci(float units, JsonValue data, AssetDirectory directory) {
     public Traci(float units, JsonValue data) {
         this.data = data;
+        this.units = units;
+//        Traci.directory = directory;
         JsonValue debugInfo = data.get("debug");
 
         x = data.get("pos").getFloat(0);
         y = data.get("pos").getFloat(1);
         float s = data.getFloat( "size" );
         float size = s*units;
+
 
         // The capsule is smaller than the image
         // "inner" is the fraction of the original size for the capsule
@@ -543,6 +576,13 @@ public class Traci extends ObstacleSprite {
         } else {
             shootCooldown = Math.max(0, shootCooldown - 1);
         }
+
+        cdFrameCount++;
+        frameIndex = (cdFrameCount / FRAME_DURATION) % TOTAL_FRAMES;
+        if (cdFrameCount >= FRAME_DURATION * TOTAL_FRAMES) {
+            cdFrameCount = 0;
+        }
+
         super.update(dt);
     }
 
@@ -557,6 +597,18 @@ public class Traci extends ObstacleSprite {
      */
     @Override
     public void draw(SpriteBatch batch) {
+        float drawX = obstacle.getX() - getWidth() / 2f;
+        float drawY = obstacle.getY() - getHeight() / 2f;
+
+        int srcIndex = frameIndex * FRAME_WIDTH;
+
+//        Texture animationTexture;
+//        if (hasTorch){
+//            animationTexture = animationTextureTorch;
+//        } else {
+//            animationTexture = animationTextureNoTorch;
+//        }
+//        batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits(), srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, isFacingRight(), false);
         if (faceRight) {
             flipCache.setToScaling( 1,1 );
         } else {
