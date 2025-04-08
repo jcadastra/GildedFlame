@@ -20,7 +20,6 @@ import edu.cornell.gdiac.util.*;
 import edu.cornell.gdiac.assets.*;
 import edu.cornell.gdiac.graphics.*;
 import java.util.ArrayList;
-//import edu.cornell.cis3152.physics.ragdoll.*;
 
 /**
  * Root class for a LibGDX.
