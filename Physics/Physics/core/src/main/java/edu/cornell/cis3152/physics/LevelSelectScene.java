@@ -1,11 +1,13 @@
 package edu.cornell.cis3152.physics;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -19,6 +21,7 @@ public class LevelSelectScene implements Screen {
     private Skin skin;
     int selectedLevel = 1;
     private ScreenListener listener;
+    private Texture bgTexture;
     public void setScreenListener(ScreenListener listener) {
         this.listener = listener;
     }
@@ -28,22 +31,26 @@ public class LevelSelectScene implements Screen {
     public LevelSelectScene() {
         stage = new Stage(new ScreenViewport());
         skin = new Skin();
+
+        bgTexture = new Texture(Gdx.files.internal("loading/menuScreen.png"));
+        Image bgImage = new Image(bgTexture);
+        bgImage.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        stage.addActor(bgImage);
+
         createBasicUI();
     }
 
     private void createBasicUI() {
         // Create a basic font
-        BitmapFont font = new BitmapFont();  // Default font
+        BitmapFont font = new BitmapFont();
 
-        // Create a simple white texture and turn it into a drawable
         Pixmap pixmap = new Pixmap(200, 60, Pixmap.Format.RGB888);
         pixmap.setColor(1, 1, 1, 1);
         pixmap.fill();
         Texture texture = new Texture(pixmap);
-        pixmap.dispose(); // We can dispose pixmap after texture is created
+        pixmap.dispose();
         Drawable drawable = new TextureRegionDrawable(texture);
 
-        // Create a TextButtonStyle and add resources to the skin
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.up = drawable;
         textButtonStyle.font = font;
@@ -51,13 +58,13 @@ public class LevelSelectScene implements Screen {
 
         float buttonWidth = 200;
         float buttonHeight = 60;
-        float spacing = 20;
+        float spacing = 50;
 
         float totalHeight = 3 * buttonHeight + 2 * spacing;
-        float centerX = Gdx.graphics.getWidth() / 2f - buttonWidth / 2f;
+        float centerX = (Gdx.graphics.getWidth() / 2f - buttonWidth / 2f) + 325;
         float startY = Gdx.graphics.getHeight() / 2f + totalHeight / 2f - buttonHeight;
 
-
+        textButtonStyle.fontColor = Color.DARK_GRAY;
         TextButton oneButton = new TextButton("Level 1", skin);
         oneButton.setSize(200, 60);
         oneButton.setPosition(centerX, startY);
@@ -73,7 +80,6 @@ public class LevelSelectScene implements Screen {
             @Override
             public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
                                      float x, float y, int pointer, int button) {
-                // Handle button press
                 System.out.println("Button pressed");
                 selectedLevel = 1;
                 if (listener != null) {
@@ -88,7 +94,6 @@ public class LevelSelectScene implements Screen {
             @Override
             public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
                                      float x, float y, int pointer, int button) {
-                // Handle button press
                 System.out.println("Button pressed");
                 selectedLevel = 2;
                 if (listener != null) {
@@ -103,7 +108,6 @@ public class LevelSelectScene implements Screen {
             @Override
             public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
                                      float x, float y, int pointer, int button) {
-                // Handle button press
                 System.out.println("Button pressed");
                 selectedLevel = 3;
                 if (listener != null) {

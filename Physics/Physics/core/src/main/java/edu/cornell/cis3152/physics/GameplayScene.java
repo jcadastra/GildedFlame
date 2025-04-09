@@ -669,20 +669,20 @@ public class GameplayScene implements Screen {
             moth.createSensor();
             enemies.add(moth);
         }
-        System.out.println("started");
+        //System.out.println("started");
         //create coins
-        JsonValue coinsJson = levelData.get("collectibles").get("coins");
-        System.out.println("collected");
-        texture = directory.getEntry("platform-moth01", Texture.class); // Ensure asset exists
-        for (int i = 0; i < coinsJson.size; i++) {
-            JsonValue coinData = coinsJson.get(i);
-            Vector2 position = new Vector2(avatar.getObstacle().getX(), avatar.getObstacle().getY());
+        //JsonValue coinsJson = levelData.get("collectibles").get("coins");
+        //System.out.println("collected");
+        //texture = directory.getEntry("platform-moth01", Texture.class); // Ensure asset exists
+        //for (int i = 0; i < coinsJson.size; i++) {
+         //   JsonValue coinData = coinsJson.get(i);
+         //   Vector2 position = new Vector2(avatar.getObstacle().getX(), avatar.getObstacle().getY());
 
-            float radius = coinData.getFloat("radius", 0.5f);
-            Coin coin = new Coin(position.x, position.y, radius, units);
-            coin.setTexture(texture);
-            addSprite(coin);
-            System.out.println("Coin added at: " + position);
+           // float radius = coinData.getFloat("radius", 0.5f);
+        //    Coin coin = new Coin(position.x, position.y, radius, units);
+         //   coin.setTexture(texture);
+         //   addSprite(coin);
+         //   System.out.println("Coin added at: " + position);
 
         }
 
@@ -723,7 +723,7 @@ public class GameplayScene implements Screen {
 //
 //        Ladder tempLadder = new Ladder(3,3,5f, units);
 ////        addSprite(tempLadder);
-    }
+//    }
     /**
      * Returns whether to process the update loop
      *
