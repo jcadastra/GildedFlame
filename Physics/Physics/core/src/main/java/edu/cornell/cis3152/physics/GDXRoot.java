@@ -20,7 +20,6 @@ import edu.cornell.gdiac.util.*;
 import edu.cornell.gdiac.assets.*;
 import edu.cornell.gdiac.graphics.*;
 import java.util.ArrayList;
-//import edu.cornell.cis3152.physics.ragdoll.*;
 
 /**
  * Root class for a LibGDX.
@@ -168,20 +167,6 @@ public class GDXRoot extends Game implements ScreenListener {
             currentScene.loadLevel(levels[0]);
             currentScene.setScreenListener(this);
             currentScene.setSpriteBatch(batch);
-
-            // controllers = new GameplayScene[1];
-            // controllers = new GameplayScene[2];
-//            controllers[0] = new RocketScene(directory);
-            //controllers[0] = new og_platformer(directory);
-//            controllers[1] = new empty_layout1(directory);
-//            controllers[2] = new empty_layout2(directory);
-//            controllers[0] = new Totem_intro(directory);
-//            controllers[0] = new Moth_intro(directory);
-//            controllers[1] = new Torch_playground(directory);
-//            controllers[1] = new GameplayScene_temp(directory, "temp");
-            // controllers[0] = new Totem_playground(directory);
-//            controllers[2] = new RagdollScene(directory);
-//            controllers[3] = new PlatformScene(directory);
 
             //for(int ii = 0; ii < controllers.length; ii++) {
             //    controllers[ii].setScreenListener(this);
