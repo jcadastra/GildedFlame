@@ -1291,8 +1291,7 @@ public class GameplayScene implements Screen {
             }
         }
         particleEngine.draw(batch,torchFire);
-        //
-        // lightController.fireLights(fireController);
+        //lightController.fireLights(fireController);
 
 
 
