@@ -879,12 +879,12 @@ public class GameplayScene implements Screen {
         float visibleH = camera.viewportHeight/2*0.8f;
 
         camera.position.x = MathUtils.clamp(camera.position.x,
-            bounds.x*scale.x+visibleW,
-            (bounds.x+bounds.width)*scale.x - visibleW);
+            bounds.x*scale.x+visibleW*1.25f,
+            (bounds.x+bounds.width)*scale.x - visibleW*1.25f);
         //System.out.println("x reached bounds:"+(camera.position.x==bounds.x*scale.x+visibleW));
         camera.position.y = MathUtils.clamp(camera.position.y,
-            bounds.y*scale.y+visibleH,
-            (bounds.y+bounds.height)*scale.y - visibleH);
+            bounds.y*scale.y+visibleH*1.25f,
+            (bounds.y+bounds.height)*scale.y - visibleH*1.25f);
 
         camera.update();
 
