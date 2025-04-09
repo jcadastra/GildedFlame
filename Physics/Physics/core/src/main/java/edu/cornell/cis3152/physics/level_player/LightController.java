@@ -110,14 +110,14 @@ public class LightController {
         //TODO:right now the light is interacting with nothing, discuss if this is the bahviour we want?
         torchLighting.setContactFilter(CATEGORY_LIGHT, (short)0, (short) CATEGORY_ENVIRONMENT);
         //rayHandler.useCustomViewport(viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
-        rayHandler.setAmbientLight(1f);
-        //TODO: uncomment this when done⬇️
-        //rayHandler.useDiffuseLight(true);
+        rayHandler.useDiffuseLight(true);
+        // Background light color⬇️, modify if needed
+        rayHandler.setAmbientLight(0.3f, 0.3f, 0.7f, 0.1f);
         rayHandler.setShadows(true);
         rayHandler.setBlur(true);
         //System.out.println(torchLighting==null);
         //System.out.println(points.x+","+points.y);
-        debug = true;
+        debug = false;
         //torchLighting.setPosition(camera.position.x, camera.position.y);
         //System.out.println("light pos "+ torchLighting.getX()+","+torchLighting.getY());
     }
@@ -201,6 +201,33 @@ public class LightController {
 
     }
 
+    public void resetCamera(float dx, float dy){
+        this.camera.position.set(dx/BOX_TO_WORLD,dy/BOX_TO_WORLD,0);
+        //rayHandler = new RayHandler(world,(int)this.camera.viewportWidth,(int)this.camera.viewportHeight);
+//        rayHandler = new RayHandler(world,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+//        //System.out.println("viewport"+this.camera.viewportWidth+","+camera.viewportHeight);
+//        //System.out.println("graphics"+Gdx.graphics.getWidth()+","+Gdx.graphics.getHeight());
+//        rayHandler.setCombinedMatrix(this.camera);
+        //attachTorchLight(fire);
+        inBounds();
+        this.camera.update();
+        rayHandler.setCombinedMatrix(camera);
+        rayHandler.update();
+    }
+
+    private void inBounds(){
+        float visibleW =  camera.viewportWidth/2*0.8f; //half of world visible, zoomed
+        float visibleH = camera.viewportHeight/2*0.8f;
+
+        camera.position.x = MathUtils.clamp(camera.position.x,
+            bounds.x*WORLD_TO_BOX+visibleW*WORLD_TO_BOX,
+            (bounds.x+bounds.width)*BOX_TO_WORLD - visibleW);
+        System.out.println("x reached bounds:"+(camera.position.x==bounds.x*BOX_TO_WORLD+visibleW));
+        camera.position.y = MathUtils.clamp(camera.position.y,
+            bounds.y*BOX_TO_WORLD+visibleH,
+            (bounds.y+bounds.height)*BOX_TO_WORLD - visibleH);
+    }
+
     public void updateCamera(float dx, float dy){
 //            // Get the player position in physics units (world units)
 //            Vector2 firePos = fire.getObstacle().getPosition();
@@ -245,13 +272,15 @@ public class LightController {
             camera.position.y += dy/BOX_TO_WORLD;
             // --- UPDATE CAMERA MATRIX ---
             camera.update();
-
             // --- UPDATE RAYHANDLER ---
             // Convert the camera's physics position to pixel units for the RayHandler
-            float cameraPixelX = camera.position.x * BOX_TO_WORLD;
-            float cameraPixelY = camera.position.y * BOX_TO_WORLD;
+            float cameraPixelX = camera.position.x;
+            float cameraPixelY = camera.position.y;
+            //System.out.println(cameraPixelX);
+            //System.out.println(cameraPixelY);
 
             // Update RayHandler with the camera's position in pixel units
+            rayHandler.setCombinedMatrix(camera);
             rayHandler.update();
         }
 

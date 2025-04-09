@@ -24,6 +24,7 @@
  */
 package edu.cornell.cis3152.physics;
 
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -628,6 +629,7 @@ public class GameplayScene implements Screen {
         addSprite(torchFire);
         lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds);
         lightController.attachTorchLight(torchFire);
+        lightController.resetCamera(camera.position.x,camera.position.y);
 
         particleEngine = new ParticleEngine(torchFire);
         particleEngine.newFires(fireController);
@@ -867,22 +869,32 @@ public class GameplayScene implements Screen {
         camera.position.x += (playerX - camera.position.x) * lerp;
         camera.position.y += (playerY - camera.position.y) * lerp;
 
-//
 //        float visibleW =  (bounds.x + bounds.width) * scale.x/2*0.8f; //half of world visible
 //        float visibleH = (bounds.y + bounds.height) * scale.y/2*0.8f;
 
 
-        float visibleW =  camera.viewportWidth/2*0.8f; //half of world visible
+        float visibleW =  camera.viewportWidth/2*0.8f; //half of world visible, zoomed
         float visibleH = camera.viewportHeight/2*0.8f;
 
         camera.position.x = MathUtils.clamp(camera.position.x,
-            bounds.x*scale.x + visibleW,
-            bounds.width*scale.x - visibleW);
+            bounds.x*scale.x+visibleW,
+            (bounds.x+bounds.width)*scale.x - visibleW);
+        //System.out.println("x reached bounds:"+(camera.position.x==bounds.x*scale.x+visibleW));
         camera.position.y = MathUtils.clamp(camera.position.y,
             bounds.y*scale.y+visibleH,
-            bounds.height*scale.x-visibleH);
+            (bounds.y+bounds.height)*scale.y - visibleH);
 
         camera.update();
+
+        //debug code
+        ShapeRenderer shapeRenderer = new ShapeRenderer();
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.RED);
+        shapeRenderer.rect(bounds.x * scale.x, bounds.y * scale.y,
+            bounds.width * scale.x, bounds.height * scale.y);
+        shapeRenderer.end();
+
 
         float dx = camera.position.x-prevX;
         float dy = camera.position.y-prevY;
@@ -1266,6 +1278,7 @@ public class GameplayScene implements Screen {
 
         // Draw the meshes (images)
         for(ObstacleSprite obj : sprites) {
+            batch.setProjectionMatrix(camera.combined);
             obj.draw(batch);
         }
 
