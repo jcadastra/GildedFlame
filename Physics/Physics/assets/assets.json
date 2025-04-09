@@ -254,7 +254,8 @@
         "moth_intro" : "platform/moth_intro.json",
         "totem_intro" : "platform/totem_intro.json",
         "spinner_layout" : "platform/spinner_layout.json",
-        "rope_test" : "platform/rope_test.json"
+        "rope_test" : "platform/rope_test.json",
+        "test2" : "test2.tmj"
     },
     "music" : {
       "eerie": "music/eerie.wav",

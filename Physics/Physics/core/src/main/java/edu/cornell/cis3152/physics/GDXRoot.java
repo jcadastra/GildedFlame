@@ -160,12 +160,13 @@ public class GDXRoot extends Game implements ScreenListener {
 
             // Initialize the three game worlds
             currentScene = new GameplayScene(directory, soundEngine, "platform");
-            levels = new String[3];
-            levels[0] = "moth_intro";
-            levels[1] = "totem_intro";
+            levels = new String[1];
+            levels[0] = "test2";
+            //levels[0] = "moth_intro";
+            //levels[1] = "totem_intro";
             //levels[2] = "spinner_layout";
-            levels[2] = "rope_test";
-            currentScene.loadLevel(levels[0]);
+            //levels[2] = "rope_test";
+            currentScene.loadLevel(levels[0], "rope_test");
             currentScene.setScreenListener(this);
             currentScene.setSpriteBatch(batch);
 
@@ -196,14 +197,14 @@ public class GDXRoot extends Game implements ScreenListener {
         } else if (exitCode == GameplayScene.EXIT_NEXT) {
             currentScene.clearLevel();
             current = (current+1) % levels.length;
-            currentScene.loadLevel(levels[current]);
+            currentScene.loadLevel(levels[current], "rope_test");
             /*current = (current+1) % controllers.length;
             controllers[current].reset();
             setScreen(controllers[current]);*/
         } else if (exitCode == GameplayScene.EXIT_PREV) {
             currentScene.clearLevel();
             current = (current+levels.length-1) % levels.length;
-            currentScene.loadLevel(levels[current]);
+            currentScene.loadLevel(levels[current], "rope_test");
             /*controllers[current].reset();
             setScreen(controllers[current]);*/
         } else if (exitCode == GameplayScene.EXIT_QUIT) {

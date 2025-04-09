@@ -12,7 +12,7 @@
     "restitution": 0.0
   },
   "walls": {
-    "tile"        : 128.0,
+    "tile"        : 300.0,
     "friction"    : 0.1,
     "density"     : 0.0,
     "restitution" : 0.1,
@@ -115,8 +115,29 @@
   },
   "enemies": {
     "moths": {
-      "count": 0,
-      "instances": []
+      "count": 1,
+      "instances": [
+        {
+          "pos": [20.0, 2.0],
+          "dimension": [1, 1],
+          "speed": 2,
+          "size": 1,
+          "density": 6,
+          "attackTimer": 75,
+          "attackAnimationTimer": 20,
+          "smotherTimer": 300,
+          "dazedTimer": 200,
+          "sensor": {
+            "shrink": 0.6,
+            "height": 0.05
+          },
+          "debug": {
+            "avatar": "#ffff00ff",
+            "sensor": "#ff0000ff",
+            "tolerance": 0.05
+          }
+        }
+      ]
     },
     "totems": {
       "count": 1,

@@ -154,7 +154,7 @@ public class GameplayScene implements Screen {
     //protected Totem totem;
     //protected Moth moth;
 
-    private String levelName = "moth_intro";
+    private String levelName = "test2";
 
     /**
      * The jump sound. We only want to play once.
@@ -505,7 +505,7 @@ public class GameplayScene implements Screen {
         world.setContactListener(contactListener);
         setComplete(false);
         setFailure(false);
-        loadLevel(levelName);
+        loadLevel(levelName, "rope_test");
     };
 
     public void clearLevel() {
@@ -539,17 +539,169 @@ public class GameplayScene implements Screen {
 
     private void populateLevel() {}
     private Rope temp;
-    public void loadLevel(String levelName) {
+
+    private List<float[]> extractSurfaces(int[] data, int cols, int rows) {
+        int[][] grid = new int[rows][cols];
+        boolean[][] visited = new boolean[rows][cols];
+
+        for (int i = 0; i < data.length; i++) {
+            int x = i % cols;
+            int y = i / cols;
+            grid[y][x] = data[i];
+        }
+
+        List<float[]> surfaces = new ArrayList<>();
+
+        for (int y = 0; y < rows; y++) {
+            for (int x = 0; x < cols; x++) {
+                if (grid[y][x] != 0 && !visited[y][x]) {
+                    int width = 1;
+                    while (x + width < cols && grid[y][x + width] != 0 && !visited[y][x + width]) {
+                        width++;
+                    }
+
+                    int height = 1;
+                    boolean expandable = true;
+                    while (y + height < rows && expandable) {
+                        for (int dx = 0; dx < width; dx++) {
+                            if (grid[y + height][x + dx] == 0 || visited[y + height][x + dx]) {
+                                expandable = false;
+                                break;
+                            }
+                        }
+                        if (expandable) {
+                            height++;
+                        }
+                    }
+                    for (int dy = 0; dy < height; dy++) {
+                        for (int dx = 0; dx < width; dx++) {
+                            visited[y + dy][x + dx] = true;
+                        }
+                    }
+
+                    int yy = rows - y;
+
+                    float[] poly = new float[]{
+                        x, yy,                         // top-left
+                        x, yy - height,                // bottom-left
+                        x + width, yy - height,        // bottom-right
+                        x + width, yy                  // top-right
+                    };
+
+                    surfaces.add(poly);
+                }
+            }
+        }
+
+        return surfaces;
+    }
+
+    public void loadLevel(String levelName, String levelInfoName) {
         this.levelName = levelName;
         float units = height / bounds.height;
 
         JsonValue levelData = directory.getEntry(levelName,JsonValue.class);
+        JsonValue levelInfo = directory.getEntry(levelInfoName, JsonValue.class);
 
         // Create ground pieces
         Texture texture = directory.getEntry( "shared-earth", Texture.class );
         enemies = new ArrayList<>();
 
-        Surface wall;
+        JsonValue layers = levelData.get("layers");
+        for (JsonValue layer : layers) {
+            String layerType = layer.getString("type");
+            String layerName = layer.getString("name");
+
+            if (layerType.equals("tilelayer")) {
+                int width = layer.getInt("width");
+                int height = layer.getInt("height");
+                JsonValue data = layer.get("data");
+
+                int[] tileData = new int[width * height];
+                for (int i = 0; i < data.size; i++) {
+                    tileData[i] = data.getInt(i);
+                }
+
+                List<float[]> polygons = extractSurfaces(tileData, width, height);
+
+                for (float[] points : polygons) {
+                    JsonValue settings = levelInfo.get("walls"); // Customize based on layer name if needed
+                    Surface tile = new Surface(points, units, settings);
+                    tile.setTexture(texture);
+                    tile.getObstacle().setName("tile"); // unique name
+                    addSprite(tile);
+                }
+
+            } else if (layerType.equals("objectgroup")) {
+                for (JsonValue object : layer.get("objects")) {
+                    String objName = object.getString("name", "unnamed");
+                    float x = object.getFloat("x") / levelData.getInt("tilewidth");
+                    float y = (18 * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
+                    float[] pos = new float[]{x, y};
+
+                    switch (objName) {
+                        case "player":
+                            Texture playerTexture = directory.getEntry("platform-player", Texture.class);
+                            avatar = new Traci(units, levelInfo.get("traci"));
+                            avatar.setTexture(playerTexture);
+                            avatar.getObstacle().setPosition(pos[0], pos[1]);
+                            System.out.println("position" + pos[0] + " " + pos[1]);
+                            addSprite(avatar);
+                            avatar.createSensor();
+                            break;
+
+                        case "torch":
+                            Lighting l = new Lighting(units, levelInfo.get("light"));
+                            l.setTexture(texture);
+                            addSprite(l);
+                            l.createSensor();
+                            torchFire = new Fire(units, new Vector2(10,10));
+                            addSprite(torchFire);
+                            lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds);
+                            lightController.attachTorchLight(torchFire);
+
+                            particleEngine = new ParticleEngine(torchFire);
+                            particleEngine.newFires(fireController);
+
+                            texture = directory.getEntry("platform-torch", Texture.class);
+                            torch = new Torch(units, constants.get("torch"));
+                            torch.getObstacle().setPosition(pos[0], pos[1]);
+                            torch.setTexture(texture);
+                            addSprite(torch);
+                            l.getObstacle().setPosition(torch.getObstacle().getPosition());
+                            torchFire.getObstacle().setPosition(torch.getObstacle().getPosition());
+                            activeLightJoint = world.createJoint(torch.attachObj(l));
+                            activeFireJoint = world.createJoint(torch.attachObj(torchFire));
+                            break;
+
+                        case "moth":
+                            texture = directory.getEntry("platform-moth01", Texture.class);
+                            Vector2 position = new Vector2(pos[0], pos[1]);
+                            Moth moth = new Moth(1, units, levelInfo.get("enemies").get("moths").get("instances").get(0), directory, position);
+                            moth.setTexture(texture);
+                            addSprite(moth);
+                            moth.createSensor();
+                            enemies.add(moth);
+                            break;
+
+                        case "totem":
+                            texture = directory.getEntry("platform-totem01", Texture.class);
+                            position = new Vector2(pos[0], pos[1]);
+                            Totem totem = new Totem(1, units, levelInfo.get("enemies").get("totems").get("instances").get(0), directory, position);
+                            totem.setTexture(texture);
+                            addSprite(totem);
+                            totem.createSensor();
+                            enemies.add(totem);
+                            break;
+
+                        default:
+                            System.out.println("Unknown object: " + objName);
+                            break;
+                    }
+                }
+            }
+        }
+        /*Surface wall;
         String wname = "wall";
         JsonValue walls = levelData.get("walls");
         JsonValue walljv = walls.get("positions");
@@ -667,7 +819,7 @@ public class GameplayScene implements Screen {
             addSprite(moth);
             moth.createSensor();
             enemies.add(moth);
-        }
+        }*/
 
         // SAMPLE BUTTON CODE BELOW::
 //        Button button = new Button(new Vector2(24,2.75f), 0, true, true, units);
