@@ -6,67 +6,51 @@
       "wrapV": "repeated"
     },
     "shared-goal": "shared/goaldoor.png",
-    "platform-mothOUTOFLIGHT": {
-      "file": "platform/mothOutOfLight.png",
-      "mipmaps": true,
-      "minfilter": "linear mipmap linear",
-      "magfilter": "linear mipmap linear"
-    },
-    "platform-mothANGRY": {
-      "file": "platform/mothAngry.png",
-      "mipmaps": true,
-      "minfilter": "linear mipmap linear",
-      "magfilter": "linear mipmap linear"
-    },
-    "platform-mothDAZED": {
-      "file": "platform/mothDazed.png",
-      "mipmaps": true,
-      "minfilter": "linear mipmap linear",
-      "magfilter": "linear mipmap linear"
-    },
-    "platform-mothCD": {
-      "file": "platform/mothCD.png",
-      "mipmaps": true,
-      "minfilter": "linear mipmap linear",
-      "magfilter": "linear mipmap linear"
-    },
-    "platform-mothTRANCE": {
-      "file": "platform/mothTrance.png",
-      "mipmaps": true,
-      "minfilter": "linear mipmap linear",
-      "magfilter": "linear mipmap linear"
-    },
-    "platform-mothSMOTHER": {
-      "file": "platform/mothSmother.png",
-      "mipmaps": true,
-      "minfilter": "linear mipmap linear",
-      "magfilter": "linear mipmap linear"
-    },
-    "platform-mothATTACK": {
-      "file": "platform/mothAttack.png",
-      "mipmaps": true,
-      "minfilter": "linear mipmap linear",
-      "magfilter": "linear mipmap linear"
-    },
-    "platform-mothINLIGHT": {
-      "file": "platform/mothInLight.png",
-      "mipmaps": true,
-      "minfilter": "linear mipmap linear",
-      "magfilter": "linear mipmap linear"
-    },
     "platform-totemLIGHTANIMATION": {
       "file": "platform/totemInLightAnimation.png",
       "mipmaps": true,
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
     },
+    "platform-playerMOVEMENTTORCH": {
+      "file": "platform/playerMovementTorch.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-playerMOVEMENTNOTORCH": {
+      "file": "platform/playerMovementNoTorch.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-playerIDLETORCH": {
+      "file": "platform/playerIdleTorch.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-playerIDLENOTORCH": {
+      "file": "platform/playerIdleNoTorch.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-mothSMOTHERANIMATION": {
+      "file": "platform/mothSmotherAnimation.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-mothATTACKANIMATION": {
+      "file": "platform/mothAttackAnimation.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
     "platform-rope-end": "platform/ropeEnd.png",
     "platform-rope-mid": "platform/ropeBodyRec.png",
-    "platform-player-torch": "platform/playerTorch.png",
-    "platform-player-no-torch": "platform/playerNoTorch.png",
-    "platform-player": "platform/player.png",
     "platform-torch": "platform/torch.png",
-    "platform-traci": "platform/traci.png",
     "platform-rope": "platform/ropebridge.png",
     "platform-barrier": "platform/barrier.png",
     "platform-bullet": "platform/bullet.png"
