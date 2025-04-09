@@ -165,6 +165,7 @@ public class GDXRoot extends Game implements ScreenListener {
             //levels[2] = "spinner_layout";
             levels[2] = "rope_test";
             currentScene.loadLevel(levels[0]);
+            currentScene.reset();
             currentScene.setScreenListener(this);
             currentScene.setSpriteBatch(batch);
 

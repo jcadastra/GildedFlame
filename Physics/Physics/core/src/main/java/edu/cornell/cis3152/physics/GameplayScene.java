@@ -569,16 +569,14 @@ public class GameplayScene implements Screen {
         texture = directory.getEntry( "platform-rope-end", Texture.class );
         Texture middle_texture = directory.getEntry( "platform-rope-mid", Texture.class );
         JsonValue ropes = levelData.get("ropes");
-        int ropeId = 0;
         for (JsonValue ropeJson : ropes) {
             Vector2 pin1 = new Vector2(ropeJson.get("pin1").getFloat(0), ropeJson.get("pin1").getFloat(1));
             Vector2 pin2 = new Vector2(ropeJson.get("pin2").getFloat(0), ropeJson.get("pin2").getFloat(1));
             float dep = ropeJson.getFloat("depth");
             Rope rope = new Rope(pin1, pin2, dep, units, ropeJson);
             rope.setTextures(texture, middle_texture);
-            temp = rope;
             addSpriteGroup(rope);
-            ropeId++;
+            temp = rope;
         }
 
         // Create spinners
@@ -687,6 +685,10 @@ public class GameplayScene implements Screen {
     //        addSprite(tempLadder);
 
         }
+
+//        if (levelName.equals("moth_intro")) {
+//            temp.deactivateAnchor(1);
+//        }
     }
     /**
      * Returns whether to process the update loop
