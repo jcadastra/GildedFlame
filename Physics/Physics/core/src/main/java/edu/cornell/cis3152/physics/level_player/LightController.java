@@ -181,6 +181,40 @@ public class LightController {
     public void translate(){
 
     }
+    private PointLight obtainLight() {
+        if (!lightPool.isEmpty()) {
+            PointLight light = lightPool.pop();
+            light.setActive(true);
+            return light;
+        }
+        return new PointLight(rayHandler, 100, Color.ORANGE, 1.5f, 0, 0);
+    }
+
+    private void releaseLight(PointLight light) {
+        light.setActive(false);
+        lightPool.add(light);
+    }
+
+    public void clearAll(FireController fireController) {
+        for(PointLight light:lightPool){
+            light.setActive(false);
+        }
+        lightPool.clear();
+    }
+
+    public void fireLights(FireController fireController){
+        for (Fire fire: fireController.getLitFires()){
+            attachFireLight(fire);
+            System.out.println("fire lights");
+        }
+        for (FireFlag fireFlag: fireController.getFireFlags()){
+
+        }
+    }
+    private void attachFireLight(Fire fire){
+        PointLight fireLight = obtainLight();
+        fireLight.attachToBody(fire.getObstacle().getBody());
+    }
 
 
     public void render() {
