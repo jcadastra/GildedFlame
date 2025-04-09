@@ -554,6 +554,7 @@ public class GameplayScene implements Screen {
 
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < cols; x++) {
+                int id = data[y * cols + x];
                 if (grid[y][x] != 0 && !visited[y][x]) {
                     int width = 1;
                     while (x + width < cols && grid[y][x + width] != 0 && !visited[y][x + width]) {
@@ -624,13 +625,77 @@ public class GameplayScene implements Screen {
 
                 List<float[]> polygons = extractSurfaces(tileData, width, height);
 
+                int floorCount = 0;
+                int wallCount = 0;
+                int platformCount = 0;
+
                 for (float[] points : polygons) {
+                    // Determine bounds of the polygon in tile coordinates
+                    float minX = points[0];
+                    float maxY = points[1];
+                    float maxX = points[4];
+                    float minY = points[5];
+
+                    int tileMinX = (int) Math.floor(minX);
+                    int tileMinY = (int) Math.floor(minY);
+                    int tileMaxX = (int) Math.ceil(maxX);
+                    int tileMaxY = (int) Math.ceil(maxY);
+
+                    boolean isFloor = false;
+                    boolean isWall = false;
+                    boolean isPlatform = false;
+                    for (int y = tileMinY; y < tileMaxY && !isFloor; y++) {
+                        for (int x = tileMinX; x < tileMaxX && !isFloor; x++) {
+                            if (x >= 0 && x < width && y >= 0 && y < height) {
+                                int flippedY = height - 1 - y;  // flip to match original data
+                                int tileId = tileData[flippedY * width + x];
+                                if (tileId == 7 || tileId == 8 || tileId == 9) {
+                                    isFloor = true;
+                                } else if (tileId == 13) {
+                                    isWall = true;
+                                } else if (tileId == 1 || tileId == 2 || tileId == 3) {
+                                    isPlatform = true;
+                                }
+                            }
+                        }
+                    }
+                    /*outer:
+                    for (int y = tileMinY; y < tileMaxY; y++) {
+                        for (int x = tileMinX; x < tileMaxX; x++) {
+                            if (x >= 0 && x < width && y >= 0 && y < height) {
+                                int tileId = tileData[y * width + x];
+                                if (tileId == 1 || tileId == 2 || tileId == 3 || tileId == 7 || tileId == 8 || tileId == 9) {
+                                    isFloor = true;
+                                    break outer;
+                                }
+                            }
+                        }
+                    }*/
+
+                    JsonValue settings = levelInfo.get("walls");
+                    Surface tile = new Surface(points, units, settings);
+                    tile.setTexture(texture);
+
+                    if (isWall) {
+                        tile.getObstacle().setName("wall" + (wallCount++));
+                    } else if (isPlatform) {
+                        tile.getObstacle().setName("floor" + (platformCount++));
+                    } else if (isFloor) {
+                        tile.getObstacle().setName("floor" + (floorCount++));
+                    } else {
+                        tile.getObstacle().setName("wall" + (wallCount++));
+                    }
+
+                    addSprite(tile);
+                }
+
+                /*for (float[] points : polygons) {
                     JsonValue settings = levelInfo.get("walls"); // Customize based on layer name if needed
                     Surface tile = new Surface(points, units, settings);
                     tile.setTexture(texture);
                     tile.getObstacle().setName("tile"); // unique name
                     addSprite(tile);
-                }
+                }*/
 
             } else if (layerType.equals("objectgroup")) {
                 for (JsonValue object : layer.get("objects")) {

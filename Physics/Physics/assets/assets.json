@@ -255,7 +255,8 @@
         "totem_intro" : "platform/totem_intro.json",
         "spinner_layout" : "platform/spinner_layout.json",
         "rope_test" : "platform/rope_test.json",
-        "test2" : "test2.tmj"
+        "test2" : "test2.tmj",
+        "test3" : "test3.tmj"
     },
     "music" : {
       "eerie": "music/eerie.wav",

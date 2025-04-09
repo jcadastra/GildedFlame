@@ -40,11 +40,22 @@
             "scaleInEditor": 1
         },
         "test2.tmx": {
+            "expandedObjectLayers": [
+                3
+            ],
             "scale": 0.0625,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4784,
-                "y": 1672
+                "x": 5648,
+                "y": 4056
+            }
+        },
+        "test3.tmx": {
+            "scale": 0.0625,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 4880,
+                "y": 6168
             }
         },
         "test_map.tmj": {

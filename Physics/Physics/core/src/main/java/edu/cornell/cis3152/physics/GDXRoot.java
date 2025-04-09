@@ -160,8 +160,9 @@ public class GDXRoot extends Game implements ScreenListener {
 
             // Initialize the three game worlds
             currentScene = new GameplayScene(directory, soundEngine, "platform");
-            levels = new String[1];
+            levels = new String[2];
             levels[0] = "test2";
+            levels[1] = "test3";
             //levels[0] = "moth_intro";
             //levels[1] = "totem_intro";
             //levels[2] = "spinner_layout";

@@ -33,9 +33,9 @@
   <object id="2" name="torch" gid="27" x="2117" y="4798" width="150" height="300"/>
  </objectgroup>
  <objectgroup id="3" name="Enemies">
-  <object id="3" name="moth" gid="32" x="4506" y="4782" width="300" height="300"/>
-  <object id="4" name="totem" gid="31" x="6001.52" y="4795.45" width="300" height="300"/>
-  <object id="5" name="totem" gid="31" x="6001.52" y="4495.45" width="300" height="300"/>
-  <object id="6" name="totem" gid="31" x="6001.52" y="4198.48" width="300" height="300"/>
+  <object id="3" name="moth" gid="32" x="4506" y="4718" width="300" height="300"/>
+  <object id="4" name="totem" gid="31" x="6001.52" y="4739.45" width="300" height="300"/>
+  <object id="5" name="totem" gid="31" x="5993.52" y="4399.45" width="300" height="300"/>
+  <object id="6" name="totem" gid="31" x="6001.52" y="4102.48" width="300" height="300"/>
  </objectgroup>
 </map>
