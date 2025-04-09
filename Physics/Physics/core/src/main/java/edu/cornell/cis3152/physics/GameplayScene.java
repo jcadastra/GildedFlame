@@ -48,6 +48,7 @@ import edu.cornell.cis3152.physics.level_player.utils.ObstacleGroup;
 
 import edu.cornell.cis3152.physics.level_player.utils.TweenElement;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -67,6 +68,7 @@ import edu.cornell.gdiac.graphics.*;
 import edu.cornell.gdiac.physics2.*;
 import edu.cornell.cis3152.physics.level_player.enviromentals.*;
 import java.util.Optional;
+import java.util.Set;
 import java.util.Stack;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -673,42 +675,46 @@ public class GameplayScene implements Screen {
             enemies.add(moth);
         }
 
-        // SAMPLE BUTTON CODE BELOW::
-//        Button button = new Button(new Vector2(24,2.75f), 0, true, true, units);
-//        BoxObstacle temp = new BoxObstacle(5,5,5,.5f);
-//        temp.setPhysicsUnits(units);
-//        temp.setName("floor");
-//        ObstacleSprite thing = new ObstacleSprite(temp);
-//        thing.getObstacle().setBodyType(BodyType.KinematicBody);
-//        thing.getObstacle().setFriction(.5f);
-////        addSprite(thing);
-//
-//        Button button = new Button(new Vector2(20,3.75f), 0, false, false, units);
-////        Array<Object> actionArray = new Array<>(new Object[]{thing, "move", new Vector2(8, 10), new Vector2(10, 10)});
-//        Function<Float, Float> movementFunc = Interpolation.swing::apply;
-//        EventAction<Vector2> eventAction = new EventAction<Vector2>(thing, "move", new Vector2(8, 10), new Vector2(16, 5), 4f, movementFunc);
-////        Object[] actionArray = new Object[]{thing, "rotate", 0f, (float) (Math.PI), 300, movementFunc};
-////        Object[] actionArray = new Object[]{thing, "move", new Vector2(8, 10), new Vector2(16, 5), 100, movementFunc};
-//
-//        Event<Integer,Vector2> event = new Event<Integer,Vector2>(button, button::getState,
-//            state -> state == 1, "button", eventAction);
-////        eventHandler.registerEvent(event);
-//
-//
-//        EventAction<Float> eventAction2 = new EventAction<Float>(thing, "rotate", 0f, (float) (Math.PI), 4, movementFunc);
-//        Event<Integer,Float> event2 = new Event<Integer, Float>(button, button::getState,
-//            state -> state == 1, "button", eventAction2);
-//        eventHandler.registerEvent(event2);
-//
-//        eventAction = new EventAction<>("spawn");
-//        event = new Event<Integer,Vector2>(button, button::getState,
-//            state -> state == 1, "button", eventAction);
-////        eventHandler.registerEvent(event);
-//
-////        addSpriteGroup(button);
-//
-//        Ladder tempLadder = new Ladder(3,3,5f, units);
-////        addSprite(tempLadder);
+        if (levelName.equals("rope_test")) {
+            // SAMPLE BUTTON CODE BELOW::
+            Button button = new Button(new Vector2(24,2.75f), 0, true, true, units);
+            Button button2 = new Button(new Vector2(30.75f,7f), (float) Math.PI/2, false, false, units);
+            BoxObstacle temp = new BoxObstacle(5,5,5,.5f);
+            temp.setPhysicsUnits(units);
+            temp.setName("floor");
+            ObstacleSprite thing = new ObstacleSprite(temp);
+            thing.getObstacle().setBodyType(BodyType.KinematicBody);
+            thing.getObstacle().setFriction(.5f);
+            addSprite(thing);
+
+    //        Array<Object> actionArray = new Array<>(new Object[]{thing, "move", new Vector2(8, 10), new Vector2(10, 10)});
+            Function<Float, Float> movementFunc = Interpolation.swing::apply;
+            EventAction<Vector2> eventAction = new EventAction<Vector2>(thing, "move", new Vector2(8, 10), new Vector2(16, 5), 4f, movementFunc);
+    //        Object[] actionArray = new Object[]{thing, "rotate", 0f, (float) (Math.PI), 300, movementFunc};
+    //        Object[] actionArray = new Object[]{thing, "move", new Vector2(8, 10), new Vector2(16, 5), 100, movementFunc};
+
+            Event<Integer,Vector2> event = new Event<Integer,Vector2>(button, button::getState,
+                state -> state == 1,  eventAction);
+            eventHandler.registerEvent(event);
+
+
+            EventAction<Float> eventAction2 = new EventAction<Float>(thing, "rotate", 0f, (float) (Math.PI), 4, movementFunc);
+            Event<Integer,Float> event2 = new Event<Integer, Float>(button, button::getState,
+                state -> state == 1,  eventAction2);
+            eventHandler.registerEvent(event2);
+
+            eventAction = new EventAction<>("demo");
+            event = new Event<Integer,Vector2>(button2, button2::getState,
+                state -> state == 1,  eventAction);
+            eventHandler.registerEvent(event);
+
+            addSpriteGroup(button);
+//            addSpriteGroup(button2);
+
+            Ladder tempLadder = new Ladder(3,3,5f, units);
+    //        addSprite(tempLadder);
+
+        }
     }
     /**
      * Returns whether to process the update loop
@@ -998,6 +1004,7 @@ public class GameplayScene implements Screen {
      */
     private <T,U> void supplementaryEventActions(float dt) {
         Stack<Event<?,?>> todos = eventHandler.getEventFlags();
+        Set<Button> toggleButtons = new HashSet<>();
         while (!todos.isEmpty()) {
             Event<T,U> event = (Event<T, U>) todos.pop();
             EventAction<U> action = event.action;
@@ -1013,7 +1020,7 @@ public class GameplayScene implements Screen {
                 undo_action.setFinalValue(temp);
 
                 Button button = (Button) event.source;
-                button.toggleButton(world);
+                toggleButtons.add(button);
 
                 int nextState;
                 if (button.getDoubleSided()) {
@@ -1092,7 +1099,7 @@ public class GameplayScene implements Screen {
                         }
 
                         timeTill = action.getTime() - stepCounter;
-                        tweenedMovmentObjectsVec2.remove(oldEventF.get());
+                        tweenedMovmentObjectsFloat.remove(oldEventF.get());
                     }
 
                     Float initialStateFloat = action.getTarget().getObstacle().getAngle();
@@ -1104,22 +1111,15 @@ public class GameplayScene implements Screen {
                     tweenedMovmentObjectsFloat.add(tweenElementFloat);
                     break;
 
-                case "spawn":
-                    float units = height / bounds.height;
-                    JsonValue levelData = directory.getEntry("moth_intro",JsonValue.class);
-                    JsonValue enemiesJson = levelData.get("enemies");
-                    Texture texture = directory.getEntry("platform-moth01", Texture.class);
-                    JsonValue mothsJson = enemiesJson.get("moths").get("instances");
-                    for (int i = 0; i < mothsJson.size; i++) {
-                        Vector2 position = new Vector2(mothsJson.get(i).get("pos").getFloat(0), mothsJson.get(i).get("pos").getFloat(1));
-                        Moth moth = new Moth(i, units, mothsJson.get(i), directory, position);
-                        moth.setTexture(texture);
-                        addSprite(moth);
-                        moth.createSensor();
-                        enemies.add(moth);
-                    }
+                case "demo":
+                    temp.deactivateAnchor(1);
+                    System.out.println("run");
                     break;
             }
+        }
+
+        for (Button button : toggleButtons) {
+            button.toggleButton(world);
         }
     }
 
