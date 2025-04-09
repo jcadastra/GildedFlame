@@ -69,6 +69,8 @@ public class InputController {
     private boolean tertiaryPressed;
     /** Whether the debug toggle was pressed. */
     private boolean debugPressed;
+
+    private boolean throwPressed;
     private boolean debugPrevious;
     /** Whether the exit button was pressed. */
     private boolean exitPressed;
@@ -286,6 +288,8 @@ public class InputController {
         prevPressed  = xbox.getLBumper();
         primePressed = xbox.getA();
         debugPressed  = xbox.getY();
+        throwPressed = xbox.getX();
+        throwing = throwPressed;
 
         // Increase animation frame, but only if trying to move
         horizontal = xbox.getLeftX();

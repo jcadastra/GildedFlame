@@ -58,6 +58,12 @@
     }
   ],
   "ropes" : [],
+  "collectibles": {
+    "coins": [
+      { "pos": [5, 10], "radius": 0.5 },
+      { "pos": [8, 7], "radius": 0.5 }
+    ]
+  },
   "bridges" : [],
   "traci": {
     "pos": [2.5, 5.0],
@@ -163,4 +169,5 @@
       ]
     }
   }
+
 }
