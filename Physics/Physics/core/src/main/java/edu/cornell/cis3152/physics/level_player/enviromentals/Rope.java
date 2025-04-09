@@ -176,8 +176,8 @@ public class Rope extends ObstacleGroup {
         // Create right (end) anchor.
         WheelObstacle rightAnchorObs = new WheelObstacle(pin2.x / units, pin2.y / units, ropeThickness / units);
         rightAnchorObs.setBodyType(BodyType.StaticBody);
-        rightAnchorObs.setMass(0.1f);
-        rightAnchorObs.setDensity(1f);
+        rightAnchorObs.setMass(0.000000001f);
+        rightAnchorObs.setDensity(0.0000001f);
         rightAnchorObs.setFixedRotation(false);
         rightAnchorObs.setPhysicsUnits(units);
         rightAnchorObs.setSensor(true);
@@ -268,5 +268,9 @@ public class Rope extends ObstacleGroup {
         Joint joint = world.createJoint(weldJointDef);
         joints.add(joint);
         return joint;
+    }
+
+    public void deactivateAnchor (int anchorNum) {
+        anchors.get(anchorNum).getObstacle().setBodyType(BodyType.DynamicBody);
     }
 }

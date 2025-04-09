@@ -46,14 +46,8 @@
   ],
   "spinners" : [],
   "bridges" : [],
-  "ropes" : [],
-  "collectibles": {
-    "coins": [
-      { "pos": [5, 10], "radius": 0.5 },
-      { "pos": [8, 7], "radius": 0.5 }
-    ]
-  },
-
+  "ropes" : [
+  ],
   "traci" : {
     "pos"       : [2.5, 5.0],
     "inner"     : [0.7, 0.95],
@@ -115,7 +109,7 @@
           "speed": 2,
           "size": 1,
           "density": 6,
-          "attackTimer": 75,
+          "attackTimer": 200,
           "attackAnimationTimer": 20,
           "smotherTimer": 300,
           "dazedTimer": 200,
@@ -135,6 +129,5 @@
       "count": 0,
       "instances": []
     }
-
   }
 }
