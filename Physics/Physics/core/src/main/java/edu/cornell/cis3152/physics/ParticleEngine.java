@@ -42,7 +42,7 @@ public class ParticleEngine implements Screen {
 
         }
         //effect.scaleEffect(1/2f);
-        System.out.println();
+        //System.out.println();
 
     }
 

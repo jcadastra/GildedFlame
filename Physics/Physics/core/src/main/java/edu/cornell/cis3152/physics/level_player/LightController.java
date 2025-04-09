@@ -148,6 +148,17 @@ public class LightController {
         torchLightState = torchLight.getState();
     }
 
+    public void fireLights(FireController fireController){
+        for (Fire fire: fireController.getLitFires()){
+            attachFireLight(fire);
+        }
+    }
+    private void attachFireLight(Fire fire){
+        PointLight fireLight = new PointLight(rayHandler,100,Color.YELLOW,
+            4f,fire.getObstacle().getX(),fire.getObstacle().getY());
+        fireLight.attachToBody(fire.getObstacle().getBody());
+    }
+
     public void updateAttach(Fire fire)
     {
         Vector2 bodyPosition = fire.getObstacle().getPosition();
@@ -222,7 +233,7 @@ public class LightController {
         camera.position.x = MathUtils.clamp(camera.position.x,
             bounds.x*WORLD_TO_BOX+visibleW*WORLD_TO_BOX,
             (bounds.x+bounds.width)*BOX_TO_WORLD - visibleW);
-        System.out.println("x reached bounds:"+(camera.position.x==bounds.x*BOX_TO_WORLD+visibleW));
+        System.out.println("x reached bounds:"+(camera.position.x));
         camera.position.y = MathUtils.clamp(camera.position.y,
             bounds.y*BOX_TO_WORLD+visibleH,
             (bounds.y+bounds.height)*BOX_TO_WORLD - visibleH);
@@ -278,6 +289,7 @@ public class LightController {
             float cameraPixelY = camera.position.y;
             //System.out.println(cameraPixelX);
             //System.out.println(cameraPixelY);
+        inBounds();
 
             // Update RayHandler with the camera's position in pixel units
             rayHandler.setCombinedMatrix(camera);
