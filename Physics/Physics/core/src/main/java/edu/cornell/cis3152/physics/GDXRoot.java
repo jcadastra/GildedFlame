@@ -141,75 +141,102 @@ public class GDXRoot extends Game implements ScreenListener {
             loading.dispose();
             loading = null;
 
+            MainMenuScreen mainMenu = new MainMenuScreen();
+            mainMenu.setScreenListener(this);
+            setScreen(mainMenu);
+            return;
 
-            soundEngine.registerSoundEffect("jump", directory.getEntry("platform-jump", SoundEffect.class));
-            soundEngine.registerSoundEffect("pew", directory.getEntry("platform-pew", SoundEffect.class));
-            soundEngine.registerSoundEffect("plop", directory.getEntry("platform-plop", SoundEffect.class));
-            soundEngine.registerSoundEffect("dirtFootStep", directory.getEntry("dirtFootStep", SoundEffect.class));
-            soundEngine.registerSoundEffect("torchThrow", directory.getEntry("torchThrow", SoundEffect.class));
 
-            soundEngine.registerMusic("eerie1", directory.getEntry("eerie", Music.class));
-            soundEngine.registerMusic("eerieCriminal", directory.getEntry("eerieCriminal", Music.class));
-            soundEngine.registerMusic("tenseSoundscape", directory.getEntry("tenseSoundscape", Music.class));
+        }
+        else if (screen instanceof MainMenuScreen){
+            LevelSelectScene levelSelect = new LevelSelectScene(); // You’ll define this similarly to MainMenu
+            levelSelect.setScreenListener(this);
+            setScreen(levelSelect);
+            return;
+        }
+        assert screen instanceof LevelSelectScene;
+        int selectedLevel = ((LevelSelectScene)screen).getSelectedLevel();
+        soundEngine.registerSoundEffect("jump", directory.getEntry("platform-jump", SoundEffect.class));
+        soundEngine.registerSoundEffect("pew", directory.getEntry("platform-pew", SoundEffect.class));
+        soundEngine.registerSoundEffect("plop", directory.getEntry("platform-plop", SoundEffect.class));
+        soundEngine.registerSoundEffect("dirtFootStep", directory.getEntry("dirtFootStep", SoundEffect.class));
+        soundEngine.registerSoundEffect("torchThrow", directory.getEntry("torchThrow", SoundEffect.class));
 
-            ArrayList<String> temp = new ArrayList<>();
-            temp.add("eerieCriminal");
-            temp.add("eerie1");
-            soundEngine.startMusicLoop(temp);
-            //TODO: fine a better place to put these ^
+        soundEngine.registerMusic("eerie1", directory.getEntry("eerie", Music.class));
+        soundEngine.registerMusic("eerieCriminal", directory.getEntry("eerieCriminal", Music.class));
+        soundEngine.registerMusic("tenseSoundscape", directory.getEntry("tenseSoundscape", Music.class));
 
-            // Initialize the three game worlds
-            currentScene = new GameplayScene(directory, soundEngine, "platform");
-            levels = new String[3];
-            levels[0] = "moth_intro";
-            levels[1] = "totem_intro";
-            //levels[2] = "spinner_layout";
-            levels[2] = "rope_test";
-            currentScene.loadLevel(levels[0]);
-            currentScene.setScreenListener(this);
-            currentScene.setSpriteBatch(batch);
+        ArrayList<String> temp = new ArrayList<>();
+        temp.add("eerieCriminal");
+        temp.add("eerie1");
+        soundEngine.startMusicLoop(temp);
+        //TODO: fine a better place to put these ^
 
-            // controllers = new GameplayScene[1];
-            // controllers = new GameplayScene[2];
+        // Initialize the three game worlds
+        currentScene = new GameplayScene(directory, soundEngine, "platform");
+        levels = new String[3];
+        levels[0] = "moth_intro";
+        levels[1] = "totem_intro";
+        //levels[2] = "spinner_layout";
+        levels[2] = "rope_test";
+        String nlevel = levels[selectedLevel-1];
+        currentScene.loadLevel(nlevel);
+        System.out.println("loaded level " + nlevel);
+        currentScene.setScreenListener(this);
+        currentScene.setSpriteBatch(batch);
+
+        // controllers = new GameplayScene[1];
+        // controllers = new GameplayScene[2];
 //            controllers[0] = new RocketScene(directory);
-            //controllers[0] = new og_platformer(directory);
+        //controllers[0] = new og_platformer(directory);
 //            controllers[1] = new empty_layout1(directory);
 //            controllers[2] = new empty_layout2(directory);
 //            controllers[0] = new Totem_intro(directory);
 //            controllers[0] = new Moth_intro(directory);
 //            controllers[1] = new Torch_playground(directory);
 //            controllers[1] = new GameplayScene_temp(directory, "temp");
-            // controllers[0] = new Totem_playground(directory);
+        // controllers[0] = new Totem_playground(directory);
 //            controllers[2] = new RagdollScene(directory);
 //            controllers[3] = new PlatformScene(directory);
 
-            //for(int ii = 0; ii < controllers.length; ii++) {
-            //    controllers[ii].setScreenListener(this);
-            //    controllers[ii].setSpriteBatch(batch);
-            //}
+        //for(int ii = 0; ii < controllers.length; ii++) {
+        //    controllers[ii].setScreenListener(this);
+        //    controllers[ii].setSpriteBatch(batch);
+        //}
 
-            current = 0;
-            currentScene.reset();
-            setScreen(currentScene);
-            // controllers[current].reset();
-            // setScreen(controllers[current]);
-        } else if (exitCode == GameplayScene.EXIT_NEXT) {
+        current = 0;
+        currentScene.reset();
+        setScreen(currentScene);
+        // controllers[current].reset();
+        // setScreen(controllers[current]);
+        if (exitCode == GameplayScene.EXIT_NEXT) {
             currentScene.clearLevel();
             current = (current+1) % levels.length;
             currentScene.loadLevel(levels[current]);
-            /*current = (current+1) % controllers.length;
-            controllers[current].reset();
-            setScreen(controllers[current]);*/
+    /*current = (current+1) % controllers.length;
+    controllers[current].reset();
+    setScreen(controllers[current]);*/
         } else if (exitCode == GameplayScene.EXIT_PREV) {
             currentScene.clearLevel();
             current = (current+levels.length-1) % levels.length;
             currentScene.loadLevel(levels[current]);
-            /*controllers[current].reset();
-            setScreen(controllers[current]);*/
+    /*controllers[current].reset();
+    setScreen(controllers[current]);*/
         } else if (exitCode == GameplayScene.EXIT_QUIT) {
             // We quit the main application
             Gdx.app.exit();
         }
-    }
+
+        }
+
+        // Immediately return so that gameplay code isn't executed yet
+
+
+
+
+
+
 
 }
+
+

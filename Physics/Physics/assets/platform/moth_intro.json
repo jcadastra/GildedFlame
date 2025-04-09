@@ -47,6 +47,13 @@
   "spinners" : [],
   "bridges" : [],
   "ropes" : [],
+  "collectibles": {
+    "coins": [
+      { "pos": [5, 10], "radius": 0.5 },
+      { "pos": [8, 7], "radius": 0.5 }
+    ]
+  },
+
   "traci" : {
     "pos"       : [2.5, 5.0],
     "inner"     : [0.7, 0.95],
@@ -128,5 +135,6 @@
       "count": 0,
       "instances": []
     }
+
   }
 }
