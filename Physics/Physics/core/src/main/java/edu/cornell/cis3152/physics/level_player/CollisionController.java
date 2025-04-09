@@ -490,6 +490,12 @@ public class CollisionController implements ContactListener {
             enemy.setJustCollided(false);
 
         }
+        if (isXandY(bd1, bd2, "wall", Enemy.class) == 1) {
+            Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
+            enemy.setJustCollided(false);
+
+        }
+
 
         /**
          * Moth and Torch collision
