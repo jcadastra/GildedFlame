@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Fire;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Lighting;
+import edu.cornell.cis3152.physics.level_player.utils.FireFlag;
 
 public class LightController {
 
@@ -57,6 +58,21 @@ public class LightController {
     public static final short CATEGORY_AVATAR = 0x0002;  // 00000010
     public static final short CATEGORY_ENVIRONMENT = 0x0004;  // 00000100
     public static final short CATEGORY_LIGHT = 0x0008;  // 00001000
+
+    /*Pool of lights for doing fire*/
+    private Array<PointLight> lightPool;
+    private int maxLights = 20;
+
+    public void initLights(RayHandler rayHandler) {
+        lightPool = new Array<>();
+
+        for (int i = 0; i < maxLights; i++) {
+            PointLight light = new PointLight(rayHandler, 64, Color.ORANGE, 1f, 0, 0);
+            light.setActive(false);  // Hide initially
+            lightPool.add(light);
+        }
+    }
+
 
 
     /* Gives the filter catergory bits for the fixture*/
@@ -118,6 +134,7 @@ public class LightController {
         //System.out.println(torchLighting==null);
         //System.out.println(points.x+","+points.y);
         debug = false;
+        initLights(rayHandler);
         //torchLighting.setPosition(camera.position.x, camera.position.y);
         //System.out.println("light pos "+ torchLighting.getX()+","+torchLighting.getY());
     }
@@ -148,16 +165,6 @@ public class LightController {
         torchLightState = torchLight.getState();
     }
 
-    public void fireLights(FireController fireController){
-        for (Fire fire: fireController.getLitFires()){
-            attachFireLight(fire);
-        }
-    }
-    private void attachFireLight(Fire fire){
-        PointLight fireLight = new PointLight(rayHandler,100,Color.YELLOW,
-            4f,fire.getObstacle().getX(),fire.getObstacle().getY());
-        fireLight.attachToBody(fire.getObstacle().getBody());
-    }
 
     public void updateAttach(Fire fire)
     {
@@ -233,7 +240,7 @@ public class LightController {
         camera.position.x = MathUtils.clamp(camera.position.x,
             bounds.x*WORLD_TO_BOX+visibleW*WORLD_TO_BOX,
             (bounds.x+bounds.width)*BOX_TO_WORLD - visibleW);
-        System.out.println("x reached bounds:"+(camera.position.x));
+        //System.out.println("x reached bounds:"+(camera.position.x));
         camera.position.y = MathUtils.clamp(camera.position.y,
             bounds.y*BOX_TO_WORLD+visibleH,
             (bounds.y+bounds.height)*BOX_TO_WORLD - visibleH);

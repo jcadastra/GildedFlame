@@ -630,7 +630,7 @@ public class GameplayScene implements Screen {
         lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds);
         lightController.attachTorchLight(torchFire);
         lightController.resetCamera(camera.position.x,camera.position.y);
-        lightController.fireLights(fireController);
+        //lightController.fireLights(fireController);
 
         particleEngine = new ParticleEngine(torchFire);
         particleEngine.newFires(fireController);
@@ -1291,6 +1291,7 @@ public class GameplayScene implements Screen {
             }
         }
         particleEngine.draw(batch,torchFire);
+        //lightController.fireLights(fireController);
 
 
 
