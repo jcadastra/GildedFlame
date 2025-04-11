@@ -5,6 +5,11 @@
             "wrapU": "repeated",
             "wrapV": "repeated"
         },
+      "stone-tile" : {
+        "file":  "platform/Stone_tile_set_1.png",
+        "wrapU": "repeated",
+        "wrapV": "repeated"
+      },
         "shared-goal":   "shared/goaldoor.png",
         "rocket-rocket": {
             "file": "rocket/rocket.png",

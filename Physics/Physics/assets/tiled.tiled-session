@@ -44,18 +44,22 @@
                 3
             ],
             "scale": 0.0625,
-            "selectedLayer": 0,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 5648,
-                "y": 4056
+                "x": 4640,
+                "y": 2840
             }
         },
         "test3.tmx": {
+            "expandedObjectLayers": [
+                2,
+                3
+            ],
             "scale": 0.0625,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 4880,
-                "y": 6168
+                "x": 4160,
+                "y": 5256
             }
         },
         "test_map.tmj": {
