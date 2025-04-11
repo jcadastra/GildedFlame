@@ -74,14 +74,14 @@
                 {
                  "gid":31,
                  "height":300,
-                 "id":14,
+                 "id":16,
                  "name":"totem",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":300,
-                 "x":5082,
-                 "y":4102
+                 "x":5426,
+                 "y":4150
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -90,7 +90,7 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":15,
+ "nextobjectid":17,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

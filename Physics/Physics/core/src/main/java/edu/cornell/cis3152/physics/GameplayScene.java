@@ -540,15 +540,6 @@ public class GameplayScene implements Screen {
     private Rope temp;
 
     private List<float[]> extractSurfaces(int[] data, int cols, int rows) {
-        int[][] grid = new int[rows][cols];
-        boolean[][] visited = new boolean[rows][cols];
-
-        for (int i = 0; i < data.length; i++) {
-            int x = i % cols;
-            int y = i / cols;
-            grid[y][x] = data[i];
-        }
-
         List<float[]> surfaces = new ArrayList<>();
 
         for (int y = 0; y < rows; y++) {
@@ -643,27 +634,30 @@ public class GameplayScene implements Screen {
 
                 List<float[]> polygons = extractSurfaces(tileData, width, height);
 
-                int floorCount = 0;
-                int wallCount = 0;
-                int platformCount = 0;
-
                 for (float[] points : polygons) {
                     // Determine bounds of the polygon in tile coordinates
-                    float minX = points[0];
-                    float maxY = points[1];
-                    float maxX = points[4];
-                    float minY = points[5];
-
-                    int tileMinX = (int) Math.floor(minX);
-                    int tileMinY = (int) Math.floor(minY);
-                    int tileMaxX = (int) Math.ceil(maxX);
-                    int tileMaxY = (int) Math.ceil(maxY);
+                    int minX = (int) points[0];
+                    int maxY = (int) points[1];
+                    int maxX = (int) points[4];
+                    int minY = (int) points[5];
+                    /*int x = minX;
+                    int y = height - maxY;
+                    int index = y * width + x;
+                    int tileId = tileData[index];*/
 
                     boolean isFloor = false;
                     boolean isWall = false;
                     boolean isPlatform = false;
-                    for (int y = tileMinY; y < tileMaxY && !isFloor; y++) {
-                        for (int x = tileMinX; x < tileMaxX && !isFloor; x++) {
+
+                    /*if (tileId == 7 || tileId == 8 || tileId == 9) {
+                        isFloor = true;
+                    } else if (tileId == 13) {
+                        isWall = true;
+                    } else if (tileId == 1 || tileId == 2 || tileId == 3) {
+                        isPlatform = true;
+                    }*/
+                    for (int y = minY; y < maxY; y++) {
+                        for (int x = minX; x < maxX; x++) {
                             if (x >= 0 && x < width && y >= 0 && y < height) {
                                 int flippedY = height - 1 - y;  // flip to match original data
                                 int tileId = tileData[flippedY * width + x];
@@ -683,13 +677,13 @@ public class GameplayScene implements Screen {
                     tile.setTexture(texture);
 
                     if (isWall) {
-                        tile.getObstacle().setName("wall" + (wallCount++));
+                        tile.getObstacle().setName("wall");
                     } else if (isPlatform) {
-                        tile.getObstacle().setName("floor" + (platformCount++));
+                        tile.getObstacle().setName("platform");
                     } else if (isFloor) {
-                        tile.getObstacle().setName("floor" + (floorCount++));
+                        tile.getObstacle().setName("floor");
                     } else {
-                        tile.getObstacle().setName("wall" + (wallCount++));
+                        tile.getObstacle().setName("wall");
                     }
 
                     addSprite(tile);

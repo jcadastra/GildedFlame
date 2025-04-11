@@ -8,6 +8,6 @@
   </objectgroup>
  </tile>
  <tile id="2">
-  <image source="../../../../Downloads/ropeEnd.png" width="300" height="300"/>
+  <image source="tiled_images/ropeEnd.png" width="300" height="300"/>
  </tile>
 </tileset>
