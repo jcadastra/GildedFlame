@@ -1,292 +1,91 @@
 {
-	"textures": {
-        "shared-earth" : {
-            "file":  "shared/earthtile.png",
-            "wrapU": "repeated",
-            "wrapV": "repeated"
-        },
-      "stone-tile" : {
-        "file":  "platform/Stone_tile_set_1.png",
-        "wrapU": "repeated",
-        "wrapV": "repeated"
-      },
-        "shared-goal":   "shared/goaldoor.png",
-        "rocket-rocket": {
-            "file": "rocket/rocket.png",
-            "mipmaps": true,
-            "minfilter": "linear mipmap linear",
-            "magfilter": "linear mipmap linear"
-        },
-        "rocket-main":  {
-            "file" : "rocket/flames.png",
-            "mipmaps" : true,
-            "minfilter": "linear mipmap linear",
-            "magfilter": "linear mipmap linear",
-            "sprites" : {
-                "fire": {
-                    "rows": 1,
-                    "cols": 4
-                }
-            }
-        },
-        "rocket-left": {
-            "file" : "rocket/flames-left.png",
-            "mipmaps" : true,
-            "minfilter": "linear mipmap linear",
-            "magfilter": "linear mipmap linear",
-            "sprites" : {
-                "fire": {
-                    "rows": 1,
-                    "cols": 4
-                }
-            }
-        },
-        "rocket-right": {
-            "file" : "rocket/flames-right.png",
-            "mipmaps" : true,
-            "minfilter": "linear mipmap linear",
-            "magfilter": "linear mipmap linear",
-            "sprites" : {
-                "fire": {
-                    "rows": 1,
-                    "cols": 4
-                }
-            }
-        },
-        "rocket-totem01": {
-            "file": "rocket/totem01.png",
-            "mipmaps" : true,
-            "minfilter": "linear mipmap linear",
-            "magfilter": "linear mipmap linear"
-        },
-      "rocket-totem02": {
-        "file": "rocket/totem02.png",
-        "mipmaps" : true,
-        "minfilter": "linear mipmap linear",
-        "magfilter": "linear mipmap linear"
-      },
-      "rocket-totem03": {
-        "file": "rocket/totem03.png",
-        "mipmaps" : true,
-        "minfilter": "linear mipmap linear",
-        "magfilter": "linear mipmap linear"
-      },
-      "rocket-totem04": {
-        "file": "rocket/totem04.png",
-        "mipmaps" : true,
-        "minfilter": "linear mipmap linear",
-        "magfilter": "linear mipmap linear"
-      },
-        "rocket-moth01": {
-            "file" : "rocket/moth01.png",
-            "mipmaps" : true,
-            "minfilter": "linear mipmap linear",
-            "magfilter": "linear mipmap linear"
-        },
-      "rocket-moth02": {
-        "file" : "rocket/moth02.png",
-        "mipmaps" : true,
-        "minfilter": "linear mipmap linear",
-        "magfilter": "linear mipmap linear"
-      },
-
-      "rocket-moth03": {
-        "file" : "rocket/moth03.png",
-        "mipmaps" : true,
-        "minfilter": "linear mipmap linear",
-        "magfilter": "linear mipmap linear"
-      },
-
-      "rocket-moth04": {
-        "file" : "rocket/moth04.png",
-        "mipmaps" : true,
-        "minfilter": "linear mipmap linear",
-        "magfilter": "linear mipmap linear"
-      },
-
-      "platform-mothOUTOFLIGHT": {
-        "file" : "platform/mothOutOfLight.png",
-        "mipmaps" : true,
-        "minfilter": "linear mipmap linear",
-        "magfilter": "linear mipmap linear"
-      },
-      "platform-mothANGRY": {
-        "file" : "platform/mothAngry.png",
-        "mipmaps" : true,
-        "minfilter": "linear mipmap linear",
-        "magfilter": "linear mipmap linear"
-      },
-      "platform-mothDAZED": {
-        "file" : "platform/mothDazed.png",
-        "mipmaps" : true,
-        "minfilter": "linear mipmap linear",
-        "magfilter": "linear mipmap linear"
-      },
-      "platform-mothCD": {
-        "file" : "platform/mothCD.png",
-        "mipmaps" : true,
-        "minfilter": "linear mipmap linear",
-        "magfilter": "linear mipmap linear"
-      },
-      "platform-mothTRANCE": {
-        "file" : "platform/mothTrance.png",
-        "mipmaps" : true,
-        "minfilter": "linear mipmap linear",
-        "magfilter": "linear mipmap linear"
-      },
-      "platform-mothSMOTHER": {
-        "file" : "platform/mothSmother.png",
-        "mipmaps" : true,
-        "minfilter": "linear mipmap linear",
-        "magfilter": "linear mipmap linear"
-      },
-      "platform-mothATTACK": {
-        "file" : "platform/mothAttack.png",
-        "mipmaps" : true,
-        "minfilter": "linear mipmap linear",
-        "magfilter": "linear mipmap linear"
-      },
-      "platform-mothINLIGHT": {
-        "file" : "platform/mothInLight.png",
-        "mipmaps" : true,
-        "minfilter": "linear mipmap linear",
-        "magfilter": "linear mipmap linear"
-      },
-      "platform-totemLIGHTANIMATION": {
-        "file" : "platform/totemInLightAnimation.png",
-        "mipmaps" : true,
-        "minfilter": "linear mipmap linear",
-        "magfilter": "linear mipmap linear"
-      },
-      "platform-totemINLIGHT": {
-        "file" : "platform/totemInLight.png",
-        "mipmaps" : true,
-        "minfilter": "linear mipmap linear",
-        "magfilter": "linear mipmap linear"
-      },
-      "platform-totemLIGHTLEFT": {
-        "file" : "platform/totemLightLeft.png",
-        "mipmaps" : true,
-        "minfilter": "linear mipmap linear",
-        "magfilter": "linear mipmap linear"
-      },
-      "platform-totemLIGHTRIGHT": {
-        "file" : "platform/totemLightRight.png",
-        "mipmaps" : true,
-        "minfilter": "linear mipmap linear",
-        "magfilter": "linear mipmap linear"
-      },
-      "platform-totemDARKLEFT": {
-        "file" : "platform/totemDarkLeft.png",
-        "mipmaps" : true,
-        "minfilter": "linear mipmap linear",
-        "magfilter": "linear mipmap linear"
-      },
-      "platform-totemDARKRIGHT": {
-        "file" : "platform/totemDarkRight.png",
-        "mipmaps" : true,
-        "minfilter": "linear mipmap linear",
-        "magfilter": "linear mipmap linear"
-      },
-      "platform-totemOUTOFLIGHT": {
-        "file" : "platform/totemOutOfLight.png",
-        "mipmaps" : true,
-        "minfilter": "linear mipmap linear",
-        "magfilter": "linear mipmap linear"
-      },
-      "platform-totemTEST": {
-        "file" : "platform/totemLIGHT.png",
-        "mipmaps" : true,
-        "minfilter": "linear mipmap linear",
-        "magfilter": "linear mipmap linear"
-      },
-
-      "platform-rope-end" : "platform/ropeEnd.png",
-      "platform-rope-mid" : "platform/ropeBodyRec.png",
-      "platform-player" : "platform/player.png",
-      "platform-torch" : "platform/torch.png",
-
-
-      "platform-traci"    : "platform/traci.png",
-        "platform-rope"     : "platform/ropebridge.png",
-        "platform-barrier"  : "platform/barrier.png",
-        "platform-bullet"   : "platform/bullet.png",
-        "ragdoll-bubble"    : "ragdoll/bubble.png",
-        "ragdoll-crosshair" : "ragdoll/crosshair.png",
-        "ragdoll-foreground": "ragdoll/foreground.png",
-        "ragdoll-background": "ragdoll/background.png"
-        "ragdoll-torso" : {
-            "file" : "ragdoll/scuba_torso.png",
-            "mipmaps"   : true,
-            "minfilter" : "linear mipmap linear",
-            "magfilter" : "linear mipmap linear"
-        },
-        "ragdoll-head" : {
-            "file" : "ragdoll/scuba_head.png",
-            "mipmaps"   : true,
-            "minfilter" : "linear mipmap linear",
-            "magfilter" : "linear mipmap linear"
-        },
-        "ragdoll-thigh" : {
-            "file" : "ragdoll/scuba_thigh.png",
-            "mipmaps"   : true,
-            "minfilter" : "linear mipmap linear",
-            "magfilter" : "linear mipmap linear"
-        },
-        "ragdoll-shin": {
-            "file" :    "ragdoll/scuba_shin.png",
-            "mipmaps"   : true,
-            "minfilter" : "linear mipmap linear",
-            "magfilter" : "linear mipmap linear"
-        },
-        "ragdoll-arm": {
-            "file" : "ragdoll/scuba_arm.png",
-            "mipmaps"   : true,
-            "minfilter" : "linear mipmap linear",
-            "magfilter" : "linear mipmap linear"
-        },
-        "ragdoll-forearm": {
-            "file" : "ragdoll/scuba_forearm.png",
-            "mipmaps"   : true,
-            "minfilter" : "linear mipmap linear",
-            "magfilter" : "linear mipmap linear"
-        }
+  "textures": {
+    "shared-earth": {
+      "file": "shared/earthtile.png",
+      "wrapU": "repeated",
+      "wrapV": "repeated"
     },
-    "jsons"  : {
-        "rocket-constants"  : "rocket/constants.json",
-        "platform-constants": "platform/constants.json",
-        "ragdoll-constants" : "ragdoll/constants.json",
-        "moth_intro" : "platform/moth_intro.json",
-        "totem_intro" : "platform/totem_intro.json",
-        "spinner_layout" : "platform/spinner_layout.json",
-        "rope_test" : "platform/rope_test.json",
-        "test2" : "test2.tmj",
-        "test3" : "test3.tmj"
+    "stone-tile" : {
+      "file":  "platform/Stone_tile_set_1.png",
+      "wrapU": "repeated",
+      "wrapV": "repeated"
     },
-    "music" : {
-      "eerie": "music/eerie.wav",
-      "eerieCriminal": "music/eerieCriminalAtmosphere.wav",
-      "tenseSoundscape": "music/tenseAtmosphereHauntingSoundscapes.wav"
+    "shared-goal": "shared/goaldoor.png",
+    "platform-totemLIGHTANIMATION": {
+      "file": "platform/totemInLightAnimation.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
     },
-    "soundfx" : {
-      "dirtFootStep"       : "soundEffects/dirtFootStep.wav",
-      "torchThrow"       : "soundEffects/torchThrow.wav",
-        "rocket-bump"       : "rocket/bump.wav",
-        "rocket-mainburn"   : "rocket/afterburner.wav",
-        "rocket-leftburn"   : "rocket/sideburner-left.wav",
-        "rocket-rightburn"  : "rocket/sideburner-right.wav",
-        "platform-jump"     : "platform/jump.wav",
-        "platform-pew"      : "platform/pew.wav",
-        "platform-plop"     : "platform/plop.wav",
-        "ragdoll-glub1"     : "ragdoll/bubble01.wav",
-        "ragdoll-glub2"     : "ragdoll/bubble02.wav",
-        "ragdoll-glub3"     : "ragdoll/bubble03.wav",
-        "ragdoll-glub4"     : "ragdoll/bubble04.wav"
+    "platform-playerMOVEMENTTORCH": {
+      "file": "platform/playerMovementTorch.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
     },
-    "fonts": {
-        "shared-retro": {
-            "file": "shared/RetroGame.ttf",
-            "size": 64
-        }
+    "platform-playerMOVEMENTNOTORCH": {
+      "file": "platform/playerMovementNoTorch.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-playerIDLETORCH": {
+      "file": "platform/playerIdleTorch.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-playerIDLENOTORCH": {
+      "file": "platform/playerIdleNoTorch.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-mothSMOTHERANIMATION": {
+      "file": "platform/mothSmotherAnimation.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-mothATTACKANIMATION": {
+      "file": "platform/mothAttackAnimation.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-rope-end": "platform/ropeEnd.png",
+    "platform-rope-mid": "platform/ropeBodyRec.png",
+    "platform-torch": "platform/torch.png",
+    "platform-rope": "platform/ropebridge.png",
+    "platform-barrier": "platform/barrier.png",
+    "platform-bullet": "platform/bullet.png"
+  },
+  "jsons": {
+    "platform-constants": "platform/constants.json",
+    "moth_intro": "platform/moth_intro.json",
+    "totem_intro": "platform/totem_intro.json",
+    "spinner_layout": "platform/spinner_layout.json",
+    "rope_test": "platform/rope_test.json",
+    "test2" : "test2.tmj",
+    "test3" : "test3.tmj"
+  },
+  "music": {
+    "eerie": "music/eerie.wav",
+    "eerieCriminal": "music/eerieCriminalAtmosphere.wav",
+    "tenseSoundscape": "music/tenseAtmosphereHauntingSoundscapes.wav",
+    "menu_music": "music/menu_music.wav"
+  },
+  "soundfx": {
+    "dirtFootStep": "soundEffects/dirtFootStep.wav",
+    "torchThrow": "soundEffects/torchThrow.wav",
+    "platform-jump": "platform/jump.wav",
+    "platform-pew": "platform/pew.wav",
+    "platform-plop": "platform/plop.wav"
+  },
+  "fonts": {
+    "shared-retro": {
+      "file": "shared/RetroGame.ttf",
+      "size": 64
     }
+  }
 }

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="32" height="18" tilewidth="300" tileheight="300" infinite="0" backgroundcolor="#2b4859" nextlayerid="4" nextobjectid="7">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="32" height="18" tilewidth="300" tileheight="300" infinite="0" backgroundcolor="#2b4859" nextlayerid="4" nextobjectid="11">
  <editorsettings>
   <export target="test2.tmj" format="json"/>
  </editorsettings>
  <tileset firstgid="1" source="PlatformTiles.tsx"/>
  <tileset firstgid="25" source="PlayerTorchTiles.tsx"/>
  <tileset firstgid="29" source="EnemyTiles.tsx"/>
+ <tileset firstgid="33" source="GameObjectTiles.tsx"/>
  <layer id="1" name="Tile Layer 1" width="32" height="18">
   <data encoding="csv">
 8,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,10,
@@ -37,5 +38,21 @@
   <object id="4" name="totem" gid="31" x="6001.52" y="4739.45" width="300" height="300"/>
   <object id="5" name="totem" gid="31" x="5993.52" y="4399.45" width="300" height="300"/>
   <object id="6" name="totem" gid="31" x="6001.52" y="4102.48" width="300" height="300"/>
+  <object id="7" name="2" gid="35" x="3002" y="2134" width="150" height="150">
+   <properties>
+    <property name="depth" value="2"/>
+    <property name="piecelen" value="14"/>
+    <property name="thickness" value="10"/>
+   </properties>
+  </object>
+  <object id="8" name="1" gid="35" x="906" y="3006" width="150" height="150"/>
+  <object id="9" name="3" gid="35" x="3882" y="3022" width="150" height="150"/>
+  <object id="10" name="4" gid="35" x="4722" y="1446" width="150" height="150">
+   <properties>
+    <property name="depth" value="2"/>
+    <property name="piecelen" value="14"/>
+    <property name="thickness" value="10"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

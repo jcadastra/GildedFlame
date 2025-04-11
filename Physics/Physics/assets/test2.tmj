@@ -119,6 +119,86 @@
                  "width":300,
                  "x":6001.52,
                  "y":4102.48
+                }, 
+                {
+                 "gid":35,
+                 "height":150,
+                 "id":7,
+                 "name":"2",
+                 "properties":[
+                        {
+                         "name":"depth",
+                         "type":"string",
+                         "value":"2"
+                        }, 
+                        {
+                         "name":"piecelen",
+                         "type":"string",
+                         "value":"14"
+                        }, 
+                        {
+                         "name":"thickness",
+                         "type":"string",
+                         "value":"10"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":150,
+                 "x":3002,
+                 "y":2134
+                }, 
+                {
+                 "gid":35,
+                 "height":150,
+                 "id":8,
+                 "name":"1",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":150,
+                 "x":906,
+                 "y":3006
+                }, 
+                {
+                 "gid":35,
+                 "height":150,
+                 "id":9,
+                 "name":"3",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":150,
+                 "x":3882,
+                 "y":3022
+                }, 
+                {
+                 "gid":35,
+                 "height":150,
+                 "id":10,
+                 "name":"4",
+                 "properties":[
+                        {
+                         "name":"depth",
+                         "type":"string",
+                         "value":"2"
+                        }, 
+                        {
+                         "name":"piecelen",
+                         "type":"string",
+                         "value":"14"
+                        }, 
+                        {
+                         "name":"thickness",
+                         "type":"string",
+                         "value":"10"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":150,
+                 "x":4722,
+                 "y":1446
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -127,7 +207,7 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":7,
+ "nextobjectid":11,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
@@ -144,6 +224,10 @@
         {
          "firstgid":29,
          "source":"EnemyTiles.tsx"
+        }, 
+        {
+         "firstgid":33,
+         "source":"GameObjectTiles.tsx"
         }],
  "tilewidth":300,
  "type":"map",

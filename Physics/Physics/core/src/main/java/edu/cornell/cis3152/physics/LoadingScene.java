@@ -334,6 +334,7 @@ public class LoadingScene implements Screen, InputProcessor {
         this.height = height;
         if (camera == null) {
             camera = new OrthographicCamera(width,height);
+
          } else {
             camera.setToOrtho( false, width, height  );
         }

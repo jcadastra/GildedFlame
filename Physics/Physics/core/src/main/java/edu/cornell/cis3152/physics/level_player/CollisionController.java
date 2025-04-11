@@ -329,6 +329,13 @@ public class CollisionController implements ContactListener {
                     collisionFlags.add(new CollisionFlag("addClimbingJoint", eos));
                 }
             }
+            if (isXandY(bd1, bd2, Traci.class, Coin.class) == 1) {
+                Coin coin = (Coin) idX(bd1, bd2, Coin.class);
+                System.out.println("collided!");
+                collisionFlags.push(new CollisionFlag("collect_coin", coin));
+            }
+
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -490,6 +497,12 @@ public class CollisionController implements ContactListener {
             enemy.setJustCollided(false);
 
         }
+        if (isXandY(bd1, bd2, "wall", Enemy.class) == 1) {
+            Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
+            enemy.setJustCollided(false);
+
+        }
+
 
         /**
          * Moth and Torch collision

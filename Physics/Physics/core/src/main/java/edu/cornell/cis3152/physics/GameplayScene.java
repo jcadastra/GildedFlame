@@ -24,6 +24,7 @@
  */
 package edu.cornell.cis3152.physics;
 
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -47,6 +48,7 @@ import edu.cornell.cis3152.physics.level_player.utils.ObstacleGroup;
 
 import edu.cornell.cis3152.physics.level_player.utils.TweenElement;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -66,6 +68,7 @@ import edu.cornell.gdiac.graphics.*;
 import edu.cornell.gdiac.physics2.*;
 import edu.cornell.cis3152.physics.level_player.enviromentals.*;
 import java.util.Optional;
+import java.util.Set;
 import java.util.Stack;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -707,7 +710,7 @@ public class GameplayScene implements Screen {
                     switch (objName) {
                         case "player":
                             Texture playerTexture = directory.getEntry("platform-player", Texture.class);
-                            avatar = new Traci(units, levelInfo.get("traci"));
+                            avatar = new Traci(directory, units, levelInfo.get("traci"));
                             avatar.setTexture(playerTexture);
                             avatar.getObstacle().setPosition(pos[0], pos[1]);
                             System.out.println("position" + pos[0] + " " + pos[1]);
@@ -831,7 +834,7 @@ public class GameplayScene implements Screen {
 
         // Create Traci
         texture = directory.getEntry("platform-player", Texture.class);
-        avatar = new Traci(units, levelData.get("traci"));
+        avatar = new Traci(directory, units, levelData.get("traci"));
         avatar.setTexture(texture);
         addSprite(avatar);
         // Have to do after body is created
@@ -845,9 +848,12 @@ public class GameplayScene implements Screen {
         addSprite(torchFire);
         lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds);
         lightController.attachTorchLight(torchFire);
+        lightController.resetCamera(camera.position.x,camera.position.y);
+        //lightController.fireLights(fireController);
 
         particleEngine = new ParticleEngine(torchFire);
         particleEngine.newFires(fireController);
+
 //
         // Create Torch
         texture = directory.getEntry("platform-torch", Texture.class);
@@ -886,42 +892,46 @@ public class GameplayScene implements Screen {
             enemies.add(moth);
         }*/
 
-        // SAMPLE BUTTON CODE BELOW::
-//        Button button = new Button(new Vector2(24,2.75f), 0, true, true, units);
-//        BoxObstacle temp = new BoxObstacle(5,5,5,.5f);
-//        temp.setPhysicsUnits(units);
-//        temp.setName("floor");
-//        ObstacleSprite thing = new ObstacleSprite(temp);
-//        thing.getObstacle().setBodyType(BodyType.KinematicBody);
-//        thing.getObstacle().setFriction(.5f);
-////        addSprite(thing);
-//
-//        Button button = new Button(new Vector2(20,3.75f), 0, false, false, units);
-////        Array<Object> actionArray = new Array<>(new Object[]{thing, "move", new Vector2(8, 10), new Vector2(10, 10)});
-//        Function<Float, Float> movementFunc = Interpolation.swing::apply;
-//        EventAction<Vector2> eventAction = new EventAction<Vector2>(thing, "move", new Vector2(8, 10), new Vector2(16, 5), 4f, movementFunc);
-////        Object[] actionArray = new Object[]{thing, "rotate", 0f, (float) (Math.PI), 300, movementFunc};
-////        Object[] actionArray = new Object[]{thing, "move", new Vector2(8, 10), new Vector2(16, 5), 100, movementFunc};
-//
-//        Event<Integer,Vector2> event = new Event<Integer,Vector2>(button, button::getState,
-//            state -> state == 1, "button", eventAction);
-////        eventHandler.registerEvent(event);
-//
-//
-//        EventAction<Float> eventAction2 = new EventAction<Float>(thing, "rotate", 0f, (float) (Math.PI), 4, movementFunc);
-//        Event<Integer,Float> event2 = new Event<Integer, Float>(button, button::getState,
-//            state -> state == 1, "button", eventAction2);
-//        eventHandler.registerEvent(event2);
-//
-//        eventAction = new EventAction<>("spawn");
-//        event = new Event<Integer,Vector2>(button, button::getState,
-//            state -> state == 1, "button", eventAction);
-////        eventHandler.registerEvent(event);
-//
-////        addSpriteGroup(button);
-//
-//        Ladder tempLadder = new Ladder(3,3,5f, units);
-////        addSprite(tempLadder);
+        if (levelName.equals("rope_test")) {
+            // SAMPLE BUTTON CODE BELOW::
+            Button button = new Button(new Vector2(24,2.75f), 0, true, true, units);
+            Button button2 = new Button(new Vector2(30.75f,7f), (float) Math.PI/2, false, false, units);
+            BoxObstacle temp = new BoxObstacle(5,5,5,.5f);
+            temp.setPhysicsUnits(units);
+            temp.setName("floor");
+            ObstacleSprite thing = new ObstacleSprite(temp);
+            thing.getObstacle().setBodyType(BodyType.KinematicBody);
+            thing.getObstacle().setFriction(.5f);
+            addSprite(thing);
+
+    //        Array<Object> actionArray = new Array<>(new Object[]{thing, "move", new Vector2(8, 10), new Vector2(10, 10)});
+            Function<Float, Float> movementFunc = Interpolation.swing::apply;
+            EventAction<Vector2> eventAction = new EventAction<Vector2>(thing, "move", new Vector2(8, 10), new Vector2(16, 5), 4f, movementFunc);
+    //        Object[] actionArray = new Object[]{thing, "rotate", 0f, (float) (Math.PI), 300, movementFunc};
+    //        Object[] actionArray = new Object[]{thing, "move", new Vector2(8, 10), new Vector2(16, 5), 100, movementFunc};
+
+            Event<Integer,Vector2> event = new Event<Integer,Vector2>(button, button::getState,
+                state -> state == 1,  eventAction);
+            eventHandler.registerEvent(event);
+
+
+            EventAction<Float> eventAction2 = new EventAction<Float>(thing, "rotate", 0f, (float) (Math.PI), 4, movementFunc);
+            Event<Integer,Float> event2 = new Event<Integer, Float>(button, button::getState,
+                state -> state == 1,  eventAction2);
+            eventHandler.registerEvent(event2);
+
+            eventAction = new EventAction<>("demo");
+            event = new Event<Integer,Vector2>(button2, button2::getState,
+                state -> state == 1,  eventAction);
+            eventHandler.registerEvent(event);
+
+            addSpriteGroup(button);
+//            addSpriteGroup(button2);
+
+            Ladder tempLadder = new Ladder(3,3,5f, units);
+    //        addSprite(tempLadder);
+
+        }
     }
     /**
      * Returns whether to process the update loop
@@ -1072,28 +1082,48 @@ public class GameplayScene implements Screen {
     }
 
     private void updateCamera() {
+
+        float prevX = camera.position.x;
+        float prevY = camera.position.y;
+
         Vector2 playerPos = avatar.getObstacle().getPosition();
-        float playerPixelX = playerPos.x * scale.x;
-        float playerPixelY = playerPos.y * scale.y;
+        float playerX = playerPos.x*scale.x;
+        float playerY = playerPos.y*scale.y;
 
         float lerp = 0.3f;
-        camera.position.x += (playerPixelX - camera.position.x) * lerp;
-        camera.position.y += (playerPixelY - camera.position.y) * lerp;
+        camera.position.x += (playerX - camera.position.x) * lerp;
+        camera.position.y += (playerY - camera.position.y) * lerp;
 
-        float effectiveWidth = camera.viewportWidth * camera.zoom;
-        float effectiveHeight = camera.viewportHeight * camera.zoom;
-        float halfWidth = effectiveWidth / 2f;
-        float halfHeight = effectiveHeight / 2f;
+//        float visibleW =  (bounds.x + bounds.width) * scale.x/2*0.8f; //half of world visible
+//        float visibleH = (bounds.y + bounds.height) * scale.y/2*0.8f;
 
-        float minXPixel = bounds.x * scale.x;
-        float maxXPixel = (bounds.x + bounds.width) * scale.x;
-        float minYPixel = bounds.y * scale.y;
-        float maxYPixel = (bounds.y + bounds.height) * scale.y;
 
-        camera.position.x = MathUtils.clamp(camera.position.x, minXPixel + halfWidth, maxXPixel - halfWidth);
-        camera.position.y = MathUtils.clamp(camera.position.y, minYPixel + halfHeight, maxYPixel - halfHeight);
+        float visibleW =  camera.viewportWidth/2*0.8f; //half of world visible, zoomed
+        float visibleH = camera.viewportHeight/2*0.8f;
+
+        camera.position.x = MathUtils.clamp(camera.position.x,
+            bounds.x*scale.x+visibleW*1.25f,
+            (bounds.x+bounds.width)*scale.x - visibleW*1.25f);
+        //System.out.println("x reached bounds:"+(camera.position.x==bounds.x*scale.x+visibleW));
+        camera.position.y = MathUtils.clamp(camera.position.y,
+            bounds.y*scale.y+visibleH*1.25f,
+            (bounds.y+bounds.height)*scale.y - visibleH*1.25f);
 
         camera.update();
+
+        //debug code
+        ShapeRenderer shapeRenderer = new ShapeRenderer();
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.RED);
+        shapeRenderer.rect(bounds.x * scale.x, bounds.y * scale.y,
+            bounds.width * scale.x, bounds.height * scale.y);
+        shapeRenderer.end();
+
+
+        float dx = camera.position.x-prevX;
+        float dy = camera.position.y-prevY;
+        lightController.updateCamera(dx,dy);
     }
 
     /**
@@ -1191,6 +1221,7 @@ public class GameplayScene implements Screen {
      */
     private <T,U> void supplementaryEventActions(float dt) {
         Stack<Event<?,?>> todos = eventHandler.getEventFlags();
+        Set<Button> toggleButtons = new HashSet<>();
         while (!todos.isEmpty()) {
             Event<T,U> event = (Event<T, U>) todos.pop();
             EventAction<U> action = event.action;
@@ -1206,7 +1237,7 @@ public class GameplayScene implements Screen {
                 undo_action.setFinalValue(temp);
 
                 Button button = (Button) event.source;
-                button.toggleButton(world);
+                toggleButtons.add(button);
 
                 int nextState;
                 if (button.getDoubleSided()) {
@@ -1285,7 +1316,7 @@ public class GameplayScene implements Screen {
                         }
 
                         timeTill = action.getTime() - stepCounter;
-                        tweenedMovmentObjectsVec2.remove(oldEventF.get());
+                        tweenedMovmentObjectsFloat.remove(oldEventF.get());
                     }
 
                     Float initialStateFloat = action.getTarget().getObstacle().getAngle();
@@ -1297,22 +1328,15 @@ public class GameplayScene implements Screen {
                     tweenedMovmentObjectsFloat.add(tweenElementFloat);
                     break;
 
-                case "spawn":
-                    float units = height / bounds.height;
-                    JsonValue levelData = directory.getEntry("moth_intro",JsonValue.class);
-                    JsonValue enemiesJson = levelData.get("enemies");
-                    Texture texture = directory.getEntry("platform-moth01", Texture.class);
-                    JsonValue mothsJson = enemiesJson.get("moths").get("instances");
-                    for (int i = 0; i < mothsJson.size; i++) {
-                        Vector2 position = new Vector2(mothsJson.get(i).get("pos").getFloat(0), mothsJson.get(i).get("pos").getFloat(1));
-                        Moth moth = new Moth(i, units, mothsJson.get(i), directory, position);
-                        moth.setTexture(texture);
-                        addSprite(moth);
-                        moth.createSensor();
-                        enemies.add(moth);
-                    }
+                case "demo":
+                    temp.deactivateAnchor(1);
+                    System.out.println("run");
                     break;
             }
+        }
+
+        for (Button button : toggleButtons) {
+            button.toggleButton(world);
         }
     }
 
@@ -1473,6 +1497,7 @@ public class GameplayScene implements Screen {
 
         // Draw the meshes (images)
         for(ObstacleSprite obj : sprites) {
+            batch.setProjectionMatrix(camera.combined);
             obj.draw(batch);
         }
 
@@ -1483,6 +1508,7 @@ public class GameplayScene implements Screen {
             }
         }
         particleEngine.draw(batch,torchFire);
+        //lightController.fireLights(fireController);
 
 
 
