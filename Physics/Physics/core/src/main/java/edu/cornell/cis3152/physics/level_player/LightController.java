@@ -107,6 +107,7 @@ public class LightController {
         // Create a separate camera for box2dlights
         this.camera = new OrthographicCamera(bounds.width, bounds.height);//Uses physic units
         this.camera.position.set(bounds.width/2.0f,bounds.height/2.0f,0);
+        camera.zoom = 0.8f;
         //this.camera.setToOrtho(false, bounds.width, bounds.height);
         this.camera.update();
         //rayHandler = new RayHandler(world,(int)this.camera.viewportWidth,(int)this.camera.viewportHeight);
@@ -228,6 +229,7 @@ public class LightController {
 //        rayHandler.setCombinedMatrix(this.camera);
         //attachTorchLight(fire);
         inBounds();
+        camera.zoom = 0.8f;
         this.camera.update();
         rayHandler.setCombinedMatrix(camera);
         rayHandler.update();
