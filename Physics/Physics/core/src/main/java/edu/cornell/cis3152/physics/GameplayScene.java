@@ -553,6 +553,25 @@ public class GameplayScene implements Screen {
 
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < cols; x++) {
+                int yy = rows - y;
+                int index = y * cols + x;
+                int tileId = data[index];
+
+                if (tileId != 0) { // Skip empty tiles
+                    float[] polygon = new float[]{
+                        x, yy,                         // top-left
+                        x, yy - 1,                // bottom-left
+                        x + 1, yy - 1,        // bottom-right
+                        x + 1, yy
+                    };
+
+                    surfaces.add(polygon);
+                }
+            }
+        }
+
+        /*for (int y = 0; y < rows; y++) {
+            for (int x = 0; x < cols; x++) {
                 int id = data[y * cols + x];
                 if (grid[y][x] != 0 && !visited[y][x]) {
                     int width = 1;
@@ -591,7 +610,7 @@ public class GameplayScene implements Screen {
                     surfaces.add(poly);
                 }
             }
-        }
+        }*/
 
         return surfaces;
     }
@@ -658,18 +677,6 @@ public class GameplayScene implements Screen {
                             }
                         }
                     }
-                    /*outer:
-                    for (int y = tileMinY; y < tileMaxY; y++) {
-                        for (int x = tileMinX; x < tileMaxX; x++) {
-                            if (x >= 0 && x < width && y >= 0 && y < height) {
-                                int tileId = tileData[y * width + x];
-                                if (tileId == 1 || tileId == 2 || tileId == 3 || tileId == 7 || tileId == 8 || tileId == 9) {
-                                    isFloor = true;
-                                    break outer;
-                                }
-                            }
-                        }
-                    }*/
 
                     JsonValue settings = levelInfo.get("walls");
                     Surface tile = new Surface(points, units, settings);
@@ -687,15 +694,6 @@ public class GameplayScene implements Screen {
 
                     addSprite(tile);
                 }
-
-                /*for (float[] points : polygons) {
-                    JsonValue settings = levelInfo.get("walls"); // Customize based on layer name if needed
-                    Surface tile = new Surface(points, units, settings);
-                    tile.setTexture(texture);
-                    tile.getObstacle().setName("tile"); // unique name
-                    addSprite(tile);
-                }*/
-
             } else if (layerType.equals("objectgroup")) {
                 Map<String, JsonValue> ropeAnchors = new HashMap<>();
                 for (JsonValue object : layer.get("objects")) {

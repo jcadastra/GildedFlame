@@ -39,15 +39,23 @@
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
+        "test2.tmj": {
+            "scale": 0.33,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 5730.30303030303,
+                "y": 4677.272727272727
+            }
+        },
         "test2.tmx": {
             "expandedObjectLayers": [
                 3
             ],
-            "scale": 0.0625,
+            "scale": 0.125,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 4640,
-                "y": 2840
+                "x": 4728,
+                "y": 2700
             }
         },
         "test3.tmx": {
@@ -55,11 +63,11 @@
                 2,
                 3
             ],
-            "scale": 0.0625,
+            "scale": 0.125,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 4160,
-                "y": 5256
+                "x": 2376,
+                "y": 3084
             }
         },
         "test_map.tmj": {
