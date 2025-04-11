@@ -51,7 +51,7 @@ public class Rope extends ObstacleGroup {
      * @param units         physics unit scale factor
      * @param data          JSON data containing rope properties ("thickness", "piecelen", etc.)
      */
-    public Rope(Vector2 pin1, Vector2 pin2, float depthOfCurve, float units, JsonValue data) {
+    public Rope(Vector2 pin1, Vector2 pin2, float depthOfCurve, float thickness, float piecelen, float units, JsonValue data) {
         this.pin1 = pin1.scl(units);
         this.pin2 = pin2.scl(units);
         this.units = units;
@@ -61,8 +61,10 @@ public class Rope extends ObstacleGroup {
 
         // Calculate the rope’s direction.
         this.internalAngle = (pin2.cpy().sub(pin1)).angleRad();
-        ropeThickness = data.getFloat("thickness");
-        ropePieceLen = data.getFloat("piecelen");
+        ropeThickness = thickness;
+        ropePieceLen = piecelen;
+        //ropeThickness = data.getFloat("thickness");
+        //ropePieceLen = data.getFloat("piecelen");
         // Step along the rope direction.
         this.step = ((pin2.cpy().sub(pin1)).nor()).scl(ropePieceLen);
 

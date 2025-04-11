@@ -47,10 +47,8 @@ import edu.cornell.cis3152.physics.level_player.utils.FireFlag;
 import edu.cornell.cis3152.physics.level_player.utils.ObstacleGroup;
 
 import edu.cornell.cis3152.physics.level_player.utils.TweenElement;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
+
+import java.util.*;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
@@ -67,9 +65,7 @@ import edu.cornell.gdiac.util.*;
 import edu.cornell.gdiac.graphics.*;
 import edu.cornell.gdiac.physics2.*;
 import edu.cornell.cis3152.physics.level_player.enviromentals.*;
-import java.util.Optional;
-import java.util.Set;
-import java.util.Stack;
+
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -701,6 +697,7 @@ public class GameplayScene implements Screen {
                 }*/
 
             } else if (layerType.equals("objectgroup")) {
+                Map<String, JsonValue> ropeAnchors = new HashMap<>();
                 for (JsonValue object : layer.get("objects")) {
                     String objName = object.getString("name", "unnamed");
                     float x = object.getFloat("x") / levelData.getInt("tilewidth");
@@ -763,8 +760,54 @@ public class GameplayScene implements Screen {
                             break;
 
                         default:
-                            System.out.println("Unknown object: " + objName);
+                            if (objName.matches("\\d+")) {
+                                ropeAnchors.put(objName, object);
+                            } else {
+                                System.out.println("Unknown object: " + objName);
+                            }
                             break;
+                    }
+                }
+
+                int rcnt = ropeAnchors.size()/2;
+                for (int i = 0; i < rcnt; i++) {
+                    String startName = String.valueOf(2 * i + 1);
+                    String endName = String.valueOf(2 * i + 2);
+
+                    JsonValue start = ropeAnchors.get(startName);
+                    JsonValue end = ropeAnchors.get(endName);
+
+                    if (start != null && end != null) {
+                        float x1 = start.getFloat("x") / levelData.getInt("tilewidth");
+                        float y1 = (18 * 300 - start.getFloat("y")) / levelData.getInt("tileheight");
+                        float x2 = end.getFloat("x") / levelData.getInt("tilewidth");
+                        float y2 = (18 * 300 - end.getFloat("y")) / levelData.getInt("tileheight");
+
+                        int depth = 10, piecelen = 10, thickness = 5;
+                        JsonValue props = end.get("properties");
+                        if (props != null) {
+                            for (JsonValue prop : props) {
+                                String pname = prop.getString("name");
+                                String val = prop.getString("value");
+                                switch (pname) {
+                                    case "depth":
+                                        depth = Integer.parseInt(val);
+                                        break;
+                                    case "piecelen":
+                                        piecelen = Integer.parseInt(val);
+                                        break;
+                                    case "thickness":
+                                        thickness = Integer.parseInt(val);
+                                        break;
+                                }
+                            }
+                        }
+                        texture = directory.getEntry( "platform-rope-end", Texture.class );
+                        Texture middle_texture = directory.getEntry( "platform-rope-mid", Texture.class );
+                        Rope rope = new Rope(new Vector2(x1, y1), new Vector2(x2, y2), depth, thickness, piecelen, units, levelInfo.get("ropes").get(0));
+                        rope.setTextures(texture, middle_texture);
+                        temp = rope;
+                        addSpriteGroup(rope);
                     }
                 }
             }
