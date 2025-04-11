@@ -561,48 +561,6 @@ public class GameplayScene implements Screen {
             }
         }
 
-        /*for (int y = 0; y < rows; y++) {
-            for (int x = 0; x < cols; x++) {
-                int id = data[y * cols + x];
-                if (grid[y][x] != 0 && !visited[y][x]) {
-                    int width = 1;
-                    while (x + width < cols && grid[y][x + width] != 0 && !visited[y][x + width]) {
-                        width++;
-                    }
-
-                    int height = 1;
-                    boolean expandable = true;
-                    while (y + height < rows && expandable) {
-                        for (int dx = 0; dx < width; dx++) {
-                            if (grid[y + height][x + dx] == 0 || visited[y + height][x + dx]) {
-                                expandable = false;
-                                break;
-                            }
-                        }
-                        if (expandable) {
-                            height++;
-                        }
-                    }
-                    for (int dy = 0; dy < height; dy++) {
-                        for (int dx = 0; dx < width; dx++) {
-                            visited[y + dy][x + dx] = true;
-                        }
-                    }
-
-                    int yy = rows - y;
-
-                    float[] poly = new float[]{
-                        x, yy,                         // top-left
-                        x, yy - height,                // bottom-left
-                        x + width, yy - height,        // bottom-right
-                        x + width, yy                  // top-right
-                    };
-
-                    surfaces.add(poly);
-                }
-            }
-        }*/
-
         return surfaces;
     }
 
@@ -661,11 +619,11 @@ public class GameplayScene implements Screen {
                             if (x >= 0 && x < width && y >= 0 && y < height) {
                                 int flippedY = height - 1 - y;  // flip to match original data
                                 int tileId = tileData[flippedY * width + x];
-                                if (tileId == 7 || tileId == 8 || tileId == 9) {
+                                if (tileId == 8 || tileId == 9 || tileId == 10) {
                                     isFloor = true;
-                                } else if (tileId == 13) {
+                                } else if (tileId == 14) {
                                     isWall = true;
-                                } else if (tileId == 1 || tileId == 2 || tileId == 3) {
+                                } else if (tileId == 2 || tileId == 3 || tileId == 4) {
                                     isPlatform = true;
                                 }
                             }
