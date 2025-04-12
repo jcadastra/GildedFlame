@@ -38,7 +38,6 @@ import edu.cornell.cis3152.physics.level_player.enemies.Enemy;
 import edu.cornell.cis3152.physics.level_player.enemies.Moth;
 import edu.cornell.cis3152.physics.level_player.enemies.Totem;
 import edu.cornell.cis3152.physics.level_player.player.Torch;
-import edu.cornell.cis3152.physics.level_player.player.TorchTrajectorySystem;
 import edu.cornell.cis3152.physics.level_player.player.Traci;
 import edu.cornell.cis3152.physics.level_player.player.Traci.GroundState;
 import edu.cornell.cis3152.physics.level_player.utils.CollisionFlag;
@@ -47,7 +46,6 @@ import edu.cornell.cis3152.physics.level_player.utils.Event;
 import edu.cornell.cis3152.physics.level_player.utils.FireFlag;
 import edu.cornell.cis3152.physics.level_player.utils.ObstacleGroup;
 
-import edu.cornell.cis3152.physics.level_player.utils.TrajectoryFlag;
 import edu.cornell.cis3152.physics.level_player.utils.TweenElement;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -191,7 +189,6 @@ public class GameplayScene implements Screen {
     protected CollisionController contactListener;
     protected FireController fireController;
     protected EventHandler eventHandler;
-    protected TorchTrajectorySystem torchTrajectorySystem;
     protected SoundEngine soundEngine;
     protected PooledList<TweenElement<Float>> tweenedMovmentObjectsFloat;
     protected PooledList<TweenElement<Vector2>> tweenedMovmentObjectsVec2;
@@ -311,6 +308,18 @@ public class GameplayScene implements Screen {
     private float phyiscsUnits;
 
     /**
+     * the constant list of items used to repersent the torch throw arc parabola
+     * offset is an internal timer used for animating it
+     */
+    private ArrayList<ObstacleSprite> torchArc;
+    private float dtTorchArcOffset = 0;
+
+    private int dotTorchArcCount = 120;
+    private int deltaTorchArc = 4;
+    private float animationOffsetTorchArc = .18f;
+
+
+    /**
      * Creates a new game world from the given asset directory
      *
      * The game world is scaled so that the screen coordinates do not agree
@@ -331,7 +340,7 @@ public class GameplayScene implements Screen {
         contactListener = new CollisionController(directory, fireController);
         this.eventHandler = new EventHandler();
         this.soundEngine = soundEngine;
-        torchTrajectorySystem = new TorchTrajectorySystem();
+        torchArc = new ArrayList<>();
         tweenedMovmentObjectsVec2 = new PooledList<>();
         tweenedMovmentObjectsFloat = new PooledList<>();
 
@@ -393,6 +402,7 @@ public class GameplayScene implements Screen {
         eventHandler.dispose();
         sprites.clear();
         addQueue.clear();
+        torchArc.clear();
         world.dispose();
         addQueue = null;
         sprites = null;
@@ -519,6 +529,11 @@ public class GameplayScene implements Screen {
         world.setContactListener(contactListener);
         setComplete(false);
         setFailure(false);
+
+        for (ObstacleSprite s : torchArc) {
+            s.getObstacle().markRemoved(true);
+        }
+        torchArc.clear();
     }
 
     private void populateLevel() {}
@@ -657,6 +672,18 @@ public class GameplayScene implements Screen {
             enemies.add(moth);
         }
 
+        torchArc = new ArrayList<>();
+        for (int i = 0; i < dotTorchArcCount / deltaTorchArc; i++) {
+            WheelObstacle temp = new WheelObstacle(-1,-1, 0.4f);
+            temp.setBodyType(BodyType.StaticBody);
+            ObstacleSprite tracker = new ObstacleSprite(temp);
+            tracker.getObstacle().setPhysicsUnits(phyiscsUnits);
+            tracker.getObstacle().setName("trajectoryPoint");
+            tracker.getObstacle().setSensor(true);
+            addSprite(tracker);
+            torchArc.add(tracker);
+        }
+
         if (levelName.equals("rope_test")) {
             // SAMPLE BUTTON CODE BELOW::
             Button button = new Button(new Vector2(24,2.75f), 0, true, true, units);
@@ -783,10 +810,10 @@ public class GameplayScene implements Screen {
         supplementaryCollisionActions();
         supplementaryFireActions();
         supplementaryEventActions(dt);
-        supplementaryTrackerActions();
+//        supplementaryTrackerActions();
         updateTweenedMovementObjectsVec2(dt);
         updateTweenedMovementObjectsFloat(dt);
-        torchTrajectorySystem.update(torch.getObstacle().getPosition());
+//        torchTrajectorySystem.update(torch.getObstacle().getPosition());
 
         if (temp != null) {
 //            for (EnhancedObstacleSprite eos : temp.getTopEntities()) {
@@ -835,10 +862,10 @@ public class GameplayScene implements Screen {
             torch.getObstacle().setSensor(false);
             soundEngine.throwTorch();
         }
-
-        if (input.pressedAssistParabola()) {
-            torchTrajectorySystem.toggle();
-            System.out.println("printed");
+        if (input.assistParabola()) {
+            generateTorchArc();
+        } else {
+            hideArc();
         }
 
         avatar.applyForce();
@@ -855,6 +882,73 @@ public class GameplayScene implements Screen {
         }
 
         updateCamera();
+    }
+
+
+    private void generateTorchArc() {
+        dtTorchArcOffset %= deltaTorchArc;
+
+        if (!avatar.getHasTorch()) {
+            hideArc();
+            return;
+        }
+
+        float dt = 1/60f;
+        Vector2 start = new Vector2(torch.getObstacle().getPosition());
+        // magic numbers but idk why they work
+        Vector2 vel = new Vector2(torch.getIntialThrowVelocity()).scl(1.05f * (avatar.isFacingRight() ? 1 : -1),2.1f);
+        float gravity = world.getGravity().y;
+        final Fixture[] hit = { null };
+        final Vector2[] hitpoint = {new Vector2()};
+        RayCastCallback raycastCallback = (fixture, point, normal, fraction) -> {
+            hit[0] = fixture;
+            hitpoint[0] = point;
+            return 0;
+        };
+        Vector2 lastTP = new Vector2(start);
+
+        ArrayList<Vector2> arcPoints = new ArrayList<Vector2>();
+        float r=dt * dtTorchArcOffset;
+        int generatedCount = 0;
+        while (generatedCount < dotTorchArcCount) {
+            float t = (dt) * (generatedCount + dtTorchArcOffset);
+            float x = start.x + vel.x * t;
+            float y = start.y + t * vel.y + 0.5f * (t * t + t) * gravity;
+            Vector2 trajectoryPosition = new Vector2(x,y);
+            if (generatedCount > 0) {
+                world.rayCast(raycastCallback, lastTP, trajectoryPosition);
+                if (hit[0] != null && !hit[0].isSensor()) {
+                    arcPoints.add(hitpoint[0]);
+                    break;
+                }
+            }
+
+            lastTP = trajectoryPosition;
+            if (generatedCount % deltaTorchArc == 0) {
+                arcPoints.add(new Vector2(x, y));
+            }
+            generatedCount++;
+        }
+
+        for (int i = 0; i < dotTorchArcCount / deltaTorchArc; i++) {
+            if (i < generatedCount/ deltaTorchArc) {
+                torchArc.get(i).getObstacle().setPosition(arcPoints.get(i));
+            } else {
+                torchArc.get(i).getObstacle().setPosition(-1,-1);
+            }
+        }
+        // this part right here is just to display final hit section
+        torchArc.get(torchArc.size() - 1).getObstacle().setPosition(arcPoints.get(arcPoints.size()-1));
+        dtTorchArcOffset += animationOffsetTorchArc;
+    }
+
+    private void hideArc() {
+        if (torchArc.get(0).getObstacle().getPosition().x == -1 && torchArc.get(0).getObstacle().getPosition().y == -1) {
+            return;
+        }
+        for (ObstacleSprite i : torchArc) {
+            i.getObstacle().setPosition(-1,-1);
+        }
     }
 
     private void updateCamera() {
@@ -1001,7 +1095,6 @@ public class GameplayScene implements Screen {
         while (!todos.isEmpty()) {
             Event<T,U> event = (Event<T, U>) todos.pop();
             EventAction<U> action = event.action;
-            System.out.println(event.source.getClass());
 
             // if the caller of the event needs any upkeep, in the case of a button the inverse of the
             // event will be added to be called after the button's state changes again, to act like a
@@ -1106,36 +1199,12 @@ public class GameplayScene implements Screen {
 
                 case "demo":
                     temp.deactivateAnchor(1);
-                    System.out.println("run");
                     break;
             }
         }
 
         for (Button button : toggleButtons) {
             button.toggleButton(world);
-        }
-    }
-
-    private void supplementaryTrackerActions() {
-        Stack<TrajectoryFlag> todos = torchTrajectorySystem.getTrajectoryFlags();
-        while (!todos.isEmpty()) {
-            TrajectoryFlag trajectoryFlag = todos.pop();
-            ObstacleSprite subject = trajectoryFlag.subject;
-            switch (trajectoryFlag.name) {
-                case "addSubject":
-                    addSprite(subject);
-                    subject.getObstacle().setPhysicsUnits(phyiscsUnits);
-                    if (torch.getObstacle().getBody() != null) {
-                        subject.getObstacle().getBody().setMassData(torch.getObstacle().getBody().getMassData());
-                    }
-                    subject.getObstacle().getBody().applyLinearImpulse(torch.getThrowForce(avatar.isFacingRight() ? 1 : -1),
-                        subject.getObstacle().getPosition(), true);
-                    subject.getObstacle().getBody().setLinearVelocity(subject.getObstacle().getBody().getLinearVelocity().add(avatar.getObstacle().getLinearVelocity()));
-                    break;
-                case "removeSubject":
-//                    world.destroyBody(subject.getObstacle().getBody());
-                    break;
-            }
         }
     }
 
