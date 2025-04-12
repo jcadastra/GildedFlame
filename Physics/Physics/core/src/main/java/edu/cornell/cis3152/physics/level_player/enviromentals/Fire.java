@@ -23,6 +23,7 @@ public class Fire extends ObstacleSprite {
 
     // raidus of the fire
     private Float radius;
+    public int fireID;
     public float getRadius () {
         return radius;
     }
@@ -59,5 +60,9 @@ public class Fire extends ObstacleSprite {
     public void dispose() {
         mesh.clear();
         obstacle.markRemoved(true);
+    }
+
+    public void setID(int fireID) {
+        this.fireID = fireID;
     }
 }

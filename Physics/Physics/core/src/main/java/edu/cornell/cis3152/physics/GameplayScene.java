@@ -602,6 +602,8 @@ public class GameplayScene implements Screen {
         addSprite(l);
         l.createSensor();
         torchFire = new Fire(units, new Vector2(10,10));
+        torchFire.setID(0);
+        fireController.forceAddMiscFire(torchFire);
         addSprite(torchFire);
         lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds);
         lightController.attachTorchLight(torchFire);
