@@ -65,8 +65,10 @@ public class CollisionController implements ContactListener {
         return (x.isInstance(a) ? a : b);
     }
 
-    private static boolean isGround(ObstacleSprite sprite) {
-        return sprite.getName().contains("floor") || sprite.getName().contains("platform") || sprite.getName().contains("barrier") || sprite.getName().contains("spinner") || sprite.getName().contains("button") || (sprite instanceof Surface) || sprite instanceof Totem;
+    public boolean isGround(ObstacleSprite sprite) {
+        return sprite.getName().contains("floor") || sprite.getName().contains("platform") ||
+               sprite.getName().contains("barrier") || sprite.getName().contains("spinner") ||
+               sprite.getName().contains("button") || (sprite instanceof Surface) || sprite instanceof Totem;
     }
 
     public Stack<CollisionFlag> getCollisionFlags() {
@@ -311,6 +313,11 @@ public class CollisionController implements ContactListener {
                 }
             }
 
+            if (isXandY(bd1, bd2, Traci.class, Door.class) == 1 ) {
+                ContactKey key = new ContactKey(fix1, fix2);
+                sustainedContacts.put(key, -1);
+            }
+
             /**
              * Collision detection to see if the player is overlapping with any climbable entities
              * then stores them within the player for future joint creation
@@ -322,6 +329,17 @@ public class CollisionController implements ContactListener {
 
                 if (eos.getClimbable() && (subjectFixture.getUserData() == null || !subjectFixture.getUserData().equals(traci.getSensorName()))) {
                     collisionFlags.add(new CollisionFlag("addClimbingJoint", eos));
+                }
+            }
+            if (isXandY(bd1, bd2, Traci.class, Coin.class) == 1) {
+                Coin coin = (Coin) idX(bd1, bd2, Coin.class);
+                System.out.println("collided!");
+                collisionFlags.push(new CollisionFlag("collect_coin", coin));
+            }
+
+            if (isX(bd1,bd2, "trackerBall") == 1) {
+                if (isGround(bd1) || isGround(bd2)) {
+                    ((ObstacleSprite) idX(bd1,bd2,"trackerBall")).getObstacle().markRemoved(true);
                 }
             }
 
@@ -391,6 +409,15 @@ public class CollisionController implements ContactListener {
                     }
                 }
             }
+
+            if (isXandY(bd1, bd2, Traci.class, Door.class) == 1) {
+                Traci traci = (Traci) idX(bd1, bd2, Traci.class);
+                if (traci.getHasTorch()) {
+                    collisionFlags.push(new CollisionFlag("queueWin"));
+                } else {
+                    sustainedContacts.put(key, -1);
+                }
+            }
         }
     }
 
@@ -454,7 +481,11 @@ public class CollisionController implements ContactListener {
         if (isXandY(bd1, bd2, Fire.class, EnhancedObstacleSprite.class) == 1) {
             ContactKey key = new ContactKey(fix1, fix2);
             sustainedContacts.remove(key);
+        }
 
+        if (isXandY(bd1, bd2, Traci.class, Door.class) == 1) {
+            ContactKey key = new ContactKey(fix1, fix2);
+            sustainedContacts.remove(key);
         }
 
         /**
@@ -472,6 +503,12 @@ public class CollisionController implements ContactListener {
             enemy.setJustCollided(false);
 
         }
+        if (isXandY(bd1, bd2, "wall", Enemy.class) == 1) {
+            Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
+            enemy.setJustCollided(false);
+
+        }
+
 
         /**
          * Moth and Torch collision

@@ -24,6 +24,7 @@
  */
 package edu.cornell.cis3152.physics;
 
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -47,6 +48,7 @@ import edu.cornell.cis3152.physics.level_player.utils.ObstacleGroup;
 
 import edu.cornell.cis3152.physics.level_player.utils.TweenElement;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -66,6 +68,7 @@ import edu.cornell.gdiac.graphics.*;
 import edu.cornell.gdiac.physics2.*;
 import edu.cornell.cis3152.physics.level_player.enviromentals.*;
 import java.util.Optional;
+import java.util.Set;
 import java.util.Stack;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -302,6 +305,19 @@ public class GameplayScene implements Screen {
     public void setSpriteBatch(SpriteBatch batch) {
         this.batch = batch;
     }
+    private float phyiscsUnits;
+
+    /**
+     * the constant list of items used to repersent the torch throw arc parabola
+     * offset is an internal timer used for animating it
+     */
+    private ArrayList<ObstacleSprite> torchArc;
+    private float dtTorchArcOffset = 0;
+
+    private int dotTorchArcCount = 120;
+    private int deltaTorchArc = 4;
+    private float animationOffsetTorchArc = .18f;
+
 
     /**
      * Creates a new game world from the given asset directory
@@ -324,6 +340,7 @@ public class GameplayScene implements Screen {
         contactListener = new CollisionController(directory, fireController);
         this.eventHandler = new EventHandler();
         this.soundEngine = soundEngine;
+        torchArc = new ArrayList<>();
         tweenedMovmentObjectsVec2 = new PooledList<>();
         tweenedMovmentObjectsFloat = new PooledList<>();
 
@@ -385,6 +402,7 @@ public class GameplayScene implements Screen {
         eventHandler.dispose();
         sprites.clear();
         addQueue.clear();
+        torchArc.clear();
         world.dispose();
         addQueue = null;
         sprites = null;
@@ -454,6 +472,11 @@ public class GameplayScene implements Screen {
      * This method disposes of the world and creates a new one.
      */
     public void reset() {
+        clearLevel();
+        loadLevel(levelName);
+    };
+
+    public void clearLevel() {
         JsonValue values = constants.get("world");
         Vector2 gravity = new Vector2(0, values.getFloat("gravity"));
         if (queueFailure) {
@@ -491,35 +514,6 @@ public class GameplayScene implements Screen {
         if (lightController != null){
             lightController.dispose();}
 
-        for (ObstacleSprite sprite : sprites) {
-            Obstacle obj = sprite.getObstacle();
-            sprite.getObstacle().deactivatePhysics(world);
-        }
-        sprites.clear();
-        addQueue.clear();
-        if (world != null) {
-            world.dispose();
-        }
-
-        world = new World(gravity, false);
-        world.setContactListener(contactListener);
-        setComplete(false);
-        setFailure(false);
-        loadLevel(levelName);
-    };
-
-    public void clearLevel() {
-        JsonValue values = constants.get("world");
-        Vector2 gravity = new Vector2(0, values.getFloat("gravity"));
-
-        if (activeTorchJoint != null) {
-            world.destroyJoint(activeTorchJoint);
-            activeTorchJoint = null;
-        }
-        if (activeLightJoint != null) {
-            world.destroyJoint(activeLightJoint);
-            activeLightJoint = null;
-        }
 
         for (ObstacleSprite sprite : sprites) {
             Obstacle obj = sprite.getObstacle();
@@ -535,6 +529,11 @@ public class GameplayScene implements Screen {
         world.setContactListener(contactListener);
         setComplete(false);
         setFailure(false);
+
+        for (ObstacleSprite s : torchArc) {
+            s.getObstacle().markRemoved(true);
+        }
+        torchArc.clear();
     }
 
     private void populateLevel() {}
@@ -542,6 +541,7 @@ public class GameplayScene implements Screen {
     public void loadLevel(String levelName) {
         this.levelName = levelName;
         float units = height / bounds.height;
+        phyiscsUnits = units;
 
         JsonValue levelData = directory.getEntry(levelName,JsonValue.class);
 
@@ -591,16 +591,14 @@ public class GameplayScene implements Screen {
         texture = directory.getEntry( "platform-rope-end", Texture.class );
         Texture middle_texture = directory.getEntry( "platform-rope-mid", Texture.class );
         JsonValue ropes = levelData.get("ropes");
-        int ropeId = 0;
         for (JsonValue ropeJson : ropes) {
             Vector2 pin1 = new Vector2(ropeJson.get("pin1").getFloat(0), ropeJson.get("pin1").getFloat(1));
             Vector2 pin2 = new Vector2(ropeJson.get("pin2").getFloat(0), ropeJson.get("pin2").getFloat(1));
             float dep = ropeJson.getFloat("depth");
             Rope rope = new Rope(pin1, pin2, dep, units, ropeJson);
             rope.setTextures(texture, middle_texture);
-            temp = rope;
             addSpriteGroup(rope);
-            ropeId++;
+            temp = rope;
         }
 
         // Create spinners
@@ -614,7 +612,7 @@ public class GameplayScene implements Screen {
 
         // Create Traci
         texture = directory.getEntry("platform-player", Texture.class);
-        avatar = new Traci(units, levelData.get("traci"));
+        avatar = new Traci(directory, units, levelData.get("traci"));
         avatar.setTexture(texture);
         addSprite(avatar);
         // Have to do after body is created
@@ -625,12 +623,17 @@ public class GameplayScene implements Screen {
         addSprite(l);
         l.createSensor();
         torchFire = new Fire(units, new Vector2(10,10));
+        torchFire.setID(0);
+        fireController.forceAddMiscFire(torchFire);
         addSprite(torchFire);
         lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds);
         lightController.attachTorchLight(torchFire);
+        lightController.resetCamera(camera.position.x,camera.position.y);
+        //lightController.fireLights(fireController);
 
         particleEngine = new ParticleEngine(torchFire);
         particleEngine.newFires(fireController);
+
 //
         // Create Torch
         texture = directory.getEntry("platform-torch", Texture.class);
@@ -638,7 +641,7 @@ public class GameplayScene implements Screen {
         torch.setTexture(texture);
         addSprite(torch);
         l.getObstacle().setPosition(torch.getObstacle().getPosition());
-        torchFire.getObstacle().setPosition(torch.getObstacle().getPosition());
+        torchFire.getObstacle().setPosition(torch.getObstacle().getPosition().cpy().add(0,torch.getHeight() / 4));
         activeLightJoint = world.createJoint(torch.attachObj(l));
         activeFireJoint = world.createJoint(torch.attachObj(torchFire));
         // TODO: Optimize the above ^^
@@ -669,42 +672,62 @@ public class GameplayScene implements Screen {
             enemies.add(moth);
         }
 
-        // SAMPLE BUTTON CODE BELOW::
-//        Button button = new Button(new Vector2(24,2.75f), 0, true, true, units);
-//        BoxObstacle temp = new BoxObstacle(5,5,5,.5f);
-//        temp.setPhysicsUnits(units);
-//        temp.setName("floor");
-//        ObstacleSprite thing = new ObstacleSprite(temp);
-//        thing.getObstacle().setBodyType(BodyType.KinematicBody);
-//        thing.getObstacle().setFriction(.5f);
-////        addSprite(thing);
-//
-//        Button button = new Button(new Vector2(20,3.75f), 0, false, false, units);
-////        Array<Object> actionArray = new Array<>(new Object[]{thing, "move", new Vector2(8, 10), new Vector2(10, 10)});
-//        Function<Float, Float> movementFunc = Interpolation.swing::apply;
-//        EventAction<Vector2> eventAction = new EventAction<Vector2>(thing, "move", new Vector2(8, 10), new Vector2(16, 5), 4f, movementFunc);
-////        Object[] actionArray = new Object[]{thing, "rotate", 0f, (float) (Math.PI), 300, movementFunc};
-////        Object[] actionArray = new Object[]{thing, "move", new Vector2(8, 10), new Vector2(16, 5), 100, movementFunc};
-//
-//        Event<Integer,Vector2> event = new Event<Integer,Vector2>(button, button::getState,
-//            state -> state == 1, "button", eventAction);
-////        eventHandler.registerEvent(event);
-//
-//
-//        EventAction<Float> eventAction2 = new EventAction<Float>(thing, "rotate", 0f, (float) (Math.PI), 4, movementFunc);
-//        Event<Integer,Float> event2 = new Event<Integer, Float>(button, button::getState,
-//            state -> state == 1, "button", eventAction2);
-//        eventHandler.registerEvent(event2);
-//
-//        eventAction = new EventAction<>("spawn");
-//        event = new Event<Integer,Vector2>(button, button::getState,
-//            state -> state == 1, "button", eventAction);
-////        eventHandler.registerEvent(event);
-//
-////        addSpriteGroup(button);
-//
-//        Ladder tempLadder = new Ladder(3,3,5f, units);
-////        addSprite(tempLadder);
+        torchArc = new ArrayList<>();
+        for (int i = 0; i < dotTorchArcCount / deltaTorchArc; i++) {
+            WheelObstacle temp = new WheelObstacle(-1,-1, 0.4f);
+            temp.setBodyType(BodyType.StaticBody);
+            ObstacleSprite tracker = new ObstacleSprite(temp);
+            tracker.getObstacle().setPhysicsUnits(phyiscsUnits);
+            tracker.getObstacle().setName("trajectoryPoint");
+            tracker.getObstacle().setSensor(true);
+            addSprite(tracker);
+            torchArc.add(tracker);
+        }
+
+        if (levelName.equals("rope_test")) {
+            // SAMPLE BUTTON CODE BELOW::
+            Button button = new Button(new Vector2(24,2.75f), 0, true, true, units);
+            Button button2 = new Button(new Vector2(30.75f,7f), (float) Math.PI/2, false, false, units);
+            BoxObstacle temp = new BoxObstacle(5,5,5,.5f);
+            temp.setPhysicsUnits(units);
+            temp.setName("floor");
+            ObstacleSprite thing = new ObstacleSprite(temp);
+            thing.getObstacle().setBodyType(BodyType.KinematicBody);
+            thing.getObstacle().setFriction(.5f);
+            addSprite(thing);
+
+    //        Array<Object> actionArray = new Array<>(new Object[]{thing, "move", new Vector2(8, 10), new Vector2(10, 10)});
+            Function<Float, Float> movementFunc = Interpolation.swing::apply;
+            EventAction<Vector2> eventAction = new EventAction<Vector2>(thing, "move", new Vector2(8, 10), new Vector2(16, 5), 4f, movementFunc);
+    //        Object[] actionArray = new Object[]{thing, "rotate", 0f, (float) (Math.PI), 300, movementFunc};
+    //        Object[] actionArray = new Object[]{thing, "move", new Vector2(8, 10), new Vector2(16, 5), 100, movementFunc};
+
+            Event<Integer,Vector2> event = new Event<Integer,Vector2>(button, button::getState,
+                state -> state == 1,  eventAction);
+            eventHandler.registerEvent(event);
+
+
+            EventAction<Float> eventAction2 = new EventAction<Float>(thing, "rotate", 0f, (float) (Math.PI), 4, movementFunc);
+            Event<Integer,Float> event2 = new Event<Integer, Float>(button, button::getState,
+                state -> state == 1,  eventAction2);
+            eventHandler.registerEvent(event2);
+
+            eventAction = new EventAction<>("demo");
+            event = new Event<Integer,Vector2>(button2, button2::getState,
+                state -> state == 1,  eventAction);
+            eventHandler.registerEvent(event);
+
+            addSpriteGroup(button);
+//            addSpriteGroup(button2);
+
+            Ladder tempLadder = new Ladder(3,3,5f, units);
+    //        addSprite(tempLadder);
+
+        }
+
+//        if (levelName.equals("moth_intro")) {
+//            temp.deactivateAnchor(1);
+//        }
     }
     /**
      * Returns whether to process the update loop
@@ -787,8 +810,10 @@ public class GameplayScene implements Screen {
         supplementaryCollisionActions();
         supplementaryFireActions();
         supplementaryEventActions(dt);
+//        supplementaryTrackerActions();
         updateTweenedMovementObjectsVec2(dt);
         updateTweenedMovementObjectsFloat(dt);
+//        torchTrajectorySystem.update(torch.getObstacle().getPosition());
 
         if (temp != null) {
 //            for (EnhancedObstacleSprite eos : temp.getTopEntities()) {
@@ -837,6 +862,11 @@ public class GameplayScene implements Screen {
             torch.getObstacle().setSensor(false);
             soundEngine.throwTorch();
         }
+        if (input.assistParabola()) {
+            generateTorchArc();
+        } else {
+            hideArc();
+        }
 
         avatar.applyForce();
 
@@ -854,29 +884,116 @@ public class GameplayScene implements Screen {
         updateCamera();
     }
 
+
+    private void generateTorchArc() {
+        dtTorchArcOffset %= deltaTorchArc;
+
+        if (!avatar.getHasTorch()) {
+            hideArc();
+            return;
+        }
+
+        float dt = 1/60f;
+        Vector2 start = new Vector2(torch.getObstacle().getPosition());
+        // magic numbers but idk why they work
+        Vector2 vel = new Vector2(torch.getIntialThrowVelocity()).scl(1.05f * (avatar.isFacingRight() ? 1 : -1),2.1f);
+        float gravity = world.getGravity().y;
+        final Fixture[] hit = { null };
+        final Vector2[] hitpoint = {new Vector2()};
+        RayCastCallback raycastCallback = (fixture, point, normal, fraction) -> {
+            hit[0] = fixture;
+            hitpoint[0] = point;
+            return 0;
+        };
+        Vector2 lastTP = new Vector2(start);
+
+        ArrayList<Vector2> arcPoints = new ArrayList<Vector2>();
+        float r=dt * dtTorchArcOffset;
+        int generatedCount = 0;
+        while (generatedCount < dotTorchArcCount) {
+            float t = (dt) * (generatedCount + dtTorchArcOffset);
+            float x = start.x + vel.x * t;
+            float y = start.y + t * vel.y + 0.5f * (t * t + t) * gravity;
+            Vector2 trajectoryPosition = new Vector2(x,y);
+            if (generatedCount > 0) {
+                world.rayCast(raycastCallback, lastTP, trajectoryPosition);
+                if (hit[0] != null && !hit[0].isSensor()) {
+                    arcPoints.add(hitpoint[0]);
+                    break;
+                }
+            }
+
+            lastTP = trajectoryPosition;
+            if (generatedCount % deltaTorchArc == 0) {
+                arcPoints.add(new Vector2(x, y));
+            }
+            generatedCount++;
+        }
+
+        for (int i = 0; i < dotTorchArcCount / deltaTorchArc; i++) {
+            if (i < generatedCount/ deltaTorchArc) {
+                torchArc.get(i).getObstacle().setPosition(arcPoints.get(i));
+            } else {
+                torchArc.get(i).getObstacle().setPosition(-1,-1);
+            }
+        }
+        // this part right here is just to display final hit section
+        torchArc.get(torchArc.size() - 1).getObstacle().setPosition(arcPoints.get(arcPoints.size()-1));
+        dtTorchArcOffset += animationOffsetTorchArc;
+    }
+
+    private void hideArc() {
+        if (torchArc.get(0).getObstacle().getPosition().x == -1 && torchArc.get(0).getObstacle().getPosition().y == -1) {
+            return;
+        }
+        for (ObstacleSprite i : torchArc) {
+            i.getObstacle().setPosition(-1,-1);
+        }
+    }
+
     private void updateCamera() {
+
+        float prevX = camera.position.x;
+        float prevY = camera.position.y;
+
         Vector2 playerPos = avatar.getObstacle().getPosition();
-        float playerPixelX = playerPos.x * scale.x;
-        float playerPixelY = playerPos.y * scale.y;
+        float playerX = playerPos.x*scale.x;
+        float playerY = playerPos.y*scale.y;
 
         float lerp = 0.3f;
-        camera.position.x += (playerPixelX - camera.position.x) * lerp;
-        camera.position.y += (playerPixelY - camera.position.y) * lerp;
+        camera.position.x += (playerX - camera.position.x) * lerp;
+        camera.position.y += (playerY - camera.position.y) * lerp;
 
-        float effectiveWidth = camera.viewportWidth * camera.zoom;
-        float effectiveHeight = camera.viewportHeight * camera.zoom;
-        float halfWidth = effectiveWidth / 2f;
-        float halfHeight = effectiveHeight / 2f;
+//        float visibleW =  (bounds.x + bounds.width) * scale.x/2*0.8f; //half of world visible
+//        float visibleH = (bounds.y + bounds.height) * scale.y/2*0.8f;
 
-        float minXPixel = bounds.x * scale.x;
-        float maxXPixel = (bounds.x + bounds.width) * scale.x;
-        float minYPixel = bounds.y * scale.y;
-        float maxYPixel = (bounds.y + bounds.height) * scale.y;
 
-        camera.position.x = MathUtils.clamp(camera.position.x, minXPixel + halfWidth, maxXPixel - halfWidth);
-        camera.position.y = MathUtils.clamp(camera.position.y, minYPixel + halfHeight, maxYPixel - halfHeight);
+        float visibleW =  camera.viewportWidth/2*camera.zoom; //half of world visible, zoomed
+        float visibleH = camera.viewportHeight/2*camera.zoom;
+
+        camera.position.x = MathUtils.clamp(camera.position.x,
+            bounds.x*scale.x+visibleW,
+            (bounds.x+bounds.width)*scale.x - visibleW);
+        //System.out.println("x reached bounds:"+(camera.position.x==bounds.x*scale.x+visibleW));
+        camera.position.y = MathUtils.clamp(camera.position.y,
+            bounds.y*scale.y+visibleH,
+            (bounds.y+bounds.height)*scale.y - visibleH);
 
         camera.update();
+
+        //debug code
+        ShapeRenderer shapeRenderer = new ShapeRenderer();
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.RED);
+        shapeRenderer.rect(bounds.x * scale.x, bounds.y * scale.y,
+            bounds.width * scale.x, bounds.height * scale.y);
+        shapeRenderer.end();
+
+
+        float dx = camera.position.x-prevX;
+        float dy = camera.position.y-prevY;
+        lightController.updateCamera(dx,dy);
     }
 
     /**
@@ -915,6 +1032,9 @@ public class GameplayScene implements Screen {
                     break;
                 case "removeClimbingJoint":
                     avatar.removeClimbable((EnhancedObstacleSprite) todo_action.getSubject());
+                    break;
+                case "queueWin":
+                    setComplete(true);
                     break;
                 case "queueFailure":
                     queueFailure = true;
@@ -971,10 +1091,10 @@ public class GameplayScene implements Screen {
      */
     private <T,U> void supplementaryEventActions(float dt) {
         Stack<Event<?,?>> todos = eventHandler.getEventFlags();
+        Set<Button> toggleButtons = new HashSet<>();
         while (!todos.isEmpty()) {
             Event<T,U> event = (Event<T, U>) todos.pop();
             EventAction<U> action = event.action;
-            System.out.println(event.source.getClass());
 
             // if the caller of the event needs any upkeep, in the case of a button the inverse of the
             // event will be added to be called after the button's state changes again, to act like a
@@ -986,7 +1106,7 @@ public class GameplayScene implements Screen {
                 undo_action.setFinalValue(temp);
 
                 Button button = (Button) event.source;
-                button.toggleButton(world);
+                toggleButtons.add(button);
 
                 int nextState;
                 if (button.getDoubleSided()) {
@@ -1065,7 +1185,7 @@ public class GameplayScene implements Screen {
                         }
 
                         timeTill = action.getTime() - stepCounter;
-                        tweenedMovmentObjectsVec2.remove(oldEventF.get());
+                        tweenedMovmentObjectsFloat.remove(oldEventF.get());
                     }
 
                     Float initialStateFloat = action.getTarget().getObstacle().getAngle();
@@ -1077,22 +1197,14 @@ public class GameplayScene implements Screen {
                     tweenedMovmentObjectsFloat.add(tweenElementFloat);
                     break;
 
-                case "spawn":
-                    float units = height / bounds.height;
-                    JsonValue levelData = directory.getEntry("moth_intro",JsonValue.class);
-                    JsonValue enemiesJson = levelData.get("enemies");
-                    Texture texture = directory.getEntry("platform-moth01", Texture.class);
-                    JsonValue mothsJson = enemiesJson.get("moths").get("instances");
-                    for (int i = 0; i < mothsJson.size; i++) {
-                        Vector2 position = new Vector2(mothsJson.get(i).get("pos").getFloat(0), mothsJson.get(i).get("pos").getFloat(1));
-                        Moth moth = new Moth(i, units, mothsJson.get(i), directory, position);
-                        moth.setTexture(texture);
-                        addSprite(moth);
-                        moth.createSensor();
-                        enemies.add(moth);
-                    }
+                case "demo":
+                    temp.deactivateAnchor(1);
                     break;
             }
+        }
+
+        for (Button button : toggleButtons) {
+            button.toggleButton(world);
         }
     }
 
@@ -1253,6 +1365,7 @@ public class GameplayScene implements Screen {
 
         // Draw the meshes (images)
         for(ObstacleSprite obj : sprites) {
+            batch.setProjectionMatrix(camera.combined);
             obj.draw(batch);
         }
 
@@ -1263,6 +1376,7 @@ public class GameplayScene implements Screen {
             }
         }
         particleEngine.draw(batch,torchFire);
+        //lightController.fireLights(fireController);
 
 
 
@@ -1298,7 +1412,7 @@ public class GameplayScene implements Screen {
         this.height = height;
         if (camera == null) {
             camera = new OrthographicCamera();
-            //camera.zoom = 0.8f;
+            camera.zoom = 0.8f;
         }
         camera.setToOrtho( false, width, height );
         scale.x = width/bounds.width;

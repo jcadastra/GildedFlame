@@ -14,6 +14,8 @@ public class ParticleEngine implements Screen {
     private ParticleEffect effect = new ParticleEffect();
 
 
+    /* Handles the torch fire.
+    * TODO: modify code structure to allow environmental lights*/
     public ParticleEngine (Fire fire){
         effect.load(Gdx.files.internal("platform/flame/particle.p"),Gdx.files.internal("platform/flame/"));
         //effect.set
@@ -25,6 +27,8 @@ public class ParticleEngine implements Screen {
         System.out.println("fire-pos"+fire.getObstacle().getX()+","+fire.getObstacle().getY());
 
     }
+
+    /*Handles particle effects for new fires (dynamic)*/
     public void newFires(FireController fireController){
         //particleAtlas = new TextureAtlas();
         for (Fire fire: fireController.getLitFires()){
@@ -38,13 +42,18 @@ public class ParticleEngine implements Screen {
 
         }
         //effect.scaleEffect(1/2f);
-        System.out.println();
+        //System.out.println();
 
     }
 
     public void draw(SpriteBatch batch){
         effect.draw(batch,Gdx.graphics.getDeltaTime());
     }
+
+    /*
+    Draw method for fire
+    TODO:update this to use the firecontroller and hide the loop, add torch to firecontroller
+    * */
     public void draw(SpriteBatch batch,Fire fire){
         //Updating and Drawing the particle effect
         //Delta being the time to progress the particle effect by, usually you pass in Gdx.graphics.getDeltaTime();

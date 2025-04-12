@@ -1,6 +1,7 @@
 package edu.cornell.cis3152.physics.level_player.enviromentals;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Joint;
@@ -147,4 +148,8 @@ public class Button extends ObstacleGroup {
         button.getObstacle().setPosition(pos.x + offsetX, pos.y + offsetY);
     }
 
+    public void setTexture(Texture baseTexture, Texture buttonTexture) {
+        base.setTexture(baseTexture);
+        button.setTexture(buttonTexture);
+    }
 }

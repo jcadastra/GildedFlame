@@ -5,8 +5,8 @@
     "volume": 0.8
   },
   "goal" : {
-    "pos"       : [29.0, 6.0],
-    "size"      : 3.0,
+    "pos"       : [2.0, 15.0],
+    "size"      : 2.0,
     "density"   : 0.0,
     "friction"  : 0.0,
     "restitution": 0.0
@@ -47,6 +47,24 @@
         31.0,
         0.0,
         31.0,
+        3.0,
+        25.0,
+        3.0
+      ]
+    },
+    {
+      "name": "platform",
+      "tile": 128.0,
+      "friction": 0.1,
+      "density": 0.0,
+      "restitution": 0.1,
+      "debug": "#ffffff",
+      "positions": [
+        25.0,
+        3.0,
+        31.0,
+        3.0,
+        31.0,
         4.0,
         25.0,
         4.0
@@ -60,20 +78,62 @@
       "restitution": 0.1,
       "debug": "#ffffff",
       "positions": [
-        17.0,
+        9.0,
+        6.5,
+        9.0,
+        7.5,
         5.0,
+        7.5,
+        5.0,
+        6.5
+      ]
+    },
+    {
+      "name": "platform",
+      "tile": 128.0,
+      "friction": 0.1,
+      "density": 0.0,
+      "restitution": 0.1,
+      "debug": "#ffffff",
+      "positions": [
         17.0,
-        6.0,
+        5.3,
+        17.0,
+        6.3,
         12.0,
-        6.0,
+        6.3,
         12.0,
-        5.0
+        5.3
+      ]
+    },
+    {
+      "name": "platform",
+      "tile": 128.0,
+      "friction": 0.1,
+      "density": 0.0,
+      "restitution": 0.1,
+      "debug": "#ffffff",
+      "positions": [
+        4.0,
+        11.0,
+        4.0,
+        12.0,
+        1.0,
+        12.0,
+        1.0,
+        11.0
       ]
     }
   ],
   "spinners" : [],
   "bridges" : [],
-  "ropes" : [],
+  "ropes" : [{
+    "thickness" : 10,
+    "piecelen" : 14,
+    "pin1" : [3.5, 11.5],
+    "pin2" : [5.5, 7.0],
+    "depth" : 2.0
+  }],
   "traci": {
     "pos": [2.5, 5.0],
     "inner": [0.7, 0.95],
@@ -127,8 +187,9 @@
   },
   "enemies": {
     "moths": {
-      "count": 0,
-      "instances": []
+      "count": 2,
+      "instances": [
+      ]
     },
     "totems": {
       "count": 3,
