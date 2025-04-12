@@ -43,22 +43,22 @@
             "expandedObjectLayers": [
                 3
             ],
-            "scale": 0.33,
+            "scale": 0.25,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 5730.30303030303,
-                "y": 4677.272727272727
+                "x": 1600,
+                "y": 4366
             }
         },
         "test2.tmx": {
             "expandedObjectLayers": [
                 3
             ],
-            "scale": 0.125,
+            "scale": 0.25,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 6440,
-                "y": 3076
+                "x": 7572,
+                "y": 3418
             }
         },
         "test3.tmx": {
@@ -69,8 +69,8 @@
             "scale": 0.125,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 4392,
-                "y": 3084
+                "x": 2712,
+                "y": 2620
             }
         },
         "test_map.tmj": {

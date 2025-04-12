@@ -5,11 +5,6 @@
       "wrapU": "repeated",
       "wrapV": "repeated"
     },
-    "stone-tile" : {
-      "file":  "platform/Stone_tile_set_1.png",
-      "wrapU": "repeated",
-      "wrapV": "repeated"
-    },
     "shared-goal": "shared/goaldoor.png",
     "platform-totemLIGHTANIMATION": {
       "file": "platform/totemInLightAnimation.png",
@@ -49,6 +44,12 @@
     },
     "platform-mothATTACKANIMATION": {
       "file": "platform/mothAttackAnimation.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-tiles": {
+      "file": "tiled_images/platform1Tiled.png",
       "mipmaps": true,
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"

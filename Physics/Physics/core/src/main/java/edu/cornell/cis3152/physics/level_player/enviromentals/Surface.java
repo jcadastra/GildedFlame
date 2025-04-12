@@ -17,6 +17,7 @@
  package edu.cornell.cis3152.physics.level_player.enviromentals;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.utils.JsonValue;
@@ -61,7 +62,8 @@ public class Surface extends ObstacleSprite {
     public Surface(float[] points, float units, JsonValue settings) {
         super();
 
-        float tile = settings.getFloat( "tile" );
+        //float tile = settings.getFloat( "tile" );
+        float tile = 64f;
 
         // Construct a Poly2 object, breaking it into triangles
         Poly2 poly = new Poly2();

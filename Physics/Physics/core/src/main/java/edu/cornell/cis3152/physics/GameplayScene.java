@@ -24,6 +24,8 @@
  */
 package edu.cornell.cis3152.physics;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
@@ -572,7 +574,7 @@ public class GameplayScene implements Screen {
         JsonValue levelInfo = directory.getEntry(levelInfoName, JsonValue.class);
 
         // Create ground pieces
-        Texture texture = directory.getEntry( "shared-earth", Texture.class );
+        Texture texture = directory.getEntry( "platform-tiles", Texture.class );
         enemies = new ArrayList<>();
 
         JsonValue layers = levelData.get("layers");
@@ -584,6 +586,7 @@ public class GameplayScene implements Screen {
                 int width = layer.getInt("width");
                 int height = layer.getInt("height");
                 JsonValue data = layer.get("data");
+                TextureRegion[][] regions = TextureRegion.split(texture, 300, 300);
 
                 int[] tileData = new int[width * height];
                 for (int i = 0; i < data.size; i++) {
@@ -598,41 +601,33 @@ public class GameplayScene implements Screen {
                     int maxY = (int) points[1];
                     int maxX = (int) points[4];
                     int minY = (int) points[5];
-                    /*int x = minX;
+                    int x = minX;
                     int y = height - maxY;
                     int index = y * width + x;
-                    int tileId = tileData[index];*/
+                    int tileId = tileData[index];
 
                     boolean isFloor = false;
                     boolean isWall = false;
                     boolean isPlatform = false;
 
-                    /*if (tileId == 7 || tileId == 8 || tileId == 9) {
+                    if (tileId == 8 || tileId == 9 || tileId == 10) {
                         isFloor = true;
-                    } else if (tileId == 13) {
+                    } else if (tileId == 14) {
                         isWall = true;
-                    } else if (tileId == 1 || tileId == 2 || tileId == 3) {
+                    } else if (tileId == 2 || tileId == 3 || tileId == 4) {
                         isPlatform = true;
-                    }*/
-                    for (int y = minY; y < maxY; y++) {
-                        for (int x = minX; x < maxX; x++) {
-                            if (x >= 0 && x < width && y >= 0 && y < height) {
-                                int flippedY = height - 1 - y;  // flip to match original data
-                                int tileId = tileData[flippedY * width + x];
-                                if (tileId == 8 || tileId == 9 || tileId == 10) {
-                                    isFloor = true;
-                                } else if (tileId == 14) {
-                                    isWall = true;
-                                } else if (tileId == 2 || tileId == 3 || tileId == 4) {
-                                    isPlatform = true;
-                                }
-                            }
-                        }
                     }
 
                     JsonValue settings = levelInfo.get("walls");
+                    float tileunits = 32f/300f;
                     Surface tile = new Surface(points, units, settings);
-                    tile.setTexture(texture);
+                    int ind = tileId - 1;
+                    int regionX = ind % 6;
+                    int regionY = ind / 6;
+                    TextureRegion region = regions[regionY][regionX];
+                    System.out.println(ind);
+                    tile.setTextureRegion(region);
+                    // tile.setTexture(texture);
 
                     if (isWall) {
                         tile.getObstacle().setName("wall");
