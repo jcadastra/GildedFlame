@@ -83,6 +83,12 @@ public class InputController {
     private float verticalPrevious;
     /** Are we throwing? */
     private boolean throwing;
+    /** Do we want assist parabola? */
+    private boolean assistParabola;
+    private boolean assistParabolaPressed;
+    public boolean pressedAssistParabola() {
+        return assistParabola && !assistParabolaPressed;
+    }
     /** The crosshair position (for raddoll) */
     private Vector2 crosshair;
     /** The crosshair cache (for using as a return value) */
@@ -261,6 +267,7 @@ public class InputController {
         nextPrevious = nextPressed;
         prevPrevious = prevPressed;
         verticalPrevious = vertical;
+        assistParabolaPressed = assistParabola;
 
         // Check to see if a GamePad is connected
         if (xbox != null && xbox.isConnected()) {
@@ -323,27 +330,28 @@ public class InputController {
     private void readKeyboard(Rectangle bounds, Vector2 scale, boolean secondary) {
         // Give priority to gamepad results
         resetPressed = (secondary && resetPressed) || (Gdx.input.isKeyPressed(Input.Keys.R));
-        debugPressed = (secondary && debugPressed) || (Gdx.input.isKeyPressed(Input.Keys.D));
+        debugPressed = (secondary && debugPressed) || (Gdx.input.isKeyPressed(Input.Keys.F));
         primePressed = (secondary && primePressed) || (Gdx.input.isKeyPressed(Keys.SPACE));
         secondPressed = (secondary && secondPressed) || (Gdx.input.isKeyPressed(Keys.L));
         prevPressed = (secondary && prevPressed) || (Gdx.input.isKeyPressed(Input.Keys.P));
         nextPressed = (secondary && nextPressed) || (Gdx.input.isKeyPressed(Input.Keys.N));
         exitPressed  = (secondary && exitPressed) || (Gdx.input.isKeyPressed(Input.Keys.ESCAPE));
+        assistParabola = (secondary && assistParabola) || (Gdx.input.isKeyPressed(Input.Keys.E));
 
         // Directional controls
         horizontal = (secondary ? horizontal : 0.0f);
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             horizontal += 1.0f;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             horizontal -= 1.0f;
         }
 
         vertical = (secondary ? vertical : 0.0f);
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             vertical += 1.0f;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             vertical -= 1.0f;
         }
 
@@ -351,6 +359,11 @@ public class InputController {
         if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
             throwing = true;
         }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.E)) {
+            assistParabola = true;
+        }
+
 
         // Mouse results
         tertiaryPressed = Gdx.input.isButtonPressed(Input.Buttons.LEFT);

@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import edu.cornell.cis3152.physics.level_player.enviromentals.*;
+import edu.cornell.cis3152.physics.level_player.player.Torch;
 import edu.cornell.cis3152.physics.level_player.utils.FireFlag;
 import edu.cornell.gdiac.graphics.SpriteMesh;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ public class FireController {
      */
     private HashMap<EnhancedObstacleSprite, Vector2[]> nFireDiagrams;
     private HashMap<EnhancedObstacleSprite, ArrayList<Fire>> firesOnShape;
+    private Set<Fire> allFires;
     private Stack<FireFlag> fireFlags;
 
     public Stack<FireFlag> getFireFlags() {
@@ -33,9 +35,18 @@ public class FireController {
 
     private EarClippingTriangulator cutter;
     private Random rand;
+    private int fireID = 1;
 
     public boolean isBodyOnFire(EnhancedObstacleSprite s) {
         return nFireDiagrams.getOrDefault(s, null) != null;
+    }
+
+    public Set<Fire> getAllFires() {
+        return allFires;
+    }
+
+    public void forceAddMiscFire(Fire f) {
+        allFires.add(f);
     }
 
     public Set<Fire> getLitFires() {
@@ -50,6 +61,7 @@ public class FireController {
         nFireDiagrams = new HashMap<>();
         firesOnShape = new HashMap<>();
         fireFlags = new Stack<>();
+        allFires = new HashSet<>();
         cutter = new EarClippingTriangulator();
         rand = new Random();
     }
@@ -199,10 +211,18 @@ public class FireController {
         if (s.getObstacle().isRemoved()) {
             return;
         }
+
+        Fire f = new Fire(s.getObstacle().getPhysicsUnits(), point.cpy());
+        f.setID(fireID);
+        fireID++;
+        if (s.getClass().isInstance(Torch.class)) {
+            return;
+        }
+
         ArrayList<Fire> currentFires = firesOnShape.get(s);
         if (currentFires != null) {
-            for (Fire f : currentFires) {
-                if (f.queryPointInside(point)) {
+            for (Fire fire : currentFires) {
+                if (fire.queryPointInside(point)) {
                     return;
                 }
             }
@@ -212,9 +232,9 @@ public class FireController {
             genFirePinPoints(s, point);
         }
 
-        Fire f = new Fire(s.getObstacle().getPhysicsUnits(), point.cpy());
         firesOnShape.computeIfAbsent(s, k -> new ArrayList<>()).add(f);
         fireFlags.push(new FireFlag("attachFire", s, f));
+        allFires.add(f);
     }
 
     /**

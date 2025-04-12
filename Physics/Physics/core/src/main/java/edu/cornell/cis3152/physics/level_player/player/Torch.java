@@ -26,6 +26,9 @@ public class Torch extends ObstacleSprite {
 
     /** height of torch */
     private final float height;
+    public float getHeight() {
+        return height;
+    }
 
     /** timer to avoid too early double pickup of torch (can pickup when 0*/
     private int pickUpTimer;
@@ -83,13 +86,15 @@ public class Torch extends ObstacleSprite {
         if (!obstacle.isActive()) {
             return;
         }
-
-        Vector2 pos = obstacle.getPosition();
-        Vector2 appliedForce;
+        obstacle.setLinearVelocity(Vector2.Zero);
         Body body = obstacle.getBody();
-        appliedForce = new Vector2(data.get( "tossForce").getFloat(0) * direc, data.get( "tossForce").getFloat(1));
-        body.applyLinearImpulse(appliedForce,pos,true);
+        Vector2 appliedForce = getThrowForce(direc);
+        body.applyLinearImpulse(appliedForce,obstacle.getPosition(),true);
         body.applyAngularImpulse(data.getFloat("angular_force") * direc,true);
+    }
+
+    public Vector2 getThrowForce(int direc) {
+        return new Vector2(data.get( "tossForce").getFloat(0) * direc, data.get( "tossForce").getFloat(1));
     }
 
     /**
@@ -104,7 +109,7 @@ public class Torch extends ObstacleSprite {
     public JointDef attachObj(ObstacleSprite o) {
         WeldJointDef jointDef = new WeldJointDef();
         Vector2 anchor = new Vector2(obstacle.getX(), obstacle.getY());
-        jointDef.initialize(o.getObstacle().getBody(), obstacle.getBody(), anchor);
+        jointDef.initialize(obstacle.getBody(), o.getObstacle().getBody(), anchor);
         jointDef.collideConnected = false;
         return jointDef;
     }

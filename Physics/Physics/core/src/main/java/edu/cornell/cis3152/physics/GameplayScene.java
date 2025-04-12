@@ -40,6 +40,7 @@ import edu.cornell.cis3152.physics.level_player.enemies.Enemy;
 import edu.cornell.cis3152.physics.level_player.enemies.Moth;
 import edu.cornell.cis3152.physics.level_player.enemies.Totem;
 import edu.cornell.cis3152.physics.level_player.player.Torch;
+import edu.cornell.cis3152.physics.level_player.player.TorchTrajectorySystem;
 import edu.cornell.cis3152.physics.level_player.player.Traci;
 import edu.cornell.cis3152.physics.level_player.player.Traci.GroundState;
 import edu.cornell.cis3152.physics.level_player.utils.CollisionFlag;
@@ -48,6 +49,7 @@ import edu.cornell.cis3152.physics.level_player.utils.Event;
 import edu.cornell.cis3152.physics.level_player.utils.FireFlag;
 import edu.cornell.cis3152.physics.level_player.utils.ObstacleGroup;
 
+import edu.cornell.cis3152.physics.level_player.utils.TrajectoryFlag;
 import edu.cornell.cis3152.physics.level_player.utils.TweenElement;
 
 import java.util.*;
@@ -67,7 +69,9 @@ import edu.cornell.gdiac.util.*;
 import edu.cornell.gdiac.graphics.*;
 import edu.cornell.gdiac.physics2.*;
 import edu.cornell.cis3152.physics.level_player.enviromentals.*;
-
+import java.util.Optional;
+import java.util.Set;
+import java.util.Stack;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -187,6 +191,7 @@ public class GameplayScene implements Screen {
     protected CollisionController contactListener;
     protected FireController fireController;
     protected EventHandler eventHandler;
+    protected TorchTrajectorySystem torchTrajectorySystem;
     protected SoundEngine soundEngine;
     protected PooledList<TweenElement<Float>> tweenedMovmentObjectsFloat;
     protected PooledList<TweenElement<Vector2>> tweenedMovmentObjectsVec2;
@@ -303,6 +308,7 @@ public class GameplayScene implements Screen {
     public void setSpriteBatch(SpriteBatch batch) {
         this.batch = batch;
     }
+    private float phyiscsUnits;
 
     /**
      * Creates a new game world from the given asset directory
@@ -325,6 +331,7 @@ public class GameplayScene implements Screen {
         contactListener = new CollisionController(directory, fireController);
         this.eventHandler = new EventHandler();
         this.soundEngine = soundEngine;
+        torchTrajectorySystem = new TorchTrajectorySystem();
         tweenedMovmentObjectsVec2 = new PooledList<>();
         tweenedMovmentObjectsFloat = new PooledList<>();
 
@@ -569,6 +576,7 @@ public class GameplayScene implements Screen {
     public void loadLevel(String levelName, String levelInfoName) {
         this.levelName = levelName;
         float units = height / bounds.height;
+        phyiscsUnits = units;
 
         JsonValue levelData = directory.getEntry(levelName,JsonValue.class);
         JsonValue levelInfo = directory.getEntry(levelInfoName, JsonValue.class);
@@ -799,16 +807,14 @@ public class GameplayScene implements Screen {
         texture = directory.getEntry( "platform-rope-end", Texture.class );
         Texture middle_texture = directory.getEntry( "platform-rope-mid", Texture.class );
         JsonValue ropes = levelData.get("ropes");
-        int ropeId = 0;
         for (JsonValue ropeJson : ropes) {
             Vector2 pin1 = new Vector2(ropeJson.get("pin1").getFloat(0), ropeJson.get("pin1").getFloat(1));
             Vector2 pin2 = new Vector2(ropeJson.get("pin2").getFloat(0), ropeJson.get("pin2").getFloat(1));
             float dep = ropeJson.getFloat("depth");
             Rope rope = new Rope(pin1, pin2, dep, units, ropeJson);
             rope.setTextures(texture, middle_texture);
-            temp = rope;
             addSpriteGroup(rope);
-            ropeId++;
+            temp = rope;
         }
 
         // Create spinners
@@ -833,6 +839,8 @@ public class GameplayScene implements Screen {
         addSprite(l);
         l.createSensor();
         torchFire = new Fire(units, new Vector2(10,10));
+        torchFire.setID(0);
+        fireController.forceAddMiscFire(torchFire);
         addSprite(torchFire);
         lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds);
         lightController.attachTorchLight(torchFire);
@@ -849,7 +857,7 @@ public class GameplayScene implements Screen {
         torch.setTexture(texture);
         addSprite(torch);
         l.getObstacle().setPosition(torch.getObstacle().getPosition());
-        torchFire.getObstacle().setPosition(torch.getObstacle().getPosition());
+        torchFire.getObstacle().setPosition(torch.getObstacle().getPosition().cpy().add(0,torch.getHeight() / 4));
         activeLightJoint = world.createJoint(torch.attachObj(l));
         activeFireJoint = world.createJoint(torch.attachObj(torchFire));
         // TODO: Optimize the above ^^
@@ -920,6 +928,10 @@ public class GameplayScene implements Screen {
     //        addSprite(tempLadder);
 
         }
+
+//        if (levelName.equals("moth_intro")) {
+//            temp.deactivateAnchor(1);
+//        }
     }
     /**
      * Returns whether to process the update loop
@@ -1002,8 +1014,10 @@ public class GameplayScene implements Screen {
         supplementaryCollisionActions();
         supplementaryFireActions();
         supplementaryEventActions(dt);
+        supplementaryTrackerActions();
         updateTweenedMovementObjectsVec2(dt);
         updateTweenedMovementObjectsFloat(dt);
+        torchTrajectorySystem.update(torch.getObstacle().getPosition());
 
         if (temp != null) {
 //            for (EnhancedObstacleSprite eos : temp.getTopEntities()) {
@@ -1051,6 +1065,11 @@ public class GameplayScene implements Screen {
             torch.resetPickUp();
             torch.getObstacle().setSensor(false);
             soundEngine.throwTorch();
+        }
+
+        if (input.pressedAssistParabola()) {
+            torchTrajectorySystem.toggle();
+            System.out.println("printed");
         }
 
         avatar.applyForce();
@@ -1325,6 +1344,29 @@ public class GameplayScene implements Screen {
 
         for (Button button : toggleButtons) {
             button.toggleButton(world);
+        }
+    }
+
+    private void supplementaryTrackerActions() {
+        Stack<TrajectoryFlag> todos = torchTrajectorySystem.getTrajectoryFlags();
+        while (!todos.isEmpty()) {
+            TrajectoryFlag trajectoryFlag = todos.pop();
+            ObstacleSprite subject = trajectoryFlag.subject;
+            switch (trajectoryFlag.name) {
+                case "addSubject":
+                    addSprite(subject);
+                    subject.getObstacle().setPhysicsUnits(phyiscsUnits);
+                    if (torch.getObstacle().getBody() != null) {
+                        subject.getObstacle().getBody().setMassData(torch.getObstacle().getBody().getMassData());
+                    }
+                    subject.getObstacle().getBody().applyLinearImpulse(torch.getThrowForce(avatar.isFacingRight() ? 1 : -1),
+                        subject.getObstacle().getPosition(), true);
+                    subject.getObstacle().getBody().setLinearVelocity(subject.getObstacle().getBody().getLinearVelocity().add(avatar.getObstacle().getLinearVelocity()));
+                    break;
+                case "removeSubject":
+//                    world.destroyBody(subject.getObstacle().getBody());
+                    break;
+            }
         }
     }
 

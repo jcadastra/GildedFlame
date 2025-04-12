@@ -335,7 +335,11 @@ public class CollisionController implements ContactListener {
                 collisionFlags.push(new CollisionFlag("collect_coin", coin));
             }
 
-
+            if (isX(bd1,bd2, "trackerBall") == 1) {
+                if (isGround(bd1) || isGround(bd2)) {
+                    ((ObstacleSprite) idX(bd1,bd2,"trackerBall")).getObstacle().markRemoved(true);
+                }
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
