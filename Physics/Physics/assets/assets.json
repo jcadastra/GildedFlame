@@ -65,7 +65,8 @@
   "music": {
     "eerie": "music/eerie.wav",
     "eerieCriminal": "music/eerieCriminalAtmosphere.wav",
-    "tenseSoundscape": "music/tenseAtmosphereHauntingSoundscapes.wav"
+    "tenseSoundscape": "music/tenseAtmosphereHauntingSoundscapes.wav",
+    "menu_music": "music/menu_music.wav"
   },
   "soundfx": {
     "dirtFootStep": "soundEffects/dirtFootStep.wav",

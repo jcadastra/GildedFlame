@@ -65,8 +65,10 @@ public class CollisionController implements ContactListener {
         return (x.isInstance(a) ? a : b);
     }
 
-    private static boolean isGround(ObstacleSprite sprite) {
-        return sprite.getName().contains("floor") || sprite.getName().contains("platform") || sprite.getName().contains("barrier") || sprite.getName().contains("spinner") || sprite.getName().contains("button") || (sprite instanceof Surface) || sprite instanceof Totem;
+    public boolean isGround(ObstacleSprite sprite) {
+        return sprite.getName().contains("floor") || sprite.getName().contains("platform") ||
+               sprite.getName().contains("barrier") || sprite.getName().contains("spinner") ||
+               sprite.getName().contains("button") || (sprite instanceof Surface) || sprite instanceof Totem;
     }
 
     public Stack<CollisionFlag> getCollisionFlags() {
@@ -327,6 +329,17 @@ public class CollisionController implements ContactListener {
 
                 if (eos.getClimbable() && (subjectFixture.getUserData() == null || !subjectFixture.getUserData().equals(traci.getSensorName()))) {
                     collisionFlags.add(new CollisionFlag("addClimbingJoint", eos));
+                }
+            }
+            if (isXandY(bd1, bd2, Traci.class, Coin.class) == 1) {
+                Coin coin = (Coin) idX(bd1, bd2, Coin.class);
+                System.out.println("collided!");
+                collisionFlags.push(new CollisionFlag("collect_coin", coin));
+            }
+
+            if (isX(bd1,bd2, "trackerBall") == 1) {
+                if (isGround(bd1) || isGround(bd2)) {
+                    ((ObstacleSprite) idX(bd1,bd2,"trackerBall")).getObstacle().markRemoved(true);
                 }
             }
 
