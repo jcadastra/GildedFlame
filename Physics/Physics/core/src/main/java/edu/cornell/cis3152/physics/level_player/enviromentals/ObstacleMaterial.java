@@ -27,26 +27,44 @@ public class ObstacleMaterial {
     private float ignitionTimer;
     private float ignitionTimerLimit;
 
+    private int smokeTimerLimit;
+
 
     public ObstacleMaterial (String name, JsonValue data) {
         this.name = name;
         switch (name) {
+            case "torch":
+                this.flammability = 0f;
+                this.burnTimerLimit = 0f;
+                this.ignitionTimerLimit = 0f;
+                this.smokeTimerLimit = 15;
+                break;
             case "wood":
                 this.flammability = 0.05f;
                 this.burnTimerLimit = 80f;
                 this.ignitionTimerLimit = 15f;
+                this.smokeTimerLimit = 60;
                 break;
 
             case "rope":
                 this.flammability = 0.05f;
                 this.burnTimerLimit = 80f;
                 this.ignitionTimerLimit = 8f;
+                this.smokeTimerLimit = -1;
+                break;
+
+            case "driedGrass":
+                this.flammability = 1f;
+                this.burnTimerLimit = 0f;
+                this.ignitionTimerLimit = 1f;
+                this.smokeTimerLimit = 20;
                 break;
 
             default:
                 this.flammability = 0f;
                 this.burnTimerLimit = 0f;
                 this.ignitionTimerLimit = 0f;
+                this.smokeTimerLimit = -1;
                 break;
         }
         this.burnTimer = 0f;
@@ -60,10 +78,15 @@ public class ObstacleMaterial {
         burnTimer++;
     }
     public boolean isExpiredBurnTimer() {
-        return burnTimer > burnTimerLimit;
+        return burnTimer > burnTimerLimit && burnTimerLimit > 0;
     }
     public boolean surpassIgnitionTimer(Integer v) {
         return v > ignitionTimerLimit;
+    }
+    public boolean makesSmoke() { return smokeTimerLimit > -1;}
+
+    public boolean checkSmokeTime(int val) {
+        return val >= smokeTimerLimit;
     }
 
     public String getName() {

@@ -141,7 +141,7 @@ public class Rope extends ObstacleGroup {
             ropeNode.setSensor(true);
             ropeNode.setName("ropeNode");
             EnhancedObstacleSprite sprite = new EnhancedObstacleSprite(ropeNode);
-            sprite.setMaterial(new ObstacleMaterial("rope", data.get(1)));
+            sprite.setMaterial(new ObstacleMaterial("driedGrass", data.get(1)));
             sprite.setDebugColor(Color.PURPLE);
             sprite.setClimbable(true);
             nodes.add(sprite);
@@ -274,3 +274,4 @@ public class Rope extends ObstacleGroup {
         anchors.get(anchorNum).getObstacle().setBodyType(BodyType.DynamicBody);
     }
 }
+

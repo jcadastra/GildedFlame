@@ -336,7 +336,7 @@ public class GameplayScene implements Screen {
         this.directory = directory;
         constants = directory.getEntry(prefix+"-constants",JsonValue.class);
         JsonValue defaults = constants.get("world");
-        fireController = new FireController();
+        fireController = new FireController(directory);
         contactListener = new CollisionController(directory, fireController);
         this.eventHandler = new EventHandler();
         this.soundEngine = soundEngine;
@@ -624,7 +624,6 @@ public class GameplayScene implements Screen {
         l.createSensor();
         torchFire = new Fire(units, new Vector2(10,10));
         torchFire.setID(0);
-        fireController.forceAddMiscFire(torchFire);
         addSprite(torchFire);
         lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds);
         lightController.attachTorchLight(torchFire);
@@ -639,11 +638,13 @@ public class GameplayScene implements Screen {
         texture = directory.getEntry("platform-torch", Texture.class);
         torch = new Torch(units, constants.get("torch"));
         torch.setTexture(texture);
+        torch.setMaterial(new ObstacleMaterial("torch", null));
         addSprite(torch);
         l.getObstacle().setPosition(torch.getObstacle().getPosition());
         torchFire.getObstacle().setPosition(torch.getObstacle().getPosition().cpy().add(0,torch.getHeight() / 4));
         activeLightJoint = world.createJoint(torch.attachObj(l));
         activeFireJoint = world.createJoint(torch.attachObj(torchFire));
+        fireController.forceAddTorchFire(torchFire, torch, new Vector2(torch.getObstacle().getPosition().cpy().add(0,torch.getHeight() / 4)) );
         // TODO: Optimize the above ^^
 
         JsonValue enemiesJson = levelData.get("enemies");
@@ -881,6 +882,12 @@ public class GameplayScene implements Screen {
             joinTorchtoAvatar();
         }
 
+        for (ObstacleSprite sprite : sprites) {
+            if (!sprite.getObstacle().isRemoved() && sprite instanceof Smoke) {
+                sprite.getObstacle().getBody().applyForceToCenter(new Vector2(1f,0f), true);
+            }
+        }
+
         updateCamera();
     }
 
@@ -1076,6 +1083,9 @@ public class GameplayScene implements Screen {
                     (fireFlag.getSubject()).getObstacle().markRemoved(true);
                     fireController.cleanObj(fireFlag.getSubject());
                     break;
+                case "spawnSmoke":
+                    ObstacleSprite smoke = fireFlag.getSmoke();
+                    addSprite(smoke);
             }
         }
     }

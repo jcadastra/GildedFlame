@@ -1,12 +1,17 @@
 package edu.cornell.cis3152.physics.level_player;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import edu.cornell.cis3152.physics.level_player.enviromentals.*;
 import edu.cornell.cis3152.physics.level_player.player.Torch;
 import edu.cornell.cis3152.physics.level_player.utils.FireFlag;
+import edu.cornell.cis3152.physics.level_player.utils.ObstacleGroup;
+import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.graphics.SpriteMesh;
+import edu.cornell.gdiac.physics2.Obstacle;
+import edu.cornell.gdiac.physics2.ObstacleSprite;
 import java.util.HashMap;
 import com.badlogic.gdx.math.EarClippingTriangulator;
 import com.badlogic.gdx.utils.ShortArray;
@@ -28,6 +33,8 @@ public class FireController {
     private HashMap<EnhancedObstacleSprite, ArrayList<Fire>> firesOnShape;
     private Set<Fire> allFires;
     private Stack<FireFlag> fireFlags;
+    private Set<Smoke> allSmoke;
+    private AssetDirectory assetDirectory;
 
     public Stack<FireFlag> getFireFlags() {
         return fireFlags;
@@ -48,6 +55,13 @@ public class FireController {
     public void forceAddMiscFire(Fire f) {
         allFires.add(f);
     }
+    public void forceAddTorchFire(Fire f, Torch s, Vector2 point) {
+        if (!nFireDiagrams.containsKey(s)) {
+            genFirePinPoints(s, point);
+        }
+
+        firesOnShape.computeIfAbsent(s, k -> new ArrayList<>()).add(f);
+    }
 
     public Set<Fire> getLitFires() {
         Set<Fire> returnSet = new HashSet<>();
@@ -62,6 +76,7 @@ public class FireController {
         firesOnShape = new HashMap<>();
         fireFlags = new Stack<>();
         allFires = new HashSet<>();
+        allSmoke = new HashSet<>();
         cutter = new EarClippingTriangulator();
         rand = new Random();
     }
@@ -71,20 +86,31 @@ public class FireController {
      * <p>
      * but you can't control fire 🤔
      */
-    public FireController() {
-        resetStorage();
+    public FireController(AssetDirectory directory) {
+        resetStorage(); this.assetDirectory = directory;
     }
 
     /**
-     * runs comparisons on all the values and dspreads fire/marks objects for destruction as needed
+     * runs comparisons on all the values and dspreads fire/marks objects for destruction as needed/
+     * creates Smoke
      */
     public void update() {
-        int sum = 0;
         for (EnhancedObstacleSprite object : firesOnShape.keySet()) {
-            for (Fire fireList : firesOnShape.get(object)) {
-
+            ObstacleMaterial obstacleMaterial = object.getMaterial();
+            if (obstacleMaterial.makesSmoke()) {
+                for (Fire fire : firesOnShape.get(object)) {
+                    if (obstacleMaterial.checkSmokeTime(fire.getTimeToSmoke())) {
+                        spawnSmoke(fire);
+                        fire.resetTimeToSmoke();
+                    } else {
+                        fire.incrementTimeToSmoke(rand.nextInt(-1,3));
+                    }
+                }
             }
         }
+
+        updateSmoke();
+
         // for each obnject that exists and has been given an assoicated diagram
         for (EnhancedObstacleSprite s : nFireDiagrams.keySet()) {
             if (s.getObstacle().isRemoved()) {
@@ -106,6 +132,21 @@ public class FireController {
                     }
                 }
             }
+        }
+    }
+
+    private void updateSmoke() {
+        for (Smoke smoke : allSmoke) {
+            Obstacle smokeObstacle = smoke.getObstacle();
+            float currentVX = smokeObstacle.getVX();
+            float newVX = (float) (currentVX + Math.signum(currentVX) * -.01);
+            if (Math.signum(newVX) != Math.signum(currentVX)) {
+                smokeObstacle.setVX(0);
+            } else {
+                smokeObstacle.setVX(newVX);
+            }
+
+            smoke.updateLifeSpan();
         }
     }
 
@@ -211,13 +252,13 @@ public class FireController {
         if (s.getObstacle().isRemoved()) {
             return;
         }
+        if (s.getClass().isInstance(Torch.class)) {
+            return;
+        }
 
         Fire f = new Fire(s.getObstacle().getPhysicsUnits(), point.cpy());
         f.setID(fireID);
         fireID++;
-        if (s.getClass().isInstance(Torch.class)) {
-            return;
-        }
 
         ArrayList<Fire> currentFires = firesOnShape.get(s);
         if (currentFires != null) {
@@ -327,6 +368,17 @@ public class FireController {
 
         for (Vector2 f : returnArray.toArray(Vector2.class)) {
         }
+    }
+
+    public void spawnSmoke(Fire fire) {
+        Smoke smoke = new Smoke(fire.getObstacle().getPosition().x, fire.getObstacle().getPosition().y + fire.getRadius()/1.5f,
+            fire.getObstacle().getPhysicsUnits(), new Vector2((rand.nextFloat()-.5f) * 2,1f));
+        smoke.getObstacle().setName("smoke");
+        smoke.setSource(fire);
+        ObstacleSprite smokeObj = new ObstacleSprite(smoke.getObstacle());
+        smokeObj.setTexture(assetDirectory.getEntry("platform-flame-smoke", Texture.class));
+        fireFlags.push(new FireFlag("spawnSmoke", fire, smokeObj));
+        allSmoke.add(smoke);
     }
 
     /**
