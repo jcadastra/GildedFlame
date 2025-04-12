@@ -881,16 +881,16 @@ public class GameplayScene implements Screen {
 //        float visibleH = (bounds.y + bounds.height) * scale.y/2*0.8f;
 
 
-        float visibleW =  camera.viewportWidth/2*0.8f; //half of world visible, zoomed
-        float visibleH = camera.viewportHeight/2*0.8f;
+        float visibleW =  camera.viewportWidth/2*camera.zoom; //half of world visible, zoomed
+        float visibleH = camera.viewportHeight/2*camera.zoom;
 
         camera.position.x = MathUtils.clamp(camera.position.x,
-            bounds.x*scale.x+visibleW*1.25f,
-            (bounds.x+bounds.width)*scale.x - visibleW*1.25f);
+            bounds.x*scale.x+visibleW,
+            (bounds.x+bounds.width)*scale.x - visibleW);
         //System.out.println("x reached bounds:"+(camera.position.x==bounds.x*scale.x+visibleW));
         camera.position.y = MathUtils.clamp(camera.position.y,
-            bounds.y*scale.y+visibleH*1.25f,
-            (bounds.y+bounds.height)*scale.y - visibleH*1.25f);
+            bounds.y*scale.y+visibleH,
+            (bounds.y+bounds.height)*scale.y - visibleH);
 
         camera.update();
 
@@ -1327,7 +1327,7 @@ public class GameplayScene implements Screen {
         this.height = height;
         if (camera == null) {
             camera = new OrthographicCamera();
-            //camera.zoom = 0.8f;
+            camera.zoom = 0.8f;
         }
         camera.setToOrtho( false, width, height );
         scale.x = width/bounds.width;
