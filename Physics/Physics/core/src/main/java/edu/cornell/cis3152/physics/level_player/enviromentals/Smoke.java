@@ -13,7 +13,7 @@ public class Smoke extends ObstacleSprite {
     public Smoke(float x,float y, float units, Vector2 velocity) {
         super();
 
-        float s = 0.6f;
+        float s = 0.3f;
 
         obstacle = new WheelObstacle(x, y, s);
 
