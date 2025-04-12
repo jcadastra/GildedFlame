@@ -39,7 +39,7 @@
       "size"      : 1,
       "force"     : 20.0,
       "damping"   : 10.0,
-      "density"   : 0.5,
+      "density"   : 0.8,
       "friction"  : 4,
       "tossForce" : [1, 1],
       "pickUpTimer": 10,
