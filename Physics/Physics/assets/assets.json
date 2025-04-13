@@ -68,7 +68,8 @@
     "spinner_layout": "platform/spinner_layout.json",
     "rope_test": "platform/rope_test.json",
     "test2" : "test2.tmj",
-    "test3" : "test3.tmj"
+    "test3" : "test3.tmj",
+    "example_level" : "example_level.tmj"
   },
   "music": {
     "eerie": "music/eerie.wav",

@@ -24,7 +24,8 @@ public class Totem extends Enemy {
     public static final int LIGHT_FRAME = 0;
     public static final int DARK_FRAME = 8;
     private static final int FRAME_DURATION = 12;
-    private static final Texture animationTexture = directory.getEntry("platform-totemLIGHTANIMATION", Texture.class);
+    private final Texture animationTexture = directory.getEntry("platform-totemLIGHTANIMATION", Texture.class);
+    //private static final Texture animationTexture = directory.getEntry("platform-totemLIGHTANIMATION", Texture.class);
     private int cdFrameCount = 0;
     private int frameIndex = 0;
     private final boolean visited;

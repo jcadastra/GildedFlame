@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="32" height="18" tilewidth="300" tileheight="300" infinite="0" nextlayerid="6" nextobjectid="17">
+ <editorsettings>
+  <export target="example_level.tmj" format="json"/>
+ </editorsettings>
+ <tileset firstgid="1" source="PlatformTiles.tsx"/>
+ <tileset firstgid="25" source="PlayerTorchTiles.tsx"/>
+ <tileset firstgid="29" source="EnemyTiles.tsx"/>
+ <tileset firstgid="33" source="GameObjectTiles.tsx"/>
+ <layer id="1" name="Tile Layer 1" width="32" height="18">
+  <data encoding="csv">
+15,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,15,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+15,3,3,3,3,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,9,9,9,9,9,15,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,15,15,15,15,15,15,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,15,15,15,15,15,15,
+15,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,15,15,15,15,15,15,15
+</data>
+ </layer>
+ <objectgroup id="5" name="GameObject">
+  <object id="7" name="button" gid="36" x="6253" y="3873" width="600" height="300">
+   <properties>
+    <property name="doublesided" type="bool" value="true"/>
+    <property name="endX" value="16"/>
+    <property name="endY" value="5"/>
+    <property name="latch" type="bool" value="true"/>
+    <property name="rotationRadiance" value="0"/>
+    <property name="startX" value="5"/>
+    <property name="startY" value="6"/>
+   </properties>
+  </object>
+  <object id="8" gid="36" x="10373" y="5393" width="86" height="49"/>
+  <object id="9" name="goaldoor" gid="37" x="958" y="3282" width="500" height="500"/>
+  <object id="10" name="button" gid="36" x="285" y="2625" width="600" height="300" rotation="90">
+   <properties>
+    <property name="doublesided" type="bool" value="false"/>
+    <property name="endX" value="16"/>
+    <property name="endY" value="5"/>
+    <property name="latch" type="bool" value="false"/>
+    <property name="rotationRadiance" value="90"/>
+    <property name="startX" value="5"/>
+    <property name="startY" value="6"/>
+   </properties>
+  </object>
+  <object id="11" gid="36" x="-967" y="2885" width="86" height="49"/>
+ </objectgroup>
+ <objectgroup id="2" name="PlayerTorch">
+  <object id="1" name="player" gid="28" x="586" y="5068" width="300" height="600"/>
+  <object id="2" name="torch" gid="27" x="1797" y="5030" width="150" height="300"/>
+ </objectgroup>
+ <objectgroup id="4" name="Enemy">
+  <object id="13" name="totem" gid="31" x="3354" y="5078" width="300" height="300"/>
+  <object id="14" name="totem" gid="31" x="3358" y="4794" width="300" height="300"/>
+  <object id="15" name="totem" gid="31" x="3350" y="4514" width="300" height="300"/>
+  <object id="16" name="totem" gid="31" x="4330" y="5110" width="300" height="300"/>
+ </objectgroup>
+</map>

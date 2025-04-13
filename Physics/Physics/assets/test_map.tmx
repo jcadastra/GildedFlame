@@ -31,9 +31,7 @@
 4,0,0,0,7,0,0,0,7,0,0,0,7,0,0,0,7,0,0,0,7,0,0,0,7,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="4" name="GameObject">
-  <object id="5" name="goaldoor" gid="17" x="920" y="736" width="200" height="200"/>
- </objectgroup>
+ <objectgroup id="4" name="GameObject"/>
  <objectgroup id="3" name="Player">
   <object id="3" name="torch" gid="15" x="682.576" y="1225.76" width="60" height="120"/>
   <object id="4" name="player" gid="16" x="383.333" y="1221.21" width="120" height="240"/>

@@ -235,6 +235,18 @@
                  "width":600,
                  "x":6581.24242424242,
                  "y":4421.9696969697
+                }, 
+                {
+                 "gid":37,
+                 "height":500,
+                 "id":16,
+                 "name":"goaldoor",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":500,
+                 "x":1118,
+                 "y":1866
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -243,7 +255,7 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":16,
+ "nextobjectid":17,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

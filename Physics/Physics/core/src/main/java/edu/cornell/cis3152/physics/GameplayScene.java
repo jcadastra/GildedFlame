@@ -157,7 +157,7 @@ public class GameplayScene implements Screen {
     //protected Totem totem;
     //protected Moth moth;
 
-    private String levelName = "test2";
+    private String levelName = "example_level";
 
     /**
      * The jump sound. We only want to play once.
@@ -597,7 +597,7 @@ public class GameplayScene implements Screen {
         JsonValue levelInfo = directory.getEntry(levelInfoName, JsonValue.class);
 
         // Create ground pieces
-        Texture texture = directory.getEntry( "platform-tiles", Texture.class );
+        Texture texture = directory.getEntry( "shared-earth", Texture.class );
         enemies = new ArrayList<>();
 
         JsonValue layers = levelData.get("layers");
@@ -609,7 +609,7 @@ public class GameplayScene implements Screen {
                 int width = layer.getInt("width");
                 int height = layer.getInt("height");
                 JsonValue data = layer.get("data");
-                TextureRegion[][] regions = TextureRegion.split(texture, 300, 300);
+                // TextureRegion[][] regions = TextureRegion.split(texture, 300, 300);
 
                 int[] tileData = new int[width * height];
                 for (int i = 0; i < data.size; i++) {
@@ -647,10 +647,10 @@ public class GameplayScene implements Screen {
                     int ind = tileId - 1;
                     int regionX = ind % 6;
                     int regionY = ind / 6;
-                    TextureRegion region = regions[regionY][regionX];
+                    //TextureRegion region = regions[regionY][regionX];
                     System.out.println(ind);
-                    tile.setTextureRegion(region);
-                    // tile.setTexture(texture);
+                    //tile.setTextureRegion(region);
+                    tile.setTexture(texture);
 
                     if (isWall) {
                         tile.getObstacle().setName("wall");
@@ -665,6 +665,13 @@ public class GameplayScene implements Screen {
                     addSprite(tile);
                 }
             } else if (layerType.equals("objectgroup")) {
+                BoxObstacle temp = new BoxObstacle(5,20,5,.5f);
+                temp.setPhysicsUnits(units);
+                temp.setName("floor");
+                ObstacleSprite thing = new ObstacleSprite(temp);
+                thing.getObstacle().setBodyType(BodyType.KinematicBody);
+                thing.getObstacle().setFriction(.5f);
+                addSprite(thing);
                 Map<String, JsonValue> ropeAnchors = new HashMap<>();
                 for (JsonValue object : layer.get("objects")) {
                     String objName = object.getString("name", "unnamed");
@@ -727,6 +734,16 @@ public class GameplayScene implements Screen {
                             enemies.add(totem);
                             break;
 
+                        case "goaldoor":
+                            texture = directory.getEntry("shared-goal", Texture.class);
+                            goalDoor = new Door(units, levelInfo.get("goal"));
+                            goalDoor.setTexture(texture);
+                            goalDoor.getObstacle().setName("goal");
+                            goalDoor.getObstacle().setPosition(pos[0], pos[1]);
+
+                            addSprite(goalDoor);
+                            break;
+
                         case "button":
                             float rotation = (float) Math.toRadians(object.getFloat("rotation", 0));
                             boolean latch = false;
@@ -764,14 +781,15 @@ public class GameplayScene implements Screen {
 
                             Button button = new Button(new Vector2(pos[0], pos[1]), rotation, latch, doubleSided, units);
                             addSpriteGroup(button);
+                            temp.setPosition(startX, startY);
 
-                            BoxObstacle temp = new BoxObstacle(startX,startY,5,.5f);
+                            /*BoxObstacle temp = new BoxObstacle(startX,startY,5,.5f);
                             temp.setPhysicsUnits(units);
                             temp.setName("floor");
                             ObstacleSprite thing = new ObstacleSprite(temp);
                             thing.getObstacle().setBodyType(BodyType.KinematicBody);
                             thing.getObstacle().setFriction(.5f);
-                            addSprite(thing);
+                            addSprite(thing);*/
 
                             Function<Float, Float> movementFunc = Interpolation.swing::apply;
                             EventAction<Vector2> eventAction = new EventAction<Vector2>(thing, "move", new Vector2(startX, startY), new Vector2(endX, endY), 4f, movementFunc);
@@ -834,7 +852,7 @@ public class GameplayScene implements Screen {
                         Texture middle_texture = directory.getEntry( "platform-rope-mid", Texture.class );
                         Rope rope = new Rope(new Vector2(x1, y1), new Vector2(x2, y2), depth, thickness, piecelen, units, levelInfo.get("ropes").get(0));
                         rope.setTextures(texture, middle_texture);
-                        temp = rope;
+                        //temp = rope;
                         addSpriteGroup(rope);
                     }
                 }
