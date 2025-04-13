@@ -101,6 +101,10 @@ public class Enemy extends ObstacleSprite {
         }
     }
 
+    public void setDirection(boolean isRight) {
+        faceRight = isRight;
+    }
+
     public boolean isGrounded() {
         return isGrounded;
     }
