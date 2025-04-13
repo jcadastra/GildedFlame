@@ -105,6 +105,16 @@ public class FireController {
                     } else {
                         fire.incrementTimeToSmoke(rand.nextInt(-1,3));
                     }
+
+                    if (fire.getInRain() && (fire.getStrength() > 0 || fire.getStrength() < 1)) {
+                        fire.modifStrength(-.01f);
+                    } else {
+                        fire.modifStrength(.02f);
+                    }
+
+                    if (fire.getStrength() <= .01) {
+                        fireFlags.add(new FireFlag("killFire", fire));
+                    }
                 }
             }
         }

@@ -125,6 +125,10 @@ public class CollisionController implements ContactListener {
                 return;
             }
 
+            if (isXandY(bd1, bd2, Fire.class, RainBlock.class) == 1) {
+                ((Fire) idX(bd1, bd2, Fire.class)).setInRain(true);
+            }
+
 //            if (isXandY(bd1,bd2,Traci.class,EnhancedObstacleSprite.class) == 1) {
 //                collisionFlags.push(new CollisionFlag("debugKillObj", bd1 instanceof Traci ? bd2 : bd1));
 //            }
@@ -486,6 +490,10 @@ public class CollisionController implements ContactListener {
         if (isXandY(bd1, bd2, Traci.class, Door.class) == 1) {
             ContactKey key = new ContactKey(fix1, fix2);
             sustainedContacts.remove(key);
+        }
+
+        if (isXandY(bd1, bd2, Fire.class, RainBlock.class) == 1) {
+            ((Fire) idX(bd1, bd2, Fire.class)).setInRain(false);
         }
 
         /**
