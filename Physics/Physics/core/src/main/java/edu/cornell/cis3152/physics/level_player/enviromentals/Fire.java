@@ -23,6 +23,8 @@ public class Fire extends ObstacleSprite {
 
     // raidus of the fire
     private Float radius;
+    private float strength;
+    private int timeToSmoke;
     public int fireID;
     public float getRadius () {
         return radius;
@@ -41,6 +43,8 @@ public class Fire extends ObstacleSprite {
         super();
 //        this.radius = data.getFloat("radius");
         radius = .8f;
+        strength = 1f;
+        timeToSmoke = 0;
         obstacle = new WheelObstacle(point.x, point.y, radius);
         obstacle.setPosition(point);
         obstacle.setUserData( this );
@@ -65,4 +69,7 @@ public class Fire extends ObstacleSprite {
     public void setID(int fireID) {
         this.fireID = fireID;
     }
+    public void incrementTimeToSmoke(int val) {timeToSmoke+=val;}
+    public int getTimeToSmoke() {return timeToSmoke;}
+    public void resetTimeToSmoke() {timeToSmoke = 0;}
 }

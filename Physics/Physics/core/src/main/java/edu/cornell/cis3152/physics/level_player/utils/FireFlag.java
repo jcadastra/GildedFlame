@@ -2,6 +2,8 @@ package edu.cornell.cis3152.physics.level_player.utils;
 
 import edu.cornell.cis3152.physics.level_player.enviromentals.EnhancedObstacleSprite;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Fire;
+import edu.cornell.cis3152.physics.level_player.enviromentals.Smoke;
+import edu.cornell.gdiac.physics2.ObstacleSprite;
 import java.util.ArrayList;
 
 /**
@@ -32,6 +34,18 @@ public class FireFlag {
      */
     public EnhancedObstacleSprite getSubject() {
         return subject;
+    }
+
+    /**
+     * the smoke
+     */
+    private ObstacleSprite smoke;
+
+    /**
+     * @return the smoke
+     */
+    public ObstacleSprite getSmoke() {
+        return smoke;
     }
 
     /**
@@ -84,4 +98,9 @@ public class FireFlag {
         this.fires = fires;
     }
 
+    public FireFlag(String name, Fire fire, ObstacleSprite smoke) {
+        this.name = name;
+        this.fire = fire;
+        this.smoke = smoke;
+    }
 }
