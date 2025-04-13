@@ -708,9 +708,11 @@ public class GameplayScene implements Screen {
                             torch = new Torch(units, constants.get("torch"));
                             torch.getObstacle().setPosition(pos[0], pos[1]);
                             torch.setTexture(texture);
+                            torch.setMaterial(new ObstacleMaterial("torch", null));
                             addSprite(torch);
                             l.getObstacle().setPosition(torch.getObstacle().getPosition());
                             torchFire.getObstacle().setPosition(torch.getObstacle().getPosition());
+                            fireController.forceAddTorchFire(torchFire, torch, new Vector2(torch.getObstacle().getPosition().cpy().add(0,torch.getHeight() / 4)));
                             activeLightJoint = world.createJoint(torch.attachObj(l));
                             activeFireJoint = world.createJoint(torch.attachObj(torchFire));
                             break;
@@ -746,7 +748,7 @@ public class GameplayScene implements Screen {
                             break;
 
                         case "button":
-                            float rotation = (float) Math.toRadians(object.getFloat("rotation", 0));
+                            float rotation = 0;
                             boolean latch = false;
                             boolean doubleSided = false;
 
@@ -765,6 +767,9 @@ public class GameplayScene implements Screen {
                                     case "doublesided":
                                         doubleSided = prop.getBoolean("value");
                                         break;
+                                    case "rotationRadiance":
+                                        rotation = Float.parseFloat(prop.getString("value"));
+                                        break;
                                     case "startX":
                                         startX = Float.parseFloat(prop.getString("value"));
                                         break;
@@ -780,7 +785,7 @@ public class GameplayScene implements Screen {
                                 }
                             }
 
-                            Button button = new Button(new Vector2(pos[0], pos[1]), rotation, latch, doubleSided, units);
+                            Button button = new Button(new Vector2(pos[0], pos[1]), rotation, doubleSided, latch, units);
                             addSpriteGroup(button);
                             temp.setPosition(startX, startY);
 
@@ -792,7 +797,7 @@ public class GameplayScene implements Screen {
                             thing.getObstacle().setFriction(.5f);
                             addSprite(thing);*/
 
-                            Function<Float, Float> movementFunc = Interpolation.swing::apply;
+                            Function<Float, Float> movementFunc = Interpolation.smoother::apply;
                             EventAction<Vector2> eventAction = new EventAction<Vector2>(thing, "move", new Vector2(startX, startY), new Vector2(endX, endY), 4f, movementFunc);
 
                             Event<Integer,Vector2> event = new Event<Integer,Vector2>(button, button::getState,
