@@ -109,6 +109,7 @@ public class LightController {
         this.camera.position.set(bounds.width/2.0f,bounds.height/2.0f,0);
         camera.zoom = 0.8f;
         //this.camera.setToOrtho(false, bounds.width, bounds.height);
+        camera.zoom=0.8f;
         this.camera.update();
         //rayHandler = new RayHandler(world,(int)this.camera.viewportWidth,(int)this.camera.viewportHeight);
         rayHandler = new RayHandler(world,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
@@ -228,6 +229,7 @@ public class LightController {
 //        //System.out.println("graphics"+Gdx.graphics.getWidth()+","+Gdx.graphics.getHeight());
 //        rayHandler.setCombinedMatrix(this.camera);
         //attachTorchLight(fire);
+        camera.zoom=0.8f;
         inBounds();
         camera.zoom = 0.8f;
         this.camera.update();
@@ -236,8 +238,8 @@ public class LightController {
     }
 
     private void inBounds(){
-        float visibleW =  camera.viewportWidth/2*0.8f; //half of world visible, zoomed
-        float visibleH = camera.viewportHeight/2*0.8f;
+        float visibleW =  camera.viewportWidth/2*camera.zoom; //half of world visible, zoomed
+        float visibleH = camera.viewportHeight/2*camera.zoom;
 
         camera.position.x = MathUtils.clamp(camera.position.x,
             bounds.x*WORLD_TO_BOX+visibleW*WORLD_TO_BOX,
