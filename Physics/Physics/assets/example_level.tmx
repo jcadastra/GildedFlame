@@ -30,12 +30,12 @@
 </data>
  </layer>
  <objectgroup id="5" name="GameObject">
-  <object id="7" name="button" gid="36" x="6253" y="3873" width="600" height="300">
+  <object id="7" name="button" gid="36" x="6253" y="4201" width="600" height="300">
    <properties>
-    <property name="doublesided" type="bool" value="true"/>
+    <property name="doublesided" type="bool" value="false"/>
     <property name="endX" value="16"/>
     <property name="endY" value="5"/>
-    <property name="latch" type="bool" value="true"/>
+    <property name="latch" type="bool" value="false"/>
     <property name="rotationRadiance" value="0"/>
     <property name="startX" value="5"/>
     <property name="startY" value="6"/>
