@@ -19,12 +19,12 @@
 16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
 16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
 16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
-16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
 15,3,3,3,3,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
 16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
 16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
 16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,9,9,9,9,9,15,
-16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,15,15,15,15,15,15,
 16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,15,15,15,15,15,15,
 15,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,15,15,15,15,15,15,15
 </data>
@@ -33,7 +33,7 @@
   <object id="7" name="button" gid="36" x="6253" y="4201" width="600" height="300">
    <properties>
     <property name="doublesided" type="bool" value="false"/>
-    <property name="endX" value="16"/>
+    <property name="endX" value="15"/>
     <property name="endY" value="5"/>
     <property name="latch" type="bool" value="false"/>
     <property name="rotationRadiance" value="0"/>
@@ -42,11 +42,11 @@
    </properties>
   </object>
   <object id="8" gid="36" x="10373" y="5393" width="86" height="49"/>
-  <object id="9" name="goaldoor" gid="37" x="958" y="3282" width="500" height="500"/>
-  <object id="10" name="button" gid="36" x="285" y="2625" width="600" height="300" rotation="90">
+  <object id="9" name="goaldoor" gid="37" x="1102" y="2954" width="500" height="500"/>
+  <object id="10" name="button" gid="36" x="445" y="2273" width="600" height="300" rotation="90">
    <properties>
     <property name="doublesided" type="bool" value="false"/>
-    <property name="endX" value="16"/>
+    <property name="endX" value="15"/>
     <property name="endY" value="5"/>
     <property name="latch" type="bool" value="false"/>
     <property name="rotationRadiance" value="90"/>
@@ -54,7 +54,6 @@
     <property name="startY" value="6"/>
    </properties>
   </object>
-  <object id="11" gid="36" x="-967" y="2885" width="86" height="49"/>
  </objectgroup>
  <objectgroup id="2" name="PlayerTorch">
   <object id="1" name="player" gid="28" x="586" y="5068" width="300" height="600"/>

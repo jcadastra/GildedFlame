@@ -39,15 +39,28 @@
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
+        "example_level.tmx": {
+            "expandedObjectLayers": [
+                5,
+                4,
+                2
+            ],
+            "scale": 0.0625,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 5312,
+                "y": 3768
+            }
+        },
         "test2.tmj": {
             "expandedObjectLayers": [
                 3
             ],
-            "scale": 0.25,
+            "scale": 0.125,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 1600,
-                "y": 4366
+                "x": 3192,
+                "y": 4436
             }
         },
         "test2.tmx": {
