@@ -17,7 +17,7 @@ public class Moth extends Enemy {
     /**
      * Distance in which enemy will become angry
      */
-    float DETECTION_DISTANCE = 5;
+    float DETECTION_DISTANCE = 8;
     /**
      * Time it takes for a moth to transition from a CD state to an ATTACK state.
      */
@@ -42,15 +42,19 @@ public class Moth extends Enemy {
     private static Texture attackAnimationTexture;
     private static Texture totemAnimationTexture;
     public static final int FRAME_SIZE = 500;
-    public static final int TOTEM_FRAME_SIZE = 1080;
+//    public static final int TOTEM_FRAME_SIZE = 1080;
+    public static final int TOTEM_FRAME_SIZE = 500;
+
     public static final int TOTAL_ATTACK_FRAMES = 16;
     public static final int TOTAL_SMOTHER_FRAMES = 6;
     private static final int FRAME_DURATION = 12;
 
-    /**
-     * 8th frame of the totem animation texture
-     */
-    public static final int OUT_OF_LIGHT_FRAME = 8;
+//    /**
+//     * 8th frame of the totem animation texture
+//     */
+//    public static final int OUT_OF_LIGHT_FRAME = 8;
+        public static final int OUT_OF_LIGHT_FRAME = 1;
+
 
     /**
      * 13th frame of the attack animation texture
@@ -82,7 +86,8 @@ public class Moth extends Enemy {
 
         smotherAnimationTexture = directory.getEntry("platform-mothSMOTHERANIMATION", Texture.class);
         attackAnimationTexture = directory.getEntry("platform-mothATTACKANIMATION", Texture.class);
-        totemAnimationTexture = directory.getEntry("platform-totemLIGHTANIMATION", Texture.class);
+//        totemAnimationTexture = directory.getEntry("platform-totemLIGHTANIMATION", Texture.class);
+        totemAnimationTexture = directory.getEntry("platform-mothATTACKANIMATION", Texture.class);
 
     }
 
@@ -156,38 +161,48 @@ public class Moth extends Enemy {
 
     @Override
     public void cd() {
-        if (getAttackTimer() == 0) {
-            setState(EnemyState.ATTACK);
+        if (rr == null) {
+            setState(EnemyState.OUT_OF_LIGHT);
         } else {
-            cdFrameCount++;
-            frameIndex = (cdFrameCount / FRAME_DURATION) % TOTAL_ATTACK_FRAMES;
-            if (cdFrameCount >= FRAME_DURATION * TOTAL_ATTACK_FRAMES) {
-                cdFrameCount = 0;
+            if (getAttackTimer() == 0) {
+                setState(EnemyState.ATTACK);
+            } else {
+                System.out.println(rr.targetObject);
+                cdFrameCount++;
+                frameIndex = (cdFrameCount / FRAME_DURATION) % TOTAL_ATTACK_FRAMES;
+                if (cdFrameCount >= FRAME_DURATION * TOTAL_ATTACK_FRAMES) {
+                    cdFrameCount = 0;
+                }
+                stop();
+                decrementAttackTimer();
             }
-            stop();
-            decrementAttackTimer();
         }
+
     }
 
 
     @Override
     public void attack() {
         resetFrames();
-        if (getAttackAnimationTimer() == 0) {
-            obstacle.getBody().setType(BodyDef.BodyType.DynamicBody);
-            obstacle.setBullet(true);
-            if (isFacingRight()) {
-                obstacle.getBody().applyForceToCenter(new Vector2(50000, 0), true);
+        if (rr != null) {
+            if (getAttackAnimationTimer() == 0) {
+                obstacle.getBody().setType(BodyDef.BodyType.DynamicBody);
+                obstacle.setBullet(true);
+                if (isFacingRight()) {
+                    obstacle.getBody().applyForceToCenter(new Vector2(50000, 0), true);
+                } else {
+                    obstacle.getBody().applyForceToCenter(new Vector2(-50000, 0), true);
+                }
+                obstacle.setBullet(false);
+                resetAttackTimer();
+                resetAttackAnimationTimer();
+                setState(EnemyState.OUT_OF_LIGHT);
             } else {
-                obstacle.getBody().applyForceToCenter(new Vector2(-50000, 0), true);
+                stop();
+                decrementAttackAnimationTimer();
             }
-            obstacle.setBullet(false);
-            resetAttackTimer();
-            resetAttackAnimationTimer();
-            setState(EnemyState.OUT_OF_LIGHT);
         } else {
-            stop();
-            decrementAttackAnimationTimer();
+            setState(EnemyState.OUT_OF_LIGHT);
         }
     }
 
@@ -246,8 +261,6 @@ public class Moth extends Enemy {
                     } else {
                         move_to(((Torch) rr.targetObject).getObstacle().getPosition());
                     }
-                } else {
-                    System.out.println(rr.targetObject);
                 }
             }
             decrementSmotherTimer();

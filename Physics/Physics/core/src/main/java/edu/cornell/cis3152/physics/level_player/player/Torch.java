@@ -32,6 +32,13 @@ public class Torch extends ObstacleSprite {
 
     /** timer to avoid too early double pickup of torch (can pickup when 0*/
     private int pickUpTimer;
+    //small vector used get hte intial velocity of the torch if thrown
+    private Vector2 intialThrowVelocity = new Vector2();
+
+    public Vector2 getIntialThrowVelocity() {
+        return intialThrowVelocity;
+    }
+
     public boolean canBePickedUp() {return pickUpTimer == 0;}
     public void resetPickUp() {pickUpTimer = data.getInt("pickupTimer");}
 
@@ -56,10 +63,11 @@ public class Torch extends ObstacleSprite {
         width = s*data.get("dimensions").getFloat(0);
         height = s*data.get("dimensions").getFloat(1);
 
-        obstacle = new BoxObstacle(x,y,width, height);
+        obstacle = new CapsuleObstacle(x,y,width, height);
 //        ((CapsuleObstacle)obstacle).setTolerance( debugInfo.getFloat("tolerance", 0.5f) );
 
         obstacle.setDensity( data.getFloat( "density", 0 ) );
+        System.out.println("-->"+obstacle.getDensity());
         obstacle.setFriction( data.getFloat( "friction", 0 ) );
         obstacle.setRestitution( data.getFloat( "restitution", 0 ) );
 //        obstacle.setFixedRotation(true);
@@ -103,6 +111,11 @@ public class Torch extends ObstacleSprite {
     public void update() {
         if (pickUpTimer != 0) {
             pickUpTimer--;
+        }
+        if (intialThrowVelocity.equals(Vector2.Zero)) {
+            obstacle.getBody().applyLinearImpulse(getThrowForce(1),obstacle.getPosition(),true);
+            intialThrowVelocity = obstacle.getLinearVelocity();
+            obstacle.getBody().setLinearVelocity(Vector2.Zero);
         }
     }
 

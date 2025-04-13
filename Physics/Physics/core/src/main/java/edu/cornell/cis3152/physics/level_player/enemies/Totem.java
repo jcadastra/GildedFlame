@@ -28,6 +28,10 @@ public class Totem extends Enemy {
     private int cdFrameCount = 0;
     private int frameIndex = 0;
     private final boolean visited;
+
+    public List<Totem> getLinkedTotems() {
+        return linkedTotems;
+    }
     /**
      * Time it takes for a totem to transition from a CD state to a OUT_OF_LIGHT state.
      */
@@ -74,9 +78,21 @@ public class Totem extends Enemy {
         return true;
     }
 
+    public boolean isAnyLinkedTotemFrozen() {
+        if (this.getState() == EnemyState.CD || this.getState() == EnemyState.IN_LIGHT) {
+            return true;
+        }
+        for (Totem linked : this.getLinkedTotems()) {
+            if (linked.getState() == EnemyState.CD || linked.getState() == EnemyState.IN_LIGHT) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public void changeDirection() {
-        if (!justCollided && isBottomTotem()) {
+        if (!justCollided && isBottomTotem() && !isAnyLinkedTotemFrozen()) {
             faceRight = !faceRight;
             propagateDirection(this.faceRight, new HashSet<>());
         }
@@ -101,6 +117,7 @@ public class Totem extends Enemy {
 
     @Override
     public void out_of_light() {
+        propagateDirection(this.faceRight, new HashSet<>());
         obstacle.setBodyType(BodyDef.BodyType.DynamicBody);
         move();
         resetFrames();

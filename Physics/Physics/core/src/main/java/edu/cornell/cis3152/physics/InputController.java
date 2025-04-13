@@ -85,9 +85,8 @@ public class InputController {
     private boolean throwing;
     /** Do we want assist parabola? */
     private boolean assistParabola;
-    private boolean assistParabolaPressed;
-    public boolean pressedAssistParabola() {
-        return assistParabola && !assistParabolaPressed;
+    public boolean assistParabola() {
+        return assistParabola;
     }
     /** The crosshair position (for raddoll) */
     private Vector2 crosshair;
@@ -267,7 +266,6 @@ public class InputController {
         nextPrevious = nextPressed;
         prevPrevious = prevPressed;
         verticalPrevious = vertical;
-        assistParabolaPressed = assistParabola;
 
         // Check to see if a GamePad is connected
         if (xbox != null && xbox.isConnected()) {
@@ -336,7 +334,6 @@ public class InputController {
         prevPressed = (secondary && prevPressed) || (Gdx.input.isKeyPressed(Input.Keys.P));
         nextPressed = (secondary && nextPressed) || (Gdx.input.isKeyPressed(Input.Keys.N));
         exitPressed  = (secondary && exitPressed) || (Gdx.input.isKeyPressed(Input.Keys.ESCAPE));
-        assistParabola = (secondary && assistParabola) || (Gdx.input.isKeyPressed(Input.Keys.E));
 
         // Directional controls
         horizontal = (secondary ? horizontal : 0.0f);
@@ -360,8 +357,8 @@ public class InputController {
             throwing = true;
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.E)) {
-            assistParabola = true;
+        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+            assistParabola = !assistParabola;
         }
 
 

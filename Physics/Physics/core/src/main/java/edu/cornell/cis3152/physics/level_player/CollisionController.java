@@ -65,8 +65,10 @@ public class CollisionController implements ContactListener {
         return (x.isInstance(a) ? a : b);
     }
 
-    private static boolean isGround(ObstacleSprite sprite) {
-        return sprite.getName().contains("floor") || sprite.getName().contains("platform") || sprite.getName().contains("barrier") || sprite.getName().contains("spinner") || sprite.getName().contains("button") || (sprite instanceof Surface) || sprite instanceof Totem;
+    public boolean isGround(ObstacleSprite sprite) {
+        return sprite.getName().contains("floor") || sprite.getName().contains("platform") ||
+               sprite.getName().contains("barrier") || sprite.getName().contains("spinner") ||
+               sprite.getName().contains("button") || (sprite instanceof Surface) || sprite instanceof Totem;
     }
 
     public Stack<CollisionFlag> getCollisionFlags() {
