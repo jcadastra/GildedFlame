@@ -882,11 +882,11 @@ public class GameplayScene implements Screen {
             joinTorchtoAvatar();
         }
 
-        for (ObstacleSprite sprite : sprites) {
-            if (!sprite.getObstacle().isRemoved() && sprite instanceof Smoke) {
-                sprite.getObstacle().getBody().applyForceToCenter(new Vector2(1f,0f), true);
-            }
-        }
+//        for (ObstacleSprite sprite : sprites) {
+//            if (!sprite.getObstacle().isRemoved() && sprite instanceof Smoke) {
+//                sprite.getObstacle().getBody().applyForceToCenter(new Vector2(1f,0f), true);
+//            }
+//        }
 
         updateCamera();
     }
