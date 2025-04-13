@@ -808,7 +808,7 @@ public class GameplayScene implements Screen {
                             EventAction<Float> eventAction2 = new EventAction<Float>(thing, "rotate", 0f, (float) (Math.PI), 4, movementFunc);
                             Event<Integer,Float> event2 = new Event<Integer, Float>(button, button::getState,
                                 state -> state == 1,  eventAction2);
-                            eventHandler.registerEvent(event2);
+//                            eventHandler.registerEvent(event2);
                             break;
 
                         default:
