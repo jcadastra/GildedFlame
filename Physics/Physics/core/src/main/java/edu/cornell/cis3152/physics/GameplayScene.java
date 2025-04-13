@@ -699,6 +699,7 @@ public class GameplayScene implements Screen {
                             addSprite(torchFire);
                             lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds);
                             lightController.attachTorchLight(torchFire);
+                            lightController.resetCamera(camera.position.x,camera.position.y);
 
                             particleEngine = new ParticleEngine(torchFire);
                             particleEngine.newFires(fireController);
