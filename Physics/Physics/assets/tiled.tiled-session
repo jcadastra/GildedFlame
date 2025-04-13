@@ -27,7 +27,7 @@
         "PlatformTiles.tsx": {
             "dynamicWrapping": false,
             "scaleInDock": 0.25,
-            "scaleInEditor": 0.75
+            "scaleInEditor": 0.5
         },
         "PlayerTorchTiles.tsx": {
             "dynamicWrapping": true,
@@ -54,11 +54,11 @@
             "expandedObjectLayers": [
                 3
             ],
-            "scale": 0.25,
+            "scale": 0.0625,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 7572,
-                "y": 3418
+                "x": 5168,
+                "y": 6008
             }
         },
         "test3.tmx": {
@@ -117,6 +117,7 @@
         "PlatformTiles.tsx"
     ],
     "project": "tiled.tiled-project",
+    "property.type": "string",
     "recentFiles": [
         "test2.tmx",
         "PlatformTiles.tsx",

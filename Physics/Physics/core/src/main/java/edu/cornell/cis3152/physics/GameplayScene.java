@@ -712,6 +712,66 @@ public class GameplayScene implements Screen {
                             enemies.add(totem);
                             break;
 
+                        case "button":
+                            float rotation = (float) Math.toRadians(object.getFloat("rotation", 0));
+                            boolean latch = false;
+                            boolean doubleSided = false;
+
+                            float startX = 0;
+                            float startY = 0;
+                            float endX = 0;
+                            float endY = 0;
+
+                            JsonValue properties = object.get("properties");
+                            for (JsonValue prop : properties) {
+                                String propName = prop.getString("name");
+                                switch (propName) {
+                                    case "latch":
+                                        latch = prop.getBoolean("value");
+                                        break;
+                                    case "doublesided":
+                                        doubleSided = prop.getBoolean("value");
+                                        break;
+                                    case "startX":
+                                        startX = Float.parseFloat(prop.getString("value"));
+                                        break;
+                                    case "startY":
+                                        startY = Float.parseFloat(prop.getString("value"));
+                                        break;
+                                    case "endX":
+                                        endX = Float.parseFloat(prop.getString("value"));
+                                        break;
+                                    case "endY":
+                                        endY = Float.parseFloat(prop.getString("value"));
+                                        break;
+                                }
+                            }
+
+                            Button button = new Button(new Vector2(pos[0], pos[1]), rotation, latch, doubleSided, units);
+                            addSpriteGroup(button);
+
+                            BoxObstacle temp = new BoxObstacle(startX,startY,5,.5f);
+                            temp.setPhysicsUnits(units);
+                            temp.setName("floor");
+                            ObstacleSprite thing = new ObstacleSprite(temp);
+                            thing.getObstacle().setBodyType(BodyType.KinematicBody);
+                            thing.getObstacle().setFriction(.5f);
+                            addSprite(thing);
+
+                            Function<Float, Float> movementFunc = Interpolation.swing::apply;
+                            EventAction<Vector2> eventAction = new EventAction<Vector2>(thing, "move", new Vector2(startX, startY), new Vector2(endX, endY), 4f, movementFunc);
+
+                            Event<Integer,Vector2> event = new Event<Integer,Vector2>(button, button::getState,
+                                state -> state == 1,  eventAction);
+                            eventHandler.registerEvent(event);
+
+
+                            EventAction<Float> eventAction2 = new EventAction<Float>(thing, "rotate", 0f, (float) (Math.PI), 4, movementFunc);
+                            Event<Integer,Float> event2 = new Event<Integer, Float>(button, button::getState,
+                                state -> state == 1,  eventAction2);
+                            eventHandler.registerEvent(event2);
+                            break;
+
                         default:
                             if (objName.matches("\\d+")) {
                                 ropeAnchors.put(objName, object);

@@ -73,54 +73,6 @@
          "name":"Enemies",
          "objects":[
                 {
-                 "gid":32,
-                 "height":300,
-                 "id":3,
-                 "name":"moth",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":300,
-                 "x":4506,
-                 "y":4718
-                }, 
-                {
-                 "gid":31,
-                 "height":300,
-                 "id":4,
-                 "name":"totem",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":300,
-                 "x":6001.52,
-                 "y":4739.45
-                }, 
-                {
-                 "gid":31,
-                 "height":300,
-                 "id":5,
-                 "name":"totem",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":300,
-                 "x":6001.52,
-                 "y":4444.90454545455
-                }, 
-                {
-                 "gid":31,
-                 "height":300,
-                 "id":6,
-                 "name":"totem",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":300,
-                 "x":6001.52,
-                 "y":4150.35
-                }, 
-                {
                  "gid":35,
                  "height":150,
                  "id":7,
@@ -223,6 +175,66 @@
                  "width":150,
                  "x":5402,
                  "y":3534
+                }, 
+                {
+                 "gid":32,
+                 "height":300,
+                 "id":13,
+                 "name":"moth",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":300,
+                 "x":3554,
+                 "y":4750
+                }, 
+                {
+                 "gid":36,
+                 "height":300,
+                 "id":15,
+                 "name":"button",
+                 "properties":[
+                        {
+                         "name":"doublesided",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"endX",
+                         "type":"string",
+                         "value":"24"
+                        }, 
+                        {
+                         "name":"endY",
+                         "type":"string",
+                         "value":"5"
+                        }, 
+                        {
+                         "name":"latch",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"rotationRadiance",
+                         "type":"string",
+                         "value":"0"
+                        }, 
+                        {
+                         "name":"startX",
+                         "type":"string",
+                         "value":"4"
+                        }, 
+                        {
+                         "name":"startY",
+                         "type":"string",
+                         "value":"15"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":600,
+                 "x":6581.24242424242,
+                 "y":4421.9696969697
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -231,7 +243,7 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":13,
+ "nextobjectid":16,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

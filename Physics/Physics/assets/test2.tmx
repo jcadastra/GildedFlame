@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="32" height="18" tilewidth="300" tileheight="300" infinite="0" backgroundcolor="#2b4859" nextlayerid="4" nextobjectid="15">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="32" height="18" tilewidth="300" tileheight="300" infinite="0" backgroundcolor="#2b4859" nextlayerid="4" nextobjectid="16">
  <editorsettings>
   <export target="test2.tmj" format="json"/>
  </editorsettings>
@@ -34,9 +34,6 @@
   <object id="2" name="torch" gid="27" x="2117" y="4798" width="150" height="300"/>
  </objectgroup>
  <objectgroup id="3" name="Enemies">
-  <object id="4" name="totem" gid="31" x="6001.52" y="4739.45" width="300" height="300"/>
-  <object id="5" name="totem" gid="31" x="5993.52" y="4399.45" width="300" height="300"/>
-  <object id="6" name="totem" gid="31" x="6001.52" y="4102.48" width="300" height="300"/>
   <object id="7" name="2" gid="35" x="3002" y="2134" width="150" height="150">
    <properties>
     <property name="depth" value="2"/>
@@ -56,5 +53,16 @@
   <object id="11" name="5" gid="35" x="5218" y="2622" width="150" height="150"/>
   <object id="12" name="6" gid="35" x="5402" y="3534" width="150" height="150"/>
   <object id="13" name="moth" gid="32" x="3554" y="4750" width="300" height="300"/>
+  <object id="15" name="button" gid="36" x="6581.24" y="4421.97" width="600" height="300">
+   <properties>
+    <property name="doublesided" type="bool" value="true"/>
+    <property name="endX" value="24"/>
+    <property name="endY" value="5"/>
+    <property name="latch" type="bool" value="true"/>
+    <property name="rotationRadiance" value="0"/>
+    <property name="startX" value="4"/>
+    <property name="startY" value="15"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>
