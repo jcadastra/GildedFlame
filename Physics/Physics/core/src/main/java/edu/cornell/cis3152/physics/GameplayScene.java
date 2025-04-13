@@ -745,7 +745,7 @@ public class GameplayScene implements Screen {
                             break;
 
                         case "button":
-                            float rotation = (float) Math.toRadians(object.getFloat("rotation", 0));
+                            float rotation = (float) Math.toRadians(object.getFloat("rotation"));
                             boolean latch = false;
                             boolean doubleSided = false;
 
@@ -778,7 +778,7 @@ public class GameplayScene implements Screen {
                                         break;
                                 }
                             }
-
+                            rotation = (float) Math.PI * (rotation /180);
                             Button button = new Button(new Vector2(pos[0], pos[1]), rotation, latch, doubleSided, units);
                             addSpriteGroup(button);
                             temp.setPosition(startX, startY);
