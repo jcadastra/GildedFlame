@@ -103,7 +103,7 @@ public class FireController {
                         spawnSmoke(fire);
                         fire.resetTimeToSmoke();
                     } else {
-                        fire.incrementTimeToSmoke(rand.nextInt(-1,3));
+                        fire.incrementTimeToSmoke(rand.nextInt(4) - 1);
                     }
                 }
             }
