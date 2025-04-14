@@ -98,6 +98,9 @@ public class InputController {
     /** An X-Box controller (if it is connected) */
     XBoxController xbox;
 
+    /*Moment marker for xbox Y button*/
+    boolean prevButtonY = false;
+
     /**
      * Returns the amount of sideways movement.
      *
@@ -245,6 +248,10 @@ public class InputController {
         crosscache = new Vector2();
     }
 
+    public boolean isUsingController(){
+        return xbox!=null;
+    }
+
     /**
      * Syncs the keyboard to the current animation frame.
      *
@@ -287,14 +294,23 @@ public class InputController {
      * @param scale  The drawing scale
      */
     private void readGamepad(Rectangle bounds, Vector2 scale) {
-        resetPressed = xbox.getStart();
-        exitPressed  = xbox.getBack();
-        nextPressed  = xbox.getRBumper();
-        prevPressed  = xbox.getLBumper();
+        resetPressed = xbox.getRStick();
+        exitPressed  = xbox.getB();
+        nextPressed = xbox.getDPadRight();
+        prevPressed = xbox.getDPadLeft();
+//        nextPressed  = xbox.getRBumper();
+//        prevPressed  = xbox.getLBumper();
         primePressed = xbox.getA();
-        debugPressed  = xbox.getY();
+        debugPressed  = xbox.getBack();
         throwPressed = xbox.getX();
         throwing = throwPressed;
+        boolean assist = xbox.getY();
+        if (assist && !prevButtonY){// make sure the button was pressed then released
+        assistParabola = !assistParabola;}
+        prevButtonY = assist;
+        // another possible thing for visual aid that feels natural to me
+        // idk i like bumpers for secondary actions
+        //assistParabola = xbox.getRBumper();
 
         // Increase animation frame, but only if trying to move
         horizontal = xbox.getLeftX();

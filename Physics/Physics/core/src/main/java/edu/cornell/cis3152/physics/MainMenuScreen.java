@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -23,6 +24,13 @@ public class MainMenuScreen implements Screen {
     private Texture bgTexture;
     private boolean startClicked = false;
     private ScreenListener listener;
+
+    /*Checker for controller support*/
+    private boolean prevButtonA = false;
+    private TextButton playButton;
+
+    /*Gets the controller*/
+    private InputController inputController = InputController.getInstance();
 
     public void setScreenListener(ScreenListener listener) {
         this.listener = listener;
@@ -62,13 +70,17 @@ public class MainMenuScreen implements Screen {
         // Create the "Choose Level" button.
         textButtonStyle.fontColor = Color.DARK_GRAY;
 
-        TextButton playButton = new TextButton("Choose Level", skin);
+        playButton = new TextButton("Choose Level", skin);
         playButton.setSize(200, 60);
         playButton.setPosition(
                 (Gdx.graphics.getWidth() / 2f - 200 / 2f) + 325,
                 Gdx.graphics.getHeight() / 2 - 30
         );
+        if (inputController.isUsingController()){// show controller select
+            playButton.setColor(Color.GRAY);
+        }
 
+        // for mouse and keyboard
         playButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
             @Override
             public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
@@ -92,6 +104,25 @@ public class MainMenuScreen implements Screen {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        // begin controller listening
+        if (inputController.isUsingController()){
+        boolean start= inputController.xbox.getA();
+        if(start && !prevButtonA){
+            InputEvent downEvent = new InputEvent();
+            downEvent.setType(InputEvent.Type.touchDown);
+            downEvent.setStage(stage);
+            downEvent.setTarget(playButton);
+            downEvent.setButton(0);
+            playButton.fire(downEvent);
+
+            InputEvent upEvent = new InputEvent();
+            upEvent.setType(InputEvent.Type.touchUp);
+            upEvent.setStage(stage);
+            upEvent.setTarget(playButton);
+            upEvent.setButton(0);
+            playButton.fire(upEvent);
+        }
+        prevButtonA =start;}
         stage.act(delta);
         stage.draw();
     }
