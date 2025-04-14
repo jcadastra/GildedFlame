@@ -38,8 +38,8 @@ import edu.cornell.cis3152.physics.level_player.enemies.Enemy;
 import edu.cornell.cis3152.physics.level_player.enemies.Moth;
 import edu.cornell.cis3152.physics.level_player.enemies.Totem;
 import edu.cornell.cis3152.physics.level_player.player.Torch;
-import edu.cornell.cis3152.physics.level_player.player.Traci;
-import edu.cornell.cis3152.physics.level_player.player.Traci.GroundState;
+import edu.cornell.cis3152.physics.level_player.player.Avatar;
+import edu.cornell.cis3152.physics.level_player.player.Avatar.GroundState;
 import edu.cornell.cis3152.physics.level_player.utils.CollisionFlag;
 import edu.cornell.cis3152.physics.level_player.utils.EventAction;
 import edu.cornell.cis3152.physics.level_player.utils.Event;
@@ -148,7 +148,7 @@ public class GameplayScene implements Screen {
     protected int countdown;
 
     private List<Enemy> enemies;
-    protected Traci avatar;
+    protected Avatar avatar;
     protected Torch torch;
 
     /** Reference to the goalDoor (for collision detection) */
@@ -612,16 +612,16 @@ public class GameplayScene implements Screen {
 
         // Create Traci
         texture = directory.getEntry("platform-player", Texture.class);
-        avatar = new Traci(directory, units, levelData.get("traci"));
+        avatar = new Avatar(directory, units, levelData.get("traci"));
         avatar.setTexture(texture);
         addSprite(avatar);
         // Have to do after body is created
         avatar.createSensor();
 
-        Lighting l = new Lighting(units, levelData.get("light"));
-        l.setTexture(texture);
-        addSprite(l);
-        l.createSensor();
+//        Lighting l = new Lighting(units, levelData.get("light"));
+//        l.setTexture(texture);
+//        addSprite(l);
+//        l.createSensor();
         torchFire = new Fire(units, new Vector2(10,10));
         torchFire.setID(0);
         addSprite(torchFire);
@@ -640,11 +640,12 @@ public class GameplayScene implements Screen {
         torch.setTexture(texture);
         torch.setMaterial(new ObstacleMaterial("torch", null));
         addSprite(torch);
-        l.getObstacle().setPosition(torch.getObstacle().getPosition());
+//        l.getObstacle().setPosition(torch.getObstacle().getPosition());
         torchFire.getObstacle().setPosition(torch.getObstacle().getPosition().cpy().add(0,torch.getHeight() / 4));
-        activeLightJoint = world.createJoint(torch.attachObj(l));
+//        activeLightJoint = world.createJoint(torch.attachObj(l));
         activeFireJoint = world.createJoint(torch.attachObj(torchFire));
         fireController.forceAddTorchFire(torchFire, torch, new Vector2(torch.getObstacle().getPosition().cpy().add(0,torch.getHeight() / 4)) );
+//        torchFire.setFixtureJoint(activeFireJoint);
         // TODO: Optimize the above ^^
 
         JsonValue enemiesJson = levelData.get("enemies");
@@ -681,9 +682,13 @@ public class GameplayScene implements Screen {
             tracker.getObstacle().setPhysicsUnits(phyiscsUnits);
             tracker.getObstacle().setName("trajectoryPoint");
             tracker.getObstacle().setSensor(true);
+            tracker.getObstacle().setPhysicsUnits(units);
             addSprite(tracker);
             torchArc.add(tracker);
         }
+
+        RainBlock rainBlocktemp = new RainBlock(3,3,10,10,units, torchFire.getRadius());
+        addSprite(rainBlocktemp);
 
         if (levelName.equals("rope_test")) {
             // SAMPLE BUTTON CODE BELOW::
@@ -1086,6 +1091,24 @@ public class GameplayScene implements Screen {
                 case "spawnSmoke":
                     ObstacleSprite smoke = fireFlag.getSmoke();
                     addSprite(smoke);
+                    break;
+                case "killFire":
+                    Fire f = fireFlag.getFire();
+                    if (f.getFixtureJoint() != null) {
+                        if (!world.isLocked()) {
+                            world.destroyJoint(f.getFixtureJoint());
+                        }
+                        f.setFixtureJoint(null);
+                    }
+                    if (torchFire != null && f.fireID == torchFire.fireID) {
+                        if (activeTorchJoint != null && !world.isLocked()) {
+                            world.destroyJoint(activeTorchJoint);
+                            activeTorchJoint = null;
+                        }
+                    }
+                    fireController.cleanFire(f);
+                    f.dispose();
+                    break;
             }
         }
     }
@@ -1385,7 +1408,9 @@ public class GameplayScene implements Screen {
                 particleEngine.draw(batch,fire);
             }
         }
-        particleEngine.draw(batch,torchFire);
+        if (!torchFire.getObstacle().isRemoved()) {
+            particleEngine.draw(batch,torchFire);
+        }
         //lightController.fireLights(fireController);
 
 
