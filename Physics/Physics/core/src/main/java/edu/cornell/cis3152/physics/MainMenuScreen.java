@@ -99,30 +99,34 @@ public class MainMenuScreen implements Screen {
         stage.addActor(playButton);
     }
 
+    /*Controller select method for firing event. Only supports the playButton right now*/
+    private void controllerSelect(){
+        // begin controller listening
+        if (inputController.isUsingController()){
+            boolean start= inputController.xbox.getA();
+            if(start && !prevButtonA){
+                InputEvent downEvent = new InputEvent();
+                downEvent.setType(InputEvent.Type.touchDown);
+                downEvent.setStage(stage);
+                downEvent.setTarget(playButton);
+                downEvent.setButton(0);
+                playButton.fire(downEvent);
+
+                InputEvent upEvent = new InputEvent();
+                upEvent.setType(InputEvent.Type.touchUp);
+                upEvent.setStage(stage);
+                upEvent.setTarget(playButton);
+                upEvent.setButton(0);
+                playButton.fire(upEvent);
+            }
+            prevButtonA =start;}
+    }
+
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        // begin controller listening
-        if (inputController.isUsingController()){
-        boolean start= inputController.xbox.getA();
-        if(start && !prevButtonA){
-            InputEvent downEvent = new InputEvent();
-            downEvent.setType(InputEvent.Type.touchDown);
-            downEvent.setStage(stage);
-            downEvent.setTarget(playButton);
-            downEvent.setButton(0);
-            playButton.fire(downEvent);
-
-            InputEvent upEvent = new InputEvent();
-            upEvent.setType(InputEvent.Type.touchUp);
-            upEvent.setStage(stage);
-            upEvent.setTarget(playButton);
-            upEvent.setButton(0);
-            playButton.fire(upEvent);
-        }
-        prevButtonA =start;}
+        controllerSelect();
         stage.act(delta);
         stage.draw();
     }
@@ -135,6 +139,7 @@ public class MainMenuScreen implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+
     }
 
     @Override
