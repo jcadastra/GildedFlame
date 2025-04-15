@@ -321,19 +321,26 @@ public class LoadingScene implements Screen, InputProcessor {
             update(delta);
             draw();
 
+            if (inputController.isUsingController()) {//controller support
+                boolean pressA = inputController.xbox.getA();
+                if (pressA && !prevButtonA) {
+                    pressState = 1;
+                    System.out.println("pressed");
+                }
+                if (!pressA && prevButtonA && pressState == 1) {
+                    // A was just released
+                    pressState = 2;
+                    System.out.println("released");
+                }
+                prevButtonA = pressA;
+            }
 
             // We are are ready, notify our listener
             if (isReady() && listener != null) {
-                if (inputController.isUsingController()){//controller support
-                    boolean pressA = inputController.xbox.getA();
-                    if (pressA && !prevButtonA){
-                        listener.exitScreen(this,0);
-                    }
-                }else{
-                listener.exitScreen(this, 0);}
+                        listener.exitScreen(this, 0);
             }
-        }
-    }
+
+    }}
 
     /**
      * Called when the Screen is resized.
@@ -404,6 +411,7 @@ public class LoadingScene implements Screen, InputProcessor {
         this.listener = listener;
     }
 
+
     // PROCESSING PLAYER INPUT
     /**
      * Called when the screen was touched or a mouse button was pressed.
@@ -421,7 +429,6 @@ public class LoadingScene implements Screen, InputProcessor {
         if (progress < 1.0f || pressState == 2) {
             return true;
         }
-
         // Flip to match graphics coordinates
         screenY = height-screenY;
 
