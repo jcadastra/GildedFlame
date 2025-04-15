@@ -711,7 +711,7 @@ public class GameplayScene implements Screen {
                             torch.setMaterial(new ObstacleMaterial("torch", null));
                             addSprite(torch);
                             l.getObstacle().setPosition(torch.getObstacle().getPosition());
-                            torchFire.getObstacle().setPosition(torch.getObstacle().getPosition());
+                            torchFire.getObstacle().setPosition(new Vector2(torch.getObstacle().getPosition().cpy().add(0,torch.getHeight() / 5)));
                             fireController.forceAddTorchFire(torchFire, torch, new Vector2(torch.getObstacle().getPosition().cpy().add(0,torch.getHeight() / 4)));
                             activeLightJoint = world.createJoint(torch.attachObj(l));
                             activeFireJoint = world.createJoint(torch.attachObj(torchFire));
