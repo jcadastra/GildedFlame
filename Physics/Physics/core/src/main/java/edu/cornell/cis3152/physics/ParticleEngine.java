@@ -4,9 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import edu.cornell.cis3152.physics.level_player.FireController;
+import edu.cornell.cis3152.physics.level_player.enviromentals.Button;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Fire;
 import edu.cornell.gdiac.graphics.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Batch;
+
+import java.awt.*;
 
 public class ParticleEngine implements Screen {
 
@@ -24,8 +29,26 @@ public class ParticleEngine implements Screen {
         //Setting the position of the ParticleEffect
         effect.setPosition(fire.getObstacle().getX()*32, fire.getObstacle().getY()*32);
         effect.scaleEffect(1/5f);
-        System.out.println("fire-pos"+fire.getObstacle().getX()+","+fire.getObstacle().getY());
+        //System.out.println("fire-pos"+fire.getObstacle().getX()+","+fire.getObstacle().getY());
 
+    }
+
+    /*Particle effect for text effects*/
+    public ParticleEngine (TextButton button){
+        effect.load(Gdx.files.internal("platform/flame/particle.p"),Gdx.files.internal("platform/flame/"));
+        //effect.set
+        effect.start();
+        //Setting the position of the ParticleEffect
+        float offesetX = button.getLabel().getX()+button.getLabel().getWidth()/2f;
+        float offesetY = button.getLabel().getY()+button.getLabel().getHeight()/2f;
+        effect.setPosition(button.getX()+offesetX,button.getY()+offesetY);
+        effect.getEmitters().first().getAngle().setHigh(0);
+        effect.scaleEffect(1/2f);
+        effect.start();
+    }
+
+    public void unSelect(TextButton button){
+        effect.dispose();
     }
 
     /*Handles particle effects for new fires (dynamic)*/
@@ -37,8 +60,8 @@ public class ParticleEngine implements Screen {
         effect.start();
         //Setting the position of the ParticleEffect
             effect.setPosition(1000,100);
-        //effect.setPosition(fire.getObstacle().getX()*32f, fire.getObstacle().getY()*32f);
-        System.out.println("fire-pos"+fire.getObstacle().getX()*32+","+fire.getObstacle().getY()*32);
+        effect.setPosition(fire.getObstacle().getX()*32f, fire.getObstacle().getY()*32f);
+        //System.out.println("fire-pos"+fire.getObstacle().getX()*32+","+fire.getObstacle().getY()*32);
 
         }
         //effect.scaleEffect(1/2f);
@@ -59,6 +82,19 @@ public class ParticleEngine implements Screen {
         //Delta being the time to progress the particle effect by, usually you pass in Gdx.graphics.getDeltaTime();
         // Update the particle effect's position to follow the fire's position
         effect.setPosition(fire.getObstacle().getX()*32, fire.getObstacle().getY()*32);
+        effect.update(Gdx.graphics.getDeltaTime());
+        effect.draw(batch,Gdx.graphics.getDeltaTime());
+    }
+
+    /*
+    Draw method for text effects
+    TODO:update this to use the firecontroller and hide the loop, add torch to firecontroller
+    * */
+    public void draw(Batch batch,TextButton button){
+        //Updating and Drawing the particle effect
+        //Delta being the time to progress the particle effect by, usually you pass in Gdx.graphics.getDeltaTime();
+        // Update the particle effect's position to follow the fire's position
+        //effect.setPosition(label.getX()*32,label.getY()*32);
         effect.update(Gdx.graphics.getDeltaTime());
         effect.draw(batch,Gdx.graphics.getDeltaTime());
     }

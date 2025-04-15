@@ -6,16 +6,19 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.ScreenUtils;
+import edu.cornell.gdiac.graphics.SpriteBatch;
 import edu.cornell.gdiac.util.ScreenListener;
 
 public class MainMenuScreen implements Screen {
@@ -28,6 +31,8 @@ public class MainMenuScreen implements Screen {
     /*Checker for controller support*/
     private boolean prevButtonA = false;
     private TextButton playButton;
+
+    private ParticleEngine particleEngine;
 
     /*Gets the controller*/
     private InputController inputController = InputController.getInstance();
@@ -76,9 +81,10 @@ public class MainMenuScreen implements Screen {
                 (Gdx.graphics.getWidth() / 2f - 200 / 2f) + 325,
                 Gdx.graphics.getHeight() / 2 - 30
         );
-        if (inputController.isUsingController()){// show controller select
-            playButton.setColor(Color.GRAY);
-        }
+        particleEngine = new ParticleEngine(playButton);
+//        if (inputController.isUsingController()){// show controller select
+//            playButton.setColor(Color.GRAY);
+//        }
 
         // for mouse and keyboard
         playButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
@@ -129,6 +135,11 @@ public class MainMenuScreen implements Screen {
         controllerSelect();
         stage.act(delta);
         stage.draw();
+        if (inputController.isUsingController()){//special effect for selection
+        Batch batch = stage.getBatch();
+        batch.begin();
+        particleEngine.draw(batch,playButton);
+        batch.end();}
     }
 
     @Override
