@@ -85,6 +85,11 @@ public class LoadingScene implements Screen, InputProcessor {
     /** Whether or not this player mode is still active */
     private boolean active;
 
+    private InputController inputController = InputController.getInstance();
+
+    boolean prevButtonA = false;
+
+
     /**
      * Returns the budget for the asset loader.
      *
@@ -243,6 +248,12 @@ public class LoadingScene implements Screen, InputProcessor {
 
             batch.setColor( tint );
             batch.draw( texture, affine );
+            if (inputController.isUsingController()){
+                BitmapFont font = new BitmapFont();
+                font.getData().scale(1.5f);
+                TextLayout text = new TextLayout("Press A to start", font);
+                batch.drawText(text,width/2, height*0.8f);
+            }
         }
         batch.end();
     }
@@ -310,9 +321,16 @@ public class LoadingScene implements Screen, InputProcessor {
             update(delta);
             draw();
 
+
             // We are are ready, notify our listener
             if (isReady() && listener != null) {
-                listener.exitScreen(this, 0);
+                if (inputController.isUsingController()){//controller support
+                    boolean pressA = inputController.xbox.getA();
+                    if (pressA && !prevButtonA){
+                        listener.exitScreen(this,0);
+                    }
+                }else{
+                listener.exitScreen(this, 0);}
             }
         }
     }
