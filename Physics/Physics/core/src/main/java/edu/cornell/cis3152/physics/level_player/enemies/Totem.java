@@ -19,15 +19,20 @@ import java.util.List;
 public class Totem extends Enemy {
 
 
-    public static final int FRAME_SIZE = 1080;
-    public static final int TOTAL_FRAMES = 9;
+    public static final int FRAME_SIZE = 500;
+    public static final int TRANSITION_TOTAL_FRAMES = 9;
+    public static final int IDLE_TOTAL_FRAMES = 12;
     public static final int LIGHT_FRAME = 0;
     public static final int DARK_FRAME = 8;
-    private static final int FRAME_DURATION = 12;
-    private final Texture animationTexture = directory.getEntry("platform-totemLIGHTANIMATION", Texture.class);
-    //private static final Texture animationTexture = directory.getEntry("platform-totemLIGHTANIMATION", Texture.class);
+    private static final int TRANSITION_FRAME_DURATION = 12;
+    private static final int IDLE_FRAME_DURATION = 9;
+    private final Texture transitionAnimationTexture = directory.getEntry("platform-totemLIGHTANIMATION", Texture.class);
+    private final Texture idleAnimationTexture = directory.getEntry("platform-totemIDLEANIMATION", Texture.class);
     private int cdFrameCount = 0;
     private int frameIndex = 0;
+
+    private int idleFrameCount = 0;
+    private int idleFrameIndex = 0;
     private final boolean visited;
 
     public List<Totem> getLinkedTotems() {
@@ -60,6 +65,11 @@ public class Totem extends Enemy {
     private void resetFrames() {
         cdFrameCount = 0;
         frameIndex = 0;
+    }
+
+    private void resetIdleFrames() {
+        idleFrameCount = 0;
+        idleFrameIndex = 0;
     }
 
     public void addLinkedTotem(Totem other) {
@@ -113,6 +123,7 @@ public class Totem extends Enemy {
     @Override
     public void in_light() {
         stop();
+        resetIdleFrames();
         resetFrames();
     }
 
@@ -121,6 +132,11 @@ public class Totem extends Enemy {
         propagateDirection(this.faceRight, new HashSet<>());
         obstacle.setBodyType(BodyDef.BodyType.DynamicBody);
         move();
+        idleFrameCount++;
+        idleFrameIndex = (idleFrameCount / IDLE_FRAME_DURATION) % IDLE_TOTAL_FRAMES;
+        if (idleFrameCount >= IDLE_FRAME_DURATION * IDLE_TOTAL_FRAMES) {
+            idleFrameCount = 0;
+        }
         resetFrames();
     }
 
@@ -132,29 +148,32 @@ public class Totem extends Enemy {
         switch (getState()) {
             case CD:
                 srcIndex = frameIndex * FRAME_SIZE;
-                batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits(), srcIndex, 0, FRAME_SIZE, FRAME_SIZE, isFacingRight(), false);
+                batch.draw(transitionAnimationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits(), srcIndex, 0, FRAME_SIZE, FRAME_SIZE, !isFacingRight(), false);
                 break;
             case IN_LIGHT:
                 srcIndex = LIGHT_FRAME * FRAME_SIZE;
-                batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits(), srcIndex, 0, FRAME_SIZE, FRAME_SIZE, isFacingRight(), false);
+                batch.draw(transitionAnimationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits(), srcIndex, 0, FRAME_SIZE, FRAME_SIZE, !isFacingRight(), false);
                 break;
             case OUT_OF_LIGHT:
-                srcIndex = DARK_FRAME * FRAME_SIZE;
-                batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits(), srcIndex, 0, FRAME_SIZE, FRAME_SIZE, isFacingRight(), false);
+                srcIndex = idleFrameIndex * FRAME_SIZE;
+                batch.draw(idleAnimationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits(), srcIndex, 0, FRAME_SIZE, FRAME_SIZE, !isFacingRight(), false);
                 break;
         }
     }
 
     @Override
     public void cd() {
+        resetIdleFrames();
+
         cdFrameCount++;
-        frameIndex = (cdFrameCount / FRAME_DURATION) % TOTAL_FRAMES;
-        if (cdFrameCount >= FRAME_DURATION * TOTAL_FRAMES) {
+        frameIndex = (cdFrameCount / TRANSITION_FRAME_DURATION) % TRANSITION_TOTAL_FRAMES;
+        if (cdFrameCount >= TRANSITION_FRAME_DURATION * TRANSITION_TOTAL_FRAMES) {
             cdFrameCount = 0;
         }
         decrementFreezeTimer();
         if (getFreezeTimer() <= 0) {
             setState(EnemyState.OUT_OF_LIGHT);
+            resetIdleFrames();
             resetFrames();
         }
     }

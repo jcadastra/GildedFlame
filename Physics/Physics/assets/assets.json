@@ -12,6 +12,12 @@
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
     },
+    "platform-totemIDLEANIMATION": {
+      "file": "platform/totemIdleAnimation.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
     "platform-playerMOVEMENTTORCH": {
       "file": "platform/playerMovementTorch.png",
       "mipmaps": true,
@@ -32,6 +38,12 @@
     },
     "platform-playerIDLENOTORCH": {
       "file": "platform/playerIdleNoTorch.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-playerJUMP": {
+      "file": "platform/playerJump.png",
       "mipmaps": true,
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"

@@ -128,7 +128,8 @@ public class LightController {
         //TODO:right now the light is interacting with nothing, discuss if this is the bahviour we want?
         torchLighting.setContactFilter(CATEGORY_LIGHT, (short)0, (short) CATEGORY_ENVIRONMENT);
         //rayHandler.useCustomViewport(viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
-        rayHandler.useDiffuseLight(true);
+//        rayHandler.useDiffuseLight(true); CHANGE LIGHT
+        rayHandler.useDiffuseLight(false);
         // Background light color⬇️, modify if needed
         rayHandler.setAmbientLight(0.3f, 0.3f, 0.7f, 0.1f);
         rayHandler.setShadows(true);

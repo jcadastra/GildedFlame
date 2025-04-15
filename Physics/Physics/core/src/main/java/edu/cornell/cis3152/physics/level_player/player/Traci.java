@@ -136,6 +136,7 @@ public class Traci extends ObstacleSprite {
     private static Texture animationTextureIdleNoTorch;
     private static Texture animationTextureMovementTorch;
     private static Texture animationTextureMovementNoTorch;
+    private static Texture animationTextureJump;
     public static final int TOTAL_FRAMES = 6;
 
     public static final int IDLE_FRAME_HEIGHT = 550;
@@ -145,6 +146,12 @@ public class Traci extends ObstacleSprite {
     public static final int MOVEMENT_FRAME_HEIGHT = 550;
     public static final int MOVEMENT_FRAME_WIDTH = 350;
 
+    public static final int JUMP_FRAME_HEIGHT = 650;
+    public static final int JUMP_FRAME_WIDTH = 450;
+
+    public static final int JUMP_TOTAL_FRAMES = 6;
+
+    public static final int JUMP_FRAME_DURATION = 12;
     private static final int FRAME_DURATION = 12;
 
     private int cdFrameCount = 0;
@@ -337,6 +344,7 @@ public class Traci extends ObstacleSprite {
         animationTextureIdleNoTorch = directory.getEntry("platform-playerIDLENOTORCH", Texture.class);
         animationTextureMovementTorch = directory.getEntry("platform-playerMOVEMENTTORCH", Texture.class);
         animationTextureMovementNoTorch = directory.getEntry("platform-playerMOVEMENTNOTORCH", Texture.class);
+        animationTextureJump = directory.getEntry("platform-playerJUMP", Texture.class);
 
         // The capsule is smaller than the image
         // "inner" is the fraction of the original size for the capsule
@@ -586,11 +594,20 @@ public class Traci extends ObstacleSprite {
         }
 
         cdFrameCount++;
-        frameIndex = (cdFrameCount / FRAME_DURATION) % TOTAL_FRAMES;
-        if (cdFrameCount >= FRAME_DURATION * TOTAL_FRAMES) {
-            cdFrameCount = 0;
-        }
 
+        if (getGroundedState() == GroundState.AIRBORNE){
+            if (frameIndex != JUMP_TOTAL_FRAMES - 1){
+                frameIndex = cdFrameCount / JUMP_FRAME_DURATION;
+                if (cdFrameCount >= JUMP_FRAME_DURATION * JUMP_TOTAL_FRAMES) {
+                    cdFrameCount = 0;
+                }
+            }
+        } else {
+            frameIndex = (cdFrameCount / FRAME_DURATION) % TOTAL_FRAMES;
+            if (cdFrameCount >= FRAME_DURATION * TOTAL_FRAMES) {
+                cdFrameCount = 0;
+            }
+        }
         super.update(dt);
     }
 
@@ -609,28 +626,35 @@ public class Traci extends ObstacleSprite {
         float drawY = obstacle.getY() - getHeight() / 2f;
 
 
-
         Texture animationTexture;
-        if (getMovement() != null) {
-            if (!getMovement().epsilonEquals(0,0)){
-                int srcIndex = frameIndex * MOVEMENT_FRAME_WIDTH;
-                if (hasTorch){
-                    animationTexture = animationTextureMovementTorch;
+        if (getGroundedState() == GroundState.AIRBORNE) {
+            int srcIndex = frameIndex * JUMP_FRAME_WIDTH;
+            animationTexture = animationTextureJump;
+            batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits()*1.5f, srcIndex, 0, JUMP_FRAME_WIDTH, JUMP_FRAME_HEIGHT, !isFacingRight(), false);
+        } else {
+            if (getMovement() != null) {
+                if (!getMovement().epsilonEquals(0,0)){
+                    int srcIndex = frameIndex * MOVEMENT_FRAME_WIDTH;
+                    if (hasTorch){
+                        animationTexture = animationTextureMovementTorch;
+                    } else {
+                        animationTexture = animationTextureMovementNoTorch;
+                    }
+                    batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits()*1.5f, srcIndex, 0, MOVEMENT_FRAME_WIDTH, MOVEMENT_FRAME_HEIGHT, !isFacingRight(), false);
                 } else {
-                    animationTexture = animationTextureMovementNoTorch;
-                }
-                batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits()*1.5f, srcIndex, 0, MOVEMENT_FRAME_WIDTH, MOVEMENT_FRAME_HEIGHT, !isFacingRight(), false);
-            } else {
-                int srcIndex = frameIndex * IDLE_FRAME_WIDTH;
-                if (hasTorch){
-                    animationTexture = animationTextureIdleTorch;
-                } else {
-                    animationTexture = animationTextureIdleNoTorch;
-                }
-                batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits()*1.5f, srcIndex, 0, IDLE_FRAME_WIDTH, IDLE_FRAME_HEIGHT, !isFacingRight(), false);
+                    int srcIndex = frameIndex * IDLE_FRAME_WIDTH;
+                    if (hasTorch){
+                        animationTexture = animationTextureIdleTorch;
+                    } else {
+                        animationTexture = animationTextureIdleNoTorch;
+                    }
+                    batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits()*1.5f, srcIndex, 0, IDLE_FRAME_WIDTH, IDLE_FRAME_HEIGHT, !isFacingRight(), false);
 
+                }
             }
         }
+
+
     }
 
     /**
