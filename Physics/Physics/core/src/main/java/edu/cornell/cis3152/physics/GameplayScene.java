@@ -732,7 +732,7 @@ public class GameplayScene implements Screen {
 
             Ladder tempLadder = new Ladder(3,3,5f, units);
     //        addSprite(tempLadder);
-            Rune runeTemp = new Rune(3,3, units, false);
+            Rune runeTemp = new Rune(3,3, units, new float[]{0, .5f});
             EventAction<Float> awef = new EventAction<Float>(thing, "rotate", thing.getObstacle().getAngle(), (float) Math.PI);
             runeTemp.registerEventAction(awef);
             runeSet.add(runeTemp);
