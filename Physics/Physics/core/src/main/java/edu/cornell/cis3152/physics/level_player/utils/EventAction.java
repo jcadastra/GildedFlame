@@ -87,6 +87,13 @@ public class EventAction<T> {
         this.interpolator = interpolator;
     }
 
+    public EventAction (ObstacleSprite target, String name, T initialValue, T finalValue) {
+        this.target = target;
+        this.name = name;
+        this.initialValue = initialValue;
+        this.finalValue = finalValue;
+    }
+
     /**
      * Tween-less event, mainly used to do an instant event that doesn't need to occur over time and
      * can be self contained

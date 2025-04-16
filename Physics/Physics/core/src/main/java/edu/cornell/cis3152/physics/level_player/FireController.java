@@ -114,8 +114,8 @@ public class FireController {
                         } else if (fire.getStrength() < 1) {
                             fire.modifStrength(.02f);
                         }
-                        System.out.println(
-                            fire.getStrength() + ", " + fire.fireID + ", " + object.getName());
+//                        System.out.println(
+//                            fire.getStrength() + ", " + fire.fireID + ", " + object.getName());
 
                         if (fire.getStrength() <= .01) {
                             fireFlags.add(new FireFlag("killFire", fire));

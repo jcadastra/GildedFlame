@@ -70,6 +70,7 @@ import edu.cornell.cis3152.physics.level_player.enviromentals.*;
 import java.util.Optional;
 import java.util.Set;
 import java.util.Stack;
+import java.util.Vector;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -190,6 +191,7 @@ public class GameplayScene implements Screen {
     protected FireController fireController;
     protected EventHandler eventHandler;
     protected SoundEngine soundEngine;
+    protected HashSet<Rune> runeSet;
     protected PooledList<TweenElement<Float>> tweenedMovmentObjectsFloat;
     protected PooledList<TweenElement<Vector2>> tweenedMovmentObjectsVec2;
 
@@ -343,6 +345,7 @@ public class GameplayScene implements Screen {
         torchArc = new ArrayList<>();
         tweenedMovmentObjectsVec2 = new PooledList<>();
         tweenedMovmentObjectsFloat = new PooledList<>();
+        runeSet = new HashSet<>();
 
         // pull out sounds
         volume = constants.getFloat("volume", 1.0f);
@@ -534,6 +537,7 @@ public class GameplayScene implements Screen {
             s.getObstacle().markRemoved(true);
         }
         torchArc.clear();
+        runeSet.clear();
     }
 
     private void populateLevel() {}
@@ -618,17 +622,17 @@ public class GameplayScene implements Screen {
         // Have to do after body is created
         avatar.createSensor();
 
-//        Lighting l = new Lighting(units, levelData.get("light"));
-//        l.setTexture(texture);
-//        addSprite(l);
-//        l.createSensor();
+        Lighting l = new Lighting(units, levelData.get("light"));
+        l.setTexture(texture);
+        addSprite(l);
+        l.createSensor();
         torchFire = new Fire(units, new Vector2(10,10));
         torchFire.setID(0);
         addSprite(torchFire);
         lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds);
         lightController.attachTorchLight(torchFire);
         lightController.resetCamera(camera.position.x,camera.position.y);
-        //lightController.fireLights(fireController);
+//        lightController.fireLights(fireController);
 
         particleEngine = new ParticleEngine(torchFire);
         particleEngine.newFires(fireController);
@@ -640,9 +644,9 @@ public class GameplayScene implements Screen {
         torch.setTexture(texture);
         torch.setMaterial(new ObstacleMaterial("torch", null));
         addSprite(torch);
-//        l.getObstacle().setPosition(torch.getObstacle().getPosition());
+        l.getObstacle().setPosition(torch.getObstacle().getPosition());
         torchFire.getObstacle().setPosition(torch.getObstacle().getPosition().cpy().add(0,torch.getHeight() / 4));
-//        activeLightJoint = world.createJoint(torch.attachObj(l));
+        activeLightJoint = world.createJoint(torch.attachObj(l));
         activeFireJoint = world.createJoint(torch.attachObj(torchFire));
         fireController.forceAddTorchFire(torchFire, torch, new Vector2(torch.getObstacle().getPosition().cpy().add(0,torch.getHeight() / 4)) );
 //        torchFire.setFixtureJoint(activeFireJoint);
@@ -687,8 +691,8 @@ public class GameplayScene implements Screen {
             torchArc.add(tracker);
         }
 
-        RainBlock rainBlocktemp = new RainBlock(3,3,10,10,units, torchFire.getRadius());
-        addSprite(rainBlocktemp);
+//        RainBlock rainBlocktemp = new RainBlock(3,3,10,10,units, torchFire.getRadius());
+//        addSprite(rainBlocktemp);
 
         if (levelName.equals("rope_test")) {
             // SAMPLE BUTTON CODE BELOW::
@@ -728,6 +732,12 @@ public class GameplayScene implements Screen {
 
             Ladder tempLadder = new Ladder(3,3,5f, units);
     //        addSprite(tempLadder);
+            Rune runeTemp = new Rune(3,3, units, false);
+            EventAction<Float> awef = new EventAction<Float>(thing, "rotate", thing.getObstacle().getAngle(), (float) Math.PI);
+            runeTemp.registerEventAction(awef);
+            runeSet.add(runeTemp);
+            addSprite(runeTemp);
+
 
         }
 
@@ -813,13 +823,12 @@ public class GameplayScene implements Screen {
      */
     public void update(float dt) {
         soundEngine.tendToMusicLoop();
+        updateRunes(dt);
         supplementaryCollisionActions();
         supplementaryFireActions();
         supplementaryEventActions(dt);
-//        supplementaryTrackerActions();
         updateTweenedMovementObjectsVec2(dt);
         updateTweenedMovementObjectsFloat(dt);
-//        torchTrajectorySystem.update(torch.getObstacle().getPosition());
 
         if (temp != null) {
 //            for (EnhancedObstacleSprite eos : temp.getTopEntities()) {
@@ -1006,6 +1015,56 @@ public class GameplayScene implements Screen {
         float dx = camera.position.x-prevX;
         float dy = camera.position.y-prevY;
         lightController.updateCamera(dx,dy);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void updateRunes(float dt) {
+        for (Rune rune : runeSet) {
+            System.out.println(rune.getPowerLevel());
+            if (!rune.returnInLight()) {
+                rune.dissapatePowerLevel();
+            }
+            float factor = rune.getPowerLevel();
+            float prevFactor = rune.getPrevPowerLevel();
+            factor = Math.max(factor,0);
+            factor = Math.min(factor,1);
+            if (factor == 0 || factor == 1) {
+                break;
+            }
+
+            for (EventAction<?> undefEventAction : rune.getEventAction()) {
+
+                if (undefEventAction.getInitialValue() instanceof Vector2) {
+                    EventAction<Vector2> eventAction = (EventAction<Vector2>) undefEventAction;
+                    Vector2 initial = eventAction.getInitialValue().cpy();
+                    Vector2 fin = eventAction.getFinalValue().cpy();
+                    switch (eventAction.getName()) {
+                        case "move":
+                            Vector2 endPointZeroed = rune.returnInLight() ? (fin.cpy()).sub(initial) : (initial.cpy()).sub(fin);
+                            Vector2 delta = endPointZeroed.cpy().scl(factor).sub(endPointZeroed.cpy().scl(prevFactor));
+                            delta.scl(1/dt) ;
+                            eventAction.getTarget().getObstacle().setLinearVelocity(delta.scl(rune.returnInLight() ? 1 : -1));
+                            if (2*factor - prevFactor >= 1 || 2*factor - prevFactor <= 0) {
+                                eventAction.getTarget().getObstacle().setLinearVelocity(Vector2.Zero);
+                            }
+                            break;
+                    }
+
+                } else if (undefEventAction.getInitialValue() instanceof Float) {
+                    EventAction<Float> eventAction = (EventAction<Float>) undefEventAction;
+                    Float initial = eventAction.getInitialValue();
+                    Float fin = eventAction.getFinalValue();
+
+                    switch (eventAction.getName()) {
+                        case "rotate":
+                            Float endPointZeroed = fin - initial;
+                            eventAction.getTarget().getObstacle().setAngle(endPointZeroed * factor + initial);
+                            break;
+                    }
+
+                }
+            }
+        }
     }
 
     /**
