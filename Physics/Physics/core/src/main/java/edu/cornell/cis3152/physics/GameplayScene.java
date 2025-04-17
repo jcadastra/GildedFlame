@@ -686,7 +686,7 @@ public class GameplayScene implements Screen {
                     switch (objName) {
                         case "player":
                             Texture playerTexture = directory.getEntry("platform-player", Texture.class);
-                            avatar = new Traci(directory, units, levelInfo.get("traci"));
+                            avatar = new Avatar(directory, units, levelInfo.get("traci"));
                             avatar.setTexture(playerTexture);
                             avatar.getObstacle().setPosition(pos[0], pos[1]);
                             System.out.println("position" + pos[0] + " " + pos[1]);
@@ -701,11 +701,11 @@ public class GameplayScene implements Screen {
                             l.createSensor();
                             torchFire = new Fire(units, new Vector2(10,10));
                             addSprite(torchFire);
-                            lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds);
+                            lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds, units);
                             lightController.attachTorchLight(torchFire);
                             lightController.resetCamera(camera.position.x,camera.position.y);
 
-                            particleEngine = new ParticleEngine(torchFire);
+                            particleEngine = new ParticleEngine(torchFire, units);
                             particleEngine.newFires(fireController);
 
                             texture = directory.getEntry("platform-torch", Texture.class);
@@ -1137,6 +1137,7 @@ public class GameplayScene implements Screen {
      * @param dt    Number of seconds since last animation frame
      */
     public void update(float dt) {
+        System.out.println(avatar.getGroundedState());
         soundEngine.tendToMusicLoop();
         updateRunes(dt);
         supplementaryCollisionActions();

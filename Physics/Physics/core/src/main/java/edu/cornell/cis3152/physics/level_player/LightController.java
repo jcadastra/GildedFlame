@@ -100,7 +100,8 @@ public class LightController {
     public void setRadius(int radius){
 
     }
-    public LightController(Vector2 points, World world, OrthographicCamera camera, Rectangle bounds){
+    public LightController(Vector2 points, World world, OrthographicCamera camera, Rectangle bounds, float physicsUnits){
+        this.BOX_TO_WORLD = physicsUnits;
         this.world = world;
         this.bounds = bounds;
         //this.camera = camera;
