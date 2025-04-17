@@ -22,8 +22,6 @@ import com.badlogic.gdx.physics.box2d.*;
 
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.Predicate;
-import edu.cornell.cis3152.physics.level_player.enemies.Enemy;
 import edu.cornell.cis3152.physics.level_player.enviromentals.EnhancedObstacleSprite;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Ladder;
 import edu.cornell.gdiac.assets.AssetDirectory;
@@ -33,11 +31,6 @@ import edu.cornell.gdiac.graphics.Texture2D;
 import edu.cornell.gdiac.math.Path2;
 import edu.cornell.gdiac.math.PathFactory;
 import edu.cornell.gdiac.physics2.*;
-import edu.cornell.gdiac.util.RandomGenerator;
-import java.nio.file.StandardOpenOption;
-import java.rmi.MarshalException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -57,7 +50,7 @@ import java.util.Set;
  * While we could have made the fixture a separate obstacle, we want it to be a
  * simple fixture so that we can attach it to the obstacle WITHOUT using joints.
  */
-public class Traci extends ObstacleSprite {
+public class Avatar extends ObstacleSprite {
     public enum GroundState {
         GROUNDED,
         AIRBORNE,
@@ -322,8 +315,8 @@ public class Traci extends ObstacleSprite {
      * @param data      The physics constants for Traci
      */
 //    public Traci(float units, JsonValue data, AssetDirectory directory) {
-    public Traci(AssetDirectory directory, float units, JsonValue data) {
-        Traci.directory = directory;
+    public Avatar(AssetDirectory directory, float units, JsonValue data) {
+        Avatar.directory = directory;
         this.data = data;
         this.units = units;
         JsonValue debugInfo = data.get("debug");
