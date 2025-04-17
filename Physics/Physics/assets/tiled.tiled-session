@@ -52,6 +52,19 @@
                 "y": 2004
             }
         },
+        "example_level2.tmx": {
+            "expandedObjectLayers": [
+                4,
+                2,
+                3
+            ],
+            "scale": 0.125,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 2832,
+                "y": 2884
+            }
+        },
         "test2.tmj": {
             "expandedObjectLayers": [
                 3

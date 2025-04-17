@@ -33,12 +33,21 @@
   <object id="7" name="button" gid="36" x="6253" y="4201" width="600" height="300">
    <properties>
     <property name="doublesided" type="bool" value="false"/>
+    <property name="endDegree" value="180"/>
     <property name="endX" value="15"/>
     <property name="endY" value="5"/>
+    <property name="interpolation" value="smoother"/>
     <property name="latch" type="bool" value="false"/>
-    <property name="rotationRadiance" value="0"/>
+    <property name="moveEvent" type="bool" value="true"/>
+    <property name="platformHeight" value="0.5"/>
+    <property name="platformIndex" value="1"/>
+    <property name="platformWidth" value="5"/>
+    <property name="rotateEvent" type="bool" value="true"/>
+    <property name="rotationRadians" value="0"/>
+    <property name="startDegree" value="0"/>
     <property name="startX" value="5"/>
     <property name="startY" value="6"/>
+    <property name="time" value="4"/>
    </properties>
   </object>
   <object id="8" gid="36" x="10373" y="5393" width="86" height="49"/>
@@ -46,12 +55,21 @@
   <object id="10" name="button" gid="36" x="445" y="2273" width="600" height="300" rotation="90">
    <properties>
     <property name="doublesided" type="bool" value="false"/>
+    <property name="endDegree" value="180"/>
     <property name="endX" value="15"/>
     <property name="endY" value="5"/>
-    <property name="latch" type="bool" value="false"/>
-    <property name="rotationRadiance" value="90"/>
+    <property name="interpolation" value="smoother"/>
+    <property name="latch" type="bool" value="true"/>
+    <property name="moveEvent" type="bool" value="true"/>
+    <property name="platformHeight" value="0.5"/>
+    <property name="platformIndex" value="1"/>
+    <property name="platformWidth" value="5"/>
+    <property name="rotateEvent" type="bool" value="true"/>
+    <property name="rotationRadians" value="-90"/>
+    <property name="startDegree" value="0"/>
     <property name="startX" value="5"/>
     <property name="startY" value="6"/>
+    <property name="time" value="4"/>
    </properties>
   </object>
  </objectgroup>
