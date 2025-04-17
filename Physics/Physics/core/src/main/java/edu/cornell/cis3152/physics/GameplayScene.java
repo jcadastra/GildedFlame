@@ -703,6 +703,7 @@ public class GameplayScene implements Screen {
 
                             particleEngine = new ParticleEngine(torchFire);
                             particleEngine.newFires(fireController);
+                            particleEngine.rainEffect(bounds);
 
                             texture = directory.getEntry("platform-torch", Texture.class);
                             torch = new Torch(units, constants.get("torch"));
@@ -1701,6 +1702,9 @@ public class GameplayScene implements Screen {
             }
         }
         particleEngine.draw(batch,torchFire);
+        particleEngine.splashEffects(1,0.5f, 20,0);
+        //particleEngine.drawRain(batch,bounds);
+        //particleEngine.drawSplash(batch,1,0.5f,20,0);
         //lightController.fireLights(fireController);
 
 
