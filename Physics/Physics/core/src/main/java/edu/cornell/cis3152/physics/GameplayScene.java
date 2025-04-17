@@ -667,8 +667,6 @@ public class GameplayScene implements Screen {
             } else if (layerType.equals("objectgroup")) {
                 Map<String, JsonValue> ropeAnchors = new HashMap<>();
                 Map<Integer, ObstacleSprite> indexedPlatforms = new HashMap<>();
-                Map<Integer, List<Button>> buttonGroups = new HashMap<>();
-                Map<Integer, IntSupplier> platformStateSuppliers = new HashMap<>();
                 for (JsonValue object : layer.get("objects")) {
                     String objName = object.getString("name", "unnamed");
                     float x = object.getFloat("x") / levelData.getInt("tilewidth");
