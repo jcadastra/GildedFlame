@@ -1766,7 +1766,8 @@ public class GameplayScene implements Screen {
      */
     public void draw(float dt) {
         // Clear the screen (color is homage to the XNA years)
-        ScreenUtils.clear(0.17f, 0.28f, 0.35f, 1.0f);
+        //ScreenUtils.clear(0.17f, 0.28f, 0.35f, 1.0f);
+        ScreenUtils.clear(56/255f,66/255f,82/255f,1f);
 //        ScreenUtils.clear(1.0f, 1.0f, 1.0f, 1.0f);
         // This shows off how powerful our new SpriteBatch is
         batch.begin(camera);

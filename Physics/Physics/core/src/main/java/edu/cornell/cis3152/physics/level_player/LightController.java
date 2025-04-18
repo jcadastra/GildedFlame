@@ -134,7 +134,7 @@ public class LightController {
         torchLightState = torchLight.getState();
 
         Color playerLightCol = new Color(Color.LIGHT_GRAY.r,Color.LIGHT_GRAY.g,Color.LIGHT_GRAY.b,0.1f);
-        playerLight = new PointLight(rayHandler,60,Color.LIGHT_GRAY,1f, points.x, points.y);
+        playerLight = new PointLight(rayHandler,60,Color.LIGHT_GRAY,1.5f, points.x, points.y);
         playerLight.setContactFilter(CATEGORY_LIGHT,(short)0,
             (short)CATEGORY_ENVIRONMENT);
         playerLight.setSoft(true);
