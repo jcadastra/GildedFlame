@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Fire;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Lighting;
+import edu.cornell.cis3152.physics.level_player.player.Traci;
 import edu.cornell.cis3152.physics.level_player.utils.FireFlag;
 
 public class LightController {
@@ -58,6 +59,8 @@ public class LightController {
     public static final short CATEGORY_AVATAR = 0x0002;  // 00000010
     public static final short CATEGORY_ENVIRONMENT = 0x0004;  // 00000100
     public static final short CATEGORY_LIGHT = 0x0008;  // 00001000
+
+    private PositionalLight playerLight;
 
     /*Pool of lights for doing fire*/
     private Array<PointLight> lightPool;
@@ -107,9 +110,9 @@ public class LightController {
         // Create a separate camera for box2dlights
         this.camera = new OrthographicCamera(bounds.width, bounds.height);//Uses physic units
         this.camera.position.set(bounds.width/2.0f,bounds.height/2.0f,0);
-        camera.zoom = 0.8f;
+        camera.zoom = 0.7f;
         //this.camera.setToOrtho(false, bounds.width, bounds.height);
-        camera.zoom=0.8f;
+        camera.zoom=0.7f;
         this.camera.update();
         //rayHandler = new RayHandler(world,(int)this.camera.viewportWidth,(int)this.camera.viewportHeight);
         rayHandler = new RayHandler(world,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
@@ -121,18 +124,29 @@ public class LightController {
 
         //Initializes torch light
         //PositionalLight testlight = new PointLight(rayHandler,10,Color.WHITE,100f,10,10);
-        torchLighting = new PointLight(rayHandler, 100, Color.YELLOW,
+        Color lightCol = new Color(1f,0.92f,0.6f,1);
+        torchLighting = new PointLight(rayHandler, 100, lightCol,
             5f, points.x, points.y);
         torchLighting.setSoft(false);
+        torchLighting.setSoftnessLength(10f);
+        torchLightState = torchLight.getState();
+
+        Color playerLightCol = new Color(Color.LIGHT_GRAY.r,Color.LIGHT_GRAY.g,Color.LIGHT_GRAY.b,0.1f);
+        playerLight = new PointLight(rayHandler,60,Color.LIGHT_GRAY,1f, points.x, points.y);
+        playerLight.setContactFilter(CATEGORY_LIGHT,(short)0,
+            (short)CATEGORY_ENVIRONMENT);
+        playerLight.setSoft(true);
+
 
         //TODO:right now the light is interacting with nothing, discuss if this is the bahviour we want?
         torchLighting.setContactFilter(CATEGORY_LIGHT, (short)0, (short) CATEGORY_ENVIRONMENT);
         //rayHandler.useCustomViewport(viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
         rayHandler.useDiffuseLight(true);
         // Background light color⬇️, modify if needed
-        rayHandler.setAmbientLight(0.3f, 0.3f, 0.7f, 0.1f);
+        rayHandler.setAmbientLight(0.15f, 0.15f, 0.35f, 1f); // same hue, just darker
+        //rayHandler.setAmbientLight(Color.BLACK);
         rayHandler.setShadows(true);
-        rayHandler.setBlur(true);
+        //rayHandler.setBlur(true);
         //System.out.println(torchLighting==null);
         //System.out.println(points.x+","+points.y);
         debug = false;
@@ -167,6 +181,10 @@ public class LightController {
         torchLightState = torchLight.getState();
     }
 
+    public void attachPlayerLight (Traci traci){
+        playerLight.attachToBody(traci.getObstacle().getBody());
+    }
+
 
     public void updateAttach(Fire fire)
     {
@@ -198,6 +216,15 @@ public class LightController {
         if (fire != null){
             updateAttach(fire);
         }
+        if (torchLightState!=null){
+        switch (torchLightState){
+            case LIGHT_OFF:
+                torchLighting.dispose();
+            case LIGHT_WAVER:
+                torchLighting.setDistance(3f);
+            case LIGHT_ON:
+                break;
+        }}
         //System.out.println("camera matrix"+camera.combined.toString());
 //        rayHandler.setCombinedMatrix(camera.combined, camera.position.x, camera.position.y, camera.viewportWidth, camera.viewportHeight);
         //System.out.println("Camera Position: " + camera.position.x*WORLD_TO_BOX+","+camera.position.y*WORLD_TO_BOX);
@@ -229,9 +256,9 @@ public class LightController {
 //        //System.out.println("graphics"+Gdx.graphics.getWidth()+","+Gdx.graphics.getHeight());
 //        rayHandler.setCombinedMatrix(this.camera);
         //attachTorchLight(fire);
-        camera.zoom=0.8f;
+        camera.zoom=0.7f;
         inBounds();
-        camera.zoom = 0.8f;
+        camera.zoom = 0.7f;
         this.camera.update();
         rayHandler.setCombinedMatrix(camera);
         rayHandler.update();

@@ -700,6 +700,7 @@ public class GameplayScene implements Screen {
                             lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds);
                             lightController.attachTorchLight(torchFire);
                             lightController.resetCamera(camera.position.x,camera.position.y);
+                            lightController.attachPlayerLight(avatar);
 
                             particleEngine = new ParticleEngine(torchFire);
                             particleEngine.newFires(fireController);
@@ -1304,14 +1305,14 @@ public class GameplayScene implements Screen {
 
         camera.update();
 
-        //debug code
-        ShapeRenderer shapeRenderer = new ShapeRenderer();
-        shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(Color.RED);
-        shapeRenderer.rect(bounds.x * scale.x, bounds.y * scale.y,
-            bounds.width * scale.x, bounds.height * scale.y);
-        shapeRenderer.end();
+//        //debug code
+//        ShapeRenderer shapeRenderer = new ShapeRenderer();
+//        shapeRenderer.setProjectionMatrix(camera.combined);
+//        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+//        shapeRenderer.setColor(Color.RED);
+//        shapeRenderer.rect(bounds.x * scale.x, bounds.y * scale.y,
+//            bounds.width * scale.x, bounds.height * scale.y);
+//        shapeRenderer.end();
 
 
         float dx = camera.position.x-prevX;
@@ -1741,7 +1742,7 @@ public class GameplayScene implements Screen {
         this.height = height;
         if (camera == null) {
             camera = new OrthographicCamera();
-            camera.zoom = 0.8f;
+            camera.zoom = 0.7f;
         }
         camera.setToOrtho( false, width, height );
         scale.x = width/bounds.width;

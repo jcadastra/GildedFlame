@@ -40,7 +40,7 @@ active: false
 - Y Offset -
 active: false
 - Spawn Shape -
-shape: point
+shape: line
 - Spawn Width -
 lowMin: 0.0
 lowMax: 0.0
@@ -52,8 +52,8 @@ scaling0: 1.0
 timelineCount: 1
 timeline0: 0.0
 - Spawn Height -
-lowMin: 0.0
-lowMax: 0.0
+lowMin: 10.0
+lowMax: 25.0
 highMin: 0.0
 highMax: 0.0
 relative: false
