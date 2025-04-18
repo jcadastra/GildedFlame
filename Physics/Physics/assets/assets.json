@@ -48,6 +48,12 @@
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
     },
+    "platform-playerTHROW": {
+      "file": "platform/playerThrow.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
     "platform-mothSMOTHERANIMATION": {
       "file": "platform/mothSmotherAnimation.png",
       "mipmaps": true,

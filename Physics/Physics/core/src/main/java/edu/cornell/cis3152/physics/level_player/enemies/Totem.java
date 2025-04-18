@@ -23,7 +23,6 @@ public class Totem extends Enemy {
     public static final int TRANSITION_TOTAL_FRAMES = 9;
     public static final int IDLE_TOTAL_FRAMES = 12;
     public static final int LIGHT_FRAME = 0;
-    public static final int DARK_FRAME = 8;
     private static final int TRANSITION_FRAME_DURATION = 12;
     private static final int IDLE_FRAME_DURATION = 9;
     private final Texture transitionAnimationTexture = directory.getEntry("platform-totemLIGHTANIMATION", Texture.class);
