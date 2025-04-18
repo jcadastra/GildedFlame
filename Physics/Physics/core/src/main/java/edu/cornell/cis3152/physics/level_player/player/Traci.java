@@ -691,7 +691,6 @@ public class Traci extends ObstacleSprite {
 
         Texture animationTexture;
 
-//        System.out.println((getHadTorch() + " " +  getHasTorch())  + " " + !isThrowing);
         if (getHadTorch() && !getHasTorch()) {
             throwFrameIndex = throwCount / THROW_FRAME_DURATION;
             throwCount++;
@@ -709,6 +708,7 @@ public class Traci extends ObstacleSprite {
             }
 
         } else if (getGroundedState() == GroundState.AIRBORNE) {
+//            System.out.println(getObstacle());
             int srcIndex = frameIndex * JUMP_FRAME_WIDTH;
             animationTexture = animationTextureJump;
             batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits() * 1.5f, srcIndex, 0, JUMP_FRAME_WIDTH, JUMP_FRAME_HEIGHT, !isFacingRight(), false);
