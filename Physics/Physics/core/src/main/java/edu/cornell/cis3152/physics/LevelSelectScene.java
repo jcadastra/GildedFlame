@@ -86,9 +86,9 @@ public class LevelSelectScene implements Screen {
         TextButton twoButton = new TextButton("Level 2", skin);
         twoButton.setSize(200, 60);
         twoButton.setPosition(centerX, startY - (buttonHeight + spacing));
-        TextButton threeButton = new TextButton("Level 3", skin);
+        /*TextButton threeButton = new TextButton("Level 3", skin);
         threeButton.setSize(200, 60);
-        threeButton.setPosition(centerX, startY - 2 * (buttonHeight + spacing));
+        threeButton.setPosition(centerX, startY - 2 * (buttonHeight + spacing));*/
 
 
         oneButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
@@ -119,7 +119,7 @@ public class LevelSelectScene implements Screen {
 
             }
         });
-        threeButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+        /*threeButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
             @Override
             public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
                                      float x, float y, int pointer, int button) {
@@ -132,10 +132,10 @@ public class LevelSelectScene implements Screen {
 
 
             }
-        });
+        });*/
         levels.add(oneButton);
         levels.add(twoButton);
-        levels.add(threeButton);
+        //levels.add(threeButton);
 
         //controller support
         if (inputController.isUsingController()){
@@ -146,7 +146,7 @@ public class LevelSelectScene implements Screen {
 
         stage.addActor(oneButton);
         stage.addActor(twoButton);
-        stage.addActor(threeButton);
+        /*stage.addActor(threeButton);*/
 
     }
 

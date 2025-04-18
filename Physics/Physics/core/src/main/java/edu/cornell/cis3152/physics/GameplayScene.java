@@ -676,14 +676,8 @@ public class GameplayScene implements Screen {
                     addSprite(tile);
                 }
             } else if (layerType.equals("objectgroup")) {
-                BoxObstacle temp = new BoxObstacle(5,20,5,.5f);
-                temp.setPhysicsUnits(units);
-                temp.setName("floor");
-                ObstacleSprite thing = new ObstacleSprite(temp);
-                thing.getObstacle().setBodyType(BodyType.KinematicBody);
-                thing.getObstacle().setFriction(.5f);
-                addSprite(thing);
                 Map<String, JsonValue> ropeAnchors = new HashMap<>();
+                Map<Integer, ObstacleSprite> indexedPlatforms = new HashMap<>();
                 for (JsonValue object : layer.get("objects")) {
                     String objName = object.getString("name", "unnamed");
                     float x = object.getFloat("x") / levelData.getInt("tilewidth");
@@ -761,56 +755,129 @@ public class GameplayScene implements Screen {
                             break;
 
                         case "button":
-                            float rotation = 0;
+                            float rotationRad = 0f;
                             boolean latch = false;
                             boolean doubleSided = false;
-
-                            float startX = 0;
-                            float startY = 0;
-                            float endX = 0;
-                            float endY = 0;
+                            boolean hasMoveEvent = false;
+                            boolean hasRotateEvent = false;
+                            float startX = 0f, startY = 0f;
+                            float endX = 0f, endY = 0f;
+                            float startDegree = 0f;
+                            float endDegree = 0f;
+                            float duration = 1f;
+                            int platformIndex = -1;
+                            float platformWidth = 1f;
+                            float platformHeight = 1f;
+                            String interpolation = "";
 
                             JsonValue properties = object.get("properties");
                             for (JsonValue prop : properties) {
                                 String propName = prop.getString("name");
+                                String value = prop.getString("value");
                                 switch (propName) {
                                     case "latch":
-                                        latch = prop.getBoolean("value");
+                                        latch = Boolean.parseBoolean(value);
                                         break;
                                     case "doublesided":
-                                        doubleSided = prop.getBoolean("value");
+                                        doubleSided = Boolean.parseBoolean(value);
                                         break;
-                                    case "rotationRadiance":
-                                        rotation = Float.parseFloat(prop.getString("value"));
+                                    case "rotationRadians":
+                                        rotationRad = Float.parseFloat(value);
+                                        break;
+                                    case "rotateEvent":
+                                        hasRotateEvent = Boolean.parseBoolean(value);
+                                        break;
+                                    case "moveEvent":
+                                        hasMoveEvent = Boolean.parseBoolean(value);
                                         break;
                                     case "startX":
-                                        startX = Float.parseFloat(prop.getString("value"));
+                                        startX = Float.parseFloat(value);
                                         break;
                                     case "startY":
-                                        startY = Float.parseFloat(prop.getString("value"));
+                                        startY = Float.parseFloat(value);
                                         break;
                                     case "endX":
-                                        endX = Float.parseFloat(prop.getString("value"));
+                                        endX = Float.parseFloat(value);
                                         break;
                                     case "endY":
-                                        endY = Float.parseFloat(prop.getString("value"));
+                                        endY = Float.parseFloat(value);
+                                        break;
+                                    case "startDegree":
+                                        startDegree = Float.parseFloat(value);
+                                        break;
+                                    case "endDegree":
+                                        endDegree = Float.parseFloat(value);
+                                        break;
+                                    case "time":
+                                        duration = Float.parseFloat(value);
+                                        break;
+                                    case "platformIndex":
+                                        platformIndex = Integer.parseInt(value);
+                                        break;
+                                    case "platformWidth":
+                                        platformWidth = Float.parseFloat(value);
+                                        break;
+                                    case "platformHeight":
+                                        platformHeight = Float.parseFloat(value);
+                                        break;
+                                    case "interpolation":
+                                        interpolation = value.toLowerCase();
                                         break;
                                 }
                             }
 
-                            Button button = new Button(new Vector2(pos[0], pos[1]), rotation, doubleSided, latch, units);
+                            Vector2 buttonPosition = new Vector2(pos[0], pos[1]);
+                            Button button = new Button(buttonPosition, (float)Math.toRadians(rotationRad), doubleSided, latch, units);
                             addSpriteGroup(button);
-                            temp.setPosition(startX, startY);
 
-                            /*BoxObstacle temp = new BoxObstacle(startX,startY,5,.5f);
-                            temp.setPhysicsUnits(units);
-                            temp.setName("floor");
-                            ObstacleSprite thing = new ObstacleSprite(temp);
-                            thing.getObstacle().setBodyType(BodyType.KinematicBody);
-                            thing.getObstacle().setFriction(.5f);
-                            addSprite(thing);*/
+                            ObstacleSprite platform = indexedPlatforms.get(platformIndex);
+                            if (platform == null && platformIndex != -1) {
+                                BoxObstacle temp = new BoxObstacle(startX, startY, platformWidth, platformHeight);
+                                temp.setPhysicsUnits(units);
+                                temp.setName("floor");
+                                temp.setBodyType(BodyType.KinematicBody);
+                                temp.setFriction(0.5f);
+
+                                platform = new ObstacleSprite(temp);
+                                platform.getObstacle().setBodyType(BodyType.KinematicBody);
+                                platform.getObstacle().setFriction(.5f);
+                                addSprite(platform);
+
+                                indexedPlatforms.put(platformIndex, platform);
+                            }
 
                             Function<Float, Float> movementFunc = Interpolation.smoother::apply;
+                            switch (interpolation) {
+                                case "linear":
+                                    movementFunc = Interpolation.linear::apply;
+                                    break;
+                                case "smoother":
+                                    movementFunc = Interpolation.smoother::apply;
+                                    break;
+                            }
+
+                            if (hasMoveEvent) {
+                                EventAction<Vector2> moveAction = new EventAction<>(platform, "move",
+                                    new Vector2(startX, startY), new Vector2(endX, endY), duration, movementFunc);
+
+                                Event<Integer, Vector2> moveEvent = new Event<>(button, button::getState,
+                                    state -> state == 1, moveAction);
+                                eventHandler.registerEvent(moveEvent);
+                            }
+
+                            if (hasRotateEvent) {
+                                float fromRad = (float) Math.toRadians(startDegree);
+                                float toRad = (float) Math.toRadians(endDegree);
+
+                                EventAction<Float> rotateAction = new EventAction<>(platform, "rotate",
+                                    fromRad, toRad, duration, movementFunc);
+
+                                Event<Integer, Float> rotateEvent = new Event<>(button, button::getState,
+                                    state -> state == 1, rotateAction);
+                                eventHandler.registerEvent(rotateEvent);
+                            }
+
+                            /*Function<Float, Float> movementFunc = Interpolation.smoother::apply;
                             EventAction<Vector2> eventAction = new EventAction<Vector2>(thing, "move", new Vector2(startX, startY), new Vector2(endX, endY), 4f, movementFunc);
 
                             Event<Integer,Vector2> event = new Event<Integer,Vector2>(button, button::getState,
@@ -822,7 +889,7 @@ public class GameplayScene implements Screen {
                             Event<Integer,Float> event2 = new Event<Integer, Float>(button, button::getState,
                                 state -> state == 1,  eventAction2);
 //                            eventHandler.registerEvent(event2);
-                            break;
+                            break;*/
 
                         default:
                             if (objName.matches("\\d+")) {
