@@ -15,7 +15,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Fire;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Lighting;
-import edu.cornell.cis3152.physics.level_player.player.Traci;
+import edu.cornell.cis3152.physics.level_player.player.Avatar;
+//import edu.cornell.cis3152.physics.level_player.player.Traci;
 import edu.cornell.cis3152.physics.level_player.utils.FireFlag;
 
 public class LightController {
@@ -103,7 +104,8 @@ public class LightController {
     public void setRadius(int radius){
 
     }
-    public LightController(Vector2 points, World world, OrthographicCamera camera, Rectangle bounds){
+    public LightController(Vector2 points, World world, OrthographicCamera camera, Rectangle bounds, float physicsUnits){
+        this.BOX_TO_WORLD = physicsUnits;
         this.world = world;
         this.bounds = bounds;
         //this.camera = camera;
@@ -181,8 +183,8 @@ public class LightController {
         torchLightState = torchLight.getState();
     }
 
-    public void attachPlayerLight (Traci traci){
-        playerLight.attachToBody(traci.getObstacle().getBody());
+    public void attachPlayerLight (Avatar avatar){
+        playerLight.attachToBody(avatar.getObstacle().getBody());
     }
 
 

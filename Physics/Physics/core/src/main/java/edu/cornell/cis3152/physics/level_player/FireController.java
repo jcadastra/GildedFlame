@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
+import java.util.function.BiConsumer;
 
 
 public class FireController {
@@ -97,15 +98,29 @@ public class FireController {
     public void update() {
         for (EnhancedObstacleSprite object : firesOnShape.keySet()) {
             ObstacleMaterial obstacleMaterial = object.getMaterial();
-            if (obstacleMaterial.makesSmoke()) {
                 for (Fire fire : firesOnShape.get(object)) {
-                    if (obstacleMaterial.checkSmokeTime(fire.getTimeToSmoke())) {
-                        spawnSmoke(fire);
-                        fire.resetTimeToSmoke();
-                    } else {
-                        fire.incrementTimeToSmoke(rand.nextInt(4) - 1);
+                    if (!fire.getObstacle().isRemoved()) {
+                        if (obstacleMaterial.makesSmoke()) {
+                            if (obstacleMaterial.checkSmokeTime(fire.getTimeToSmoke())) {
+                                spawnSmoke(fire);
+                                fire.resetTimeToSmoke();
+                            } else {
+                                fire.incrementTimeToSmoke(rand.nextInt(-1, 3));
+                            }
+                        }
+
+//                        if (fire.getInRain()) {
+//                            fire.modifStrength(-.01f);
+//                        } else if (fire.getStrength() < 1) {
+//                            fire.modifStrength(.02f);
+//                        }
+////                        System.out.println(
+////                            fire.getStrength() + ", " + fire.fireID + ", " + object.getName());
+//
+//                        if (fire.getStrength() <= .01) {
+//                            fireFlags.add(new FireFlag("killFire", fire));
+//                        }
                     }
-                }
             }
         }
 
@@ -389,4 +404,7 @@ public class FireController {
         nFireDiagrams.remove(s);
         firesOnShape.remove(s);
     }
+     public void cleanFire (Fire fire) {
+        firesOnShape.forEach((enhancedObstacleSprite, fires) -> fires.remove(fire));
+     }
 }
