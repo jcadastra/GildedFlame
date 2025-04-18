@@ -129,6 +129,8 @@ public class Avatar extends ObstacleSprite {
     private static Texture animationTextureIdleNoTorch;
     private static Texture animationTextureMovementTorch;
     private static Texture animationTextureMovementNoTorch;
+    private static Texture animationTextureJump;
+    private static Texture animationTextureThrow;
     public static final int TOTAL_FRAMES = 6;
 
     public static final int IDLE_FRAME_HEIGHT = 550;
