@@ -31,6 +31,7 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
+import com.badlogic.gdx.utils.Null;
 import com.badlogic.gdx.utils.ObjectSet;
 import edu.cornell.cis3152.physics.level_player.CollisionController;
 import edu.cornell.cis3152.physics.level_player.EventHandler;
@@ -196,6 +197,7 @@ public class GameplayScene implements Screen {
     protected PooledList<TweenElement<Vector2>> tweenedMovmentObjectsVec2;
 
     protected LightController lightController;
+    protected ShapeRenderer shapeRenderer;
 
     protected ParticleEngine particleEngine;
 
@@ -345,6 +347,7 @@ public class GameplayScene implements Screen {
         torchArc = new ArrayList<>();
         tweenedMovmentObjectsVec2 = new PooledList<>();
         tweenedMovmentObjectsFloat = new PooledList<>();
+        this.shapeRenderer = new ShapeRenderer();
         runeSet = new HashSet<>();
 
         // pull out sounds
@@ -562,6 +565,10 @@ public class GameplayScene implements Screen {
         }
         torchArc.clear();
         runeSet.clear();
+
+        if (this.shapeRenderer == null) {
+            this.shapeRenderer = new ShapeRenderer();
+        }
     }
 
     private void populateLevel() {}
@@ -1319,7 +1326,6 @@ public class GameplayScene implements Screen {
         camera.update();
 
         //debug code
-        ShapeRenderer shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.RED);
