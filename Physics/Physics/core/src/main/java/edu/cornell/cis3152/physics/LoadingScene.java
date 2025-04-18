@@ -85,6 +85,11 @@ public class LoadingScene implements Screen, InputProcessor {
     /** Whether or not this player mode is still active */
     private boolean active;
 
+    private InputController inputController = InputController.getInstance();
+
+    boolean prevButtonA = false;
+
+
     /**
      * Returns the budget for the asset loader.
      *
@@ -243,6 +248,12 @@ public class LoadingScene implements Screen, InputProcessor {
 
             batch.setColor( tint );
             batch.draw( texture, affine );
+            if (inputController.isUsingController()){
+                BitmapFont font = new BitmapFont();
+                font.getData().scale(1.5f);
+                TextLayout text = new TextLayout("Press A to start", font);
+                batch.drawText(text,width/2, height*0.8f);
+            }
         }
         batch.end();
     }
@@ -310,12 +321,26 @@ public class LoadingScene implements Screen, InputProcessor {
             update(delta);
             draw();
 
+            if (inputController.isUsingController()) {//controller support
+                boolean pressA = inputController.xbox.getA();
+                if (pressA && !prevButtonA) {//simulate push down
+                    pressState = 1;
+                    //System.out.println("pressed");
+                }
+                if (!pressA && prevButtonA && pressState == 1) {//simulate push up
+                    // A was just released
+                    pressState = 2;
+                    //System.out.println("released");
+                }
+                prevButtonA = pressA;
+            }
+
             // We are are ready, notify our listener
             if (isReady() && listener != null) {
-                listener.exitScreen(this, 0);
+                        listener.exitScreen(this, 0);
             }
-        }
-    }
+
+    }}
 
     /**
      * Called when the Screen is resized.
@@ -386,6 +411,7 @@ public class LoadingScene implements Screen, InputProcessor {
         this.listener = listener;
     }
 
+
     // PROCESSING PLAYER INPUT
     /**
      * Called when the screen was touched or a mouse button was pressed.
@@ -403,7 +429,6 @@ public class LoadingScene implements Screen, InputProcessor {
         if (progress < 1.0f || pressState == 2) {
             return true;
         }
-
         // Flip to match graphics coordinates
         screenY = height-screenY;
 

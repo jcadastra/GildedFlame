@@ -46,10 +46,10 @@
                 2
             ],
             "scale": 0.125,
-            "selectedLayer": 0,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 1904,
-                "y": 2004
+                "x": 6184,
+                "y": 2892
             }
         },
         "example_level2.tmx": {

@@ -33,6 +33,9 @@ public class Smoke extends ObstacleSprite {
     public void setSource(Fire f) {
         this.source = f;
     }
+    public Fire getSource() {
+        return source;
+    }
 
     public void updateLifeSpan() {
         lifeLimit--;

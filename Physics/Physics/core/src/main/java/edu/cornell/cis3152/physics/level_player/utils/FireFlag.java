@@ -103,4 +103,9 @@ public class FireFlag {
         this.fire = fire;
         this.smoke = smoke;
     }
+
+    public FireFlag(String name, Fire fire) {
+        this.name = name;
+        this.fire = fire;
+    }
 }

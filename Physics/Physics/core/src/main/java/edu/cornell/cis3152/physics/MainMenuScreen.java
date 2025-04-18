@@ -6,15 +6,19 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.ScreenUtils;
+import edu.cornell.gdiac.graphics.SpriteBatch;
 import edu.cornell.gdiac.util.ScreenListener;
 
 public class MainMenuScreen implements Screen {
@@ -23,6 +27,15 @@ public class MainMenuScreen implements Screen {
     private Texture bgTexture;
     private boolean startClicked = false;
     private ScreenListener listener;
+
+    /*Checker for controller support*/
+    private boolean prevButtonA = false;
+    private TextButton playButton;
+
+    private ParticleEngine particleEngine;
+
+    /*Gets the controller*/
+    private InputController inputController = InputController.getInstance();
 
     public void setScreenListener(ScreenListener listener) {
         this.listener = listener;
@@ -62,13 +75,18 @@ public class MainMenuScreen implements Screen {
         // Create the "Choose Level" button.
         textButtonStyle.fontColor = Color.DARK_GRAY;
 
-        TextButton playButton = new TextButton("Choose Level", skin);
+        playButton = new TextButton("Choose Level", skin);
         playButton.setSize(200, 60);
         playButton.setPosition(
                 (Gdx.graphics.getWidth() / 2f - 200 / 2f) + 325,
                 Gdx.graphics.getHeight() / 2 - 30
         );
+        particleEngine = new ParticleEngine(playButton);
+//        if (inputController.isUsingController()){// show controller select
+//            playButton.setColor(Color.GRAY);
+//        }
 
+        // for mouse and keyboard
         playButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
             @Override
             public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
@@ -87,13 +105,41 @@ public class MainMenuScreen implements Screen {
         stage.addActor(playButton);
     }
 
+    /*Controller select method for firing event. Only supports the playButton right now*/
+    private void controllerSelect(){
+        // begin controller listening
+        if (inputController.isUsingController()){
+            boolean start= inputController.xbox.getA();
+            if(start && !prevButtonA){
+                InputEvent downEvent = new InputEvent();
+                downEvent.setType(InputEvent.Type.touchDown);
+                downEvent.setStage(stage);
+                downEvent.setTarget(playButton);
+                downEvent.setButton(0);
+                playButton.fire(downEvent);
+
+                InputEvent upEvent = new InputEvent();
+                upEvent.setType(InputEvent.Type.touchUp);
+                upEvent.setStage(stage);
+                upEvent.setTarget(playButton);
+                upEvent.setButton(0);
+                playButton.fire(upEvent);
+            }
+            prevButtonA =start;}
+    }
+
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+        controllerSelect();
         stage.act(delta);
         stage.draw();
+        if (inputController.isUsingController()){//special effect for selection
+        Batch batch = stage.getBatch();
+        batch.begin();
+        particleEngine.draw(batch,playButton);
+        batch.end();}
     }
 
     @Override
@@ -104,6 +150,7 @@ public class MainMenuScreen implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+
     }
 
     @Override

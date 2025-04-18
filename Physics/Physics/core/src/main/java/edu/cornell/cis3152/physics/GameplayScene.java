@@ -31,6 +31,7 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
+import com.badlogic.gdx.utils.Null;
 import com.badlogic.gdx.utils.ObjectSet;
 import edu.cornell.cis3152.physics.level_player.CollisionController;
 import edu.cornell.cis3152.physics.level_player.EventHandler;
@@ -40,8 +41,8 @@ import edu.cornell.cis3152.physics.level_player.enemies.Enemy;
 import edu.cornell.cis3152.physics.level_player.enemies.Moth;
 import edu.cornell.cis3152.physics.level_player.enemies.Totem;
 import edu.cornell.cis3152.physics.level_player.player.Torch;
-import edu.cornell.cis3152.physics.level_player.player.Traci;
-import edu.cornell.cis3152.physics.level_player.player.Traci.GroundState;
+import edu.cornell.cis3152.physics.level_player.player.Avatar;
+import edu.cornell.cis3152.physics.level_player.player.Avatar.GroundState;
 import edu.cornell.cis3152.physics.level_player.utils.CollisionFlag;
 import edu.cornell.cis3152.physics.level_player.utils.EventAction;
 import edu.cornell.cis3152.physics.level_player.utils.Event;
@@ -70,6 +71,7 @@ import edu.cornell.cis3152.physics.level_player.enviromentals.*;
 import java.util.Optional;
 import java.util.Set;
 import java.util.Stack;
+import java.util.Vector;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -148,7 +150,7 @@ public class GameplayScene implements Screen {
     protected int countdown;
 
     private List<Enemy> enemies;
-    protected Traci avatar;
+    protected Avatar avatar;
     protected Torch torch;
 
     /** Reference to the goalDoor (for collision detection) */
@@ -190,10 +192,12 @@ public class GameplayScene implements Screen {
     protected FireController fireController;
     protected EventHandler eventHandler;
     protected SoundEngine soundEngine;
+    protected HashSet<Rune> runeSet;
     protected PooledList<TweenElement<Float>> tweenedMovmentObjectsFloat;
     protected PooledList<TweenElement<Vector2>> tweenedMovmentObjectsVec2;
 
     protected LightController lightController;
+    protected ShapeRenderer shapeRenderer;
 
     protected ParticleEngine particleEngine;
 
@@ -343,6 +347,8 @@ public class GameplayScene implements Screen {
         torchArc = new ArrayList<>();
         tweenedMovmentObjectsVec2 = new PooledList<>();
         tweenedMovmentObjectsFloat = new PooledList<>();
+        this.shapeRenderer = new ShapeRenderer();
+        runeSet = new HashSet<>();
 
         // pull out sounds
         volume = constants.getFloat("volume", 1.0f);
@@ -558,6 +564,11 @@ public class GameplayScene implements Screen {
             s.getObstacle().markRemoved(true);
         }
         torchArc.clear();
+        runeSet.clear();
+
+        if (this.shapeRenderer == null) {
+            this.shapeRenderer = new ShapeRenderer();
+        }
     }
 
     private void populateLevel() {}
@@ -676,7 +687,7 @@ public class GameplayScene implements Screen {
                     switch (objName) {
                         case "player":
                             Texture playerTexture = directory.getEntry("platform-player", Texture.class);
-                            avatar = new Traci(directory, units, levelInfo.get("traci"));
+                            avatar = new Avatar(directory, units, levelInfo.get("traci"));
                             avatar.setTexture(playerTexture);
                             avatar.getObstacle().setPosition(pos[0], pos[1]);
                             System.out.println("position" + pos[0] + " " + pos[1]);
@@ -691,11 +702,11 @@ public class GameplayScene implements Screen {
                             l.createSensor();
                             torchFire = new Fire(units, new Vector2(10,10));
                             addSprite(torchFire);
-                            lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds);
+                            lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds, units);
                             lightController.attachTorchLight(torchFire);
                             lightController.resetCamera(camera.position.x,camera.position.y);
 
-                            particleEngine = new ParticleEngine(torchFire);
+                            particleEngine = new ParticleEngine(torchFire, units);
                             particleEngine.newFires(fireController);
 
                             texture = directory.getEntry("platform-torch", Texture.class);
@@ -705,7 +716,7 @@ public class GameplayScene implements Screen {
                             torch.setMaterial(new ObstacleMaterial("torch", null));
                             addSprite(torch);
                             l.getObstacle().setPosition(torch.getObstacle().getPosition());
-                            torchFire.getObstacle().setPosition(torch.getObstacle().getPosition());
+                            torchFire.getObstacle().setPosition(new Vector2(torch.getObstacle().getPosition().cpy().add(0,torch.getHeight() / 5)));
                             fireController.forceAddTorchFire(torchFire, torch, new Vector2(torch.getObstacle().getPosition().cpy().add(0,torch.getHeight() / 4)));
                             activeLightJoint = world.createJoint(torch.attachObj(l));
                             activeFireJoint = world.createJoint(torch.attachObj(torchFire));
@@ -994,7 +1005,7 @@ public class GameplayScene implements Screen {
 
         // Create Traci
         texture = directory.getEntry("platform-player", Texture.class);
-        avatar = new Traci(directory, units, levelData.get("traci"));
+        avatar = new Avatar(directory, units, levelData.get("traci"));
         avatar.setTexture(texture);
         addSprite(avatar);
         // Have to do after body is created
@@ -1010,7 +1021,7 @@ public class GameplayScene implements Screen {
         lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds);
         lightController.attachTorchLight(torchFire);
         lightController.resetCamera(camera.position.x,camera.position.y);
-        //lightController.fireLights(fireController);
+//        lightController.fireLights(fireController);
 
         particleEngine = new ParticleEngine(torchFire);
         particleEngine.newFires(fireController);
@@ -1027,6 +1038,7 @@ public class GameplayScene implements Screen {
         activeLightJoint = world.createJoint(torch.attachObj(l));
         activeFireJoint = world.createJoint(torch.attachObj(torchFire));
         fireController.forceAddTorchFire(torchFire, torch, new Vector2(torch.getObstacle().getPosition().cpy().add(0,torch.getHeight() / 4)) );
+//        torchFire.setFixtureJoint(activeFireJoint);
         // TODO: Optimize the above ^^
 
         JsonValue enemiesJson = levelData.get("enemies");
@@ -1063,9 +1075,13 @@ public class GameplayScene implements Screen {
             tracker.getObstacle().setPhysicsUnits(phyiscsUnits);
             tracker.getObstacle().setName("trajectoryPoint");
             tracker.getObstacle().setSensor(true);
+            tracker.getObstacle().setPhysicsUnits(units);
             addSprite(tracker);
             torchArc.add(tracker);
         }
+
+//        RainBlock rainBlocktemp = new RainBlock(3,3,10,10,units, torchFire.getRadius());
+//        addSprite(rainBlocktemp);
 
         if (levelName.equals("rope_test")) {
             // SAMPLE BUTTON CODE BELOW::
@@ -1105,6 +1121,12 @@ public class GameplayScene implements Screen {
 
             Ladder tempLadder = new Ladder(3,3,5f, units);
     //        addSprite(tempLadder);
+            Rune runeTemp = new Rune(3,3, units, new float[]{0, .5f});
+            EventAction<Float> awef = new EventAction<Float>(thing, "rotate", thing.getObstacle().getAngle(), (float) Math.PI);
+            runeTemp.registerEventAction(awef);
+            runeSet.add(runeTemp);
+            addSprite(runeTemp);
+
 
         }
 
@@ -1189,14 +1211,14 @@ public class GameplayScene implements Screen {
      * @param dt    Number of seconds since last animation frame
      */
     public void update(float dt) {
+        System.out.println(avatar.getGroundedState());
         soundEngine.tendToMusicLoop();
+        updateRunes(dt);
         supplementaryCollisionActions();
         supplementaryFireActions();
         supplementaryEventActions(dt);
-//        supplementaryTrackerActions();
         updateTweenedMovementObjectsVec2(dt);
         updateTweenedMovementObjectsFloat(dt);
-//        torchTrajectorySystem.update(torch.getObstacle().getPosition());
 
         if (temp != null) {
 //            for (EnhancedObstacleSprite eos : temp.getTopEntities()) {
@@ -1371,7 +1393,6 @@ public class GameplayScene implements Screen {
         camera.update();
 
         //debug code
-        ShapeRenderer shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.RED);
@@ -1383,6 +1404,56 @@ public class GameplayScene implements Screen {
         float dx = camera.position.x-prevX;
         float dy = camera.position.y-prevY;
         lightController.updateCamera(dx,dy);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void updateRunes(float dt) {
+        for (Rune rune : runeSet) {
+            System.out.println(rune.getPowerLevel());
+            if (!rune.returnInLight()) {
+                rune.dissapatePowerLevel();
+            }
+            float factor = rune.getPowerLevel();
+            float prevFactor = rune.getPrevPowerLevel();
+            factor = Math.max(factor,0);
+            factor = Math.min(factor,1);
+            if (factor == 0 || factor == 1) {
+                break;
+            }
+
+            for (EventAction<?> undefEventAction : rune.getEventAction()) {
+
+                if (undefEventAction.getInitialValue() instanceof Vector2) {
+                    EventAction<Vector2> eventAction = (EventAction<Vector2>) undefEventAction;
+                    Vector2 initial = eventAction.getInitialValue().cpy();
+                    Vector2 fin = eventAction.getFinalValue().cpy();
+                    switch (eventAction.getName()) {
+                        case "move":
+                            Vector2 endPointZeroed = rune.returnInLight() ? (fin.cpy()).sub(initial) : (initial.cpy()).sub(fin);
+                            Vector2 delta = endPointZeroed.cpy().scl(factor).sub(endPointZeroed.cpy().scl(prevFactor));
+                            delta.scl(1/dt) ;
+                            eventAction.getTarget().getObstacle().setLinearVelocity(delta.scl(rune.returnInLight() ? 1 : -1));
+                            if (2*factor - prevFactor >= 1 || 2*factor - prevFactor <= 0) {
+                                eventAction.getTarget().getObstacle().setLinearVelocity(Vector2.Zero);
+                            }
+                            break;
+                    }
+
+                } else if (undefEventAction.getInitialValue() instanceof Float) {
+                    EventAction<Float> eventAction = (EventAction<Float>) undefEventAction;
+                    Float initial = eventAction.getInitialValue();
+                    Float fin = eventAction.getFinalValue();
+
+                    switch (eventAction.getName()) {
+                        case "rotate":
+                            Float endPointZeroed = fin - initial;
+                            eventAction.getTarget().getObstacle().setAngle(endPointZeroed * factor + initial);
+                            break;
+                    }
+
+                }
+            }
+        }
     }
 
     /**
@@ -1468,6 +1539,24 @@ public class GameplayScene implements Screen {
                 case "spawnSmoke":
                     ObstacleSprite smoke = fireFlag.getSmoke();
                     addSprite(smoke);
+                    break;
+                case "killFire":
+                    Fire f = fireFlag.getFire();
+                    if (f.getFixtureJoint() != null) {
+                        if (!world.isLocked()) {
+                            world.destroyJoint(f.getFixtureJoint());
+                        }
+                        f.setFixtureJoint(null);
+                    }
+                    if (torchFire != null && f.fireID == torchFire.fireID) {
+                        if (activeTorchJoint != null && !world.isLocked()) {
+                            world.destroyJoint(activeTorchJoint);
+                            activeTorchJoint = null;
+                        }
+                    }
+                    fireController.cleanFire(f);
+                    f.dispose();
+                    break;
             }
         }
     }
@@ -1767,7 +1856,9 @@ public class GameplayScene implements Screen {
                 particleEngine.draw(batch,fire);
             }
         }
-        particleEngine.draw(batch,torchFire);
+        if (!torchFire.getObstacle().isRemoved()) {
+            particleEngine.draw(batch,torchFire);
+        }
         //lightController.fireLights(fireController);
 
 

@@ -59,8 +59,8 @@ public class DesktopLauncher {
 //        config.fullscreen = true;
         config.fullscreen = false;
         config.resizable = false;
-        config.width = 1024;
-        config.height = 576;
+        config.width = 1280;
+        config.height = 720;
         config.rawHDPI = false;
 
         // Use OpenGLES 2.0
