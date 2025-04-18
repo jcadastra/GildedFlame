@@ -17,17 +17,19 @@ public class ParticleEngine implements Screen {
 
     private TextureAtlas particleAtlas;
     private ParticleEffect effect = new ParticleEffect();
+    private float physicsUnits;
 
 
     /* Handles the torch fire.
     * TODO: modify code structure to allow environmental lights*/
-    public ParticleEngine (Fire fire){
+    public ParticleEngine (Fire fire, float physicsUnits){
+        this.physicsUnits = physicsUnits;
         effect.load(Gdx.files.internal("platform/flame/particle.p"),Gdx.files.internal("platform/flame/"));
         //effect.set
         effect.start();
 
         //Setting the position of the ParticleEffect
-        effect.setPosition(fire.getObstacle().getX()*32, fire.getObstacle().getY()*32);
+        effect.setPosition(fire.getObstacle().getX()*physicsUnits, fire.getObstacle().getY()*physicsUnits);
         effect.scaleEffect(1/5f);
         //System.out.println("fire-pos"+fire.getObstacle().getX()+","+fire.getObstacle().getY());
 
@@ -60,7 +62,7 @@ public class ParticleEngine implements Screen {
         effect.start();
         //Setting the position of the ParticleEffect
             effect.setPosition(1000,100);
-        effect.setPosition(fire.getObstacle().getX()*32f, fire.getObstacle().getY()*32f);
+        effect.setPosition(fire.getObstacle().getX()*physicsUnits, fire.getObstacle().getY()*physicsUnits);
         //System.out.println("fire-pos"+fire.getObstacle().getX()*32+","+fire.getObstacle().getY()*32);
 
         }
@@ -81,7 +83,7 @@ public class ParticleEngine implements Screen {
         //Updating and Drawing the particle effect
         //Delta being the time to progress the particle effect by, usually you pass in Gdx.graphics.getDeltaTime();
         // Update the particle effect's position to follow the fire's position
-        effect.setPosition(fire.getObstacle().getX()*32, fire.getObstacle().getY()*32);
+        effect.setPosition(fire.getObstacle().getX()*physicsUnits, fire.getObstacle().getY()*physicsUnits);
         effect.update(Gdx.graphics.getDeltaTime());
         effect.draw(batch,Gdx.graphics.getDeltaTime());
     }

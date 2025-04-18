@@ -24,6 +24,7 @@ public class Fire extends ObstacleSprite {
     // raidus of the fire
     private Float radius;
     private float strength;
+    private boolean inRain;
     private int timeToSmoke;
     public int fireID;
     public float getRadius () {
@@ -72,4 +73,8 @@ public class Fire extends ObstacleSprite {
     public void incrementTimeToSmoke(int val) {timeToSmoke+=val;}
     public int getTimeToSmoke() {return timeToSmoke;}
     public void resetTimeToSmoke() {timeToSmoke = 0;}
+    public float getStrength() {return strength;}
+    public void modifStrength(float val) {strength += val;}
+    public void setInRain(boolean val) {inRain =  val;}
+    public boolean getInRain() {return inRain;}
 }
