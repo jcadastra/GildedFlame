@@ -686,14 +686,14 @@ public class GameplayScene implements Screen {
                     JsonValue settings = levelInfo.get("walls");
                     float tileunits = 32f/300f;
                     Surface tile = new Surface(points, units, settings);
-                    int ind = tileId - 1;
-                    int regionX = ind % 6;
-                    int regionY = ind / 6;
-                    System.out.println("HAS ENTRY: " + directory.getDirectory().toString());
-                    System.out.println("HAS ENTRY: " + directory.hasEntry("platform-tiles", Texture.class));
+//                    int ind = tileId - 1;
+//                    int regionX = ind % 6;
+//                    int regionY = ind / 6;
 
-                    System.out.println(directory.getEntry("platform-stoneTiles-2", Texture.class));
-                    tile.setTexture(directory.getEntry("platform-stoneTiles-2", Texture.class));
+                    System.out.println(directory.getEntry("platform"+(tileId), Texture.class));
+                    System.out.println("platform"+(tileId));
+
+                    tile.setTexture(directory.getEntry("platform"+(tileId), Texture.class));
 
                     if (isWall) {
                         tile.getObstacle().setName("wall");
