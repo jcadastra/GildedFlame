@@ -1209,10 +1209,6 @@ public class GameplayScene implements Screen {
      * @param dt    Number of seconds since last animation frame
      */
     public void update(float dt) {
-<<<<<<< HEAD
-//        System.out.println(avatar.getGroundedState());
-=======
->>>>>>> 8c2fd5e90ed9767764c3d02b12edbbe149bf39a7
         soundEngine.tendToMusicLoop();
         updateRunes(dt);
         supplementaryCollisionActions();
