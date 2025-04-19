@@ -54,12 +54,12 @@
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
     },
-    "platform1": {
+    "stoneTile1": {
       "file": "platform/stoneTiles/1.png",
       "wrapU": "repeated",
       "wrapV": "repeated"
     },
-    "platform2": {
+    "stoneTile2": {
       "file": "platform/stoneTiles/2.png",
       "wrapU": "repeated",
       "wrapV": "repeated"
