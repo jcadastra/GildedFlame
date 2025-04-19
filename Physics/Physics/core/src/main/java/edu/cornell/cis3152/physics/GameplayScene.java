@@ -575,27 +575,59 @@ public class GameplayScene implements Screen {
     private Rope temp;
 
     private List<float[]> extractSurfaces(int[] data, int cols, int rows) {
+        boolean[] visited = new boolean[data.length];
         List<float[]> surfaces = new ArrayList<>();
+
+        int[][] directions = {
+            {0, 1}, {1, 0}, {0, -1}, {-1, 0}
+        };
 
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < cols; x++) {
-                int yy = rows - y;
                 int index = y * cols + x;
-                int tileId = data[index];
+                if (visited[index]) continue;
 
-                if (tileId != 0) { // Skip empty tiles
-                    float[] polygon = new float[]{
-                        x, yy,                         // top-left
-                        x, yy - 1,                // bottom-left
-                        x + 1, yy - 1,        // bottom-right
-                        x + 1, yy
-                    };
+                int tileType = data[index];
+                if(tileType == 0) {continue;}
+                Queue<int[]> queue = new LinkedList<>();
+                queue.add(new int[]{x, y});
+                visited[index] = true;
 
-                    surfaces.add(polygon);
+                int minX = x, maxX = x;
+                int minY = y, maxY = y;
+
+                while (!queue.isEmpty()) {
+                    int[] current = queue.poll();
+                    int cx = current[0], cy = current[1];
+                    int ci = cy * cols + cx;
+
+                    for (int[] d : directions) {
+                        int nx = cx + d[0];
+                        int ny = cy + d[1];
+                        if (nx >= 0 && ny >= 0 && nx < cols && ny < rows) {
+                            int ni = ny * cols + nx;
+                            if (!visited[ni] && data[ni] == tileType) {
+                                queue.add(new int[]{nx, ny});
+                                visited[ni] = true;
+
+                                minX = Math.min(minX, nx);
+                                maxX = Math.max(maxX, nx);
+                                minY = Math.min(minY, ny);
+                                maxY = Math.max(maxY, ny);
+                            }
+                        }
+                    }
                 }
+                float[] rect = new float[]{
+                    minX, rows - minY,
+                    minX, rows - maxY - 1,
+                    maxX + 1, rows - maxY - 1,
+                    maxX + 1, rows - minY
+                };
+
+                surfaces.add(rect);
             }
         }
-
         return surfaces;
     }
 
@@ -608,7 +640,7 @@ public class GameplayScene implements Screen {
         JsonValue levelInfo = directory.getEntry(levelInfoName, JsonValue.class);
 
         // Create ground pieces
-        Texture texture = directory.getEntry( "shared-earth", Texture.class );
+        Texture texture = directory.getEntry( "platform-stoneTiles-1", Texture.class );
         enemies = new ArrayList<>();
 
         JsonValue layers = levelData.get("layers");
@@ -620,7 +652,6 @@ public class GameplayScene implements Screen {
                 int width = layer.getInt("width");
                 int height = layer.getInt("height");
                 JsonValue data = layer.get("data");
-                // TextureRegion[][] regions = TextureRegion.split(texture, 300, 300);
 
                 int[] tileData = new int[width * height];
                 for (int i = 0; i < data.size; i++) {
@@ -658,10 +689,11 @@ public class GameplayScene implements Screen {
                     int ind = tileId - 1;
                     int regionX = ind % 6;
                     int regionY = ind / 6;
-                    //TextureRegion region = regions[regionY][regionX];
-                    System.out.println(ind);
-                    //tile.setTextureRegion(region);
-                    tile.setTexture(texture);
+                    System.out.println("HAS ENTRY: " + directory.getDirectory().toString());
+                    System.out.println("HAS ENTRY: " + directory.hasEntry("platform-tiles", Texture.class));
+
+                    System.out.println(directory.getEntry("platform-stoneTiles-2", Texture.class));
+                    tile.setTexture(directory.getEntry("platform-stoneTiles-2", Texture.class));
 
                     if (isWall) {
                         tile.getObstacle().setName("wall");
@@ -1211,7 +1243,6 @@ public class GameplayScene implements Screen {
      * @param dt    Number of seconds since last animation frame
      */
     public void update(float dt) {
-        System.out.println(avatar.getGroundedState());
         soundEngine.tendToMusicLoop();
         updateRunes(dt);
         supplementaryCollisionActions();
