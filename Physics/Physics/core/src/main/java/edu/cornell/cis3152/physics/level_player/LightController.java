@@ -56,6 +56,9 @@ public class LightController {
 
     private Rectangle bounds;
 
+    private int flickerMax = 300;
+    private int flickerCount = 300;
+
     private boolean debug;
     public static final short CATEGORY_AVATAR = 0x0002;  // 00000010
     public static final short CATEGORY_ENVIRONMENT = 0x0004;  // 00000100
@@ -132,6 +135,7 @@ public class LightController {
         torchLighting.setSoft(false);
         torchLighting.setSoftnessLength(10f);
         torchLightState = torchLight.getState();
+        //torchLightState = Lighting.LightState.LIGHT_WAVER;
 
         Color playerLightCol = new Color(Color.LIGHT_GRAY.r,Color.LIGHT_GRAY.g,Color.LIGHT_GRAY.b,0.1f);
         playerLight = new PointLight(rayHandler,60,Color.LIGHT_GRAY,1.5f, points.x, points.y);
@@ -181,6 +185,7 @@ public class LightController {
         //System.out.println("fire pos"+ fire.getObstacle().getX()+","+fire.getObstacle().getY());
         torchLighting.attachToBody(fire.getObstacle().getBody());
         torchLightState = torchLight.getState();
+        //torchLightState = Lighting.LightState.LIGHT_WAVER;
     }
 
     public void attachPlayerLight (Avatar avatar){
@@ -221,10 +226,19 @@ public class LightController {
         if (torchLightState!=null){
         switch (torchLightState){
             case LIGHT_OFF:
-                torchLighting.dispose();
+                torchLighting.setActive(false);
+                break;
             case LIGHT_WAVER:
-                torchLighting.setDistance(3f);
+                //flickerCount--;
+                //System.out.println(flickerCount);
+                float dis = torchLighting.getDistance()-1;
+                System.out.println("new distance: " + dis*flickerCount/flickerMax);
+                torchLighting.setDistance(1+dis*flickerCount/flickerMax);
+                if (flickerCount <0){
+                torchLightState = Lighting.LightState.LIGHT_OFF;}
+                break;
             case LIGHT_ON:
+                if (flickerCount < 0){flickerCount = 5;}//light out, renew
                 break;
         }}
         //System.out.println("camera matrix"+camera.combined.toString());
@@ -344,5 +358,25 @@ public class LightController {
             camera = null;
         }
     }
+
+
+    public void update(Boolean beginSmother){
+        if (beginSmother){
+            //torchLight.waver(flickerCount);
+            System.out.println("flickerCount"+flickerCount);
+            flickerCount--;
+            if (flickerCount%60==0&&flickerCount>0){
+                torchLightState=Lighting.LightState.LIGHT_WAVER;
+            }else{
+                torchLightState=Lighting.LightState.LIGHT_ON;
+            }
+            if(flickerCount<=0){
+                torchLightState = Lighting.LightState.LIGHT_OFF;
+            }
+        }
+    }
 }
+
+
+
 //TODO: finish rayhandling, switch light states, and dispose when finished

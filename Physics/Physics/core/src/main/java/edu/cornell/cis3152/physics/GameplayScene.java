@@ -524,7 +524,7 @@ public class GameplayScene implements Screen {
         if (world != null) {
             world.dispose();
         }
-
+        contactListener.reset();
         world = new World(gravity, false);
         world.setContactListener(contactListener);
         setComplete(false);
@@ -1239,6 +1239,7 @@ public class GameplayScene implements Screen {
         fireController.update();
         eventHandler.update();
         contactListener.sustainedContact();
+        lightController.update(contactListener.beginSmother());
 
         InputController input = InputController.getInstance();
 
