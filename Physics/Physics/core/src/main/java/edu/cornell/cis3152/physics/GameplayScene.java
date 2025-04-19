@@ -524,7 +524,7 @@ public class GameplayScene implements Screen {
         if (world != null) {
             world.dispose();
         }
-        contactListener.reset();
+
         world = new World(gravity, false);
         world.setContactListener(contactListener);
         setComplete(false);
@@ -705,11 +705,9 @@ public class GameplayScene implements Screen {
                             lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds, units);
                             lightController.attachTorchLight(torchFire);
                             lightController.resetCamera(camera.position.x,camera.position.y);
-                            lightController.attachPlayerLight(avatar);
 
                             particleEngine = new ParticleEngine(torchFire, units);
                             particleEngine.newFires(fireController);
-                            particleEngine.rainEffect(bounds);
 
                             texture = directory.getEntry("platform-torch", Texture.class);
                             torch = new Torch(units, constants.get("torch"));
@@ -1239,7 +1237,6 @@ public class GameplayScene implements Screen {
         fireController.update();
         eventHandler.update();
         contactListener.sustainedContact();
-        lightController.update(contactListener.beginSmother());
 
         InputController input = InputController.getInstance();
 
@@ -1395,6 +1392,13 @@ public class GameplayScene implements Screen {
 
         camera.update();
 
+        //debug code
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.RED);
+        shapeRenderer.rect(bounds.x * scale.x, bounds.y * scale.y,
+            bounds.width * scale.x, bounds.height * scale.y);
+        shapeRenderer.end();
 
 
         float dx = camera.position.x-prevX;
@@ -1834,8 +1838,7 @@ public class GameplayScene implements Screen {
      */
     public void draw(float dt) {
         // Clear the screen (color is homage to the XNA years)
-        //ScreenUtils.clear(0.17f, 0.28f, 0.35f, 1.0f);
-        ScreenUtils.clear(56/255f,66/255f,82/255f,1f);
+        ScreenUtils.clear(0.17f, 0.28f, 0.35f, 1.0f);
 //        ScreenUtils.clear(1.0f, 1.0f, 1.0f, 1.0f);
         // This shows off how powerful our new SpriteBatch is
         batch.begin(camera);
@@ -1856,10 +1859,6 @@ public class GameplayScene implements Screen {
         if (!torchFire.getObstacle().isRemoved()) {
             particleEngine.draw(batch,torchFire);
         }
-        //particleEngine.draw(batch,torchFire);
-        //particleEngine.splashEffects(1,0.5f, 20,0);
-        //particleEngine.drawRain(batch,bounds);
-        //particleEngine.drawSplash(batch,1,0.5f,20,0);
         //lightController.fireLights(fireController);
 
 
@@ -1896,7 +1895,7 @@ public class GameplayScene implements Screen {
         this.height = height;
         if (camera == null) {
             camera = new OrthographicCamera();
-            camera.zoom = 0.7f;
+            camera.zoom = 0.8f;
         }
         camera.setToOrtho( false, width, height );
         scale.x = width/bounds.width;
