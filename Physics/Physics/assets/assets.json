@@ -30,6 +30,72 @@
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
     },
+    "platform-playerJUMPNOTORCHFALL": {
+      "file": "platform/playerJumpNoTorchFall.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-playerJUMPNOTORCHLAND": {
+      "file": "platform/playerJumpNoTorchLand.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-playerJUMPNOTORCHUP": {
+      "file": "platform/playerJumpNoTorchUp.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-playerJUMPTORCHFALL": {
+      "file": "platform/playerJumpTorchFall.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-playerJUMPTORCHLAND": {
+      "file": "platform/playerJumpTorchLand.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-playerJUMPTORCHUP": {
+      "file": "platform/playerJumpTorchUp.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-playerJUMPTHROWFALL": {
+      "file": "platform/playerJumpThrowFall.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-playerJUMPTHROWUP": {
+      "file": "platform/playerJumpThrowUp.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-playerJUMPTHROWLAND": {
+      "file": "platform/playerJumpThrowLand.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-playerCLIMBUP": {
+      "file": "platform/playerClimbUp.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-playerCLIMBDOWN": {
+      "file": "platform/playerClimbUp.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
     "platform-playerIDLETORCH": {
       "file": "platform/playerIdleTorch.png",
       "mipmaps": true,
@@ -38,12 +104,6 @@
     },
     "platform-playerIDLENOTORCH": {
       "file": "platform/playerIdleNoTorch.png",
-      "mipmaps": true,
-      "minfilter": "linear mipmap linear",
-      "magfilter": "linear mipmap linear"
-    },
-    "platform-playerJUMP": {
-      "file": "platform/playerJump.png",
       "mipmaps": true,
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"

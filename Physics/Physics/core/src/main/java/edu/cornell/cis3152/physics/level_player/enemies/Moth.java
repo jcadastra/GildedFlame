@@ -112,7 +112,7 @@ public class Moth extends Enemy {
 
     @Override
     public void cd() {
-        System.out.println("CD");
+        setTexture(directory.getEntry("platform-mothINLIGHT", Texture.class));
         if (rr == null) {
             setState(EnemyState.OUT_OF_LIGHT);
         } else {

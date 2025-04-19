@@ -31,18 +31,20 @@ import edu.cornell.gdiac.graphics.Texture2D;
 import edu.cornell.gdiac.math.Path2;
 import edu.cornell.gdiac.math.PathFactory;
 import edu.cornell.gdiac.physics2.*;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * Traci's avatar for the platform game.
- *
+ * <p>
  * An ObstacleSprite is a sprite (specifically a textured mesh) that is
  * connected to a obstacle. It is designed to be the same size as the
  * physics object, and it tracks the physics object, matching its position
  * and angle at all times.
- *
+ * <p>
  * Note that unlike a traditional ObstacleSprite, this attaches some additional
  * information to the obstacle. In particular, we add a sensor fixture. This
  * sensor is used to prevent double-jumping. However, we only have one mesh,
@@ -51,108 +53,257 @@ import java.util.Set;
  * simple fixture so that we can attach it to the obstacle WITHOUT using joints.
  */
 public class Avatar extends ObstacleSprite {
-    public enum GroundState {
-        GROUNDED,
-        AIRBORNE,
-        CLIMBING;
-    }
-    private GroundState groundState;
-    private Set<EnhancedObstacleSprite> bodyTouchedClimbables;
     public static final int PLAYER = 0x00000001;
     public static final int WALL = 0x00000002;
     public static final int TORCH = 0x00000004;
     public static final int TOTEM = 0x00000008;
     public static final int MOTH = 0x00000010;
-    /** The initializing data (to avoid magic numbers) */
-    private final JsonValue data;
-    /** The width of Traci's avatar */
-    private float width;
-    /** The height of Traci's avatar */
-    private float height;
-
-    /** The factor to multiply by the input */
-    private float force;
-    /** The amount to slow the character down */
-    private float damping;
-    /** The maximum character speed */
-    private float maxspeed;
-    /** The impulse for the character jump */
-    private float jump_force;
-    /** Cooldown (in animation frames) for jumping */
-    private int jumpLimit;
-    /** Cooldown (in animation frames) for shooting */
-    private int shotLimit;
-
-    /** The current horizontal movement of the character */
-    private Vector2   movement;
-    /** Which direction is the character facing */
-    private boolean faceRight;
-    /** How long until we can jump again */
-    private int jumpCooldown;
-    /** Whether we are actively jumping */
-    private boolean isJumping;
-    /** How long until we can shoot again */
-    private int shootCooldown;
-    /** Whether we are actively shooting */
-    private boolean isShooting;
-
-    /** Whether the player has torch in hand */
-    private boolean hasTorch;
-    /** The outline of the sensor obstacle */
-    private Path2 sensorOutline;
-    /** The debug color for the sensor */
-    private Color sensorColor;
-    /** The name of the sensor fixture */
-    private String sensorName;
-
-    private float x;
-    private float y;
-
-    private final float units;
-
-    public float getUnits() {
-        return units;
-    }
-
-
     public static final short CATEGORY_AVATAR = 0x0002;  // 00000010
     public static final short CATEGORY_ENVIRONMENT = 0x0004;  // 00000100
     public static final short CATEGORY_LIGHT = 0x0008;  // 00001000
+    public static final int TOTAL_FRAMES = 6;
+    public static final int TOTAL_JUMP_UP_FRAMES = 4;
+    public static final int TOTAL_JUMP_FALL_FRAMES = 4;
+    public static final int TOTAL_JUMP_LAND_FRAMES = 2;
+    public static final int FRAME_HEIGHT = 550;
+    public static final int FRAME_WIDTH = 350;
+    private static final int JUMP_FRAME_DURATION = 6;
+    private static final int JUMP_FRAME_LAND_DURATION = 6;
 
-    /** Cache for internal force calculations */
-    private final Vector2 forceCache = new Vector2();
-    /** Cache for the affine flip */
-    private final Affine2 flipCache = new Affine2();
-
+    public static final int THROW_TOTAL_FRAMES = 3;
+    public static final int THROW_FRAME_DURATION = 6;
+    public static int throwCount = 0;
+    private static boolean isThrowing = false;
+    private static final int FRAME_DURATION = 12;
     protected static AssetDirectory directory;
     private static Texture animationTextureIdleTorch;
     private static Texture animationTextureIdleNoTorch;
     private static Texture animationTextureMovementTorch;
     private static Texture animationTextureMovementNoTorch;
-    private static Texture animationTextureJump;
     private static Texture animationTextureThrow;
-    public static final int TOTAL_FRAMES = 6;
-
-    public static final int IDLE_FRAME_HEIGHT = 550;
-    public static final int IDLE_FRAME_WIDTH = 300;
-
-
-    public static final int MOVEMENT_FRAME_HEIGHT = 550;
-    public static final int MOVEMENT_FRAME_WIDTH = 350;
-
-    private static final int FRAME_DURATION = 12;
-
+    private static Texture animationTextureJumpNoTorchFall;
+    private static Texture animationTextureJumpNoTorchLand;
+    private static Texture animationTextureJumpNoTorchUp;
+    private static Texture animationTextureJumpTorchFall;
+    private static Texture animationTextureJumpTorchLand;
+    private static Texture animationTextureJumpTorchUp;
+    private static Texture animationTextureJumpThrowFall;
+    private static Texture animationTextureJumpThrowLand;
+    private static Texture animationTextureJumpThrowUp;
+    private static Texture animationTextureClimbUp;
+    private static Texture animationTextureClimbDown;
+    /**
+     * The initializing data (to avoid magic numbers)
+     */
+    private final JsonValue data;
+    private final float units;
+    /**
+     * Cache for internal force calculations
+     */
+    private final Vector2 forceCache = new Vector2();
+    /**
+     * Cache for the affine flip
+     */
+    private final Affine2 flipCache = new Affine2();
+    private final Set<EnhancedObstacleSprite> bodyTouchedClimbables;
+    /**
+     * The width of Traci's avatar
+     */
+    private final float width;
+    /**
+     * The height of Traci's avatar
+     */
+    private final float height;
+    /**
+     * The factor to multiply by the input
+     */
+    private final float force;
+    /**
+     * The amount to slow the character down
+     */
+    private final float damping;
+    /**
+     * The maximum character speed
+     */
+    private final float maxspeed;
+    /**
+     * The impulse for the character jump
+     */
+    private final float jump_force;
+    /**
+     * Cooldown (in animation frames) for jumping
+     */
+    private final int jumpLimit;
+    /**
+     * Cooldown (in animation frames) for shooting
+     */
+    private final int shotLimit;
+    /**
+     * The debug color for the sensor
+     */
+    private final Color sensorColor;
+    private final float x;
+    private final float y;
+    private GroundState groundState;
+    /**
+     * The current horizontal movement of the character
+     */
+    private Vector2 movement;
+    /**
+     * Which direction is the character facing
+     */
+    private boolean faceRight;
+    /**
+     * How long until we can jump again
+     */
+    private int jumpCooldown;
+    /**
+     * Whether we are actively jumping
+     */
+    private boolean isJumping;
+    /**
+     * How long until we can shoot again
+     */
+    private int shootCooldown;
+    /**
+     * Whether we are actively shooting
+     */
+    private boolean isShooting;
+    /**
+     * Whether the player has torch in hand
+     */
+    private boolean hasTorch;
+    private boolean doOnce;
+    /**
+     * The outline of the sensor obstacle
+     */
+    private Path2 sensorOutline;
+    /**
+     * The name of the sensor fixture
+     */
+    private String sensorName;
     private int cdFrameCount = 0;
     private int frameIndex = 0;
+
+
+    private int throwFrameIndex = 0;
+    private boolean throwSwitch = false;
+    private int jumpFrameCount = 0;
+    private boolean justLanded = false;
+    private boolean reachedApex = false;
+    private boolean hadTorch;
+
+    /**
+     * Creates a new Traci avatar with the given physics data
+     * <p>
+     * The physics units are used to size the mesh relative to the physics
+     * body. All other attributes are defined by the JSON file. Because of
+     * transparency around the image file, the physics object will be slightly
+     * thinner than the mesh in order to give a tighter hitbox.
+     *
+     * @param units The physics units
+     * @param data  The physics constants for Traci
+     */
+//    public Traci(float units, JsonValue data, AssetDirectory directory) {
+    public Avatar(AssetDirectory directory, float units, JsonValue data) {
+        Avatar.directory = directory;
+        this.data = data;
+        this.units = units;
+        JsonValue debugInfo = data.get("debug");
+
+        x = data.get("pos").getFloat(0);
+        y = data.get("pos").getFloat(1);
+        float s = data.getFloat("size");
+        float size = s * units;
+
+        animationTextureIdleTorch = directory.getEntry("platform-playerIDLETORCH", Texture.class);
+        animationTextureIdleNoTorch = directory.getEntry("platform-playerIDLENOTORCH", Texture.class);
+        animationTextureMovementTorch = directory.getEntry("platform-playerMOVEMENTTORCH", Texture.class);
+        animationTextureMovementNoTorch = directory.getEntry("platform-playerMOVEMENTNOTORCH", Texture.class);
+        animationTextureJumpNoTorchFall = directory.getEntry("platform-playerJUMPNOTORCHFALL", Texture.class);
+        animationTextureJumpNoTorchLand = directory.getEntry("platform-playerJUMPNOTORCHLAND", Texture.class);
+        animationTextureJumpNoTorchUp = directory.getEntry("platform-playerJUMPNOTORCHUP", Texture.class);
+        animationTextureJumpTorchFall = directory.getEntry("platform-playerJUMPTORCHFALL", Texture.class);
+        animationTextureJumpTorchLand = directory.getEntry("platform-playerJUMPTORCHLAND", Texture.class);
+        animationTextureJumpTorchUp = directory.getEntry("platform-playerJUMPTORCHUP", Texture.class);
+        animationTextureJumpThrowFall = directory.getEntry("platform-playerJUMPTHROWFALL", Texture.class);
+        animationTextureJumpThrowLand = directory.getEntry("platform-playerJUMPTHROWLAND", Texture.class);
+        animationTextureJumpThrowUp = directory.getEntry("platform-playerJUMPTHROWUP", Texture.class);
+        animationTextureThrow = directory.getEntry("platform-playerTHROW", Texture.class);
+        animationTextureClimbUp = directory.getEntry("platform-playerCLIMBUP", Texture.class);
+        animationTextureClimbDown = directory.getEntry("platform-playerCLIMBDOWN", Texture.class);
+
+
+        // The capsule is smaller than the image
+        // "inner" is the fraction of the original size for the capsule
+        width = s * data.get("inner").getFloat(0);
+        height = s * data.get("inner").getFloat(1);
+        obstacle = new CapsuleObstacle(x, y, width, height);
+        ((CapsuleObstacle) obstacle).setTolerance(debugInfo.getFloat("tolerance", 0.5f));
+
+        obstacle.setDensity(data.getFloat("density", 0));
+        obstacle.setFriction(data.getFloat("friction", 0));
+        obstacle.setRestitution(data.getFloat("restitution", 0));
+        obstacle.setFixedRotation(true);
+        obstacle.setPhysicsUnits(units);
+        obstacle.setUserData(this);
+        obstacle.setName("traci");
+
+        debug = ParserUtils.parseColor(debugInfo.get("avatar"), Color.WHITE);
+        sensorColor = ParserUtils.parseColor(debugInfo.get("sensor"), Color.WHITE);
+
+        maxspeed = data.getFloat("maxspeed", 0);
+        damping = data.getFloat("damping", 0);
+        force = data.getFloat("force", 0);
+        jump_force = data.getFloat("jump_force", 0);
+        jumpLimit = data.getInt("jump_cool", 0);
+        shotLimit = data.getInt("shot_cool", 0);
+
+        // Gameplay attributes
+        groundState = GroundState.AIRBORNE;
+        isShooting = false;
+        isJumping = false;
+        faceRight = true;
+        hasTorch = false;
+        hadTorch = false;
+        doOnce = true;
+
+        shootCooldown = 0;
+        jumpCooldown = 0;
+
+        // Create a rectangular mesh for Traci. This is the same as for door,
+        // since Traci is a rectangular image. But note that the capsule is
+        // actually smaller than the image, making a tighter hitbox. You can
+        // see this when you enable debug mode.
+        mesh.set(-size / 2.0f, -size / 2.0f, size, size);
+
+        //fixture filter for lights
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.filter.categoryBits = CATEGORY_AVATAR; // Object's category
+        fixtureDef.filter.maskBits = CATEGORY_ENVIRONMENT; // Which lights affect it
+
+        this.bodyTouchedClimbables = new HashSet<>();
+    }
+
+    public float getUnits() {
+        return units;
+    }
 
     private void resetFrames() {
         cdFrameCount = 0;
         frameIndex = 0;
+        jumpFrameCount = 0;
+        reachedApex = false;
+    }
+
+    private void resetJumpFrames() {
+        jumpFrameCount = 0;
+        reachedApex = false;
     }
 
     /**
      * Returns the left/right movement of this character.
-     *
+     * <p>
      * This is the result of input times force.
      *
      * @return the left/right movement of this character.
@@ -163,7 +314,7 @@ public class Avatar extends ObstacleSprite {
 
     /**
      * Sets the left/right movement of this character.
-     *
+     * <p>
      * This is the result of input times force.
      *
      * @param value the left/right movement of this character.
@@ -213,6 +364,7 @@ public class Avatar extends ObstacleSprite {
     public void setJumping(boolean value) {
         isJumping = value;
     }
+
     /**
      * Returns true if Traci has torch.
      */
@@ -220,15 +372,29 @@ public class Avatar extends ObstacleSprite {
         return hasTorch;
     }
 
-    public Vector2 getLocation() {
-        return new Vector2(getObstacle().getX(), getObstacle().getY());
-    }
-
     /**
      * Sets whether Traci has torch.
      */
     public void setHasTorch(boolean value) {
         hasTorch = value;
+    }
+    /**
+     * Returns true if Traci had torch.
+     */
+    public boolean getHadTorch() {
+        return hadTorch;
+    }
+
+    /**
+     * Sets whether Traci has torch.
+     */
+    public void setHadTorch(boolean value) {
+        hadTorch = value;
+    }
+
+
+    public Vector2 getLocation() {
+        return new Vector2(getObstacle().getX(), getObstacle().getY());
     }
 
     /**
@@ -249,7 +415,7 @@ public class Avatar extends ObstacleSprite {
 
     /**
      * Returns how much force to apply to get Traci moving
-     *
+     * <p>
      * Multiply this by the input to get the movement value.
      *
      * @return how much force to apply to get Traci moving
@@ -269,7 +435,7 @@ public class Avatar extends ObstacleSprite {
 
     /**
      * Returns the upper limit on Traci's left-right movement.
-     *
+     * <p>
      * This does NOT apply to vertical movement.
      *
      * @return the upper limit on Traci's left-right movement.
@@ -280,7 +446,7 @@ public class Avatar extends ObstacleSprite {
 
     /**
      * Returns the name of the ground sensor
-     *
+     * <p>
      * This is used by the ContactListener. Because we do not associate the
      * sensor with its own obstacle,
      *
@@ -298,90 +464,13 @@ public class Avatar extends ObstacleSprite {
     public boolean isFacingRight() {
         return faceRight;
     }
+
     public Float getWidth() {
         return width;
     }
+
     public Float getHeight() {
         return height;
-    }
-
-    /**
-     * Creates a new Traci avatar with the given physics data
-     *
-     * The physics units are used to size the mesh relative to the physics
-     * body. All other attributes are defined by the JSON file. Because of
-     * transparency around the image file, the physics object will be slightly
-     * thinner than the mesh in order to give a tighter hitbox.
-     *
-     * @param units     The physics units
-     * @param data      The physics constants for Traci
-     */
-//    public Traci(float units, JsonValue data, AssetDirectory directory) {
-    public Avatar(AssetDirectory directory, float units, JsonValue data) {
-        Avatar.directory = directory;
-        this.data = data;
-        this.units = units;
-        JsonValue debugInfo = data.get("debug");
-
-        x = data.get("pos").getFloat(0);
-        y = data.get("pos").getFloat(1);
-        float s = data.getFloat( "size" );
-        float size = s*units;
-
-        animationTextureIdleTorch = directory.getEntry("platform-playerIDLETORCH", Texture.class);
-        animationTextureIdleNoTorch = directory.getEntry("platform-playerIDLENOTORCH", Texture.class);
-        animationTextureMovementTorch = directory.getEntry("platform-playerMOVEMENTTORCH", Texture.class);
-        animationTextureMovementNoTorch = directory.getEntry("platform-playerMOVEMENTNOTORCH", Texture.class);
-        animationTextureJump = directory.getEntry("platform-playerJUMP", Texture.class);
-        animationTextureThrow = directory.getEntry("platform-playerTHROW", Texture.class);
-
-        // The capsule is smaller than the image
-        // "inner" is the fraction of the original size for the capsule
-        width = s*data.get("inner").getFloat(0);
-        height = s*data.get("inner").getFloat(1);
-        obstacle = new CapsuleObstacle(x, y, width, height);
-        ((CapsuleObstacle)obstacle).setTolerance( debugInfo.getFloat("tolerance", 0.5f) );
-
-        obstacle.setDensity( data.getFloat( "density", 0 ) );
-        obstacle.setFriction( data.getFloat( "friction", 0 ) );
-        obstacle.setRestitution( data.getFloat( "restitution", 0 ) );
-        obstacle.setFixedRotation(true);
-        obstacle.setPhysicsUnits( units );
-        obstacle.setUserData( this );
-        obstacle.setName("traci");
-
-        debug = ParserUtils.parseColor( debugInfo.get("avatar"),  Color.WHITE);
-        sensorColor = ParserUtils.parseColor( debugInfo.get("sensor"),  Color.WHITE);
-
-        maxspeed = data.getFloat("maxspeed", 0);
-        damping = data.getFloat("damping", 0);
-        force = data.getFloat("force", 0);
-        jump_force = data.getFloat( "jump_force", 0 );
-        jumpLimit = data.getInt( "jump_cool", 0 );
-        shotLimit = data.getInt( "shot_cool", 0 );
-
-        // Gameplay attributes
-        groundState = GroundState.AIRBORNE;
-        isShooting = false;
-        isJumping = false;
-        faceRight = true;
-        hasTorch = false;
-
-        shootCooldown = 0;
-        jumpCooldown = 0;
-
-        // Create a rectangular mesh for Traci. This is the same as for door,
-        // since Traci is a rectangular image. But note that the capsule is
-        // actually smaller than the image, making a tighter hitbox. You can
-        // see this when you enable debug mode.
-        mesh.set(-size/2.0f,-size/2.0f,size,size);
-
-        //fixture filter for lights
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.filter.categoryBits = CATEGORY_AVATAR; // Object's category
-        fixtureDef.filter.maskBits = CATEGORY_ENVIRONMENT; // Which lights affect it
-
-        this.bodyTouchedClimbables = new HashSet<>();
     }
 
     public void create_Fixture() {
@@ -409,34 +498,34 @@ public class Avatar extends ObstacleSprite {
 
     /**
      * Creates the sensor for Traci.
-     *
+     * <p>
      * We only allow the Traci to jump when she's on the ground. Double jumping
      * is not allowed.
-     *
+     * <p>
      * To determine whether Traci is on the ground we create a thin sensor under
      * her feet, which reports collisions with the world but has no collision
      * response. This sensor is just a FIXTURE, it is not an obstacle. We will
      * talk about the different between these later.
-     *
+     * <p>
      * Note this method is not part of the constructor. It can only be called
      * once the physics obstacle has been activated.
      */
     public void createSensor() {
         Vector2 sensorCenter = new Vector2(0, -height / 2);
         FixtureDef sensorDef = new FixtureDef();
-        sensorDef.density = data.getFloat("density",0);
+        sensorDef.density = data.getFloat("density", 0);
         sensorDef.isSensor = true;
 
         JsonValue sensorjv = data.get("sensor");
-        float w = sensorjv.getFloat("shrink",0)*width/2.0f;
-        float h = sensorjv.getFloat("height",0);
+        float w = sensorjv.getFloat("shrink", 0) * width / 2.0f;
+        float h = sensorjv.getFloat("height", 0);
         PolygonShape sensorShape = new PolygonShape();
         sensorShape.setAsBox(w, h, sensorCenter, 0.0f);
         sensorDef.shape = sensorShape;
 
         // Ground sensor to represent our feet
         Body body = obstacle.getBody();
-        Fixture sensorFixture = body.createFixture( sensorDef );
+        Fixture sensorFixture = body.createFixture(sensorDef);
         sensorName = "traci_sensor";
         sensorFixture.setUserData(sensorName);
 
@@ -444,13 +533,12 @@ public class Avatar extends ObstacleSprite {
         float u = obstacle.getPhysicsUnits();
         PathFactory factory = new PathFactory();
         sensorOutline = new Path2();
-        factory.makeRect( (sensorCenter.x-w/2)*u,(sensorCenter.y-h/2)*u, w*u, h*u,  sensorOutline);
+        factory.makeRect((sensorCenter.x - w / 2) * u, (sensorCenter.y - h / 2) * u, w * u, h * u, sensorOutline);
     }
-
 
     /**
      * Applies the force to the body of Traci
-     *
+     * <p>
      * This method should be called after the force attribute is set.
      */
     public void applyForce() {
@@ -481,30 +569,29 @@ public class Avatar extends ObstacleSprite {
                 avgAngle += eos.getObstacle().getAngle();
                 avgPos.add(eos.getObstacle().getPosition().cpy());
             }
-            avgVel.scl(1f/count);
-            avgPos.scl(1f/count);
+            avgVel.scl(1f / count);
+            avgPos.scl(1f / count);
             avgAngle /= (count);
-            obstacle.setAngle((float) ((Math.PI/2)-Math.abs(avgAngle)));
+            obstacle.setAngle((float) ((Math.PI / 2) - Math.abs(avgAngle)));
 //            System.out.println("angle -> " + avgAngle);
 //            System.out.println(count);
 
-            Vector2 ropeDir = new Vector2((float)Math.cos(avgAngle), (float)Math.sin(avgAngle));
+            Vector2 ropeDir = new Vector2((float) Math.cos(avgAngle), (float) Math.sin(avgAngle));
             Vector2 perpDir = new Vector2(-ropeDir.y, ropeDir.x);
 
-            java.util.function.Predicate<EnhancedObstacleSprite> testLadder = (item) -> item instanceof Ladder;
+            Predicate<EnhancedObstacleSprite> testLadder = (item) -> item instanceof Ladder;
             int topProtector = 1;
-            if (!bodyTouchedClimbables.stream().allMatch(testLadder) && avgPos.y < (pos.y - height/4) && getMovement().y > 0) {
-                topProtector= 0;
+            if (!bodyTouchedClimbables.stream().allMatch(testLadder) && avgPos.y < (pos.y - height / 4) && getMovement().y > 0) {
+                topProtector = 0;
             }
             if (avgPos.y > pos.y) {
-                maxVel.scl(Math.signum(avgPos.x - pos.x) , Math.signum(avgPos.y - pos.x));
+                maxVel.scl(Math.signum(avgPos.x - pos.x), Math.signum(avgPos.y - pos.x));
             }
             if (topProtector == 0) {
                 pos.y = avgPos.y;
             }
 
-            Vector2 playerMovement = new Vector2(ropeDir).scl(-getMovement().y * (1f/7 * topProtector))
-                .add(new Vector2(perpDir).scl(getMovement().x * (1f/10)));
+            Vector2 playerMovement = new Vector2(ropeDir).scl(-getMovement().y * (1f / 7 * topProtector)).add(new Vector2(perpDir).scl(getMovement().x * (1f / 10)));
 
             if (playerMovement.len() == 0 && bodyTouchedClimbables.size() > 1) {
                 playerMovement = avgPos.cpy().sub(getObstacle().getPosition());
@@ -515,27 +602,27 @@ public class Avatar extends ObstacleSprite {
                 removeClimbingPhysics();
                 obstacle.setLinearVelocity(Vector2.Zero);
                 forceCache.set(0, jump_force);
-                body.applyLinearImpulse(forceCache,pos,true);
+                body.applyLinearImpulse(forceCache, pos, true);
             }
         } else {
             // TYPICAL MOVEMENT LOGIC
 //            getObstacle().getBody().setGravityScale(1);
 
             if (getMovement().x == 0f) {
-                forceCache.set(-getDamping()*vx,0);
-                body.applyForce(forceCache,pos,true);
+                forceCache.set(-getDamping() * vx, 0);
+                body.applyForce(forceCache, pos, true);
             }
 
             if (Math.abs(vx) >= getMaxSpeed()) {
-                obstacle.setVX(Math.signum(vx)*getMaxSpeed());
+                obstacle.setVX(Math.signum(vx) * getMaxSpeed());
             } else {
-                forceCache.set(getMovement().x,0);
-                body.applyForce(forceCache,pos,true);
+                forceCache.set(getMovement().x, 0);
+                body.applyForce(forceCache, pos, true);
             }
 
             if (isJumping()) {
                 forceCache.set(0, jump_force);
-                body.applyLinearImpulse(forceCache,pos,true);
+                body.applyLinearImpulse(forceCache, pos, true);
             }
         }
     }
@@ -545,6 +632,7 @@ public class Avatar extends ObstacleSprite {
         getObstacle().setFixedRotation(false);
         applyWeightToClimbable(bodyTouchedClimbables);
     }
+
     public void removeClimbingPhysics() {
         getObstacle().setAngle(0);
         getObstacle().setFixedRotation(true);
@@ -562,14 +650,28 @@ public class Avatar extends ObstacleSprite {
 
     /**
      * Updates the object's physics state (NOT GAME LOGIC).
-     *
+     * <p>
      * We use this method to reset cooldowns.
      *
-     * @param dt    Number of seconds since last animation frame
+     * @param dt Number of seconds since last animation frame
      */
     @Override
     public void update(float dt) {
         // Apply cooldowns
+        if (justLanded && doOnce) {
+            resetJumpFrames();
+            doOnce = false;
+        }
+
+        if (!hasTorch && hadTorch){
+            if (throwSwitch){
+                throwSwitch = false;
+                setHadTorch((getHasTorch()));
+            }
+        } else if (!hadTorch && hasTorch){
+            setHadTorch(getHasTorch());
+        }
+
         if (isJumping()) {
             jumpCooldown = jumpLimit;
         } else {
@@ -593,7 +695,7 @@ public class Avatar extends ObstacleSprite {
 
     /**
      * Draws the physics object.
-     *
+     * <p>
      * This method is overridden from ObstacleSprite. We need to flip the
      * texture back-and-forth depending on her facing. We do that by creating
      * a reflection affine transform.
@@ -604,41 +706,96 @@ public class Avatar extends ObstacleSprite {
     public void draw(SpriteBatch batch) {
         float drawX = obstacle.getX() - getWidth() / 2f;
         float drawY = obstacle.getY() - getHeight() / 2f;
-
-
-
         Texture animationTexture;
-//    if (getGroundedState() == GroundState.AIRBORNE) {
-//        int srcIndex = frameIndex * JUMP_FRAME_WIDTH;
-//        animationTexture = animationTextureJump;
-//        batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits() * 1.5f, srcIndex, 0, JUMP_FRAME_WIDTH, JUMP_FRAME_HEIGHT, !isFacingRight(), false);
-//    }
-
-        if (getMovement() != null) {
-            if (!getMovement().epsilonEquals(0,0)){
-                int srcIndex = frameIndex * MOVEMENT_FRAME_WIDTH;
-                if (hasTorch){
-                    animationTexture = animationTextureMovementTorch;
-                } else {
-                    animationTexture = animationTextureMovementNoTorch;
-                }
-                batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits()*1.5f, srcIndex, 0, MOVEMENT_FRAME_WIDTH, MOVEMENT_FRAME_HEIGHT, !isFacingRight(), false);
+        int srcIndex;
+        if (groundState == GroundState.CLIMBING) {
+            if (movement.y > 0) {
+                cdFrameCount++;
+                frameIndex = (cdFrameCount / FRAME_DURATION) % TOTAL_FRAMES;
+                srcIndex = frameIndex * FRAME_WIDTH;
+                animationTexture = animationTextureClimbUp;
+            } else if (movement.y < 0) {
+                cdFrameCount++;
+                frameIndex = (cdFrameCount / FRAME_DURATION) % TOTAL_FRAMES;
+                srcIndex = frameIndex * FRAME_WIDTH;
+                animationTexture = animationTextureClimbDown;
             } else {
-                int srcIndex = frameIndex * IDLE_FRAME_WIDTH;
-                if (hasTorch){
-                    animationTexture = animationTextureIdleTorch;
-                } else {
-                    animationTexture = animationTextureIdleNoTorch;
-                }
-                batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits()*1.5f, srcIndex, 0, IDLE_FRAME_WIDTH, IDLE_FRAME_HEIGHT, !isFacingRight(), false);
-
+                frameIndex = 0;
+                srcIndex = 0;
+                animationTexture = animationTextureClimbUp;
             }
+            batch.draw(animationTexture, drawX * units, drawY * units, units, units * 1.5f, srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, !faceRight, false);
+        } else if (getHadTorch() && !getHasTorch()) {
+            throwFrameIndex = throwCount / THROW_FRAME_DURATION;
+            throwCount++;
+            if (throwFrameIndex <= THROW_TOTAL_FRAMES){
+                if (throwFrameIndex == THROW_TOTAL_FRAMES){
+                    throwFrameIndex = 0;
+                    throwCount = 0;
+                    throwSwitch = true;
+                } else {
+                    srcIndex = throwFrameIndex * FRAME_WIDTH;
+                    animationTexture = animationTextureThrow;
+                    batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits() * 1.5f, srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, !isFacingRight(), false);
+                    throwFrameIndex++;
+                }
+            }
+
+
+        } else if (getGroundedState() == GroundState.AIRBORNE) {
+            float vy = obstacle.getLinearVelocity().y;
+            if (vy > 0) {
+                jumpFrameCount++;
+                frameIndex = Math.min((jumpFrameCount / JUMP_FRAME_DURATION), TOTAL_JUMP_UP_FRAMES - 1);
+                if (frameIndex == TOTAL_JUMP_UP_FRAMES - 1) {
+                    reachedApex = true;
+                }
+                srcIndex = frameIndex * FRAME_WIDTH;
+                animationTexture = hasTorch ? animationTextureJumpTorchUp : animationTextureJumpNoTorchUp;
+                System.out.println(jumpFrameCount);
+            } else if (vy < 0) {
+                if (reachedApex) {
+                    resetJumpFrames();
+                }
+                jumpFrameCount++;
+                frameIndex = (jumpFrameCount / JUMP_FRAME_DURATION) % TOTAL_JUMP_FALL_FRAMES;
+                srcIndex = frameIndex * FRAME_WIDTH;
+                animationTexture = hasTorch ? animationTextureJumpTorchFall : animationTextureJumpNoTorchFall;
+                justLanded = true;
+                doOnce = true;
+            } else {
+                srcIndex = frameIndex * FRAME_WIDTH;
+                animationTexture = hasTorch ? animationTextureJumpTorchFall : animationTextureJumpNoTorchFall;
+            }
+            batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits() * 1.5f, srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, !isFacingRight(), false);
+        } else if (justLanded) {
+            jumpFrameCount++;
+            frameIndex = (jumpFrameCount / JUMP_FRAME_LAND_DURATION);
+            if (frameIndex == TOTAL_JUMP_LAND_FRAMES) {
+                justLanded = false;
+            }
+            srcIndex = frameIndex * FRAME_WIDTH;
+            animationTexture = hasTorch ? animationTextureJumpTorchLand : animationTextureJumpNoTorchLand;
+            batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits() * 1.5f, srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, !isFacingRight(), false);
+        } else if (getMovement() != null && !getMovement().epsilonEquals(0, 0)) {
+            cdFrameCount++;
+            frameIndex = (cdFrameCount / FRAME_DURATION) % TOTAL_FRAMES;
+            srcIndex = frameIndex * FRAME_WIDTH;
+            animationTexture = hasTorch ? animationTextureMovementTorch : animationTextureMovementNoTorch;
+            batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits() * 1.5f, srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, !isFacingRight(), false);
+        } else {
+
+            cdFrameCount++;
+            frameIndex = (cdFrameCount / FRAME_DURATION) % TOTAL_FRAMES;
+            srcIndex = frameIndex * FRAME_WIDTH;
+            animationTexture = hasTorch ? animationTextureIdleTorch : animationTextureIdleNoTorch;
+            batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits() * 1.5f, srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, !isFacingRight(), false);
         }
     }
 
     /**
      * Draws the outline of the physics object.
-     *
+     * <p>
      * This method is overridden from ObstacleSprite. By default, that method
      * only draws the outline of the main physics obstacle. We also want to
      * draw the outline of the sensor, and in a different color. Since it
@@ -648,11 +805,11 @@ public class Avatar extends ObstacleSprite {
      */
     @Override
     public void drawDebug(SpriteBatch batch) {
-        super.drawDebug( batch );
+        super.drawDebug(batch);
 
         if (sensorOutline != null) {
-            batch.setTexture( Texture2D.getBlank() );
-            batch.setColor( sensorColor );
+            batch.setTexture(Texture2D.getBlank());
+            batch.setColor(sensorColor);
 
             Vector2 p = obstacle.getPosition();
             float a = obstacle.getAngle();
@@ -660,26 +817,28 @@ public class Avatar extends ObstacleSprite {
 
             // transform is an inherited cache variable
             transform.idt();
-            transform.preRotate( (float) (a * 180.0f / Math.PI) );
-            transform.preTranslate( p.x * u, p.y * u );
+            transform.preRotate((float) (a * 180.0f / Math.PI));
+            transform.preTranslate(p.x * u, p.y * u);
 
             //
-            batch.outline( sensorOutline, transform );
+            batch.outline(sensorOutline, transform);
         }
     }
 
     public void registerClimbable(EnhancedObstacleSprite obj) {
-        if (!bodyTouchedClimbables.contains(obj) && groundState.equals(GroundState.CLIMBING) ) {
+        if (!bodyTouchedClimbables.contains(obj) && groundState.equals(GroundState.CLIMBING)) {
             applyWeightToClimbable(new HashSet<>(List.of(obj)));
         }
         bodyTouchedClimbables.add(obj);
     }
+
     public void removeClimbable(EnhancedObstacleSprite obj) {
         if (bodyTouchedClimbables.contains(obj) && groundState.equals(GroundState.CLIMBING)) {
             removeWeightToClimbable(new HashSet<>(List.of(obj)));
         }
         bodyTouchedClimbables.remove(obj);
     }
+
     private void applyWeightToClimbable(Set<EnhancedObstacleSprite> set) {
 //        System.out.println("adding weight to # objects -> " + set.size());
         for (EnhancedObstacleSprite obj : set) {
@@ -692,6 +851,7 @@ public class Avatar extends ObstacleSprite {
             obj.getObstacle().getBody().resetMassData();
         }
     }
+
     private void removeWeightToClimbable(Set<EnhancedObstacleSprite> set) {
 //        System.out.println("removing weight to # objects -> " + set.size());
         for (EnhancedObstacleSprite obj : set) {
@@ -708,8 +868,13 @@ public class Avatar extends ObstacleSprite {
 //            System.out.println(obj +" post -> " +obj.getObstacle().getMass());
         }
     }
+
     public Set<EnhancedObstacleSprite> getBodyTouchedClimbables() {
         return bodyTouchedClimbables;
+    }
+
+    public enum GroundState {
+        GROUNDED, AIRBORNE, CLIMBING
     }
 }
 
