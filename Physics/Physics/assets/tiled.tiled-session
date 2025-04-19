@@ -7,6 +7,7 @@
     "expandedProjectPaths": [
         "."
     ],
+    "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "": {
             "scaleInDock": 1
@@ -39,18 +40,37 @@
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
+        "example.tsx": {
+            "dynamicWrapping": true
+        },
         "example_level.tmx": {
             "expandedObjectLayers": [
+                2,
                 5,
-                4,
-                2
+                4
             ],
             "scale": 0.125,
-            "selectedLayer": 0,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 1904,
-                "y": 2004
+                "x": 2008,
+                "y": 3748
             }
+        },
+        "example_level2.tmx": {
+            "expandedObjectLayers": [
+                2,
+                3,
+                4
+            ],
+            "scale": 0.33,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 1918.181818181818,
+                "y": 2683.3333333333335
+            }
+        },
+        "platform1Tiled.tsx": {
+            "dynamicWrapping": false
         },
         "test2.tmj": {
             "expandedObjectLayers": [
@@ -70,8 +90,8 @@
             "scale": 0.0625,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 4768,
-                "y": 5112
+                "x": 5520,
+                "y": 3288
             }
         },
         "test3.tmx": {
@@ -96,25 +116,38 @@
         },
         "test_map.tmx": {
             "expandedObjectLayers": [
-                4,
                 2,
-                3
+                3,
+                4
             ],
-            "scale": 0.5,
+            "scale": 0.125,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": -112,
-                "y": 561
+                "x": 1544,
+                "y": 772
             }
         },
         "tileset.tsx": {
             "dynamicWrapping": false,
             "scaleInDock": 0.125,
             "scaleInEditor": 0.33
+        },
+        "untitled.tmx": {
+            "expandedObjectLayers": [
+                2,
+                3,
+                4
+            ],
+            "scale": 0.0625,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 4976,
+                "y": 3112
+            }
         }
     },
     "last.exportedFilePath": "C:/Users/Cynthia Sun/The-Gilded-Flame/Physics/Physics/assets",
-    "last.imagePath": "C:/Users/Cynthia Sun/The-Gilded-Flame/Physics/Physics/assets/shared",
+    "last.imagePath": "C:/Users/Cynthia Sun/The-Gilded-Flame/Physics/Physics/assets/tiled_images",
     "map.height": 18,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "map.lastUsedFormat": "tmx",
@@ -130,14 +163,14 @@
         "PlatformTiles.tsx"
     ],
     "project": "tiled.tiled-project",
-    "property.type": "string",
+    "property.type": "bool",
     "recentFiles": [
-        "test2.tmx",
-        "PlatformTiles.tsx",
         "test_map.tmx",
         "EnemyTiles.tsx",
         "GameObjectTiles.tsx",
         "PlayerTorchTiles.tsx",
+        "PlatformTiles.tsx",
+        "test2.tmx",
         "test_map.tmj",
         "tileset.tsx",
         "earthtile.tsx"
