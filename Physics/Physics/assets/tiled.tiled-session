@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "test2.tmx",
+    "activeFile": "test3.tmj",
     "expandedProjectPaths": [
         "."
     ],
@@ -40,37 +40,18 @@
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
-        "example.tsx": {
-            "dynamicWrapping": true
-        },
         "example_level.tmx": {
             "expandedObjectLayers": [
-                2,
                 5,
-                4
+                4,
+                2
             ],
             "scale": 0.125,
-            "selectedLayer": 1,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 2008,
-                "y": 3748
+                "x": 1904,
+                "y": 2004
             }
-        },
-        "example_level2.tmx": {
-            "expandedObjectLayers": [
-                2,
-                3,
-                4
-            ],
-            "scale": 0.33,
-            "selectedLayer": 1,
-            "viewCenter": {
-                "x": 1918.181818181818,
-                "y": 2683.3333333333335
-            }
-        },
-        "platform1Tiled.tsx": {
-            "dynamicWrapping": false
         },
         "test2.tmj": {
             "expandedObjectLayers": [
@@ -90,8 +71,16 @@
             "scale": 0.0625,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 5520,
-                "y": 3288
+                "x": 4784,
+                "y": 88
+            }
+        },
+        "test3.tmj": {
+            "scale": 0.128546875,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 4807.584781815972,
+                "y": 2703.2940318463593
             }
         },
         "test3.tmx": {
@@ -117,33 +106,20 @@
         "test_map.tmx": {
             "expandedObjectLayers": [
                 2,
-                3,
-                4
+                4,
+                3
             ],
-            "scale": 0.125,
+            "scale": 0.5,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 1544,
-                "y": 772
+                "x": 960,
+                "y": 311
             }
         },
         "tileset.tsx": {
             "dynamicWrapping": false,
             "scaleInDock": 0.125,
             "scaleInEditor": 0.33
-        },
-        "untitled.tmx": {
-            "expandedObjectLayers": [
-                2,
-                3,
-                4
-            ],
-            "scale": 0.0625,
-            "selectedLayer": 3,
-            "viewCenter": {
-                "x": 4976,
-                "y": 3112
-            }
         }
     },
     "last.exportedFilePath": "C:/Users/Cynthia Sun/The-Gilded-Flame/Physics/Physics/assets",
@@ -160,7 +136,8 @@
         "GameObjectTiles.tsx",
         "PlayerTorchTiles.tsx",
         "test2.tmx",
-        "PlatformTiles.tsx"
+        "PlatformTiles.tsx",
+        "test3.tmj"
     ],
     "project": "tiled.tiled-project",
     "property.type": "bool",
@@ -169,8 +146,9 @@
         "EnemyTiles.tsx",
         "GameObjectTiles.tsx",
         "PlayerTorchTiles.tsx",
-        "PlatformTiles.tsx",
         "test2.tmx",
+        "PlatformTiles.tsx",
+        "test3.tmj",
         "test_map.tmj",
         "tileset.tsx",
         "earthtile.tsx"
