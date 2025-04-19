@@ -306,7 +306,7 @@ public class LightController {
             float cameraPixelY = camera.position.y;
             //System.out.println(cameraPixelX);
             //System.out.println(cameraPixelY);
-        inBounds();
+            inBounds();
 
             // Update RayHandler with the camera's position in pixel units
             rayHandler.setCombinedMatrix(camera);
