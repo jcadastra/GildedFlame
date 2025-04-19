@@ -1366,8 +1366,8 @@ public class GameplayScene implements Screen {
 //        float visibleH = (bounds.y + bounds.height) * scale.y/2*0.8f;
 
         System.out.println(camera.viewportWidth + ", " + camera.viewportHeight);
-        float visibleW =  camera.viewportWidth/1*camera.zoom; //half of world visible, zoomed
-        float visibleH = camera.viewportHeight/1*camera.zoom;
+        float visibleW =  camera.viewportWidth/2*camera.zoom; //half of world visible, zoomed
+        float visibleH = camera.viewportHeight/2*camera.zoom;
 
         camera.position.x = MathUtils.clamp(camera.position.x,
             bounds.x*scale.x+visibleW,
