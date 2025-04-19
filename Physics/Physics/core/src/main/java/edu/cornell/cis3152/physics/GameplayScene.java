@@ -31,6 +31,7 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Null;
 import com.badlogic.gdx.utils.ObjectSet;
 import edu.cornell.cis3152.physics.level_player.CollisionController;
@@ -575,57 +576,21 @@ public class GameplayScene implements Screen {
     private Rope temp;
 
     private List<float[]> extractSurfaces(int[] data, int cols, int rows) {
-        boolean[] visited = new boolean[data.length];
         List<float[]> surfaces = new ArrayList<>();
-
-        int[][] directions = {
-            {0, 1}, {1, 0}, {0, -1}, {-1, 0}
-        };
-
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < cols; x++) {
+                int yy = rows - y;
                 int index = y * cols + x;
-                if (visited[index]) continue;
-
-                int tileType = data[index];
-                if(tileType == 0) {continue;}
-                Queue<int[]> queue = new LinkedList<>();
-                queue.add(new int[]{x, y});
-                visited[index] = true;
-
-                int minX = x, maxX = x;
-                int minY = y, maxY = y;
-
-                while (!queue.isEmpty()) {
-                    int[] current = queue.poll();
-                    int cx = current[0], cy = current[1];
-                    int ci = cy * cols + cx;
-
-                    for (int[] d : directions) {
-                        int nx = cx + d[0];
-                        int ny = cy + d[1];
-                        if (nx >= 0 && ny >= 0 && nx < cols && ny < rows) {
-                            int ni = ny * cols + nx;
-                            if (!visited[ni] && data[ni] == tileType) {
-                                queue.add(new int[]{nx, ny});
-                                visited[ni] = true;
-
-                                minX = Math.min(minX, nx);
-                                maxX = Math.max(maxX, nx);
-                                minY = Math.min(minY, ny);
-                                maxY = Math.max(maxY, ny);
-                            }
-                        }
-                    }
+                int tileId = data[index];
+                if (tileId != 0) { // Skip empty tiles
+                    float[] polygon = new float[]{
+                        x, yy,                         // top-left
+                        x, yy - 1,                // bottom-left
+                        x + 1, yy - 1,        // bottom-right
+                        x + 1, yy
+                    };
+                    surfaces.add(polygon);
                 }
-                float[] rect = new float[]{
-                    minX, rows - minY,
-                    minX, rows - maxY - 1,
-                    maxX + 1, rows - maxY - 1,
-                    maxX + 1, rows - minY
-                };
-
-                surfaces.add(rect);
             }
         }
         return surfaces;
@@ -661,6 +626,7 @@ public class GameplayScene implements Screen {
                 List<float[]> polygons = extractSurfaces(tileData, width, height);
 
                 for (float[] points : polygons) {
+                    System.out.println(Arrays.toString(points));
                     // Determine bounds of the polygon in tile coordinates
                     int minX = (int) points[0];
                     int maxY = (int) points[1];
