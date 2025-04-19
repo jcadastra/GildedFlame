@@ -239,6 +239,11 @@ public class LightController {
     }
 
     private void inBounds(){
+//        System.out.println(camera.viewportWidth+ ",  ***  , " + camera.viewportHeight);
+        //TODO: MAGIC NUMEBRS
+        int height = 18;
+        int width = 32;
+
         float visibleW =  camera.viewportWidth/2*camera.zoom; //half of world visible, zoomed
         float visibleH = camera.viewportHeight/2*camera.zoom;
 

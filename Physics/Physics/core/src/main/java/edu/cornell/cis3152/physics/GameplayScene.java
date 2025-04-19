@@ -24,15 +24,13 @@
  */
 package edu.cornell.cis3152.physics;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
-import com.badlogic.gdx.utils.Null;
 import com.badlogic.gdx.utils.ObjectSet;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import edu.cornell.cis3152.physics.level_player.CollisionController;
 import edu.cornell.cis3152.physics.level_player.EventHandler;
 import edu.cornell.cis3152.physics.level_player.FireController;
@@ -71,7 +69,6 @@ import edu.cornell.cis3152.physics.level_player.enviromentals.*;
 import java.util.Optional;
 import java.util.Set;
 import java.util.Stack;
-import java.util.Vector;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -195,6 +192,7 @@ public class GameplayScene implements Screen {
     protected HashSet<Rune> runeSet;
     protected PooledList<TweenElement<Float>> tweenedMovmentObjectsFloat;
     protected PooledList<TweenElement<Vector2>> tweenedMovmentObjectsVec2;
+    protected FitViewport fitViewport;
 
     protected LightController lightController;
     protected ShapeRenderer shapeRenderer;
@@ -349,6 +347,8 @@ public class GameplayScene implements Screen {
         tweenedMovmentObjectsFloat = new PooledList<>();
         this.shapeRenderer = new ShapeRenderer();
         runeSet = new HashSet<>();
+
+        this.fitViewport = new FitViewport(1280, 720);
 
         // pull out sounds
         volume = constants.getFloat("volume", 1.0f);
@@ -619,6 +619,7 @@ public class GameplayScene implements Screen {
             if (layerType.equals("tilelayer")) {
                 int width = layer.getInt("width");
                 int height = layer.getInt("height");
+                System.out.println(width + "x" + height);
                 JsonValue data = layer.get("data");
                 // TextureRegion[][] regions = TextureRegion.split(texture, 300, 300);
 
@@ -1144,7 +1145,6 @@ public class GameplayScene implements Screen {
      * @param dt    Number of seconds since last animation frame
      */
     public void update(float dt) {
-        System.out.println(avatar.getGroundedState());
         soundEngine.tendToMusicLoop();
         updateRunes(dt);
         supplementaryCollisionActions();
@@ -1772,8 +1772,9 @@ public class GameplayScene implements Screen {
     public void draw(float dt) {
         // Clear the screen (color is homage to the XNA years)
         ScreenUtils.clear(0.17f, 0.28f, 0.35f, 1.0f);
-//        ScreenUtils.clear(1.0f, 1.0f, 1.0f, 1.0f);
+//        ScreenUtils.clear(0,0,0,1);
         // This shows off how powerful our new SpriteBatch is
+        fitViewport.apply();
         batch.begin(camera);
 
 
@@ -1833,6 +1834,8 @@ public class GameplayScene implements Screen {
         camera.setToOrtho( false, width, height );
         scale.x = width/bounds.width;
         scale.y = height/bounds.height;
+
+        fitViewport.update(width, height, true);
         reset();
     }
 
