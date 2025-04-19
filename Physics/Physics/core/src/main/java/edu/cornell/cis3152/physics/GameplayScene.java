@@ -24,6 +24,9 @@
  */
 package edu.cornell.cis3152.physics;
 
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.Texture.TextureWrap;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
@@ -618,6 +621,7 @@ public class GameplayScene implements Screen {
                 System.out.println(width + "x" + height);
                 JsonValue data = layer.get("data");
 
+                JsonValue settings = levelInfo.get("walls");
                 int[] tileData = new int[width * height];
                 for (int i = 0; i < data.size; i++) {
                     tileData[i] = data.getInt(i);
@@ -637,19 +641,6 @@ public class GameplayScene implements Screen {
                     int index = y * width + x;
                     int tileId = tileData[index];
 
-                    boolean isFloor = false;
-                    boolean isWall = false;
-                    boolean isPlatform = false;
-
-                    if (tileId == 8 || tileId == 9 || tileId == 10) {
-                        isFloor = true;
-                    } else if (tileId == 14) {
-                        isWall = true;
-                    } else if (tileId == 2 || tileId == 3 || tileId == 4) {
-                        isPlatform = true;
-                    }
-
-                    JsonValue settings = levelInfo.get("walls");
                     float tileunits = 32f/300f;
                     Surface tile = new Surface(points, units, settings);
                     int ind = tileId ;
@@ -659,13 +650,15 @@ public class GameplayScene implements Screen {
                     System.out.println(directory.getEntry("stoneTile"+(ind), Texture.class));
                     System.out.println("stoneTile"+(ind));
 
-                    tile.setTexture(directory.getEntry("stoneTile"+(ind), Texture.class));
+                    TextureRegion region = directory.getEntry("stoneTile"+tileId, TextureRegion.class);
+                    region.getTexture()  // this is the shared atlas
+                        .setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 
-                    if (isWall) {
-                        tile.getObstacle().setName("wall");
-                    } else if (isPlatform) {
+                    tile.setTextureRegion(region);
+
+                    if (tileId == 2 || tileId == 3 || tileId == 4) {
                         tile.getObstacle().setName("platform");
-                    } else if (isFloor) {
+                    } else if (tileId == 8 || tileId == 9 || tileId == 10) {
                         tile.getObstacle().setName("floor");
                     } else {
                         tile.getObstacle().setName("wall");
