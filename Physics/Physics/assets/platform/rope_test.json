@@ -127,7 +127,7 @@
         {
           "pos": [20.0, 2.0],
           "dimension": [1, 1],
-          "speed": 2,
+          "speed": 3,
           "size": 1,
           "density": 6,
           "attackTimer": 75,

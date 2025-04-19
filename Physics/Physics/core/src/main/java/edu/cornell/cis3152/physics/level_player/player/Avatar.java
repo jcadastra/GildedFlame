@@ -332,6 +332,8 @@ public class Avatar extends ObstacleSprite {
         animationTextureIdleNoTorch = directory.getEntry("platform-playerIDLENOTORCH", Texture.class);
         animationTextureMovementTorch = directory.getEntry("platform-playerMOVEMENTTORCH", Texture.class);
         animationTextureMovementNoTorch = directory.getEntry("platform-playerMOVEMENTNOTORCH", Texture.class);
+        animationTextureJump = directory.getEntry("platform-playerJUMP", Texture.class);
+        animationTextureThrow = directory.getEntry("platform-playerTHROW", Texture.class);
 
         // The capsule is smaller than the image
         // "inner" is the fraction of the original size for the capsule
@@ -606,6 +608,12 @@ public class Avatar extends ObstacleSprite {
 
 
         Texture animationTexture;
+//    if (getGroundedState() == GroundState.AIRBORNE) {
+//        int srcIndex = frameIndex * JUMP_FRAME_WIDTH;
+//        animationTexture = animationTextureJump;
+//        batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits() * 1.5f, srcIndex, 0, JUMP_FRAME_WIDTH, JUMP_FRAME_HEIGHT, !isFacingRight(), false);
+//    }
+
         if (getMovement() != null) {
             if (!getMovement().epsilonEquals(0,0)){
                 int srcIndex = frameIndex * MOVEMENT_FRAME_WIDTH;
