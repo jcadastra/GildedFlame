@@ -62,8 +62,7 @@ public class Surface extends ObstacleSprite {
     public Surface(float[] points, float units, JsonValue settings) {
         super();
 
-        //float tile = settings.getFloat( "tile" );
-        float tile = 64f;
+        float tile = units;
 
         // Construct a Poly2 object, breaking it into triangles
         Poly2 poly = new Poly2();
@@ -91,7 +90,7 @@ public class Surface extends ObstacleSprite {
         obstacle.setPhysicsUnits( units );
         obstacle.setUserData( this );
 
-        debug = ParserUtils.parseColor( settings.get("debug"),  Color.WHITE);
+        debug = ParserUtils.parseColor( settings.get("debug"),  Color.YELLOW);
 
         // Create a polygon mesh matching the physics body, adjusted by the
         // physics units. We take the save polygon we used to create the

@@ -607,7 +607,7 @@ public class GameplayScene implements Screen {
         JsonValue levelInfo = directory.getEntry(levelInfoName, JsonValue.class);
 
         // Create ground pieces
-        Texture texture = directory.getEntry( "platform-stoneTiles-1", Texture.class );
+        Texture texture;
         enemies = new ArrayList<>();
 
         JsonValue layers = levelData.get("layers");
@@ -647,14 +647,10 @@ public class GameplayScene implements Screen {
 //                    int regionX = ind % 6;
 //                    int regionY = ind / 6;
 
-                    System.out.println(directory.getEntry("stoneTile"+(ind), Texture.class));
-                    System.out.println("stoneTile"+(ind));
+                    Texture textur = directory.getEntry("stoneTile"+(ind), Texture.class);
+                    textur.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 
-                    TextureRegion region = directory.getEntry("stoneTile"+tileId, TextureRegion.class);
-                    region.getTexture()  // this is the shared atlas
-                        .setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
-
-                    tile.setTextureRegion(region);
+                    tile.setTexture(textur);
 
                     if (tileId == 2 || tileId == 3 || tileId == 4) {
                         tile.getObstacle().setName("platform");
@@ -688,7 +684,6 @@ public class GameplayScene implements Screen {
 
                         case "torch":
                             Lighting l = new Lighting(units, levelInfo.get("light"));
-                            l.setTexture(texture);
                             addSprite(l);
                             l.createSensor();
                             torchFire = new Fire(units, new Vector2(10,10));
@@ -1371,8 +1366,8 @@ public class GameplayScene implements Screen {
 //        float visibleH = (bounds.y + bounds.height) * scale.y/2*0.8f;
 
         System.out.println(camera.viewportWidth + ", " + camera.viewportHeight);
-        float visibleW =  camera.viewportWidth/2*camera.zoom; //half of world visible, zoomed
-        float visibleH = camera.viewportHeight/2*camera.zoom;
+        float visibleW =  camera.viewportWidth/1*camera.zoom; //half of world visible, zoomed
+        float visibleH = camera.viewportHeight/1*camera.zoom;
 
         camera.position.x = MathUtils.clamp(camera.position.x,
             bounds.x*scale.x+visibleW,
