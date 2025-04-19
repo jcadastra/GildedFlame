@@ -752,7 +752,7 @@ public class Avatar extends ObstacleSprite {
                 }
                 srcIndex = frameIndex * FRAME_WIDTH;
                 animationTexture = hasTorch ? animationTextureJumpTorchUp : animationTextureJumpNoTorchUp;
-                System.out.println(jumpFrameCount);
+//                System.out.println(jumpFrameCount);
             } else if (vy < 0) {
                 if (reachedApex) {
                     resetJumpFrames();

@@ -163,6 +163,7 @@ public class Enemy extends ObstacleSprite {
     }
 
     public void update() {
+//        System.out.println(getState());
         updateRayCast();
         switch (state) {
             case OUT_OF_LIGHT:
@@ -189,6 +190,9 @@ public class Enemy extends ObstacleSprite {
             case SMOTHER:
                 smother();
                 break;
+            case FRUSTRATED:
+                frustrated();
+                break;
             default:
                 break;
         }
@@ -210,6 +214,9 @@ public class Enemy extends ObstacleSprite {
 
     }
 
+    public void frustrated(){
+
+    }
     public boolean isAboutToFall() {
 //        if (!isGrounded()) return false;
 
@@ -423,7 +430,7 @@ public class Enemy extends ObstacleSprite {
 
         ANGRY, CD,
 
-        ATTACK, TRANCE, DAZED, SMOTHER
+        ATTACK, TRANCE, DAZED, SMOTHER, FRUSTRATED
     }
 
     public class RaycastResult {
