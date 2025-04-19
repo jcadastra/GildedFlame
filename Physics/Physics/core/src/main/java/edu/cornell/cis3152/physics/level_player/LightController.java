@@ -239,6 +239,11 @@ public class LightController {
     }
 
     private void inBounds(){
+//        System.out.println(camera.viewportWidth+ ",  ***  , " + camera.viewportHeight);
+        //TODO: MAGIC NUMEBRS
+        int height = 18;
+        int width = 32;
+
         float visibleW =  camera.viewportWidth/2*camera.zoom; //half of world visible, zoomed
         float visibleH = camera.viewportHeight/2*camera.zoom;
 
@@ -301,7 +306,7 @@ public class LightController {
             float cameraPixelY = camera.position.y;
             //System.out.println(cameraPixelX);
             //System.out.println(cameraPixelY);
-        inBounds();
+            inBounds();
 
             // Update RayHandler with the camera's position in pixel units
             rayHandler.setCombinedMatrix(camera);
