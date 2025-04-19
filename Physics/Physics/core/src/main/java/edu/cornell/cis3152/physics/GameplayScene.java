@@ -626,7 +626,7 @@ public class GameplayScene implements Screen {
                 List<float[]> polygons = extractSurfaces(tileData, width, height);
 
                 for (float[] points : polygons) {
-                    System.out.println(Arrays.toString(points));
+//                    System.out.println(Arrays.toString(points));
                     // Determine bounds of the polygon in tile coordinates
                     int minX = (int) points[0];
                     int maxY = (int) points[1];
@@ -650,14 +650,14 @@ public class GameplayScene implements Screen {
                     }
 
                     JsonValue settings = levelInfo.get("walls");
-                    float tileunits = 32f/300f;
+                    float tileunits = units/300f;
                     Surface tile = new Surface(points, units, settings);
                     int ind = tileId ;
 //                    int regionX = ind % 6;
 //                    int regionY = ind / 6;
 
-                    System.out.println(directory.getEntry("stoneTile"+(ind), Texture.class));
-                    System.out.println("stoneTile"+(ind));
+//                    System.out.println(directory.getEntry("stoneTile"+(ind), Texture.class));
+//                    System.out.println("stoneTile"+(ind));
 
                     tile.setTexture(directory.getEntry("stoneTile"+(ind), Texture.class));
 
