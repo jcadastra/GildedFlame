@@ -133,124 +133,74 @@
       "magfilter": "linear mipmap linear"
     },
     "stoneTile1": {
-      "file": "platform/stoneTiles/1.png",
-      "wrapU": "repeated",
-      "wrapV": "repeated"
+      "file": "platform/stoneTiles/1.png"
     },
-    "stoneTile2": {
-      "file": "platform/stoneTiles/2.png",
-      "wrapU": "repeated",
-      "wrapV": "repeated"
-    },
+    "stoneTile2": {"file": "platform/stoneTiles/2.png"},
     "stoneTile3": {
-      "file": "platform/stoneTiles/3.png",
-      "wrapU": "repeated",
-      "wrapV": "repeated"
+      "file": "platform/stoneTiles/3.png"
     },
     "stoneTile4": {
-      "file": "platform/stoneTiles/4.png",
-      "wrapU": "repeated",
-      "wrapV": "repeated"
+      "file": "platform/stoneTiles/4.png"
     },
     "stoneTile5": {
-      "file": "platform/stoneTiles/5.png",
-      "wrapU": "repeated",
-      "wrapV": "repeated"
+      "file": "platform/stoneTiles/5.png"
     },
     "stoneTile6": {
-      "file": "platform/stoneTiles/6.png",
-      "wrapU": "repeated",
-      "wrapV": "repeated"
+      "file": "platform/stoneTiles/6.png"
     },
     "stoneTile7": {
-      "file": "platform/stoneTiles/7.png",
-      "wrapU": "repeated",
-      "wrapV": "repeated"
+      "file": "platform/stoneTiles/7.png"
     },
     "stoneTile8": {
-      "file": "platform/stoneTiles/8.png",
-      "wrapU": "repeated",
-      "wrapV": "repeated"
+      "file": "platform/stoneTiles/8.png"
     },
     "stoneTile9": {
-      "file": "platform/stoneTiles/9.png",
-      "wrapU": "repeated",
-      "wrapV": "repeated"
+      "file": "platform/stoneTiles/9.png"
     },
     "stoneTile10": {
-      "file": "platform/stoneTiles/10.png",
-      "wrapU": "repeated",
-      "wrapV": "repeated"
+      "file": "platform/stoneTiles/10.png"
     },
     "stoneTile11": {
-      "file": "platform/stoneTiles/11.png",
-      "wrapU": "repeated",
-      "wrapV": "repeated"
+      "file": "platform/stoneTiles/11.png"
     },
     "stoneTile12": {
-      "file": "platform/stoneTiles/12.png",
-      "wrapU": "repeated",
-      "wrapV": "repeated"
+      "file": "platform/stoneTiles/12.png"
     },
     "stoneTile13": {
-      "file": "platform/stoneTiles/13.png",
-      "wrapU": "repeated",
-      "wrapV": "repeated"
+      "file": "platform/stoneTiles/13.png"
     },
     "stoneTile14": {
-      "file": "platform/stoneTiles/14.png",
-      "wrapU": "repeated",
-      "wrapV": "repeated"
+      "file": "platform/stoneTiles/14.png"
     },
     "stoneTile15": {
-      "file": "platform/stoneTiles/15.png",
-      "wrapU": "repeated",
-      "wrapV": "repeated"
+      "file": "platform/stoneTiles/15.png"
     },
     "stoneTile16": {
-      "file": "platform/stoneTiles/16.png",
-      "wrapU": "repeated",
-      "wrapV": "repeated"
+      "file": "platform/stoneTiles/16.png"
     },
     "stoneTile17": {
-      "file": "platform/stoneTiles/17.png",
-      "wrapU": "repeated",
-      "wrapV": "repeated"
+      "file": "platform/stoneTiles/17.png"
     },
     "stoneTile18": {
-      "file": "platform/stoneTiles/18.png",
-      "wrapU": "repeated",
-      "wrapV": "repeated"
+      "file": "platform/stoneTiles/18.png"
     },
     "stoneTile19": {
-      "file": "platform/stoneTiles/19.png",
-      "wrapU": "repeated",
-      "wrapV": "repeated"
+      "file": "platform/stoneTiles/19.png"
     },
     "stoneTile20": {
-      "file": "platform/stoneTiles/20.png",
-      "wrapU": "repeated",
-      "wrapV": "repeated"
+      "file": "platform/stoneTiles/20.png"
     },
     "stoneTile21": {
-      "file": "platform/stoneTiles/21.png",
-      "wrapU": "repeated",
-      "wrapV": "repeated"
+      "file": "platform/stoneTiles/21.png"
     },
     "stoneTile22": {
-      "file": "platform/stoneTiles/22.png",
-      "wrapU": "repeated",
-      "wrapV": "repeated"
+      "file": "platform/stoneTiles/22.png"
     },
     "stoneTile23": {
-      "file": "platform/stoneTiles/23.png",
-      "wrapU": "repeated",
-      "wrapV": "repeated"
+      "file": "platform/stoneTiles/23.png"
     },
     "stoneTile24": {
-      "file": "platform/stoneTiles/24.png",
-      "wrapU": "repeated",
-      "wrapV": "repeated"
+      "file": "platform/stoneTiles/24.png"
     },
     "platform-rope-end": "platform/ropeEnd.png",
     "platform-rope-mid": "platform/ropeBodyRec.png",
