@@ -641,9 +641,17 @@ public class GameplayScene implements Screen {
                     int y = height - maxY;
                     int index = y * width + x;
                     int tileId = tileData[index];
+                    String name;
+                    if (tileId == 2 || tileId == 3 || tileId == 4) {
+                        name = "platform";
+                    } else if (tileId == 8 || tileId == 9 || tileId == 10) {
+                        name = "floor";
+                    } else {
+                        name = "wall";
+                    }
 
                     float tileunits = 32f/300f;
-                    Surface tile = new Surface(points, units, settings);
+                    Surface tile = new Surface(points, units, name, settings);
                     int ind = tileId ;
 //                    int regionX = ind % 6;
 //                    int regionY = ind / 6;
@@ -653,13 +661,6 @@ public class GameplayScene implements Screen {
 
                     tile.setTexture(textur);
 
-                    if (tileId == 2 || tileId == 3 || tileId == 4) {
-                        tile.getObstacle().setName("platform");
-                    } else if (tileId == 8 || tileId == 9 || tileId == 10) {
-                        tile.getObstacle().setName("floor");
-                    } else {
-                        tile.getObstacle().setName("wall");
-                    }
 
                     addSprite(tile);
                 }
