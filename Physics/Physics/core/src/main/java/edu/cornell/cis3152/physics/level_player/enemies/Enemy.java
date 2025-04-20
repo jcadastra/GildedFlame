@@ -174,9 +174,6 @@ public class Enemy extends ObstacleSprite {
         speed = value;
     }
 
-    public void processCD(float frame) {
-
-    }
 
     public void update() {
 //        System.out.println(getState());
@@ -276,11 +273,13 @@ public class Enemy extends ObstacleSprite {
             return null;
         }
         Vector2 pos = obstacle.getBody().getPosition();
-        Vector2 start = new Vector2(pos.x, pos.y - height / 4);
+        Vector2 start;
         Vector2 direction;
         if (isFacingRight()) {
+            start = new Vector2(pos.x + width/2.0f, pos.y);
             direction = new Vector2(1, 0);
         } else {
+            start = new Vector2(pos.x - width/2.0f, pos.y);
             direction = new Vector2(-1, 0);
         }
 
@@ -312,11 +311,13 @@ public class Enemy extends ObstacleSprite {
     public RaycastResult raycastInLight() {
 
         Vector2 pos = obstacle.getBody().getPosition();
-        Vector2 start = new Vector2(pos.x, pos.y - height / 4);
+        Vector2 start;
         Vector2 direction;
         if (isFacingRight()) {
+            start = new Vector2(pos.x + width/2.0f, pos.y);
             direction = new Vector2(1, 0);
         } else {
+            start = new Vector2(pos.x - width/2.0f, pos.y);
             direction = new Vector2(-1, 0);
         }
         float maxDistance = 5f;
@@ -325,7 +326,6 @@ public class Enemy extends ObstacleSprite {
         final Vector2[] closestPoint = {null};
         final float[] closestFraction = {Float.MAX_VALUE};
         RayCastCallback callback = (fixture, point, normal, fraction) -> {
-            // If the fixture belongs to a Light, ignore it
             Object detectedObject = fixture.getBody().getUserData();
             if (detectedObject instanceof Lighting || detectedObject instanceof Fire) {
                 return -1;
@@ -404,7 +404,6 @@ public class Enemy extends ObstacleSprite {
     }
 
     public void stop() {
-//        System.out.println("stopping");
         float currY = obstacle.getLinearVelocity().y;
         obstacle.getBody().setLinearVelocity(0, currY);
         obstacle.setBodyType(BodyDef.BodyType.StaticBody);

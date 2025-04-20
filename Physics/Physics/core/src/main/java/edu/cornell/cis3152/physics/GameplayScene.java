@@ -615,7 +615,6 @@ public class GameplayScene implements Screen {
             if (layerType.equals("tilelayer")) {
                 int width = layer.getInt("width");
                 int height = layer.getInt("height");
-                System.out.println(width + "x" + height);
                 JsonValue data = layer.get("data");
 
                 int[] tileData = new int[width * height];
@@ -688,7 +687,7 @@ public class GameplayScene implements Screen {
                             avatar = new Avatar(directory, units, levelInfo.get("traci"));
                             avatar.setTexture(playerTexture);
                             avatar.getObstacle().setPosition(pos[0], pos[1]);
-                            System.out.println("position" + pos[0] + " " + pos[1]);
+//                            System.out.println("position" + pos[0] + " " + pos[1]);
                             addSprite(avatar);
                             avatar.createSensor();
                             break;
@@ -1222,7 +1221,6 @@ public class GameplayScene implements Screen {
 //                System.out.println(eos.getObstacle().getAngle());
 //            }
         }
-//        System.out.println("-----------");
 
         if (enemies != null) {
             for (Enemy e : enemies) {
@@ -1377,14 +1375,14 @@ public class GameplayScene implements Screen {
 //        float visibleW =  (bounds.x + bounds.width) * scale.x/2*0.8f; //half of world visible
 //        float visibleH = (bounds.y + bounds.height) * scale.y/2*0.8f;
 
-        System.out.println(camera.viewportWidth + ", " + camera.viewportHeight);
+//        System.out.println(camera.viewportWidth + ", " + camera.viewportHeight);
         float visibleW =  camera.viewportWidth/2*camera.zoom; //half of world visible, zoomed
         float visibleH = camera.viewportHeight/2*camera.zoom;
 
         camera.position.x = MathUtils.clamp(camera.position.x,
             bounds.x*scale.x+visibleW,
             (bounds.x+bounds.width)*scale.x - visibleW);
-        System.out.println(camera.position.x +", " + bounds.x + " , " + bounds.width + " , " + bounds.height+ " , " + scale.x);
+//        System.out.println(camera.position.x +", " + bounds.x + " , " + bounds.width + " , " + bounds.height+ " , " + scale.x);
         //System.out.println("x reached bounds:"+(camera.position.x==bounds.x*scale.x+visibleW));
         camera.position.y = MathUtils.clamp(camera.position.y,
             bounds.y*scale.y+visibleH,
