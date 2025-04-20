@@ -30,7 +30,7 @@
          "width":32,
          "x":0,
          "y":0
-        }, 
+        },
         {
          "draworder":"topdown",
          "id":5,
@@ -46,77 +46,77 @@
                          "name":"doublesided",
                          "type":"bool",
                          "value":false
-                        }, 
+                        },
                         {
                          "name":"endDegree",
                          "type":"string",
                          "value":"180"
-                        }, 
+                        },
                         {
                          "name":"endX",
                          "type":"string",
                          "value":"15"
-                        }, 
+                        },
                         {
                          "name":"endY",
                          "type":"string",
                          "value":"5"
-                        }, 
+                        },
                         {
                          "name":"interpolation",
                          "type":"string",
                          "value":"smoother"
-                        }, 
+                        },
                         {
                          "name":"latch",
                          "type":"bool",
                          "value":false
-                        }, 
+                        },
                         {
                          "name":"moveEvent",
                          "type":"bool",
                          "value":true
-                        }, 
+                        },
                         {
                          "name":"platformHeight",
                          "type":"string",
                          "value":"0.5"
-                        }, 
+                        },
                         {
                          "name":"platformIndex",
                          "type":"string",
                          "value":"1"
-                        }, 
+                        },
                         {
                          "name":"platformWidth",
                          "type":"string",
                          "value":"5"
-                        }, 
+                        },
                         {
                          "name":"rotateEvent",
                          "type":"bool",
                          "value":true
-                        }, 
+                        },
                         {
                          "name":"rotationRadians",
                          "type":"string",
                          "value":"0"
-                        }, 
+                        },
                         {
                          "name":"startDegree",
                          "type":"string",
                          "value":"0"
-                        }, 
+                        },
                         {
                          "name":"startX",
                          "type":"string",
                          "value":"5"
-                        }, 
+                        },
                         {
                          "name":"startY",
                          "type":"string",
                          "value":"6"
-                        }, 
+                        },
                         {
                          "name":"time",
                          "type":"string",
@@ -128,7 +128,7 @@
                  "width":600,
                  "x":6253,
                  "y":4201
-                }, 
+                },
                 {
                  "gid":36,
                  "height":49,
@@ -140,7 +140,7 @@
                  "width":86,
                  "x":10373,
                  "y":5393
-                }, 
+                },
                 {
                  "gid":37,
                  "height":500,
@@ -152,7 +152,7 @@
                  "width":500,
                  "x":1102,
                  "y":2954
-                }, 
+                },
                 {
                  "gid":36,
                  "height":300,
@@ -163,77 +163,77 @@
                          "name":"doublesided",
                          "type":"bool",
                          "value":false
-                        }, 
+                        },
                         {
                          "name":"endDegree",
                          "type":"string",
                          "value":"180"
-                        }, 
+                        },
                         {
                          "name":"endX",
                          "type":"string",
                          "value":"15"
-                        }, 
+                        },
                         {
                          "name":"endY",
                          "type":"string",
                          "value":"5"
-                        }, 
+                        },
                         {
                          "name":"interpolation",
                          "type":"string",
                          "value":"smoother"
-                        }, 
+                        },
                         {
                          "name":"latch",
                          "type":"bool",
                          "value":true
-                        }, 
+                        },
                         {
                          "name":"moveEvent",
                          "type":"bool",
                          "value":true
-                        }, 
+                        },
                         {
                          "name":"platformHeight",
                          "type":"string",
                          "value":"0.5"
-                        }, 
+                        },
                         {
                          "name":"platformIndex",
                          "type":"string",
                          "value":"1"
-                        }, 
+                        },
                         {
                          "name":"platformWidth",
                          "type":"string",
                          "value":"5"
-                        }, 
+                        },
                         {
                          "name":"rotateEvent",
                          "type":"bool",
                          "value":true
-                        }, 
+                        },
                         {
                          "name":"rotationRadians",
                          "type":"string",
                          "value":"-90"
-                        }, 
+                        },
                         {
                          "name":"startDegree",
                          "type":"string",
                          "value":"0"
-                        }, 
+                        },
                         {
                          "name":"startX",
                          "type":"string",
                          "value":"5"
-                        }, 
+                        },
                         {
                          "name":"startY",
                          "type":"string",
                          "value":"6"
-                        }, 
+                        },
                         {
                          "name":"time",
                          "type":"string",
@@ -251,7 +251,7 @@
          "visible":true,
          "x":0,
          "y":0
-        }, 
+        },
         {
          "draworder":"topdown",
          "id":2,
@@ -268,7 +268,7 @@
                  "width":300,
                  "x":586,
                  "y":5068
-                }, 
+                },
                 {
                  "gid":27,
                  "height":300,
@@ -286,7 +286,7 @@
          "visible":true,
          "x":0,
          "y":0
-        }, 
+        },
         {
          "draworder":"topdown",
          "id":4,
@@ -303,7 +303,7 @@
                  "width":300,
                  "x":3354,
                  "y":5078
-                }, 
+                },
                 {
                  "gid":31,
                  "height":300,
@@ -315,7 +315,7 @@
                  "width":300,
                  "x":3358,
                  "y":4794
-                }, 
+                },
                 {
                  "gid":31,
                  "height":300,
@@ -327,7 +327,7 @@
                  "width":300,
                  "x":3350,
                  "y":4514
-                }, 
+                },
                 {
                  "gid":31,
                  "height":300,
@@ -356,15 +356,15 @@
         {
          "firstgid":1,
          "source":"PlatformTiles.tsx"
-        }, 
+        },
         {
          "firstgid":25,
          "source":"PlayerTorchTiles.tsx"
-        }, 
+        },
         {
          "firstgid":29,
          "source":"EnemyTiles.tsx"
-        }, 
+        },
         {
          "firstgid":33,
          "source":"GameObjectTiles.tsx"

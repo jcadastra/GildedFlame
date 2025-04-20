@@ -24,15 +24,13 @@
  */
 package edu.cornell.cis3152.physics;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
-import com.badlogic.gdx.utils.Null;
 import com.badlogic.gdx.utils.ObjectSet;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import edu.cornell.cis3152.physics.level_player.CollisionController;
 import edu.cornell.cis3152.physics.level_player.EventHandler;
 import edu.cornell.cis3152.physics.level_player.FireController;
@@ -71,7 +69,6 @@ import edu.cornell.cis3152.physics.level_player.enviromentals.*;
 import java.util.Optional;
 import java.util.Set;
 import java.util.Stack;
-import java.util.Vector;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -195,6 +192,7 @@ public class GameplayScene implements Screen {
     protected HashSet<Rune> runeSet;
     protected PooledList<TweenElement<Float>> tweenedMovmentObjectsFloat;
     protected PooledList<TweenElement<Vector2>> tweenedMovmentObjectsVec2;
+    protected FitViewport fitViewport;
 
     protected LightController lightController;
     protected ShapeRenderer shapeRenderer;
@@ -349,6 +347,8 @@ public class GameplayScene implements Screen {
         tweenedMovmentObjectsFloat = new PooledList<>();
         this.shapeRenderer = new ShapeRenderer();
         runeSet = new HashSet<>();
+
+        this.fitViewport = new FitViewport(1280, 720);
 
         // pull out sounds
         volume = constants.getFloat("volume", 1.0f);
@@ -576,13 +576,11 @@ public class GameplayScene implements Screen {
 
     private List<float[]> extractSurfaces(int[] data, int cols, int rows) {
         List<float[]> surfaces = new ArrayList<>();
-
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < cols; x++) {
                 int yy = rows - y;
                 int index = y * cols + x;
                 int tileId = data[index];
-
                 if (tileId != 0) { // Skip empty tiles
                     float[] polygon = new float[]{
                         x, yy,                         // top-left
@@ -590,12 +588,10 @@ public class GameplayScene implements Screen {
                         x + 1, yy - 1,        // bottom-right
                         x + 1, yy
                     };
-
                     surfaces.add(polygon);
                 }
             }
         }
-
         return surfaces;
     }
 
@@ -608,7 +604,7 @@ public class GameplayScene implements Screen {
         JsonValue levelInfo = directory.getEntry(levelInfoName, JsonValue.class);
 
         // Create ground pieces
-        Texture texture = directory.getEntry( "shared-earth", Texture.class );
+        Texture texture = directory.getEntry( "platform-stoneTiles-1", Texture.class );
         enemies = new ArrayList<>();
 
         JsonValue layers = levelData.get("layers");
@@ -619,8 +615,8 @@ public class GameplayScene implements Screen {
             if (layerType.equals("tilelayer")) {
                 int width = layer.getInt("width");
                 int height = layer.getInt("height");
+                System.out.println(width + "x" + height);
                 JsonValue data = layer.get("data");
-                // TextureRegion[][] regions = TextureRegion.split(texture, 300, 300);
 
                 int[] tileData = new int[width * height];
                 for (int i = 0; i < data.size; i++) {
@@ -630,6 +626,7 @@ public class GameplayScene implements Screen {
                 List<float[]> polygons = extractSurfaces(tileData, width, height);
 
                 for (float[] points : polygons) {
+//                    System.out.println(Arrays.toString(points));
                     // Determine bounds of the polygon in tile coordinates
                     int minX = (int) points[0];
                     int maxY = (int) points[1];
@@ -653,15 +650,16 @@ public class GameplayScene implements Screen {
                     }
 
                     JsonValue settings = levelInfo.get("walls");
-                    float tileunits = 32f/300f;
+                    float tileunits = units/300f;
                     Surface tile = new Surface(points, units, settings);
-                    int ind = tileId - 1;
-                    int regionX = ind % 6;
-                    int regionY = ind / 6;
-                    //TextureRegion region = regions[regionY][regionX];
-                    System.out.println(ind);
-                    //tile.setTextureRegion(region);
-                    tile.setTexture(texture);
+                    int ind = tileId ;
+//                    int regionX = ind % 6;
+//                    int regionY = ind / 6;
+
+//                    System.out.println(directory.getEntry("stoneTile"+(ind), Texture.class));
+//                    System.out.println("stoneTile"+(ind));
+
+                    tile.setTexture(directory.getEntry("stoneTile"+(ind), Texture.class));
 
                     if (isWall) {
                         tile.getObstacle().setName("wall");
@@ -1069,7 +1067,7 @@ public class GameplayScene implements Screen {
 
         torchArc = new ArrayList<>();
         for (int i = 0; i < dotTorchArcCount / deltaTorchArc; i++) {
-            WheelObstacle temp = new WheelObstacle(-1,-1, 0.4f);
+            WheelObstacle temp = new WheelObstacle(-1,-1, 0.4f/32f * units);
             temp.setBodyType(BodyType.StaticBody);
             ObstacleSprite tracker = new ObstacleSprite(temp);
             tracker.getObstacle().setPhysicsUnits(phyiscsUnits);
@@ -1211,7 +1209,6 @@ public class GameplayScene implements Screen {
      * @param dt    Number of seconds since last animation frame
      */
     public void update(float dt) {
-//        System.out.println(avatar.getGroundedState());
         soundEngine.tendToMusicLoop();
         updateRunes(dt);
         supplementaryCollisionActions();
@@ -1362,6 +1359,8 @@ public class GameplayScene implements Screen {
         }
     }
 
+    // Camera player not light camera (light camera updated internally) but movements
+    // here are for the camera that follows player (?)
     private void updateCamera() {
 
         float prevX = camera.position.x;
@@ -1378,13 +1377,14 @@ public class GameplayScene implements Screen {
 //        float visibleW =  (bounds.x + bounds.width) * scale.x/2*0.8f; //half of world visible
 //        float visibleH = (bounds.y + bounds.height) * scale.y/2*0.8f;
 
-
+        System.out.println(camera.viewportWidth + ", " + camera.viewportHeight);
         float visibleW =  camera.viewportWidth/2*camera.zoom; //half of world visible, zoomed
         float visibleH = camera.viewportHeight/2*camera.zoom;
 
         camera.position.x = MathUtils.clamp(camera.position.x,
             bounds.x*scale.x+visibleW,
             (bounds.x+bounds.width)*scale.x - visibleW);
+        System.out.println(camera.position.x +", " + bounds.x + " , " + bounds.width + " , " + bounds.height+ " , " + scale.x);
         //System.out.println("x reached bounds:"+(camera.position.x==bounds.x*scale.x+visibleW));
         camera.position.y = MathUtils.clamp(camera.position.y,
             bounds.y*scale.y+visibleH,
@@ -1839,8 +1839,9 @@ public class GameplayScene implements Screen {
     public void draw(float dt) {
         // Clear the screen (color is homage to the XNA years)
         ScreenUtils.clear(0.17f, 0.28f, 0.35f, 1.0f);
-//        ScreenUtils.clear(1.0f, 1.0f, 1.0f, 1.0f);
+//        ScreenUtils.clear(0,0,0,1);
         // This shows off how powerful our new SpriteBatch is
+        fitViewport.apply();
         batch.begin(camera);
 
 
@@ -1900,6 +1901,8 @@ public class GameplayScene implements Screen {
         camera.setToOrtho( false, width, height );
         scale.x = width/bounds.width;
         scale.y = height/bounds.height;
+
+        fitViewport.update(width, height, true);
         reset();
     }
 
