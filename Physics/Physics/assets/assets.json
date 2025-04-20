@@ -6,6 +6,9 @@
       "wrapV": "repeated"
     },
     "shared-goal": "shared/goaldoor.png",
+    "window": "tiled_images/Window.png",
+    "brick": "tiled_images/brick.png",
+    "column": "tiled_images/column_background.png",
     "platform-totemLIGHTANIMATION": {
       "file": "platform/totemInLightAnimation.png",
       "mipmaps": true,

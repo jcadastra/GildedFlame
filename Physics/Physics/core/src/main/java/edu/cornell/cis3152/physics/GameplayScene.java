@@ -752,6 +752,30 @@ public class GameplayScene implements Screen {
                             addSprite(goalDoor);
                             break;
 
+                        case "window":
+                            System.out.println("window");
+                            texture = directory.getEntry("window", Texture.class);
+                            if (texture != null) {System.out.println("texture: " + texture);}
+                            else {System.out.println("texture: null");}
+                            float width = object.getFloat("width") / levelData.getInt("tilewidth");
+                            float height = object.getFloat("height") / levelData.getInt("tileheight");
+
+                            // Define rectangle points (counter-clockwise)
+                            float[] points = new float[]{
+                                -width / 2f, height / 2f,
+                                -width / 2f, -height / 2f,
+                                width / 2f, -height / 2f,
+                                width / 2f, height / 2f
+                            };
+
+                            GameObject decoration = new GameObject(points, pos[0], pos[1], units);
+                            //decoration.getObstacle().setSensor(true);  // Make it non-interactive
+                            decoration.setTexture(texture);
+                            decoration.getObstacle().setName(objName);
+
+                            addSprite(decoration);
+                            break;
+
                         case "button":
                             float rotationRad = 0f;
                             boolean latch = false;

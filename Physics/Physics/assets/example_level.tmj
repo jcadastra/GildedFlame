@@ -245,6 +245,54 @@
                  "width":600,
                  "x":445,
                  "y":2273
+                }, 
+                {
+                 "gid":40,
+                 "height":2000,
+                 "id":17,
+                 "name":"window",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1200,
+                 "x":3874,
+                 "y":2818
+                }, 
+                {
+                 "gid":38,
+                 "height":2000,
+                 "id":18,
+                 "name":"column",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1200,
+                 "x":6490,
+                 "y":2298
+                }, 
+                {
+                 "gid":39,
+                 "height":300,
+                 "id":19,
+                 "name":"brick",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":300,
+                 "x":554,
+                 "y":910
+                }, 
+                {
+                 "gid":39,
+                 "height":300,
+                 "id":20,
+                 "name":"brick",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":300,
+                 "x":1162,
+                 "y":1830
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -347,7 +395,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":17,
+ "nextobjectid":21,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
