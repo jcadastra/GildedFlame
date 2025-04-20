@@ -653,14 +653,7 @@ public class GameplayScene implements Screen {
                     }
 
                     JsonValue settings = levelInfo.get("walls");
-                    float tileunits = 32f/300f;
                     Surface tile = new Surface(points, units, settings);
-                    int ind = tileId - 1;
-                    int regionX = ind % 6;
-                    int regionY = ind / 6;
-                    //TextureRegion region = regions[regionY][regionX];
-                    //System.out.println(ind);
-                    //tile.setTextureRegion(region);
                     tile.setTexture(texture);
 
                     if (isWall) {
@@ -755,8 +748,6 @@ public class GameplayScene implements Screen {
                         case "window":
                             System.out.println("window");
                             texture = directory.getEntry("window", Texture.class);
-                            if (texture != null) {System.out.println("texture: " + texture);}
-                            else {System.out.println("texture: null");}
                             float width = object.getFloat("width") / levelData.getInt("tilewidth");
                             float height = object.getFloat("height") / levelData.getInt("tileheight");
 
@@ -769,7 +760,7 @@ public class GameplayScene implements Screen {
                             };
 
                             GameObject decoration = new GameObject(points, pos[0], pos[1], units);
-                            //decoration.getObstacle().setSensor(true);  // Make it non-interactive
+                            decoration.getObstacle().setSensor(true);  // set as sensor
                             decoration.setTexture(texture);
                             decoration.getObstacle().setName(objName);
 

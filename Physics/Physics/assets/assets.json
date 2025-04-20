@@ -81,7 +81,7 @@
     "eerieCriminal": "music/eerieCriminalAtmosphere.wav",
     "tenseSoundscape": "music/tenseAtmosphereHauntingSoundscapes.wav",
     "menu_music": "music/menu_music.wav",
-    "in_game_music" : "music/in_game_music.wav"
+    "in_game_music": "music/in_game_music.mp3"
   },
   "soundfx": {
     "dirtFootStep": "soundEffects/dirtFootStep.wav",
