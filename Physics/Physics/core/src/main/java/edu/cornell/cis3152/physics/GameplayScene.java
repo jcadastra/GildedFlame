@@ -1348,7 +1348,7 @@ public class GameplayScene implements Screen {
     // Camera player not light camera (light camera updated internally) but movements
     // here are for the camera that follows player (?)
     private void updateCamera() {
-        System.out.println();
+//        System.out.println();
 
         float prevX = camera.position.x;
         float prevY = camera.position.y;
@@ -1364,21 +1364,21 @@ public class GameplayScene implements Screen {
 //        float visibleW =  (bounds.x + bounds.width) * scale.x/2*0.8f; //half of world visible
 //        float visibleH = (bounds.y + bounds.height) * scale.y/2*0.8f;
 
-        System.out.println(camera.viewportWidth + ", " + camera.viewportHeight);
+//        System.out.println(camera.viewportWidth + ", " + camera.viewportHeight);
         float visibleW =  camera.viewportWidth/2*camera.zoom; //half of world visible, zoomed
         float visibleH = camera.viewportHeight/2*camera.zoom;
-        System.out.println("actual height and width: " + height +", " + width);
-        System.out.println(visibleW + ": W, H ;" + visibleH + ";; " + camera.zoom);
-        System.out.println("gutters, top: " + fitViewport.getTopGutterHeight() + ", bottom: " + fitViewport.getBottomGutterHeight() + ", left: " + fitViewport.getLeftGutterWidth() + ", right: " + fitViewport.getRightGutterWidth());
-        System.out.println("screen width and height " + fitViewport.getScreenWidth() + ", " + fitViewport.getScreenHeight() + " ;; now world: " + fitViewport.getWorldWidth() + ", " + fitViewport.getWorldHeight());
-        System.out.println("cam viewports: " + camera.viewportWidth + ", " + camera.viewportHeight);
+//        System.out.println("actual height and width: " + height +", " + width);
+//        System.out.println(visibleW + ": W, H ;" + visibleH + ";; " + camera.zoom);
+//        System.out.println("gutters, top: " + fitViewport.getTopGutterHeight() + ", bottom: " + fitViewport.getBottomGutterHeight() + ", left: " + fitViewport.getLeftGutterWidth() + ", right: " + fitViewport.getRightGutterWidth());
+//        System.out.println("screen width and height " + fitViewport.getScreenWidth() + ", " + fitViewport.getScreenHeight() + " ;; now world: " + fitViewport.getWorldWidth() + ", " + fitViewport.getWorldHeight());
+//        System.out.println("cam viewports: " + camera.viewportWidth + ", " + camera.viewportHeight);
 
 
         camera.position.x = MathUtils.clamp(camera.position.x,
             bounds.x*scale.x+visibleW,
             (bounds.x+bounds.width)*scale.x - visibleW);
-        System.out.println(camera.position.x +", " + bounds.x + " , " + bounds.width + " , " + bounds.height+ " , " + scale);
-        System.out.println("min: "+ (bounds.x*scale.x+visibleW )+ "max: "+ ((bounds.x+bounds.width)*scale.x - visibleW));
+//        System.out.println(camera.position.x +", " + bounds.x + " , " + bounds.width + " , " + bounds.height+ " , " + scale);
+//        System.out.println("min: "+ (bounds.x*scale.x+visibleW )+ "max: "+ ((bounds.x+bounds.width)*scale.x - visibleW));
         //System.out.println("x reached bounds:"+(camera.position.x==bounds.x*scale.x+visibleW));
         camera.position.y = MathUtils.clamp(camera.position.y,
             bounds.y*scale.y+visibleH,
