@@ -158,6 +158,11 @@ public class GDXRoot extends Game implements ScreenListener {
                 MainMenuScreen mainMenu = new MainMenuScreen();
                 mainMenu.setScreenListener(this);
                 setScreen(mainMenu);
+                soundEngine.stopMusicLoop();
+                soundEngine.registerMusic("menu_music", directory.getEntry("menu_music", Music.class));
+                ArrayList<String> temp = new ArrayList<>();
+                temp.add("menu_music");
+                soundEngine.startMusicLoop(temp);
                 return;
             }
             // Handle exit from the main menu.
@@ -170,7 +175,7 @@ public class GDXRoot extends Game implements ScreenListener {
             // Handle exit from the level selection screen.
             else if (screen instanceof LevelSelectScene) {
                 int selectedLevel = ((LevelSelectScene) screen).getSelectedLevel();
-
+                soundEngine.stopMusicLoop();
                 // Register sound effects.
                 soundEngine.registerSoundEffect("jump", directory.getEntry("platform-jump", SoundEffect.class));
                 soundEngine.registerSoundEffect("pew", directory.getEntry("platform-pew", SoundEffect.class));
@@ -180,11 +185,13 @@ public class GDXRoot extends Game implements ScreenListener {
 
                 // Register music and start a loop.
                 soundEngine.registerMusic("eerie1", directory.getEntry("eerie", Music.class));
-                soundEngine.registerMusic("eerieCriminal", directory.getEntry("eerieCriminal", Music.class));
-                soundEngine.registerMusic("tenseSoundscape", directory.getEntry("tenseSoundscape", Music.class));
+                //soundEngine.registerMusic("eerieCriminal", directory.getEntry("eerieCriminal", Music.class));
+                //soundEngine.registerMusic("tenseSoundscape", directory.getEntry("tenseSoundscape", Music.class));
+                soundEngine.registerMusic("in_game", directory.getEntry("in_game_music", Music.class));
                 ArrayList<String> temp = new ArrayList<>();
-                temp.add("eerieCriminal");
+                //temp.add("eerieCriminal");
                 temp.add("eerie1");
+                temp.add("in_game");
                 soundEngine.startMusicLoop(temp);
 
                 // Initialize the gameplay scene and level data.
@@ -195,6 +202,7 @@ public class GDXRoot extends Game implements ScreenListener {
                 currentScene.setSpriteBatch(batch);
                 current = selectedLevel - 1;
                 setScreen(currentScene);
+
                 return;
             }
 

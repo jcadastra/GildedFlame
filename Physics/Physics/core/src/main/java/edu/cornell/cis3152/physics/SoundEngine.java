@@ -66,6 +66,14 @@ public class SoundEngine {
         }
     }
 
+    public void stopMusicLoop() {
+        for (Music music : activeMusic) {
+            music.stop();
+        }
+        activeMusic.clear();
+        activeMusicIndex = 0;
+    }
+
     public void pauseLoopingSoundEffects() {
         for (String name : activeLoopingSounds.keySet()) {
             SoundEffect sound = registeredSoundEffects.get(name);

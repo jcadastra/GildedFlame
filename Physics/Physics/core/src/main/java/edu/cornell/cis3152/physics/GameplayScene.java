@@ -659,7 +659,7 @@ public class GameplayScene implements Screen {
                     int regionX = ind % 6;
                     int regionY = ind / 6;
                     //TextureRegion region = regions[regionY][regionX];
-                    System.out.println(ind);
+                    //System.out.println(ind);
                     //tile.setTextureRegion(region);
                     tile.setTexture(texture);
 
@@ -690,7 +690,7 @@ public class GameplayScene implements Screen {
                             avatar = new Avatar(directory, units, levelInfo.get("traci"));
                             avatar.setTexture(playerTexture);
                             avatar.getObstacle().setPosition(pos[0], pos[1]);
-                            System.out.println("position" + pos[0] + " " + pos[1]);
+                            //System.out.println("position" + pos[0] + " " + pos[1]);
                             addSprite(avatar);
                             avatar.createSensor();
                             break;
