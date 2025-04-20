@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "example_level.tmj",
+    "activeFile": "test2.tmj",
     "expandedProjectPaths": [
         "."
     ],
@@ -44,8 +44,8 @@
             "scale": 0.75,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 1006.6666666666666,
-                "y": 3067.333333333333
+                "x": 4800,
+                "y": 2699.333333333333
             }
         },
         "example_level.tmx": {
@@ -68,8 +68,8 @@
             "scale": 0.125,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 3192,
-                "y": 4436
+                "x": 3184,
+                "y": 4428
             }
         },
         "test2.tmx": {
@@ -146,7 +146,8 @@
         "test2.tmx",
         "PlatformTiles.tsx",
         "test3.tmj",
-        "example_level.tmj"
+        "example_level.tmj",
+        "test2.tmj"
     ],
     "project": "tiled.tiled-project",
     "property.type": "bool",
@@ -159,6 +160,7 @@
         "PlatformTiles.tsx",
         "test3.tmj",
         "example_level.tmj",
+        "test2.tmj",
         "test_map.tmj",
         "tileset.tsx",
         "earthtile.tsx"
