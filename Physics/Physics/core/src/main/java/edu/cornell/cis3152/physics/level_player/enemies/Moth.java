@@ -313,6 +313,9 @@ public class Moth extends Enemy {
                 Torch torch = (Torch) rr.targetObject;
                 torchPos = torch.getObstacle().getPosition();
             } else {
+                if (rr == null) {
+                    System.out.println("null check");
+                }
                 System.out.println("ERROR: GROUNDED AND NULL");
             }
             body.setType(BodyDef.BodyType.DynamicBody);

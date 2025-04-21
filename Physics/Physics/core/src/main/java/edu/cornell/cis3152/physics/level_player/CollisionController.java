@@ -241,7 +241,7 @@ public class CollisionController implements ContactListener {
                         beginSmother = true;
                         beginSmother();
                     }
-                    }
+                }
 
             }
 
