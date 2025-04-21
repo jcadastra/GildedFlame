@@ -321,7 +321,8 @@ public class CollisionController implements ContactListener {
                 }
             }
 
-            if (isXandY(bd1, bd2, Avatar.class, Door.class) == 1 ) {
+            if (isX(bd1, bd2, Avatar.class) == 1 && isX(bd1,bd2,"goalDoor") == 1) {
+                System.out.println("detected collision");
                 ContactKey key = new ContactKey(fix1, fix2);
                 sustainedContacts.put(key, -1);
             }
@@ -424,7 +425,7 @@ public class CollisionController implements ContactListener {
                 }
             }
 
-            if (isXandY(bd1, bd2, Avatar.class, Door.class) == 1) {
+            if (isX(bd1, bd2, Avatar.class) == 1 && isX(bd1,bd2,"goalDoor") == 1) {
                 Avatar traci = (Avatar) idX(bd1, bd2, Avatar.class);
                 if (traci.getHasTorch()) {
                     collisionFlags.push(new CollisionFlag("queueWin"));
@@ -508,7 +509,7 @@ public class CollisionController implements ContactListener {
             sustainedContacts.remove(key);
         }
 
-        if (isXandY(bd1, bd2, Avatar.class, Door.class) == 1) {
+        if (isX(bd1, bd2, Avatar.class) == 1 && isX(bd1,bd2,"goalDoor") == 1) {
             ContactKey key = new ContactKey(fix1, fix2);
             sustainedContacts.remove(key);
         }
