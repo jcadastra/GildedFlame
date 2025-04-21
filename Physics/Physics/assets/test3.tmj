@@ -82,6 +82,39 @@
                  "width":300,
                  "x":5426,
                  "y":4150
+                }, 
+                {
+                 "gid":43,
+                 "height":200,
+                 "id":17,
+                 "name":"rune",
+                 "properties":[
+                        {
+                         "name":"platformHeight",
+                         "type":"string",
+                         "value":"0.5"
+                        }, 
+                        {
+                         "name":"platformPosition",
+                         "type":"string",
+                         "value":"25,8"
+                        }, 
+                        {
+                         "name":"platformWidth",
+                         "type":"string",
+                         "value":"5"
+                        }, 
+                        {
+                         "name":"thresholds",
+                         "type":"string",
+                         "value":"0,0.5"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":150,
+                 "x":5972,
+                 "y":3359
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -90,7 +123,7 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":17,
+ "nextobjectid":18,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
@@ -107,6 +140,10 @@
         {
          "firstgid":29,
          "source":"EnemyTiles.tsx"
+        }, 
+        {
+         "firstgid":33,
+         "source":"GameObjectTiles.tsx"
         }],
  "tilewidth":300,
  "type":"map",

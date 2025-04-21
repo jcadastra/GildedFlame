@@ -767,6 +767,55 @@ public class GameplayScene implements Screen {
                             addSprite(decoration);
                             break;
 
+                        case "rune":
+                            float platWidth = 1f;
+                            float platHeight = 1f;
+                            List<Float> platformPos = new ArrayList<>();
+                            float[] thresholds = null;
+
+                            JsonValue runeProperties = object.get("properties");
+                            for (JsonValue prop : runeProperties) {
+                                String propName = prop.getString("name");
+                                String value = prop.getString("value");
+                                switch (propName) {
+                                    case "platformWidth":
+                                        platWidth = Float.parseFloat(value);
+                                        break;
+                                    case "platformHeight":
+                                        platHeight = Float.parseFloat(value);
+                                        break;
+                                    case "platformPosition":
+                                        for (String num : value.split(",")) {
+                                            platformPos.add(Float.parseFloat(num));
+                                        }
+                                        break;
+
+                                    case "thresholds":
+                                        String[] tokens = value.split(",");
+                                        thresholds = new float[tokens.length];
+                                        for (int i = 0; i < tokens.length; i++) {
+                                            thresholds[i] = Float.parseFloat(tokens[i].trim());
+                                        }
+                                        break;
+                                }
+                            }
+
+                            Rune runeTemp = new Rune(pos[0],pos[1], units, thresholds);
+                            BoxObstacle tmp = new BoxObstacle(platformPos.get(0), platformPos.get(1), platWidth, platHeight);
+                            tmp.setPhysicsUnits(units);
+                            tmp.setName("floor");
+                            tmp.setBodyType(BodyType.KinematicBody);
+                            tmp.setFriction(0.5f);
+
+                            ObstacleSprite plat = new ObstacleSprite(tmp);
+                            plat.getObstacle().setBodyType(BodyType.KinematicBody);
+                            plat.getObstacle().setFriction(.5f);
+                            addSprite(plat);
+                            EventAction<Float> awef = new EventAction<Float>(plat, "rotate", plat.getObstacle().getAngle(), (float) Math.PI);
+                            runeTemp.registerEventAction(awef);
+                            runeSet.add(runeTemp);
+                            addSprite(runeTemp);
+
                         case "button":
                             float rotationRad = 0f;
                             boolean latch = false;
@@ -889,20 +938,6 @@ public class GameplayScene implements Screen {
                                     state -> state == 1, rotateAction);
                                 eventHandler.registerEvent(rotateEvent);
                             }
-
-                            /*Function<Float, Float> movementFunc = Interpolation.smoother::apply;
-                            EventAction<Vector2> eventAction = new EventAction<Vector2>(thing, "move", new Vector2(startX, startY), new Vector2(endX, endY), 4f, movementFunc);
-
-                            Event<Integer,Vector2> event = new Event<Integer,Vector2>(button, button::getState,
-                                state -> state == 1,  eventAction);
-                            eventHandler.registerEvent(event);
-
-
-                            EventAction<Float> eventAction2 = new EventAction<Float>(thing, "rotate", 0f, (float) (Math.PI), 4, movementFunc);
-                            Event<Integer,Float> event2 = new Event<Integer, Float>(button, button::getState,
-                                state -> state == 1,  eventAction2);
-//                            eventHandler.registerEvent(event2);
-                            break;*/
 
                         default:
                             if (objName.matches("\\d+")) {

@@ -88,13 +88,13 @@
         },
         "test3.tmx": {
             "expandedObjectLayers": [
-                2,
-                3
+                3,
+                2
             ],
             "scale": 0.125,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 2712,
+                "x": 5112,
                 "y": 2620
             }
         },
@@ -133,7 +133,7 @@
             }
         }
     },
-    "last.exportedFilePath": "C:/Users/Cynthia Sun/The-Gilded-Flame/Physics/Physics/assets",
+    "last.exportedFilePath": "C:/Users/Cynthia Sun/Documents/GitHub/The-Gilded-Flame/Physics/Physics/assets",
     "last.imagePath": "C:/Users/Cynthia Sun/Documents/GitHub/The-Gilded-Flame/Physics/Physics/assets/tiled_images",
     "map.height": 18,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
@@ -150,7 +150,7 @@
         "PlatformTiles.tsx"
     ],
     "project": "tiled.tiled-project",
-    "property.type": "bool",
+    "property.type": "string",
     "recentFiles": [
         "test_map.tmx",
         "test2.tmx",
