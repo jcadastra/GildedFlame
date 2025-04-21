@@ -45,10 +45,10 @@
                 5
             ],
             "scale": 0.125,
-            "selectedLayer": 2,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": -2088,
-                "y": 1748
+                "x": 3656,
+                "y": 1900
             }
         },
         "example_level2.tmx": {
@@ -108,15 +108,15 @@
         },
         "test_map.tmx": {
             "expandedObjectLayers": [
-                4,
+                3,
                 2,
-                3
+                4
             ],
             "scale": 0.5,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": -112,
-                "y": 561
+                "x": 960,
+                "y": 335
             }
         },
         "tileset.tsx": {
@@ -134,7 +134,7 @@
         }
     },
     "last.exportedFilePath": "C:/Users/Cynthia Sun/The-Gilded-Flame/Physics/Physics/assets",
-    "last.imagePath": "C:/Users/Cynthia Sun/The-Gilded-Flame/Physics/Physics/assets/tiled_images",
+    "last.imagePath": "C:/Users/Cynthia Sun/Documents/GitHub/The-Gilded-Flame/Physics/Physics/assets/tiled_images",
     "map.height": 18,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "map.lastUsedFormat": "tmx",
