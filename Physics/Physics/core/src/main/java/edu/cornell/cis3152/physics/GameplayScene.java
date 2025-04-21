@@ -154,7 +154,7 @@ public class GameplayScene implements Screen {
     protected Torch torch;
 
     /** Reference to the goalDoor (for collision detection) */
-    private Door goalDoor;
+    private GameObject goalDoor;
 
     //protected Totem totem;
     //protected Moth moth;
@@ -768,6 +768,7 @@ public class GameplayScene implements Screen {
                             goalDoor.getObstacle().setName("goalDoor");
                             goalDoor.setTexture(texture);
                             goalDoor.getObstacle().setPhysicsUnits(units);
+                            this.goalDoor = goalDoor;
                             addSprite(goalDoor);
                             break;
 
