@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Fire;
@@ -18,6 +19,10 @@ import edu.cornell.cis3152.physics.level_player.enviromentals.Lighting;
 import edu.cornell.cis3152.physics.level_player.player.Avatar;
 //import edu.cornell.cis3152.physics.level_player.player.Traci;
 import edu.cornell.cis3152.physics.level_player.utils.FireFlag;
+import edu.cornell.gdiac.physics2.ObstacleSprite;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LightController {
 
@@ -58,6 +63,7 @@ public class LightController {
 
     private int flickerMax = 300;
     private int flickerCount = 300;
+    private int lightIndex = 0;
 
     private boolean debug;
     public static final short CATEGORY_AVATAR = 0x0002;  // 00000010
@@ -69,12 +75,14 @@ public class LightController {
     /*Pool of lights for doing fire*/
     private Array<PointLight> lightPool;
     private int maxLights = 20;
+    Map<Body, PointLight> lightAssignments = new HashMap<>();
+
 
     public void initLights(RayHandler rayHandler) {
         lightPool = new Array<>();
 
         for (int i = 0; i < maxLights; i++) {
-            PointLight light = new PointLight(rayHandler, 64, Color.ORANGE, 1f, 0, 0);
+            PointLight light = new PointLight(rayHandler, 64, Color.LIGHT_GRAY, 1f, 0, 0);
             light.setActive(false);  // Hide initially
             lightPool.add(light);
         }
@@ -206,6 +214,20 @@ public class LightController {
         torchLighting.setPosition(lightPosX, lightPosY);
     }
 
+    public void attachAmbientLight (ObstacleSprite sprite){
+        PointLight light = lightPool.get(lightIndex);
+        lightAssignments.put(sprite.getObstacle().getBody(), light);
+        light.attachToBody(sprite.getObstacle().getBody());
+        light.setActive(true);
+        light.setContactFilter(CATEGORY_LIGHT,(short)0,
+            (short)CATEGORY_ENVIRONMENT);
+        lightIndex = (lightIndex + 1)%maxLights;
+    }
+
+    public void turnOffAmbientLight(ObstacleSprite sprite){
+        lightAssignments.get(sprite.getObstacle().getBody()).setActive(false);
+        lightAssignments.remove(sprite);
+    }
     public void translate(){
 
     }
