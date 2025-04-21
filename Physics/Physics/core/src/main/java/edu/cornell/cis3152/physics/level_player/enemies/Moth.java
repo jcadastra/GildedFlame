@@ -318,7 +318,7 @@ public class Moth extends Enemy {
             body.setType(BodyDef.BodyType.DynamicBody);
             body.setAwake(true);
             body.setGravityScale(0.5f);
-            float jumpVy = 5f;
+            float jumpVy = 3f;
             float gEff    = Math.abs(body.getWorld().getGravity().y * body.getGravityScale());
             float T       = (2f * jumpVy) / gEff;
             float dx      = torchPos.x - body.getPosition().x;

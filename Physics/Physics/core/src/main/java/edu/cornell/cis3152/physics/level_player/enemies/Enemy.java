@@ -257,7 +257,7 @@ public class Enemy extends ObstacleSprite {
                     if (target.getName().equals("platform") || target.getName().equals("enemy") || target.getName().equals("ground") || target.getName().equals("floor")) {
                         groundDetected[0] = true;
                     } else {
-                        System.out.println(target.getName());
+//                        System.out.println(target.getName());
                     }
                 }
                 return fraction;
