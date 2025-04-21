@@ -49,24 +49,47 @@ public class LevelSelectScene implements Screen {
     }
 
     private void createBasicUI() {
+        Texture chamberLabelTexture = new Texture(Gdx.files.internal("ui/chamber_sel.png"));
+        Image chamberLabel = new Image(chamberLabelTexture);
+        chamberLabel.setSize(500, 100);
+        chamberLabel.setPosition(
+            (Gdx.graphics.getWidth() - chamberLabel.getWidth()) / 2f,
+            Gdx.graphics.getHeight() - chamberLabel.getHeight() - 60
+        );
+        stage.addActor(chamberLabel);
+        Texture chapLableTexture = new Texture(Gdx.files.internal("ui/chap_title.png"));
+        Image chapLabel = new Image(chapLableTexture);
+        chapLabel.setSize(250, 50);
+        chapLabel.setPosition(
+            (Gdx.graphics.getWidth() - chamberLabel.getWidth()) / 2f + 125,
+            Gdx.graphics.getHeight() - chamberLabel.getHeight() - 150
+        );
+        stage.addActor(chapLabel);
+
+
         // Load door textures
         Texture door1Texture = new Texture(Gdx.files.internal("ui/doors/door1.png"));
         Texture door2Texture = new Texture(Gdx.files.internal("ui/doors/door2.png"));
         Texture door3Texture = new Texture(Gdx.files.internal("ui/doors/door3.png"));
+        Texture door4Texture = new Texture(Gdx.files.internal("ui/doors/door4.png"));
+        Texture door5Texture = new Texture(Gdx.files.internal("ui/doors/door5.png"));
 
         // Create ImageButtons using these textures
         Image door1 = new Image(door1Texture);
         Image door2 = new Image(door2Texture);
         Image door3 = new Image(door3Texture);
+        Image door4 = new Image(door4Texture); // not interactive
+        Image door5 = new Image(door5Texture); // not interactive
 
         float buttonWidth = 200;
         float buttonHeight = 200; // Adjust based on your image
         float spacing = 50;
 
-        float totalHeight = 3 * buttonHeight + 2 * spacing;
         float centerX = (Gdx.graphics.getWidth() / 2f - buttonWidth / 2f) + 325;
-        float startY = Gdx.graphics.getHeight() / 2f + totalHeight / 2f - 75;
+        float startY = Gdx.graphics.getHeight() / 2f + 3 * buttonHeight / 2f - 30;
 
+        // Place all doors on the same row horizontally
+        float yPosition = startY - 2 * (buttonHeight + spacing);
         door1.setSize(buttonWidth, buttonHeight);
         door1.setPosition(centerX - 800, startY - 2 * (buttonHeight + spacing));
         door2.setSize(buttonWidth, buttonHeight);
@@ -74,7 +97,14 @@ public class LevelSelectScene implements Screen {
         door3.setSize(buttonWidth, buttonHeight);
         door3.setPosition(centerX - 266, startY - 2 * (buttonHeight + spacing));
 
-        // Attach input listeners to images
+
+        door4.setSize(buttonWidth, buttonHeight);
+        door4.setPosition(centerX, yPosition);
+
+        door5.setSize(buttonWidth, buttonHeight);
+        door5.setPosition(centerX + 266, yPosition);
+
+        // Interactive input only for first 3 doors
         door1.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -108,19 +138,21 @@ public class LevelSelectScene implements Screen {
             }
         });
 
-        // Store for controller highlighting
+        // Store for controller highlighting (only interactive ones)
         levels.add(door1);
         levels.add(door2);
         levels.add(door3);
 
-        // Controller support (first image selected)
         if (inputController.isUsingController() && levels.notEmpty()) {
             particleEngine = new ParticleEngine(levels.get(0));
         }
 
+        // Add all doors to stage
         stage.addActor(door1);
         stage.addActor(door2);
         stage.addActor(door3);
+        stage.addActor(door4);
+        stage.addActor(door5);
     }
 
     private void updateLevelHighlight(){
