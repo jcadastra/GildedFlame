@@ -224,6 +224,11 @@ public class GDXRoot extends Game implements ScreenListener {
                     LevelSelectScene levelSelect = new LevelSelectScene();
                     levelSelect.setScreenListener(this);
                     setScreen(levelSelect);
+                    soundEngine.stopMusicLoop();
+                    soundEngine.registerMusic("menu_music", directory.getEntry("menu_music", Music.class));
+                    ArrayList<String> temp = new ArrayList<>();
+                    temp.add("menu_music");
+                    soundEngine.startMusicLoop(temp);
                     return;
                 }
             }
