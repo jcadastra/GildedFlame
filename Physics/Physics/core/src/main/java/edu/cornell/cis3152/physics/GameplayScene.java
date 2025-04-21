@@ -154,7 +154,7 @@ public class GameplayScene implements Screen {
     protected Torch torch;
 
     /** Reference to the goalDoor (for collision detection) */
-    private Door goalDoor;
+    private GameObject goalDoor;
 
     //protected Totem totem;
     //protected Moth moth;
@@ -218,6 +218,15 @@ public class GameplayScene implements Screen {
      * Mark set to handle more sophisticated collision callbacks
      */
     protected ObjectSet<Fixture> sensorFixtures;
+
+    /**
+     * floating lights in the level, place-holder for now
+     * three default lights:
+     * 1. light for the level door (doesn't move)
+     * 2. light for center of the room (doesn't move)
+     * 3. light for the far end of the room (moves between the far end and this end)
+     */
+    protected FloatingLight[] floatingLights = new FloatingLight[3];
 
     /**
      * Returns true if debug mode is active.
@@ -525,6 +534,7 @@ public class GameplayScene implements Screen {
         }
         sprites.clear();
         addQueue.clear();
+        runeSet.clear();
         if (world != null) {
             world.dispose();
         }
@@ -675,9 +685,12 @@ public class GameplayScene implements Screen {
                             avatar = new Avatar(directory, units, levelInfo.get("traci"));
                             avatar.setTexture(playerTexture);
                             avatar.getObstacle().setPosition(pos[0], pos[1]);
-                            System.out.println("position" + pos[0] + " " + pos[1]);
+                            //System.out.println("position" + pos[0] + " " + pos[1]);
                             addSprite(avatar);
                             avatar.createSensor();
+                            if(lightController!= null){
+                                lightController.attachPlayerLight(avatar);
+                            }
                             break;
 
                         case "torch":
@@ -689,6 +702,7 @@ public class GameplayScene implements Screen {
                             lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds, units);
                             lightController.attachTorchLight(torchFire);
                             lightController.resetCamera(camera.position.x,camera.position.y);
+                            lightController.attachPlayerLight(avatar);
 
                             particleEngine = new ParticleEngine(torchFire, units);
                             particleEngine.newFires(fireController);
@@ -704,6 +718,24 @@ public class GameplayScene implements Screen {
                             fireController.forceAddTorchFire(torchFire, torch, new Vector2(torch.getObstacle().getPosition().cpy().add(0,torch.getHeight() / 4)));
                             activeLightJoint = world.createJoint(torch.attachObj(l));
                             activeFireJoint = world.createJoint(torch.attachObj(torchFire));
+
+                            //floating lights
+                            floatingLights = new FloatingLight[3];
+                            Vector2 goalPos = goalDoor.getObstacle().getPosition();
+                            FloatingLight goalLight = new FloatingLight(units,goalPos,1,goalPos);
+                            floatingLights[0] = goalLight;
+                            Vector2 centerPos = new Vector2(bounds.width/2,bounds.height/2);
+                            FloatingLight centerLight = new FloatingLight(units,centerPos,1,centerPos);
+                            floatingLights[1] = centerLight;
+                            Vector2 edgePos1 = new Vector2(bounds.width-5,5);
+                            Vector2 edgePos2 = new Vector2(5,5);
+                            FloatingLight edgeLight = new FloatingLight(units,edgePos1,1,edgePos2);
+                            floatingLights[2] = edgeLight;
+                            for (int i = 0; i <floatingLights.length; i++){
+                                addSprite(floatingLights[i]);}
+                            for (FloatingLight floatingLight: floatingLights) {
+                                lightController.attachAmbientLight(floatingLight);
+                            }
                             break;
 
                         case "moth":
@@ -728,12 +760,89 @@ public class GameplayScene implements Screen {
 
                         case "goaldoor":
                             texture = directory.getEntry("shared-goal", Texture.class);
-                            goalDoor = new Door(units, levelInfo.get("goal"));
-                            goalDoor.setTexture(texture);
-                            goalDoor.getObstacle().setName("goal");
-                            goalDoor.getObstacle().setPosition(pos[0], pos[1]);
+                            System.out.println("goal door texture: " + texture);
+                            float size = 1f;
 
+                            GameObject goalDoor = new GameObject(x,y,size*1.47f,size,units);
+                            goalDoor.getObstacle().setSensor(true);
+                            goalDoor.getObstacle().setBodyType(BodyType.StaticBody);
+                            goalDoor.getObstacle().setName("goalDoor");
+                            goalDoor.setTexture(texture);
+                            goalDoor.getObstacle().setPhysicsUnits(units);
+                            this.goalDoor = goalDoor;
                             addSprite(goalDoor);
+                            break;
+
+                        /*case "window":
+                            System.out.println("window");
+                            texture = directory.getEntry("window", Texture.class);
+                            float width = object.getFloat("width") / levelData.getInt("tilewidth");
+                            float height = object.getFloat("height") / levelData.getInt("tileheight");
+
+                            // Define rectangle points (counter-clockwise)
+                            float[] points = new float[]{
+                                -width / 2f, height / 2f,
+                                -width / 2f, -height / 2f,
+                                width / 2f, -height / 2f,
+                                width / 2f, height / 2f
+                            };
+
+                            GameObject decoration = new GameObject(points, pos[0], pos[1], units);
+                            decoration.getObstacle().setSensor(true);  // set as sensor
+                            decoration.setTexture(texture);
+                            decoration.getObstacle().setName(objName);
+
+                            addSprite(decoration);
+                            break;*/
+
+                        case "rune":
+                            float platWidth = 1f;
+                            float platHeight = 1f;
+                            List<Float> platformPos = new ArrayList<>();
+                            float[] thresholds = null;
+
+                            JsonValue runeProperties = object.get("properties");
+                            for (JsonValue prop : runeProperties) {
+                                String propName = prop.getString("name");
+                                String value = prop.getString("value");
+                                switch (propName) {
+                                    case "platformWidth":
+                                        platWidth = Float.parseFloat(value);
+                                        break;
+                                    case "platformHeight":
+                                        platHeight = Float.parseFloat(value);
+                                        break;
+                                    case "platformPosition":
+                                        for (String num : value.split(",")) {
+                                            platformPos.add(Float.parseFloat(num));
+                                        }
+                                        break;
+
+                                    case "thresholds":
+                                        String[] tokens = value.split(",");
+                                        thresholds = new float[tokens.length];
+                                        for (int i = 0; i < tokens.length; i++) {
+                                            thresholds[i] = Float.parseFloat(tokens[i].trim());
+                                        }
+                                        break;
+                                }
+                            }
+
+                            Rune runeTemp = new Rune(pos[0],pos[1], units, thresholds);
+                            BoxObstacle tmp = new BoxObstacle(platformPos.get(0), platformPos.get(1), platWidth, platHeight);
+                            tmp.setPhysicsUnits(units);
+                            tmp.setName("floor");
+                            tmp.setBodyType(BodyType.KinematicBody);
+                            tmp.setFriction(0.5f);
+
+                            ObstacleSprite plat = new ObstacleSprite(tmp);
+                            plat.getObstacle().setBodyType(BodyType.KinematicBody);
+                            plat.getObstacle().setFriction(.5f);
+                            addSprite(plat);
+                            EventAction<Float> awef = new EventAction<Float>(plat, "rotate", plat.getObstacle().getAngle(), (float) Math.PI);
+                            runeTemp.registerEventAction(awef);
+                            runeSet.add(runeTemp);
+                            addSprite(runeTemp);
                             break;
 
                         case "button":
@@ -859,20 +968,6 @@ public class GameplayScene implements Screen {
                                 eventHandler.registerEvent(rotateEvent);
                             }
 
-                            /*Function<Float, Float> movementFunc = Interpolation.smoother::apply;
-                            EventAction<Vector2> eventAction = new EventAction<Vector2>(thing, "move", new Vector2(startX, startY), new Vector2(endX, endY), 4f, movementFunc);
-
-                            Event<Integer,Vector2> event = new Event<Integer,Vector2>(button, button::getState,
-                                state -> state == 1,  eventAction);
-                            eventHandler.registerEvent(event);
-
-
-                            EventAction<Float> eventAction2 = new EventAction<Float>(thing, "rotate", 0f, (float) (Math.PI), 4, movementFunc);
-                            Event<Integer,Float> event2 = new Event<Integer, Float>(button, button::getState,
-                                state -> state == 1,  eventAction2);
-//                            eventHandler.registerEvent(event2);
-                            break;*/
-
                         default:
                             if (objName.matches("\\d+")) {
                                 ropeAnchors.put(objName, object);
@@ -923,9 +1018,12 @@ public class GameplayScene implements Screen {
                         //temp = rope;
                         addSpriteGroup(rope);
                     }
+
                 }
             }
         }
+
+
         /*Surface wall;
         String wname = "wall";
         JsonValue walls = levelData.get("walls");
@@ -1067,7 +1165,7 @@ public class GameplayScene implements Screen {
 //        RainBlock rainBlocktemp = new RainBlock(3,3,10,10,units, torchFire.getRadius());
 //        addSprite(rainBlocktemp);
 
-        if (levelName.equals("rope_test")) {
+        /*if (levelName.equals("rope_test")) {
             // SAMPLE BUTTON CODE BELOW::
             Button button = new Button(new Vector2(24,2.75f), 0, true, true, units);
             Button button2 = new Button(new Vector2(30.75f,7f), (float) Math.PI/2, false, false, units);
@@ -1087,32 +1185,11 @@ public class GameplayScene implements Screen {
 
             Event<Integer,Vector2> event = new Event<Integer,Vector2>(button, button::getState,
                 state -> state == 1,  eventAction);
-            eventHandler.registerEvent(event);
+            eventHandler.registerEvent(event);*/
 
 
-            EventAction<Float> eventAction2 = new EventAction<Float>(thing, "rotate", 0f, (float) (Math.PI), 4, movementFunc);
-            Event<Integer,Float> event2 = new Event<Integer, Float>(button, button::getState,
-                state -> state == 1,  eventAction2);
-            eventHandler.registerEvent(event2);
 
-            eventAction = new EventAction<>("demo");
-            event = new Event<Integer,Vector2>(button2, button2::getState,
-                state -> state == 1,  eventAction);
-            eventHandler.registerEvent(event);
-
-            addSpriteGroup(button);
-//            addSpriteGroup(button2);
-
-            Ladder tempLadder = new Ladder(3,3,5f, units);
-    //        addSprite(tempLadder);
-            Rune runeTemp = new Rune(3,3, units, new float[]{0, .5f});
-            EventAction<Float> awef = new EventAction<Float>(thing, "rotate", thing.getObstacle().getAngle(), (float) Math.PI);
-            runeTemp.registerEventAction(awef);
-            runeSet.add(runeTemp);
-            addSprite(runeTemp);
-
-
-        }
+//        }
 
 //        if (levelName.equals("moth_intro")) {
 //            temp.deactivateAnchor(1);
@@ -1873,6 +1950,11 @@ public class GameplayScene implements Screen {
         }
 
         batch.end();
+        for (FloatingLight light : floatingLights){
+            if (light.isOff()){
+                lightController.turnOffAmbientLight(light);
+            }
+        }
         lightController.render();
     }
 

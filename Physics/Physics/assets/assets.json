@@ -6,6 +6,9 @@
       "wrapV": "repeated"
     },
     "shared-goal": "shared/goaldoor.png",
+    "window": "tiled_images/Window.png",
+    "brick": "tiled_images/brick.png",
+    "column": "tiled_images/column_background.png",
     "platform-totemLIGHTANIMATION": {
       "file": "platform/totemInLightAnimation.png",
       "mipmaps": true,
@@ -257,7 +260,7 @@
     "platform-rope": "platform/ropebridge.png",
     "platform-barrier": "platform/barrier.png",
     "platform-bullet": "platform/bullet.png",
-    "platform-flame-smoke": "platform/flame/smoke.png"
+    "platform-flame-smoke": "platform/particles/smoke.png"
   },
   "jsons": {
     "platform-constants": "platform/constants.json",
@@ -274,7 +277,8 @@
     "eerie": "music/eerie.wav",
     "eerieCriminal": "music/eerieCriminalAtmosphere.wav",
     "tenseSoundscape": "music/tenseAtmosphereHauntingSoundscapes.wav",
-    "menu_music": "music/menu_music.wav"
+    "menu_music": "music/menu_music.wav",
+    "in_game_music": "music/in_game_music.mp3"
   },
   "soundfx": {
     "dirtFootStep": "soundEffects/dirtFootStep.wav",

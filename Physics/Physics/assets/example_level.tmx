@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="32" height="18" tilewidth="300" tileheight="300" infinite="0" nextlayerid="6" nextobjectid="17">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="32" height="18" tilewidth="300" tileheight="300" infinite="0" nextlayerid="6" nextobjectid="22">
  <editorsettings>
   <export target="example_level.tmj" format="json"/>
  </editorsettings>
@@ -64,6 +64,7 @@
     <property name="time" value="4"/>
    </properties>
   </object>
+  <object id="21" name="column" gid="42" x="4714" y="2426" width="1200" height="2000"/>
  </objectgroup>
  <objectgroup id="2" name="PlayerTorch">
   <object id="1" name="player" gid="28" x="586" y="5068"/>

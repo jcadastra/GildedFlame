@@ -93,13 +93,13 @@
         },
         "test3.tmx": {
             "expandedObjectLayers": [
-                2,
-                3
+                3,
+                2
             ],
             "scale": 0.125,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 2712,
+                "x": 5112,
                 "y": 2620
             }
         },
@@ -108,30 +108,38 @@
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 960.4042105263159,
-                "y": 638.6526315789475
+                "y": 638.6526315789473
             }
         },
         "test_map.tmx": {
             "expandedObjectLayers": [
-                4,
+                3,
                 2,
-                3
+                4
             ],
             "scale": 0.5,
             "selectedLayer": 2,
             "viewCenter": {
                 "x": 960,
-                "y": 311
+                "y": 335
             }
         },
         "tileset.tsx": {
             "dynamicWrapping": false,
             "scaleInDock": 0.125,
             "scaleInEditor": 0.33
+        },
+        "untitled.tmj": {
+            "scale": 0.08658854166666666,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 4804.330827067671,
+                "y": 2696.6616541353383
+            }
         }
     },
-    "last.exportedFilePath": "C:/Users/Cynthia Sun/The-Gilded-Flame/Physics/Physics/assets",
-    "last.imagePath": "C:/Users/Cynthia Sun/The-Gilded-Flame/Physics/Physics/assets/tiled_images",
+    "last.exportedFilePath": "C:/Users/Cynthia Sun/Documents/GitHub/The-Gilded-Flame/Physics/Physics/assets",
+    "last.imagePath": "C:/Users/Cynthia Sun/Documents/GitHub/The-Gilded-Flame/Physics/Physics/assets/tiled_images",
     "map.height": 18,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "map.lastUsedFormat": "tmx",
@@ -150,9 +158,15 @@
         "test2.tmj"
     ],
     "project": "tiled.tiled-project",
-    "property.type": "bool",
+    "property.type": "string",
     "recentFiles": [
         "test_map.tmx",
+        "test2.tmx",
+        "test2.tmj",
+        "test3.tmx",
+        "test_map.tmj",
+        "untitled.tmj",
+        "PlatformTiles.tsx",
         "EnemyTiles.tsx",
         "GameObjectTiles.tsx",
         "PlayerTorchTiles.tsx",
