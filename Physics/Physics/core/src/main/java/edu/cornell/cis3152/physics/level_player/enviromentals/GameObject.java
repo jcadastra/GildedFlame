@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import edu.cornell.gdiac.math.Poly2;
 import edu.cornell.gdiac.math.PolyTriangulator;
 import edu.cornell.gdiac.physics2.BoxObstacle;
+import edu.cornell.gdiac.physics2.ObstacleSprite;
 import edu.cornell.gdiac.physics2.PolygonObstacle;
 import edu.cornell.gdiac.physics2.WheelObstacle;
 import javax.swing.Box;
@@ -20,13 +21,13 @@ public class GameObject extends EnhancedObstacleSprite {
     public GameObject(float x, float y, float width, float height, float units) {
         super();
 
-        obstacle = new BoxObstacle(x,y,width,height);
+        BoxObstacle temp = new BoxObstacle(x,y,width,height);
+        obstacle = new ObstacleSprite(temp).getObstacle();
         obstacle.setDensity(0.5f);
         obstacle.setFriction(0.5f);
         obstacle.setRestitution(.1f);
         obstacle.setPhysicsUnits(units);
         obstacle.setFixedRotation(true);
-        setObstacle(obstacle);
         mesh.set(-(width * units)/2, -(height * units)/2, width * units, height * units);
     }
 }
