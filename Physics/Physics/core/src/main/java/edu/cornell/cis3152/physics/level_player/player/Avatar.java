@@ -764,7 +764,7 @@ public class Avatar extends ObstacleSprite {
                 doOnce = true;
             } else {
                 System.out.println("vy = 0");
-                srcIndex = frameIndex * FRAME_WIDTH;
+                srcIndex = 0;
                 animationTexture = hasTorch ? animationTextureJumpTorchFall : animationTextureJumpNoTorchFall;
             }
             batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits() * 1.5f, srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, !isFacingRight(), false);
@@ -787,6 +787,7 @@ public class Avatar extends ObstacleSprite {
 
             cdFrameCount++;
             frameIndex = (cdFrameCount / FRAME_DURATION) % TOTAL_FRAMES;
+            System.out.println("HERE: " + frameIndex);
             srcIndex = frameIndex * FRAME_WIDTH;
             animationTexture = hasTorch ? animationTextureIdleTorch : animationTextureIdleNoTorch;
             batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits() * 1.5f, srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, !isFacingRight(), false);
