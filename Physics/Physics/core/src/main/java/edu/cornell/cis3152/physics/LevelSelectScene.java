@@ -3,20 +3,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.ScreenUtils;
 import edu.cornell.gdiac.util.ScreenListener;
 import edu.cornell.gdiac.util.XBoxController;
 
@@ -27,7 +20,7 @@ public class LevelSelectScene implements Screen {
     private ScreenListener listener;
     private Texture bgTexture;
 
-    private Array<TextButton> levels = new Array<>(10);//10 level per scene
+    private Array<Image> levels = new Array<Image>(10);//10 level per scene
     private int currentIndex = 0;
 
     private ParticleEngine particleEngine;
@@ -47,7 +40,7 @@ public class LevelSelectScene implements Screen {
         stage = new Stage(new ScreenViewport());
         skin = new Skin();
 
-        bgTexture = new Texture(Gdx.files.internal("loading/menuScreen.png"));
+        bgTexture = new Texture(Gdx.files.internal("ui/plain_back.png"));
         Image bgImage = new Image(bgTexture);
         bgImage.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage.addActor(bgImage);
@@ -56,102 +49,82 @@ public class LevelSelectScene implements Screen {
     }
 
     private void createBasicUI() {
-        // Create a basic font
-        BitmapFont font = new BitmapFont();
+        // Load door textures
+        Texture door1Texture = new Texture(Gdx.files.internal("ui/doors/door1.png"));
+        Texture door2Texture = new Texture(Gdx.files.internal("ui/doors/door2.png"));
+        Texture door3Texture = new Texture(Gdx.files.internal("ui/doors/door3.png"));
 
-        Pixmap pixmap = new Pixmap(200, 60, Pixmap.Format.RGB888);
-        pixmap.setColor(1, 1, 1, 1);
-        pixmap.fill();
-        Texture texture = new Texture(pixmap);
-        pixmap.dispose();
-        Drawable drawable = new TextureRegionDrawable(texture);
-
-        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        textButtonStyle.up = drawable;
-        textButtonStyle.font = font;
-        skin.add("default", textButtonStyle);
+        // Create ImageButtons using these textures
+        Image door1 = new Image(door1Texture);
+        Image door2 = new Image(door2Texture);
+        Image door3 = new Image(door3Texture);
 
         float buttonWidth = 200;
-        float buttonHeight = 60;
+        float buttonHeight = 200; // Adjust based on your image
         float spacing = 50;
 
         float totalHeight = 3 * buttonHeight + 2 * spacing;
         float centerX = (Gdx.graphics.getWidth() / 2f - buttonWidth / 2f) + 325;
-        float startY = Gdx.graphics.getHeight() / 2f + totalHeight / 2f - buttonHeight;
+        float startY = Gdx.graphics.getHeight() / 2f + totalHeight / 2f - 75;
 
-        textButtonStyle.fontColor = Color.DARK_GRAY;
-        TextButton oneButton = new TextButton("Level 1", skin);
-        oneButton.setSize(200, 60);
-        oneButton.setPosition(centerX, startY);
-        TextButton twoButton = new TextButton("Level 2", skin);
-        twoButton.setSize(200, 60);
-        twoButton.setPosition(centerX, startY - (buttonHeight + spacing));
-        TextButton threeButton = new TextButton("Level 3", skin);
-        threeButton.setSize(200, 60);
-        threeButton.setPosition(centerX, startY - 2 * (buttonHeight + spacing));
+        door1.setSize(buttonWidth, buttonHeight);
+        door1.setPosition(centerX - 800, startY - 2 * (buttonHeight + spacing));
+        door2.setSize(buttonWidth, buttonHeight);
+        door2.setPosition(centerX - 533, startY - 2 * (buttonHeight + spacing));
+        door3.setSize(buttonWidth, buttonHeight);
+        door3.setPosition(centerX - 266, startY - 2 * (buttonHeight + spacing));
 
-
-        oneButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+        // Attach input listeners to images
+        door1.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
             @Override
-            public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
-                                     float x, float y, int pointer, int button) {
-                System.out.println("Button pressed");
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 selectedLevel = 1;
                 if (listener != null) {
-                    listener.exitScreen(LevelSelectScene.this, 1); // You choose any exit code
+                    listener.exitScreen(LevelSelectScene.this, 1);
                 }
                 return true;
-
-
             }
         });
-        twoButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+
+        door2.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
             @Override
-            public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
-                                     float x, float y, int pointer, int button) {
-                System.out.println("Button pressed");
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 selectedLevel = 2;
                 if (listener != null) {
-                    listener.exitScreen(LevelSelectScene.this, 1); // You choose any exit code
+                    listener.exitScreen(LevelSelectScene.this, 1);
                 }
                 return true;
-
-
             }
         });
-        threeButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+
+        door3.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
             @Override
-            public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
-                                     float x, float y, int pointer, int button) {
-                System.out.println("Button pressed");
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 selectedLevel = 3;
                 if (listener != null) {
-                    listener.exitScreen(LevelSelectScene.this, 1); // You choose any exit code
+                    listener.exitScreen(LevelSelectScene.this, 1);
                 }
                 return true;
-
-
             }
         });
-        levels.add(oneButton);
-        levels.add(twoButton);
-        levels.add(threeButton);
 
-        //controller support
-        if (inputController.isUsingController()){
-            if (levels.notEmpty()){//the first button appears as selected
-            particleEngine = new ParticleEngine(levels.get(0));}
+        // Store for controller highlighting
+        levels.add(door1);
+        levels.add(door2);
+        levels.add(door3);
 
+        // Controller support (first image selected)
+        if (inputController.isUsingController() && levels.notEmpty()) {
+            particleEngine = new ParticleEngine(levels.get(0));
         }
 
-        stage.addActor(oneButton);
-        stage.addActor(twoButton);
-        stage.addActor(threeButton);
-
+        stage.addActor(door1);
+        stage.addActor(door2);
+        stage.addActor(door3);
     }
 
     private void updateLevelHighlight(){
-        TextButton currentLevel = levels.get(currentIndex);
+        Image currentLevel = levels.get(currentIndex);
 //        particleEngine = new ParticleEngine(levels.get(currentIndex));
 //            Batch batch = stage.getBatch();
 //            batch.begin();
@@ -161,7 +134,7 @@ public class LevelSelectScene implements Screen {
     }
 
     private void controllerSelect(){
-        TextButton currentLevel = levels.get(currentIndex);
+        Image currentLevel = levels.get(currentIndex);
         // begin controller listening
         if (inputController.isUsingController()){
             // starts listening for level confirmation
