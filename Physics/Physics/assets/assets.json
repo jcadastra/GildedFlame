@@ -233,7 +233,7 @@
     "platform-rope": "platform/ropebridge.png",
     "platform-barrier": "platform/barrier.png",
     "platform-bullet": "platform/bullet.png",
-    "platform-flame-smoke": "platform/flame/smoke.png"
+    "platform-flame-smoke": "platform/particles/smoke.png"
   },
   "jsons": {
     "platform-constants": "platform/constants.json",

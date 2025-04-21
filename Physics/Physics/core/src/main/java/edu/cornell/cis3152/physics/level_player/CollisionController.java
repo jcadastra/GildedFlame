@@ -23,6 +23,7 @@ public class CollisionController implements ContactListener {
     private final FireController fireController;
     private boolean directionFlag;
     private Map<ContactKey, Integer> sustainedContacts = new HashMap<>();
+    private boolean beginSmother = false;
 
 
     public CollisionController(AssetDirectory directory, FireController fireController) {
@@ -31,6 +32,8 @@ public class CollisionController implements ContactListener {
         this.collisionFlags = new Stack<>();
         this.sustainedContacts = new HashMap<>();
     }
+
+    public boolean beginSmother(){return beginSmother;}
 
     /**
      * Next three are for querying if a is of type x or y and b is of the other type
@@ -233,6 +236,8 @@ public class CollisionController implements ContactListener {
                 if (moth.getState() != EnemyState.DAZED) {
                     moth.resetSmotherTimer();
                     moth.setState(EnemyState.SMOTHER);
+                    beginSmother = true;
+                    beginSmother();
                 }
 //                collisionFlags.push(new Object[]{"addTorch", idX(bd1, bd2, Traci.class)});
 //                collisionFlags.push(new CollisionFlag("queueFailure"));
@@ -418,6 +423,7 @@ public class CollisionController implements ContactListener {
                 int contactTime = sustainedContacts.get(key);
                 if (moth.getState() == EnemyState.SMOTHER) {
                     if (contactTime == 0) {
+                        beginSmother = false;
                         collisionFlags.push(new CollisionFlag("queueFailure"));
                     } else {
                         sustainedContacts.put(key, contactTime - 1);
@@ -635,6 +641,7 @@ public class CollisionController implements ContactListener {
             Moth moth = (Moth) idX(bd1, bd2, Moth.class);
             if (moth.getState() == EnemyState.SMOTHER) {
                 contact.setEnabled(false);
+                //beginSmother = false;
             }
         }
     }
@@ -649,5 +656,10 @@ public class CollisionController implements ContactListener {
 
     private ObstacleSprite idX(ObstacleSprite a, ObstacleSprite b, String x) {
         return (a.getName().contains(x) ? a : b);
+    }
+
+    public void reset(){//resets properties
+        // imma not proud of this im sorry
+        beginSmother = false;
     }
 }

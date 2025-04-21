@@ -220,6 +220,15 @@ public class GameplayScene implements Screen {
     protected ObjectSet<Fixture> sensorFixtures;
 
     /**
+     * floating lights in the level, place-holder for now
+     * three default lights:
+     * 1. light for the level door (doesn't move)
+     * 2. light for center of the room (doesn't move)
+     * 3. light for the far end of the room (moves between the far end and this end)
+     */
+    protected FloatingLight[] floatingLights = new FloatingLight[3];
+
+    /**
      * Returns true if debug mode is active.
      *
      * If true, all objects will display their physics bodies.
@@ -678,6 +687,9 @@ public class GameplayScene implements Screen {
                             System.out.println("position" + pos[0] + " " + pos[1]);
                             addSprite(avatar);
                             avatar.createSensor();
+                            if(lightController!= null){
+                                lightController.attachPlayerLight(avatar);
+                            }
                             break;
 
                         case "torch":
@@ -689,6 +701,7 @@ public class GameplayScene implements Screen {
                             lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds, units);
                             lightController.attachTorchLight(torchFire);
                             lightController.resetCamera(camera.position.x,camera.position.y);
+                            lightController.attachPlayerLight(avatar);
 
                             particleEngine = new ParticleEngine(torchFire, units);
                             particleEngine.newFires(fireController);
@@ -704,6 +717,24 @@ public class GameplayScene implements Screen {
                             fireController.forceAddTorchFire(torchFire, torch, new Vector2(torch.getObstacle().getPosition().cpy().add(0,torch.getHeight() / 4)));
                             activeLightJoint = world.createJoint(torch.attachObj(l));
                             activeFireJoint = world.createJoint(torch.attachObj(torchFire));
+
+                            //floating lights
+                            floatingLights = new FloatingLight[3];
+                            Vector2 goalPos = goalDoor.getObstacle().getPosition();
+                            FloatingLight goalLight = new FloatingLight(units,goalPos,1,goalPos);
+                            floatingLights[0] = goalLight;
+                            Vector2 centerPos = new Vector2(bounds.width/2,bounds.height/2);
+                            FloatingLight centerLight = new FloatingLight(units,centerPos,1,centerPos);
+                            floatingLights[1] = centerLight;
+                            Vector2 edgePos1 = new Vector2(bounds.width-5,5);
+                            Vector2 edgePos2 = new Vector2(5,5);
+                            FloatingLight edgeLight = new FloatingLight(units,edgePos1,1,edgePos2);
+                            floatingLights[2] = edgeLight;
+                            for (int i = 0; i <floatingLights.length; i++){
+                                addSprite(floatingLights[i]);}
+                            for (FloatingLight floatingLight: floatingLights) {
+                                lightController.attachAmbientLight(floatingLight);
+                            }
                             break;
 
                         case "moth":
@@ -927,9 +958,12 @@ public class GameplayScene implements Screen {
                         //temp = rope;
                         addSpriteGroup(rope);
                     }
+
                 }
             }
         }
+
+
         /*Surface wall;
         String wname = "wall";
         JsonValue walls = levelData.get("walls");
@@ -1877,6 +1911,11 @@ public class GameplayScene implements Screen {
         }
 
         batch.end();
+        for (FloatingLight light : floatingLights){
+            if (light.isOff()){
+                lightController.turnOffAmbientLight(light);
+            }
+        }
         lightController.render();
     }
 
