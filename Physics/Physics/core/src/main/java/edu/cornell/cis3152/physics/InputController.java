@@ -295,13 +295,14 @@ public class InputController {
      */
     private void readGamepad(Rectangle bounds, Vector2 scale) {
         resetPressed = xbox.getRStick();
-        exitPressed  = xbox.getB();
+        exitPressed  = xbox.getBack();
         nextPressed = xbox.getDPadRight();
         prevPressed = xbox.getDPadLeft();
 //        nextPressed  = xbox.getRBumper();
 //        prevPressed  = xbox.getLBumper();
         primePressed = xbox.getA();
-        debugPressed  = xbox.getBack();
+        //debugPressed  = xbox.getBack();
+        debugPressed = xbox.getLStick();
         throwPressed = xbox.getX();
         throwing = throwPressed;
         boolean assist = xbox.getY();

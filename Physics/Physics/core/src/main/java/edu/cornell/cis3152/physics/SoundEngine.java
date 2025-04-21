@@ -124,7 +124,7 @@ public class SoundEngine {
 
     public void throwTorch() {
         SoundEffect torchThrow = registeredSoundEffects.get("torchThrow");
-        System.out.println("throwing");
+//        System.out.println("throwing");
         if (torchThrow != null) {
             torchThrow.play();
         }

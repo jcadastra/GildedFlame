@@ -30,7 +30,7 @@
          "width":32,
          "x":0,
          "y":0
-        }, 
+        },
         {
          "draworder":"topdown",
          "id":2,
@@ -47,7 +47,7 @@
                  "width":150,
                  "x":3909,
                  "y":4118
-                }, 
+                },
                 {
                  "gid":28,
                  "height":600,
@@ -65,24 +65,26 @@
          "visible":true,
          "x":0,
          "y":0
-        }, 
+        },
         {
          "draworder":"topdown",
          "id":3,
          "name":"Enemies",
          "objects":[
                 {
-                 "gid":31,
+                 "gid":32,
                  "height":300,
-                 "id":16,
-                 "name":"totem",
+                 "id":17,
+                 "name":"moth",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":300,
+                 "x":6605.22366625978,
+                 "y":4175.56185826093
                  "x":5426,
                  "y":4150
-                }, 
+                },
                 {
                  "gid":43,
                  "height":200,
@@ -93,17 +95,17 @@
                          "name":"platformHeight",
                          "type":"string",
                          "value":"0.5"
-                        }, 
+                        },
                         {
                          "name":"platformPosition",
                          "type":"string",
                          "value":"25,8"
-                        }, 
+                        },
                         {
                          "name":"platformWidth",
                          "type":"string",
                          "value":"5"
-                        }, 
+                        },
                         {
                          "name":"thresholds",
                          "type":"string",
@@ -132,15 +134,15 @@
         {
          "firstgid":1,
          "source":"PlatformTiles.tsx"
-        }, 
+        },
         {
          "firstgid":25,
          "source":"PlayerTorchTiles.tsx"
-        }, 
+        },
         {
          "firstgid":29,
          "source":"EnemyTiles.tsx"
-        }, 
+        },
         {
          "firstgid":33,
          "source":"GameObjectTiles.tsx"

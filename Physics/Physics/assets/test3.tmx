@@ -35,6 +35,7 @@
  </objectgroup>
  <objectgroup id="3" name="Enemies">
   <object id="16" name="totem" gid="31" x="5426" y="4150" width="300" height="300"/>
+  <object id="17" name="moth" gid="32" x="6605.22" y="4175.56" width="300" height="300"/>
   <object id="17" name="rune" gid="43" x="5972" y="3359" width="150" height="200">
    <properties>
     <property name="platformHeight" value="0.5"/>

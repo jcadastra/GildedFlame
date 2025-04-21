@@ -13,6 +13,7 @@ import edu.cornell.gdiac.math.Path2;
 import edu.cornell.gdiac.math.PathFactory;
 import edu.cornell.gdiac.physics2.BoxObstacle;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
+import edu.cornell.gdiac.physics2.PolygonObstacle;
 
 public class Enemy extends ObstacleSprite {
 
@@ -58,7 +59,22 @@ public class Enemy extends ObstacleSprite {
         this.x = position.x;
         this.y = position.y;
         this.justCollided = false;
-        obstacle = new BoxObstacle(x, y, width, height);
+
+        // helpers
+        float half = size/units * 0.5f;
+        float cut  = size/units * 0.05f;
+        float[] verts = {
+            half, half,
+            -half, half, //top vertices
+
+            -half, (-half + cut),
+            0, (-half), //bottom left slice
+
+            half, (-half + cut) //bottom right
+
+        };
+
+        obstacle = new PolygonObstacle(verts, x, y);
         obstacle.setBodyType(BodyDef.BodyType.DynamicBody);
 
         obstacle.setDensity(data.getFloat("density", 0));
@@ -163,6 +179,7 @@ public class Enemy extends ObstacleSprite {
     }
 
     public void update() {
+//        System.out.println(getState());
         updateRayCast();
         switch (state) {
             case OUT_OF_LIGHT:
@@ -189,6 +206,9 @@ public class Enemy extends ObstacleSprite {
             case SMOTHER:
                 smother();
                 break;
+            case FRUSTRATED:
+                frustrated();
+                break;
             default:
                 break;
         }
@@ -210,6 +230,9 @@ public class Enemy extends ObstacleSprite {
 
     }
 
+    public void frustrated(){
+
+    }
     public boolean isAboutToFall() {
 //        if (!isGrounded()) return false;
 
@@ -231,8 +254,11 @@ public class Enemy extends ObstacleSprite {
                 Object userData = fixture.getBody().getUserData();
                 if (userData instanceof ObstacleSprite) {
                     ObstacleSprite target = (ObstacleSprite) userData;
-                    if (target.getName().equals("platform") || target.getName().equals("enemy") || target.getName().equals("ground")) {
+                    if (target.getName().equals("platform") || target.getName().equals("enemy") || target.getName().equals("ground") || target.getName().equals("floor")) {
+
                         groundDetected[0] = true;
+                    } else {
+                        System.out.println(target.getName());
                     }
                 }
                 return fraction;
@@ -333,14 +359,10 @@ public class Enemy extends ObstacleSprite {
             changeDirection();
         }
         if (isFacingRight()) {
-//            System.out.println("Facing right");
             direction = speed;
         } else {
-//            System.out.println("Facing left");
             direction = -speed;
         }
-
-//        System.out.println("Direction: " + getSpeed());
         body.setLinearVelocity(new Vector2(direction, body.getLinearVelocity().y));
 
     }
@@ -425,7 +447,7 @@ public class Enemy extends ObstacleSprite {
 
         ANGRY, CD,
 
-        ATTACK, TRANCE, DAZED, SMOTHER
+        ATTACK, TRANCE, DAZED, SMOTHER, FRUSTRATED
     }
 
     public class RaycastResult {
