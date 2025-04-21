@@ -255,6 +255,7 @@ public class Enemy extends ObstacleSprite {
                 if (userData instanceof ObstacleSprite) {
                     ObstacleSprite target = (ObstacleSprite) userData;
                     if (target.getName().contains("platform") || target.getName().contains("enemy") || target.getName().contains("ground") || target.getName().contains("floor")) {
+
                         groundDetected[0] = true;
                     } else {
 //                        System.out.println(target.getName());
