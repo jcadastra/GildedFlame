@@ -732,18 +732,15 @@ public class GameplayScene implements Screen {
 
                         case "goaldoor":
                             texture = directory.getEntry("shared-goal", Texture.class);
-                            float[] points = new float[]{
-                                0, 0,
-                                texture.getWidth()/units, 0,
-                                texture.getWidth()/units, texture.getHeight()/units,
-                                0, texture.getHeight()/units
-                            };
+                            System.out.println("goal door texture: " + texture);
+                            float size = 1f;
 
-                            GameObject goalDoor = new GameObject(points, x, y, units);
+                            GameObject goalDoor = new GameObject(x,y,size*1.47f,size,units);
                             goalDoor.getObstacle().setSensor(true);
                             goalDoor.getObstacle().setBodyType(BodyType.StaticBody);
                             goalDoor.getObstacle().setName("goalDoor");
                             goalDoor.setTexture(texture);
+                            goalDoor.getObstacle().setPhysicsUnits(units);
                             addSprite(goalDoor);
                             break;
 
