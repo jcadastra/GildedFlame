@@ -24,6 +24,9 @@
  */
 package edu.cornell.cis3152.physics;
 
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.Texture.TextureWrap;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
@@ -348,7 +351,7 @@ public class GameplayScene implements Screen {
         this.shapeRenderer = new ShapeRenderer();
         runeSet = new HashSet<>();
 
-        this.fitViewport = new FitViewport(1280, 720);
+        this.fitViewport = new FitViewport(16, 9);
 
         // pull out sounds
         volume = constants.getFloat("volume", 1.0f);
@@ -356,6 +359,7 @@ public class GameplayScene implements Screen {
         sensorFixtures = new ObjectSet<Fixture>();
 
         scale = new Vector2();
+        //TODO: Value needs to be imported from level vvvv
         bounds = new Rectangle(0,0,defaults.get("bounds").getFloat( 0 ), defaults.get("bounds").getFloat( 1 ));
         resize(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 
@@ -604,7 +608,7 @@ public class GameplayScene implements Screen {
         JsonValue levelInfo = directory.getEntry(levelInfoName, JsonValue.class);
 
         // Create ground pieces
-        Texture texture = directory.getEntry( "platform-stoneTiles-1", Texture.class );
+        Texture texture;
         enemies = new ArrayList<>();
 
         JsonValue layers = levelData.get("layers");
@@ -618,6 +622,7 @@ public class GameplayScene implements Screen {
                 System.out.println(width + "x" + height);
                 JsonValue data = layer.get("data");
 
+                JsonValue settings = levelInfo.get("walls");
                 int[] tileData = new int[width * height];
                 for (int i = 0; i < data.size; i++) {
                     tileData[i] = data.getInt(i);
@@ -636,40 +641,22 @@ public class GameplayScene implements Screen {
                     int y = height - maxY;
                     int index = y * width + x;
                     int tileId = tileData[index];
-
-                    boolean isFloor = false;
-                    boolean isWall = false;
-                    boolean isPlatform = false;
-
-                    if (tileId == 8 || tileId == 9 || tileId == 10) {
-                        isFloor = true;
-                    } else if (tileId == 14) {
-                        isWall = true;
-                    } else if (tileId == 2 || tileId == 3 || tileId == 4) {
-                        isPlatform = true;
-                    }
-
-                    JsonValue settings = levelInfo.get("walls");
-                    float tileunits = units/300f;
-                    Surface tile = new Surface(points, units, settings);
-                    int ind = tileId ;
-//                    int regionX = ind % 6;
-//                    int regionY = ind / 6;
-
-//                    System.out.println(directory.getEntry("stoneTile"+(ind), Texture.class));
-//                    System.out.println("stoneTile"+(ind));
-
-                    tile.setTexture(directory.getEntry("stoneTile"+(ind), Texture.class));
-
-                    if (isWall) {
-                        tile.getObstacle().setName("wall");
-                    } else if (isPlatform) {
-                        tile.getObstacle().setName("platform");
-                    } else if (isFloor) {
-                        tile.getObstacle().setName("floor");
+                    String name;
+                    if (tileId == 2 || tileId == 3 || tileId == 4) {
+                        name = "platform";
+                    } else if (tileId == 8 || tileId == 9 || tileId == 10) {
+                        name = "floor";
                     } else {
-                        tile.getObstacle().setName("wall");
+                        name = "wall";
                     }
+
+                    float tileunits = units/300f;
+                    Surface tile = new Surface(points, units, name, settings);
+                    Texture textur = directory.getEntry("stoneTile"+(tileId), Texture.class);
+                    textur.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+
+                    tile.setTexture(textur);
+
 
                     addSprite(tile);
                 }
@@ -695,7 +682,6 @@ public class GameplayScene implements Screen {
 
                         case "torch":
                             Lighting l = new Lighting(units, levelInfo.get("light"));
-                            l.setTexture(texture);
                             addSprite(l);
                             l.createSensor();
                             torchFire = new Fire(units, new Vector2(10,10));
@@ -1362,6 +1348,7 @@ public class GameplayScene implements Screen {
     // Camera player not light camera (light camera updated internally) but movements
     // here are for the camera that follows player (?)
     private void updateCamera() {
+//        System.out.println();
 
         float prevX = camera.position.x;
         float prevY = camera.position.y;
@@ -1377,14 +1364,21 @@ public class GameplayScene implements Screen {
 //        float visibleW =  (bounds.x + bounds.width) * scale.x/2*0.8f; //half of world visible
 //        float visibleH = (bounds.y + bounds.height) * scale.y/2*0.8f;
 
-        System.out.println(camera.viewportWidth + ", " + camera.viewportHeight);
+//        System.out.println(camera.viewportWidth + ", " + camera.viewportHeight);
         float visibleW =  camera.viewportWidth/2*camera.zoom; //half of world visible, zoomed
         float visibleH = camera.viewportHeight/2*camera.zoom;
+//        System.out.println("actual height and width: " + height +", " + width);
+//        System.out.println(visibleW + ": W, H ;" + visibleH + ";; " + camera.zoom);
+//        System.out.println("gutters, top: " + fitViewport.getTopGutterHeight() + ", bottom: " + fitViewport.getBottomGutterHeight() + ", left: " + fitViewport.getLeftGutterWidth() + ", right: " + fitViewport.getRightGutterWidth());
+//        System.out.println("screen width and height " + fitViewport.getScreenWidth() + ", " + fitViewport.getScreenHeight() + " ;; now world: " + fitViewport.getWorldWidth() + ", " + fitViewport.getWorldHeight());
+//        System.out.println("cam viewports: " + camera.viewportWidth + ", " + camera.viewportHeight);
+
 
         camera.position.x = MathUtils.clamp(camera.position.x,
             bounds.x*scale.x+visibleW,
             (bounds.x+bounds.width)*scale.x - visibleW);
-        System.out.println(camera.position.x +", " + bounds.x + " , " + bounds.width + " , " + bounds.height+ " , " + scale.x);
+//        System.out.println(camera.position.x +", " + bounds.x + " , " + bounds.width + " , " + bounds.height+ " , " + scale);
+//        System.out.println("min: "+ (bounds.x*scale.x+visibleW )+ "max: "+ ((bounds.x+bounds.width)*scale.x - visibleW));
         //System.out.println("x reached bounds:"+(camera.position.x==bounds.x*scale.x+visibleW));
         camera.position.y = MathUtils.clamp(camera.position.y,
             bounds.y*scale.y+visibleH,
@@ -1899,8 +1893,10 @@ public class GameplayScene implements Screen {
             camera.zoom = 0.8f;
         }
         camera.setToOrtho( false, width, height );
-        scale.x = width/bounds.width;
+//        scale.x = width/bounds.width;
         scale.y = height/bounds.height;
+        scale.x = scale.y;
+        // this works???? ^^^
 
         fitViewport.update(width, height, true);
         reset();
