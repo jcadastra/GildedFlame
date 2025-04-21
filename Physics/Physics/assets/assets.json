@@ -6,8 +6,17 @@
       "wrapV": "repeated"
     },
     "shared-goal": "shared/goaldoor.png",
+    "window": "tiled_images/Window.png",
+    "brick": "tiled_images/brick.png",
+    "column": "tiled_images/column_background.png",
     "platform-totemLIGHTANIMATION": {
       "file": "platform/totemInLightAnimation.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-totemIDLEANIMATION": {
+      "file": "platform/totemIdleAnimation.png",
       "mipmaps": true,
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
@@ -24,6 +33,72 @@
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
     },
+    "platform-playerJUMPNOTORCHFALL": {
+      "file": "platform/playerJumpNoTorchFall.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-playerJUMPNOTORCHLAND": {
+      "file": "platform/playerJumpNoTorchLand.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-playerJUMPNOTORCHUP": {
+      "file": "platform/playerJumpNoTorchUp.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-playerJUMPTORCHFALL": {
+      "file": "platform/playerJumpTorchFall.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-playerJUMPTORCHLAND": {
+      "file": "platform/playerJumpTorchLand.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-playerJUMPTORCHUP": {
+      "file": "platform/playerJumpTorchUp.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-playerJUMPTHROWFALL": {
+      "file": "platform/playerJumpThrowFall.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-playerJUMPTHROWUP": {
+      "file": "platform/playerJumpThrowUp.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-playerJUMPTHROWLAND": {
+      "file": "platform/playerJumpThrowLand.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-playerCLIMBUP": {
+      "file": "platform/playerClimbUp.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-playerCLIMBDOWN": {
+      "file": "platform/playerClimbUp.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
     "platform-playerIDLETORCH": {
       "file": "platform/playerIdleTorch.png",
       "mipmaps": true,
@@ -32,6 +107,18 @@
     },
     "platform-playerIDLENOTORCH": {
       "file": "platform/playerIdleNoTorch.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-playerTHROW": {
+      "file": "platform/playerThrow.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-mothINLIGHTANIMATION": {
+      "file": "platform/mothInLightAnimation.png",
       "mipmaps": true,
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
@@ -48,11 +135,124 @@
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
     },
+    "platform-mothTRANCEANIMATION": {
+      "file": "platform/mothTRANCEAnimation.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-mothCDANIMATION": {
+      "file": "platform/mothCDAnimation.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-mothDAZEDANIMATION": {
+      "file": "platform/mothDazedAnimation.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-mothOUTOFLIGHTANIMATION": {
+      "file": "platform/mothOutOfLightAnimation.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-mothANGRYANIMATION": {
+      "file": "platform/mothAngryAnimation.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-mothFRUSTRATEDANIMATION": {
+      "file": "platform/mothFrustratedAnimation.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-mothDUSTANIMATION": {
+      "file": "platform/mothDustAnimation.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+
     "platform-tiles": {
       "file": "tiled_images/platform1Tiled.png",
       "mipmaps": true,
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
+    },
+    "stoneTile1": {
+      "file": "platform/stoneTiles/1.png"
+    },
+    "stoneTile2": {"file": "platform/stoneTiles/2.png"},
+    "stoneTile3": {
+      "file": "platform/stoneTiles/3.png"
+    },
+    "stoneTile4": {
+      "file": "platform/stoneTiles/4.png"
+    },
+    "stoneTile5": {
+      "file": "platform/stoneTiles/5.png"
+    },
+    "stoneTile6": {
+      "file": "platform/stoneTiles/6.png"
+    },
+    "stoneTile7": {
+      "file": "platform/stoneTiles/7.png"
+    },
+    "stoneTile8": {
+      "file": "platform/stoneTiles/8.png"
+    },
+    "stoneTile9": {
+      "file": "platform/stoneTiles/9.png"
+    },
+    "stoneTile10": {
+      "file": "platform/stoneTiles/10.png"
+    },
+    "stoneTile11": {
+      "file": "platform/stoneTiles/11.png"
+    },
+    "stoneTile12": {
+      "file": "platform/stoneTiles/12.png"
+    },
+    "stoneTile13": {
+      "file": "platform/stoneTiles/13.png"
+    },
+    "stoneTile14": {
+      "file": "platform/stoneTiles/14.png"
+    },
+    "stoneTile15": {
+      "file": "platform/stoneTiles/15.png"
+    },
+    "stoneTile16": {
+      "file": "platform/stoneTiles/16.png"
+    },
+    "stoneTile17": {
+      "file": "platform/stoneTiles/17.png"
+    },
+    "stoneTile18": {
+      "file": "platform/stoneTiles/18.png"
+    },
+    "stoneTile19": {
+      "file": "platform/stoneTiles/19.png"
+    },
+    "stoneTile20": {
+      "file": "platform/stoneTiles/20.png"
+    },
+    "stoneTile21": {
+      "file": "platform/stoneTiles/21.png"
+    },
+    "stoneTile22": {
+      "file": "platform/stoneTiles/22.png"
+    },
+    "stoneTile23": {
+      "file": "platform/stoneTiles/23.png"
+    },
+    "stoneTile24": {
+      "file": "platform/stoneTiles/24.png"
     },
     "platform-rope-end": "platform/ropeEnd.png",
     "platform-rope-mid": "platform/ropeBodyRec.png",
@@ -60,7 +260,7 @@
     "platform-rope": "platform/ropebridge.png",
     "platform-barrier": "platform/barrier.png",
     "platform-bullet": "platform/bullet.png",
-    "platform-flame-smoke": "platform/flame/smoke.png"
+    "platform-flame-smoke": "platform/particles/smoke.png"
   },
   "jsons": {
     "platform-constants": "platform/constants.json",
@@ -77,7 +277,8 @@
     "eerie": "music/eerie.wav",
     "eerieCriminal": "music/eerieCriminalAtmosphere.wav",
     "tenseSoundscape": "music/tenseAtmosphereHauntingSoundscapes.wav",
-    "menu_music": "music/menu_music.wav"
+    "menu_music": "music/menu_music.wav",
+    "in_game_music": "music/in_game_music.mp3"
   },
   "soundfx": {
     "dirtFootStep": "soundEffects/dirtFootStep.wav",

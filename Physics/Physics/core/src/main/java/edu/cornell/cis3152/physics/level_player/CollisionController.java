@@ -23,6 +23,7 @@ public class CollisionController implements ContactListener {
     private final FireController fireController;
     private boolean directionFlag;
     private Map<ContactKey, Integer> sustainedContacts = new HashMap<>();
+    private boolean beginSmother = false;
 
 
     public CollisionController(AssetDirectory directory, FireController fireController) {
@@ -31,6 +32,8 @@ public class CollisionController implements ContactListener {
         this.collisionFlags = new Stack<>();
         this.sustainedContacts = new HashMap<>();
     }
+
+    public boolean beginSmother(){return beginSmother;}
 
     /**
      * Next three are for querying if a is of type x or y and b is of the other type
@@ -154,11 +157,6 @@ public class CollisionController implements ContactListener {
                 enemy.changeDirection();
             }
 
-            if (isXandY(bd1, bd2, "floor", Enemy.class) == 1) {
-                Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
-                enemy.setGrounded(true);
-            }
-
             if (isXandY(bd1, bd2, Totem.class, Moth.class) == 1) {
                 Totem totem = (Totem) idX(bd1, bd2, Totem.class);
                 Moth moth = (Moth) idX(bd1, bd2, Moth.class);
@@ -230,12 +228,21 @@ public class CollisionController implements ContactListener {
              */
             if (isXandY(bd1, bd2, Moth.class, Torch.class) == 1) {
                 Moth moth = (Moth) idX(bd1, bd2, Moth.class);
-                if (moth.getState() != EnemyState.DAZED) {
-                    moth.resetSmotherTimer();
-                    moth.setState(EnemyState.SMOTHER);
+                Torch torch = (Torch) idX(bd1, bd2, Torch.class);
+                if (moth.getState() != EnemyState.DAZED && torch.canBePickedUp()) {
+                    float mothX  = moth.getObstacle().getBody().getPosition().x;
+                    float torchX = torch.getObstacle().getBody().getPosition().x;
+
+                    float threshold = moth.getWidth() * 0.5f;
+
+                    if (Math.abs(mothX - torchX) <= threshold) {
+                        moth.resetSmotherTimer();
+                        moth.setState(EnemyState.SMOTHER);
+                        beginSmother = true;
+                        beginSmother();
+                    }
                 }
-//                collisionFlags.push(new Object[]{"addTorch", idX(bd1, bd2, Traci.class)});
-//                collisionFlags.push(new CollisionFlag("queueFailure"));
+
             }
 
             if (isXandY(bd1, bd2, Moth.class, Moth.class) == 2) {
@@ -260,7 +267,7 @@ public class CollisionController implements ContactListener {
             if (isXandY(bd1, bd2, Lighting.class, Moth.class) == 1) {
                 Lighting light = (Lighting) idX(bd1, bd2, Lighting.class);
                 Moth moth = (Moth) idX(bd1, bd2, Moth.class);
-                if (moth.getState() != EnemyState.TRANCE && moth.getState() != EnemyState.SMOTHER && moth.getState() != EnemyState.DAZED) {
+                if (moth.getState() != EnemyState.JUMP && moth.getState() != EnemyState.SMOTHER && moth.getState() != EnemyState.DAZED && moth.getState() != EnemyState.ATTACK && moth.getState() != EnemyState.JUMP) {
                     moth.setState(EnemyState.IN_LIGHT);
 
                     float lx = light.getObstacle().getX();
@@ -293,6 +300,13 @@ public class CollisionController implements ContactListener {
                         if ((moth.getState() == EnemyState.SMOTHER) && playerPos.y > mothPos.y) {
                             moth.resetDazedTimer();
                             moth.setState(EnemyState.DAZED);
+                            Body playerBody = player.getObstacle().getBody();
+                            float bounceImpulse = 0.15f * player.getUnits();
+                            playerBody.applyLinearImpulse(
+                                new Vector2(0, bounceImpulse),
+                                playerBody.getWorldCenter(),
+                                true
+                            );
                         } else {
                             collisionFlags.push(new CollisionFlag("queueFailure"));
                         }
@@ -321,7 +335,8 @@ public class CollisionController implements ContactListener {
                 }
             }
 
-            if (isXandY(bd1, bd2, Avatar.class, Door.class) == 1 ) {
+            if (isX(bd1, bd2, Avatar.class) == 1 && isX(bd1,bd2,"goalDoor") == 1) {
+                System.out.println("detected collision");
                 ContactKey key = new ContactKey(fix1, fix2);
                 sustainedContacts.put(key, -1);
             }
@@ -406,7 +421,6 @@ public class CollisionController implements ContactListener {
                     } else {
                         modif = 1;
                     }
-//                    System.out.println(modif + ", " + contactTime + modif);
                     sustainedContacts.put(key, (int) (contactTime + modif));
                 }
             }
@@ -417,6 +431,7 @@ public class CollisionController implements ContactListener {
                 int contactTime = sustainedContacts.get(key);
                 if (moth.getState() == EnemyState.SMOTHER) {
                     if (contactTime == 0) {
+                        beginSmother = false;
                         collisionFlags.push(new CollisionFlag("queueFailure"));
                     } else {
                         sustainedContacts.put(key, contactTime - 1);
@@ -424,7 +439,7 @@ public class CollisionController implements ContactListener {
                 }
             }
 
-            if (isXandY(bd1, bd2, Avatar.class, Door.class) == 1) {
+            if (isX(bd1, bd2, Avatar.class) == 1 && isX(bd1,bd2,"goalDoor") == 1) {
                 Avatar traci = (Avatar) idX(bd1, bd2, Avatar.class);
                 if (traci.getHasTorch()) {
                     collisionFlags.push(new CollisionFlag("queueWin"));
@@ -441,7 +456,7 @@ public class CollisionController implements ContactListener {
                     rune.addPowerLevel((float) (.005f * (1/Math.sqrt(distance) - distance/16)));
                 }
                 sustainedContacts.put(key, -1);
-                System.out.println(rune.getPowerLevel());
+//                System.out.println(rune.getPowerLevel());
             }
         }
     }
@@ -496,7 +511,7 @@ public class CollisionController implements ContactListener {
          */
         if (isXandY(bd1, bd2, Lighting.class, Moth.class) == 1) {
             Moth moth = (Moth) idX(bd1, bd2, Moth.class);
-            if (moth.getState() != EnemyState.DAZED) {
+            if (moth.getState() != EnemyState.DAZED && moth.getState() != EnemyState.ATTACK && moth.getState() != EnemyState.SMOTHER && moth.getState() != EnemyState.JUMP) {
                 moth.setState(EnemyState.OUT_OF_LIGHT);
 
             }
@@ -508,7 +523,7 @@ public class CollisionController implements ContactListener {
             sustainedContacts.remove(key);
         }
 
-        if (isXandY(bd1, bd2, Avatar.class, Door.class) == 1) {
+        if (isX(bd1, bd2, Avatar.class) == 1 && isX(bd1,bd2,"goalDoor") == 1) {
             ContactKey key = new ContactKey(fix1, fix2);
             sustainedContacts.remove(key);
         }
@@ -648,5 +663,10 @@ public class CollisionController implements ContactListener {
 
     private ObstacleSprite idX(ObstacleSprite a, ObstacleSprite b, String x) {
         return (a.getName().contains(x) ? a : b);
+    }
+
+    public void reset(){//resets properties
+        // imma not proud of this im sorry
+        beginSmother = false;
     }
 }

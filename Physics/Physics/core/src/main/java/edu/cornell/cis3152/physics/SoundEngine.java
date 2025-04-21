@@ -66,6 +66,14 @@ public class SoundEngine {
         }
     }
 
+    public void stopMusicLoop() {
+        for (Music music : activeMusic) {
+            music.stop();
+        }
+        activeMusic.clear();
+        activeMusicIndex = 0;
+    }
+
     public void pauseLoopingSoundEffects() {
         for (String name : activeLoopingSounds.keySet()) {
             SoundEffect sound = registeredSoundEffects.get(name);
@@ -116,7 +124,7 @@ public class SoundEngine {
 
     public void throwTorch() {
         SoundEffect torchThrow = registeredSoundEffects.get("torchThrow");
-        System.out.println("throwing");
+//        System.out.println("throwing");
         if (torchThrow != null) {
             torchThrow.play();
         }

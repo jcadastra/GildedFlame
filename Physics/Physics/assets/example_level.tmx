@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="32" height="18" tilewidth="300" tileheight="300" infinite="0" nextlayerid="6" nextobjectid="17">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="32" height="18" tilewidth="300" tileheight="300" infinite="0" nextlayerid="6" nextobjectid="22">
  <editorsettings>
   <export target="example_level.tmj" format="json"/>
  </editorsettings>
@@ -30,39 +30,50 @@
 </data>
  </layer>
  <objectgroup id="5" name="GameObject">
-  <object id="7" name="button" gid="36" x="6253" y="4201" width="600" height="300">
+  <object id="7" name="button" gid="36" x="6253" y="4201">
    <properties>
     <property name="doublesided" type="bool" value="false"/>
     <property name="endX" value="15"/>
     <property name="endY" value="5"/>
+    <property name="interpolation" value="smoother"/>
     <property name="latch" type="bool" value="false"/>
-    <property name="rotationRadiance" value="0"/>
+    <property name="moveEvent" type="bool" value="true"/>
+    <property name="platformHeight" value="0.5"/>
+    <property name="platformIndex" value="1"/>
+    <property name="platformWidth" value="5"/>
+    <property name="rotationRadians" value="0"/>
     <property name="startX" value="5"/>
     <property name="startY" value="6"/>
+    <property name="time" value="4"/>
    </properties>
   </object>
   <object id="8" gid="36" x="10373" y="5393" width="86" height="49"/>
-  <object id="9" name="goaldoor" gid="37" x="1102" y="2954" width="500" height="500"/>
-  <object id="10" name="button" gid="36" x="445" y="2273" width="600" height="300" rotation="90">
+  <object id="9" name="goaldoor" gid="37" x="1102" y="2954"/>
+  <object id="10" name="button" gid="36" x="445" y="2273" width="600">
    <properties>
     <property name="doublesided" type="bool" value="false"/>
-    <property name="endX" value="15"/>
-    <property name="endY" value="5"/>
-    <property name="latch" type="bool" value="false"/>
-    <property name="rotationRadiance" value="90"/>
-    <property name="startX" value="5"/>
-    <property name="startY" value="6"/>
+    <property name="endDegree" value="180"/>
+    <property name="interpolation" value="smoother"/>
+    <property name="latch" type="bool" value="true"/>
+    <property name="platformHeight" value="0.5"/>
+    <property name="platformIndex" value="1"/>
+    <property name="platformWidth" value="5"/>
+    <property name="rotateEvent" type="bool" value="true"/>
+    <property name="rotationRadians" value="0"/>
+    <property name="startDegree" value="0"/>
+    <property name="time" value="4"/>
    </properties>
   </object>
+  <object id="21" name="column" gid="42" x="4714" y="2426" width="1200" height="2000"/>
  </objectgroup>
  <objectgroup id="2" name="PlayerTorch">
-  <object id="1" name="player" gid="28" x="586" y="5068" width="300" height="600"/>
-  <object id="2" name="torch" gid="27" x="1797" y="5030" width="150" height="300"/>
+  <object id="1" name="player" gid="28" x="586" y="5068"/>
+  <object id="2" name="torch" gid="27" x="1797" y="5030"/>
  </objectgroup>
  <objectgroup id="4" name="Enemy">
-  <object id="13" name="totem" gid="31" x="3354" y="5078" width="300" height="300"/>
-  <object id="14" name="totem" gid="31" x="3358" y="4794" width="300" height="300"/>
-  <object id="15" name="totem" gid="31" x="3350" y="4514" width="300" height="300"/>
-  <object id="16" name="totem" gid="31" x="4330" y="5110" width="300" height="300"/>
+  <object id="13" name="totem" gid="31" x="3354" y="5078"/>
+  <object id="14" name="totem" gid="31" x="3358" y="4794"/>
+  <object id="15" name="totem" gid="31" x="3350" y="4514"/>
+  <object id="16" name="totem" gid="31" x="4330" y="5110"/>
  </objectgroup>
 </map>
