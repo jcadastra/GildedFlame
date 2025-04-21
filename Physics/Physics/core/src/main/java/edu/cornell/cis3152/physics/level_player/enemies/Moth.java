@@ -2,6 +2,8 @@ package edu.cornell.cis3152.physics.level_player.enemies;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Lighting;
 import edu.cornell.cis3152.physics.level_player.player.Torch;
@@ -13,34 +15,39 @@ public class Moth extends Enemy {
     public static final int FRAME_SIZE = 500;
     // Frame counts
     public static final int TOTAL_ATTACK_FRAMES = 1;
-    public static final int TOTAL_ANGRY_FRAMES = 6; // same as out of light for now
-    public static final int TOTAL_IN_LIGHT_FRAMES = 1; // lowk doesn't need to exist bc inlight is transition
+    public static final int TOTAL_ANGRY_FRAMES = 6;
+    public static final int TOTAL_IN_LIGHT_FRAMES = 4; // same as frustrated
     public static final int TOTAL_OUT_OF_LIGHT_FRAMES = 6;
-    public static final int TOTAL_TRANCE_FRAMES = 6; // same as out of light for now
+    public static final int TOTAL_JUMP_FRAMES = 1;
+    private static final int TOTAL_TRANCE_FRAMES = 4;
     public static final int TOTAL_SMOTHER_FRAMES = 6;
     public static final int TOTAL_CD_FRAMES = 18;
     public static final int TOTAL_DAZED_FRAMES = 4;
-
-    public static final int TOTAL_FRUSTRATED_FRAMES = 1; // for now this is just the in light animation.
+    public static final int TOTAL_FRUSTRATED_FRAMES = 4;
+    public static final int TOTAL_DUST_FRAMES = 8;
     // Frame durations
     private static final int ATTACK_FRAME_DURATION = 12;
     private static final int ANGRY_FRAME_DURATION = 12;
     private static final int IN_LIGHT_FRAME_DURATION = 12;
     private static final int OUT_OF_LIGHT_FRAME_DURATION = 12;
-    private static final int TRANCE_FRAME_DURATION = 12;
+    private static final int JUMP_FRAME_DURATION = 12;
+    private static final int TRANCE_FRAME_DURATION = 36;
     private static final int SMOTHER_FRAME_DURATION = 12;
-    private static final int CD_FRAME_DURATION = 5;
+    private static final int CD_FRAME_DURATION = 6;
     private static final int DAZED_FRAME_DURATION = 12;
     private static final int FRUSTRATED_FRAME_DURATION = 12;
+    private static final int DUST_FRAME_DURATION = 12;
     private static Texture outOfLightAnimationTexture;
     private static Texture angryAnimationTexture;
     private static Texture inLightAnimationTexture;
+    private static Texture jumpAnimationTexture;
     private static Texture tranceAnimationTexture;
     private static Texture smotherAnimationTexture;
     private static Texture cdAnimationTexture;
     private static Texture attackAnimationTexture;
     private static Texture dazedAnimationTexture;
     private static Texture frustratedAnimationTexture;
+    private static Texture dustAnimationTexture;
 
     /**
      * This is the amount of time until the moth attacks after being in the light.
@@ -52,27 +59,42 @@ public class Moth extends Enemy {
     private final Timer attackAnimationTimer;
     private final Timer smotherTimer;
     private final Timer dazedTimer;
+    private final Timer tranceTimer;
     float DETECTION_DISTANCE = 8;
     private int frameCount = 0;
     private int frameIndex = 0;
+    private int dustCount = 0;
+    private int dustIndex = 0;
+    private float initialX;
+    private float initialY;
+    private boolean doOnceAttack = true;
 
+    Vector2 torchPos;
+
+    private boolean hasJumped = false;
+    private void setHasJumped(boolean val) {
+        hasJumped = val;
+    }
     public Moth(int id, float units, JsonValue value, AssetDirectory directory, Vector2 position) {
         super(id, units, value, directory, position);
         rr = null;
 
         outOfLightAnimationTexture = directory.getEntry("platform-mothOUTOFLIGHTANIMATION", Texture.class);
-        angryAnimationTexture = directory.getEntry("platform-mothOUTOFLIGHTANIMATION", Texture.class); // same as out of light
-        inLightAnimationTexture = directory.getEntry("platform-mothINLIGHTANIMATION", Texture.class);
-        tranceAnimationTexture = directory.getEntry("platform-mothOUTOFLIGHTANIMATION", Texture.class); // same as out of light
+        angryAnimationTexture = directory.getEntry("platform-mothANGRYANIMATION", Texture.class);
+        inLightAnimationTexture = directory.getEntry("platform-mothFRUSTRATEDANIMATION", Texture.class);
+        jumpAnimationTexture = directory.getEntry("platform-mothTRANCEANIMATION", Texture.class);
+        tranceAnimationTexture = directory.getEntry("platform-mothTRANCEANIMATION", Texture.class);
         smotherAnimationTexture = directory.getEntry("platform-mothSMOTHERANIMATION", Texture.class);
         dazedAnimationTexture = directory.getEntry("platform-mothDAZEDANIMATION", Texture.class);
         cdAnimationTexture = directory.getEntry("platform-mothCDANIMATION", Texture.class);
         attackAnimationTexture = directory.getEntry("platform-mothATTACKANIMATION", Texture.class);
-        frustratedAnimationTexture = directory.getEntry("platform-mothINLIGHTANIMATION", Texture.class); // just in light for now
+        frustratedAnimationTexture = directory.getEntry("platform-mothFRUSTRATEDANIMATION", Texture.class);
+        dustAnimationTexture = directory.getEntry("platform-mothDUSTANIMATION", Texture.class);
 
         attackTimer = new Timer(data.getInt("attackTimer"));
 //        attackAnimationTimer = new Timer(data.getInt("attackAnimationTimer"));
         attackAnimationTimer = new Timer(50);
+        tranceTimer = new Timer(100);
         smotherTimer = new Timer(data.getInt("smotherTimer"));
         dazedTimer = new Timer(data.getInt("dazedTimer"));
     }
@@ -82,12 +104,26 @@ public class Moth extends Enemy {
         frameIndex = 0;
     }
 
+    private void resetDustFrames() {
+        dustCount = 0;
+        dustIndex = 0;
+    }
+
     private void updateFrame(int frameDuration, int totalFrames) {
         frameCount++;
         frameIndex = (frameCount / frameDuration) % totalFrames;
         if (frameCount >= frameDuration * totalFrames) {
             frameCount = 0;
         }
+    }
+
+    private void updateDustFrame(){
+        dustCount++;
+        dustIndex = (dustCount / DUST_FRAME_DURATION) % TOTAL_DUST_FRAMES;
+        if (dustCount >= DUST_FRAME_DURATION * TOTAL_DUST_FRAMES){
+            dustCount = 0;
+        }
+        System.out.println("dustCount: " + dustCount + " dustIndex: " + dustIndex);
     }
 
     private void resetSpeed() {
@@ -158,14 +194,31 @@ public class Moth extends Enemy {
         return dazedTimer.get();
     }
 
+    public void resetTranceTimer() {
+        tranceTimer.reset();
+    }
+
+    public void decrementTranceTimer() {
+        tranceTimer.decrement();
+    }
+
+    public boolean isTranceTimerZero() {
+        return tranceTimer.isZero();
+    }
+
+    public int getTranceTimer() {
+        return tranceTimer.get();
+    }
+
     @Override
     public void in_light() {
         updateFrame(IN_LIGHT_FRAME_DURATION, TOTAL_IN_LIGHT_FRAMES);
         resetAttackTimer();
         if (rr != null) {
-            System.out.println(rr.targetObject);
+            System.out.println("in light: " + rr.targetObject);
             if (rr.targetObject instanceof Torch && ((Torch) rr.targetObject).canBePickedUp()) {
                 setState(EnemyState.TRANCE);
+                resetTranceTimer();
             } else if (rr.targetObject instanceof Avatar) {
                 setState(EnemyState.CD);
             } else {
@@ -197,22 +250,17 @@ public class Moth extends Enemy {
     public void attack() {
         resetFrames();
         setSpeed(4.5f);
-        System.out.println(getAttackAnimationTimer());
         if (isAttackAnimationTimerZero()) {
-//                obstacle.getBody().setType(BodyDef.BodyType.DynamicBody);
-//                obstacle.setBullet(true);
-//                Vector2 force = isFacingRight() ? new Vector2(50000, 0) : new Vector2(-50000, 0);
-//                obstacle.getBody().applyForceToCenter(force, true);
-//                obstacle.setBullet(false);
-//                resetAttackTimer();
-//                resetAttackAnimationTimer();
             setState(EnemyState.OUT_OF_LIGHT);
+            doOnceAttack = true;
             resetSpeed();
             resetFrames();
+            resetDustFrames();
             resetAttackAnimationTimer();
         } else {
             move();
             updateFrame(ATTACK_FRAME_DURATION, TOTAL_ATTACK_FRAMES);
+            updateDustFrame();
             decrementAttackAnimationTimer();
         }
     }
@@ -235,12 +283,8 @@ public class Moth extends Enemy {
         setSpeed(2.0f);
         updateFrame(OUT_OF_LIGHT_FRAME_DURATION, TOTAL_OUT_OF_LIGHT_FRAMES);
         if (rr != null && !Float.isNaN(rr.targetDistance)) {
-            System.out.println(rr.targetObject);
             if (rr.targetDistance < DETECTION_DISTANCE && rr.targetObject instanceof Lighting) {
-                System.out.println("OUTOFLIGHT > ANGRY");
                 setState(EnemyState.ANGRY);
-            } else {
-                System.out.println((rr.targetDistance < DETECTION_DISTANCE) + " ");
             }
         }
         move();
@@ -248,39 +292,80 @@ public class Moth extends Enemy {
 
     @Override
     public void trance() {
-        setSpeed(1f);
-        move();
         updateFrame(TRANCE_FRAME_DURATION, TOTAL_TRANCE_FRAMES);
+        if (isTranceTimerZero()){
+            setState(EnemyState.JUMP);
+        } else {
+            decrementTranceTimer();
+            stop();
+        }
+
+    }
+
+    @Override
+    public void jump() {
+        updateFrame(JUMP_FRAME_DURATION, TOTAL_JUMP_FRAMES);
+        Body body = obstacle.getBody();
+        if (hasJumped) {
+            return;
+        }
+            if (rr != null && rr.targetObject instanceof Torch){
+                Torch torch = (Torch) rr.targetObject;
+                torchPos = torch.getObstacle().getPosition();
+            } else {
+                System.out.println("ERROR: GROUNDED AND NULL");
+            }
+            body.setType(BodyDef.BodyType.DynamicBody);
+            body.setAwake(true);
+            body.setGravityScale(0.5f);
+            float jumpVy = 5f;
+            float gEff    = Math.abs(body.getWorld().getGravity().y * body.getGravityScale());
+            float T       = (2f * jumpVy) / gEff;
+            float dx      = torchPos.x - body.getPosition().x;
+            float jumpVx  = dx / T;
+            body.setLinearVelocity(jumpVx, jumpVy);
+            setHasJumped(true);
     }
 
     @Override
     public void smother() {
+        setHasJumped(false);
+        stop();
         if (isSmotherTimerZero()) {
             System.out.println("Game Over");
         } else {
             updateFrame(SMOTHER_FRAME_DURATION, TOTAL_SMOTHER_FRAMES);
-            if (rr != null && rr.targetObject instanceof Torch) {
-                Torch torch = (Torch) rr.targetObject;
-                Vector2 torchPos = torch.getObstacle().getPosition();
-                if (Math.abs(getObstacle().getX() - torchPos.x) < 0.5) {
-                    stop();
-                } else {
-                    move_to(torchPos);
-                }
-            }
             decrementSmotherTimer();
         }
     }
 
     @Override
     public void dazed() {
+        Body body = obstacle.getBody();
 //        resetFrames();
         if (isDazedTimerZero()) {
             setState(EnemyState.OUT_OF_LIGHT);
-        } else {
-            updateFrame(DAZED_FRAME_DURATION, TOTAL_DAZED_FRAMES);
-            stop();
-            decrementDazedTimer();
+            onExitDazed();
+            return;
+        }
+        obstacle.setBodyType(BodyDef.BodyType.DynamicBody);
+        updateFrame(DAZED_FRAME_DURATION, TOTAL_DAZED_FRAMES);
+        body.setGravityScale(1.0f);
+        Vector2 vel = body.getLinearVelocity();
+        body.setLinearVelocity(0f, vel.y);
+        decrementDazedTimer();
+
+    }
+
+    private void onExitDazed() {
+        if (rr != null && rr.targetObject instanceof Torch && ((Torch)rr.targetObject).canBePickedUp()) {
+            resetSmotherTimer();
+            setState(EnemyState.SMOTHER);
+            return;
+        }
+
+        if (rr != null && rr.targetObject instanceof Lighting) {
+            setState(EnemyState.IN_LIGHT);
         }
     }
 
@@ -304,6 +389,9 @@ public class Moth extends Enemy {
             case IN_LIGHT:
                 drawAnimation(batch, inLightAnimationTexture, frameIndex, drawX, drawY, flipX);
                 break;
+            case JUMP:
+                drawAnimation(batch, jumpAnimationTexture, 3, drawX, drawY, flipX);
+                break;
             case TRANCE:
                 drawAnimation(batch, tranceAnimationTexture, frameIndex, drawX, drawY, flipX);
                 break;
@@ -314,6 +402,13 @@ public class Moth extends Enemy {
                 drawAnimation(batch, cdAnimationTexture, frameIndex, drawX, drawY, flipX);
                 break;
             case ATTACK:
+                if (doOnceAttack){
+                    initialX = drawX;
+                    initialY = drawY;
+                    doOnceAttack = false;
+                }
+                System.out.println("ATTACK dust index: " + dustIndex);
+                drawAnimation(batch, dustAnimationTexture, dustIndex, initialX, initialY, flipX);
                 drawAnimation(batch, attackAnimationTexture, frameIndex, drawX, drawY, flipX);
                 break;
             case OUT_OF_LIGHT:

@@ -176,8 +176,8 @@ public class Enemy extends ObstacleSprite {
 
 
     public void update() {
-//        System.out.println(getState());
         updateRayCast();
+
         switch (state) {
             case OUT_OF_LIGHT:
                 out_of_light();
@@ -193,6 +193,9 @@ public class Enemy extends ObstacleSprite {
                 break;
             case CD:
                 cd();
+                break;
+            case JUMP:
+                jump();
                 break;
             case TRANCE:
                 trance();
@@ -212,7 +215,7 @@ public class Enemy extends ObstacleSprite {
     }
 
     public void updateRayCast() {
-        if (getState() == EnemyState.TRANCE || getState() == EnemyState.IN_LIGHT || getState() == EnemyState.CD) {
+        if (getState() == EnemyState.JUMP || getState() == EnemyState.IN_LIGHT || getState() == EnemyState.CD) {
             rr = raycastInLight();
         } else {
             rr = raycast();
@@ -252,7 +255,6 @@ public class Enemy extends ObstacleSprite {
                 if (userData instanceof ObstacleSprite) {
                     ObstacleSprite target = (ObstacleSprite) userData;
                     if (target.getName().equals("platform") || target.getName().equals("enemy") || target.getName().equals("ground") || target.getName().equals("floor")) {
-
                         groundDetected[0] = true;
                     } else {
                         System.out.println(target.getName());
@@ -276,10 +278,10 @@ public class Enemy extends ObstacleSprite {
         Vector2 start;
         Vector2 direction;
         if (isFacingRight()) {
-            start = new Vector2(pos.x + width/2.0f, pos.y);
+            start = new Vector2(pos.x + width/2.0f, pos.y - height/4.0f);
             direction = new Vector2(1, 0);
         } else {
-            start = new Vector2(pos.x - width/2.0f, pos.y);
+            start = new Vector2(pos.x - width/2.0f, pos.y - height/4.0f);
             direction = new Vector2(-1, 0);
         }
 
@@ -314,10 +316,10 @@ public class Enemy extends ObstacleSprite {
         Vector2 start;
         Vector2 direction;
         if (isFacingRight()) {
-            start = new Vector2(pos.x + width/2.0f, pos.y);
+            start = new Vector2(pos.x + width/2.0f, pos.y - height/4.0f);
             direction = new Vector2(1, 0);
         } else {
-            start = new Vector2(pos.x - width/2.0f, pos.y);
+            start = new Vector2(pos.x - width/2.0f, pos.y- height/4.0f);
             direction = new Vector2(-1, 0);
         }
         float maxDistance = 5f;
@@ -400,9 +402,12 @@ public class Enemy extends ObstacleSprite {
     public void cd() {
     }
 
-    public void trance() {
+    public void jump() {
     }
 
+    public void trance() {
+
+    }
     public void stop() {
         float currY = obstacle.getLinearVelocity().y;
         obstacle.getBody().setLinearVelocity(0, currY);
@@ -446,7 +451,7 @@ public class Enemy extends ObstacleSprite {
 
         ANGRY, CD,
 
-        ATTACK, TRANCE, DAZED, SMOTHER, FRUSTRATED
+        ATTACK, JUMP, DAZED, SMOTHER, FRUSTRATED, TRANCE
     }
 
     public class RaycastResult {

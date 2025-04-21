@@ -132,6 +132,12 @@
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
     },
+    "platform-mothTRANCEANIMATION": {
+      "file": "platform/mothTRANCEAnimation.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
     "platform-mothCDANIMATION": {
       "file": "platform/mothCDAnimation.png",
       "mipmaps": true,
@@ -146,6 +152,24 @@
     },
     "platform-mothOUTOFLIGHTANIMATION": {
       "file": "platform/mothOutOfLightAnimation.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-mothANGRYANIMATION": {
+      "file": "platform/mothAngryAnimation.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-mothFRUSTRATEDANIMATION": {
+      "file": "platform/mothFrustratedAnimation.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-mothDUSTANIMATION": {
+      "file": "platform/mothDustAnimation.png",
       "mipmaps": true,
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
