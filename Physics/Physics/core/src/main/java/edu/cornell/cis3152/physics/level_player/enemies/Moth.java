@@ -306,6 +306,9 @@ public class Moth extends Enemy {
         updateFrame(JUMP_FRAME_DURATION, TOTAL_JUMP_FRAMES);
         Body body = obstacle.getBody();
         if (hasJumped) {
+            if (isGrounded()){
+                System.out.println("HERE");
+            }
             return;
         }
             if (rr != null && rr.targetObject instanceof Torch){
@@ -314,13 +317,13 @@ public class Moth extends Enemy {
             } else {
                 if (rr == null) {
                     System.out.println("null check");
+                } else {
                 }
-                System.out.println("ERROR: GROUNDED AND NULL");
             }
             body.setType(BodyDef.BodyType.DynamicBody);
             body.setAwake(true);
             body.setGravityScale(0.5f);
-            float jumpVy = 3f;
+            float jumpVy  = 3f;
             float gEff    = Math.abs(body.getWorld().getGravity().y * body.getGravityScale());
             float T       = (2f * jumpVy) / gEff;
             float dx      = torchPos.x - body.getPosition().x;

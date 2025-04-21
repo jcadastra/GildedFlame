@@ -177,7 +177,6 @@ public class Enemy extends ObstacleSprite {
 
     public void update() {
         updateRayCast();
-
         switch (state) {
             case OUT_OF_LIGHT:
                 out_of_light();

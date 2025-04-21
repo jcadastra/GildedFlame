@@ -839,8 +839,10 @@ public class GameplayScene implements Screen {
                             plat.getObstacle().setBodyType(BodyType.KinematicBody);
                             plat.getObstacle().setFriction(.5f);
                             addSprite(plat);
-                            EventAction<Float> awef = new EventAction<Float>(plat, "rotate", plat.getObstacle().getAngle(), (float) Math.PI);
-                            runeTemp.registerEventAction(awef);
+//                            EventAction<Float> awef = new EventAction<Float>(plat, "rotate", plat.getObstacle().getAngle(), (float) Math.PI);
+                            EventAction<Vector2> mo = new EventAction<Vector2>(plat, "move", new Vector2(8,10), new Vector2(16,10));
+//                            runeTemp.registerEventAction(awef);
+                            runeTemp.registerEventAction(mo);
                             runeSet.add(runeTemp);
                             addSprite(runeTemp);
                             break;
