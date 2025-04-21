@@ -179,6 +179,7 @@ public class Enemy extends ObstacleSprite {
     }
 
     public void update() {
+//        System.out.println(getState());
         updateRayCast();
         switch (state) {
             case OUT_OF_LIGHT:
@@ -205,6 +206,9 @@ public class Enemy extends ObstacleSprite {
             case SMOTHER:
                 smother();
                 break;
+            case FRUSTRATED:
+                frustrated();
+                break;
             default:
                 break;
         }
@@ -226,6 +230,9 @@ public class Enemy extends ObstacleSprite {
 
     }
 
+    public void frustrated(){
+
+    }
     public boolean isAboutToFall() {
 //        if (!isGrounded()) return false;
 
@@ -247,8 +254,11 @@ public class Enemy extends ObstacleSprite {
                 Object userData = fixture.getBody().getUserData();
                 if (userData instanceof ObstacleSprite) {
                     ObstacleSprite target = (ObstacleSprite) userData;
-                    if (target.getName().contains("platform") || target.getName().contains("enemy") || target.getName().contains("ground")) {
+                    if (target.getName().equals("platform") || target.getName().equals("enemy") || target.getName().equals("ground") || target.getName().equals("floor")) {
+
                         groundDetected[0] = true;
+                    } else {
+                        System.out.println(target.getName());
                     }
                 }
                 return fraction;
@@ -349,14 +359,10 @@ public class Enemy extends ObstacleSprite {
             changeDirection();
         }
         if (isFacingRight()) {
-//            System.out.println("Facing right");
             direction = speed;
         } else {
-//            System.out.println("Facing left");
             direction = -speed;
         }
-
-//        System.out.println("Direction: " + getSpeed());
         body.setLinearVelocity(new Vector2(direction, body.getLinearVelocity().y));
 
     }
@@ -441,7 +447,7 @@ public class Enemy extends ObstacleSprite {
 
         ANGRY, CD,
 
-        ATTACK, TRANCE, DAZED, SMOTHER
+        ATTACK, TRANCE, DAZED, SMOTHER, FRUSTRATED
     }
 
     public class RaycastResult {

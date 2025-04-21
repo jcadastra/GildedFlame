@@ -26,6 +26,7 @@ import edu.cornell.gdiac.math.Poly2;
 import edu.cornell.gdiac.math.PolyTriangulator;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
 import edu.cornell.gdiac.physics2.PolygonObstacle;
+import java.util.Arrays;
 
 /**
  * A class representing a tiled surface (wall or platform)
@@ -59,48 +60,58 @@ public class Surface extends ObstacleSprite {
      * @param units     The physics units
      * @param data      The physics constants for this rope bridge
      */
-    public Surface(float[] points, float units, JsonValue settings) {
+    public Surface(float[] points, float units, String name, JsonValue settings) {
         super();
 
-        //float tile = settings.getFloat( "tile" );
-        float tile = 64f;
+        float tile = units;
 
-        // Construct a Poly2 object, breaking it into triangles
+        // Save original for visuals
+        float[] visualPoints = Arrays.copyOf(points, points.length);
+
+        // Modify for physics
+        if (name.equals("platform") || name.equals("floor")) {
+            points[1] -= 0.15f;
+            points[7] -= 0.15f;
+        }
+
+        // Build triangulated mesh using original visual points
         Poly2 poly = new Poly2();
         PolyTriangulator triangulator = new PolyTriangulator();
-        triangulator.set(points);
+        triangulator.set(visualPoints);
         triangulator.calculate();
         triangulator.getPolygon(poly);
 
         float x_avg = 0;
         float y_avg = 0;
         for (int i = 0; i < points.length; i++) {
-            if (i%2 == 0) {
+            if (i % 2 == 0) {
                 x_avg += points[i];
             } else {
                 y_avg += points[i];
             }
         }
-        internal_position = new Vector2(x_avg/( (float) points.length / 2), y_avg /( (float) points.length / 2) );
+        internal_position = new Vector2(x_avg / (points.length / 2f), y_avg / (points.length / 2f));
 
+        // Use modified points for the physics object
         obstacle = new PolygonObstacle(points);
-        obstacle.setBodyType( BodyDef.BodyType.StaticBody );
-        obstacle.setDensity( settings.getFloat( "density", 0 ) );
-        obstacle.setFriction( settings.getFloat( "friction", 0 ) );
-        obstacle.setRestitution( settings.getFloat( "restitution", 0 ) );
-        obstacle.setPhysicsUnits( units );
-        obstacle.setUserData( this );
+        obstacle.setBodyType(BodyDef.BodyType.StaticBody);
+        obstacle.setDensity(settings.getFloat("density", 0));
+        obstacle.setFriction(settings.getFloat("friction", 0));
+        obstacle.setRestitution(settings.getFloat("restitution", 0));
+        obstacle.setPhysicsUnits(units);
+        obstacle.setUserData(this);
+        obstacle.setName(name);
 
-        debug = ParserUtils.parseColor( settings.get("debug"),  Color.WHITE);
+        debug = ParserUtils.parseColor(settings.get("debug"), Color.YELLOW);
 
-        // Create a polygon mesh matching the physics body, adjusted by the
-        // physics units. We take the save polygon we used to create the
-        // physics obstacle and scale it up. We then use that to set the
-        // mesh. The attribute tile is used to define how we scale/stretch
-        // the texture to fit to the polygon. Try experimenting with this in
-        // the JSON to see what happens.
-        poly.scl( units );
-        mesh.set(poly,tile,tile);
+        // Scale visual mesh properly (without overcompensation)
+        Poly2 visualPoly = new Poly2();
+        PolyTriangulator visTri = new PolyTriangulator();
+        visTri.set(visualPoints);
+        visTri.calculate();
+        visTri.getPolygon(visualPoly);
+        visualPoly.scl(units);
+        mesh.set(visualPoly, tile, tile);
     }
 
     public Vector2 temp_delect_position_remove() {

@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "test3.tmj",
+    "activeFile": "test2.tmj",
     "expandedProjectPaths": [
         "."
     ],
@@ -40,6 +40,14 @@
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
+        "example_level.tmj": {
+            "scale": 0.75,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 4800,
+                "y": 2699.333333333333
+            }
+        },
         "example_level.tmx": {
             "expandedObjectLayers": [
                 5,
@@ -60,8 +68,8 @@
             "scale": 0.125,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 3192,
-                "y": 4436
+                "x": 3184,
+                "y": 4428
             }
         },
         "test2.tmx": {
@@ -71,15 +79,15 @@
             "scale": 0.0625,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 4784,
-                "y": 88
+                "x": 4800,
+                "y": 2712
             }
         },
         "test3.tmj": {
             "scale": 0.128546875,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4807.584781815972,
+                "x": 4799.805518414974,
                 "y": 2703.2940318463593
             }
         },
@@ -105,8 +113,8 @@
         },
         "test_map.tmx": {
             "expandedObjectLayers": [
-                2,
                 4,
+                2,
                 3
             ],
             "scale": 0.5,
@@ -137,7 +145,9 @@
         "PlayerTorchTiles.tsx",
         "test2.tmx",
         "PlatformTiles.tsx",
-        "test3.tmj"
+        "test3.tmj",
+        "example_level.tmj",
+        "test2.tmj"
     ],
     "project": "tiled.tiled-project",
     "property.type": "bool",
@@ -149,6 +159,8 @@
         "test2.tmx",
         "PlatformTiles.tsx",
         "test3.tmj",
+        "example_level.tmj",
+        "test2.tmj",
         "test_map.tmj",
         "tileset.tsx",
         "earthtile.tsx"

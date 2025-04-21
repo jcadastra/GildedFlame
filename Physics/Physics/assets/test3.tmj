@@ -72,16 +72,16 @@
          "name":"Enemies",
          "objects":[
                 {
-                 "gid":31,
+                 "gid":32,
                  "height":300,
-                 "id":16,
-                 "name":"totem",
+                 "id":17,
+                 "name":"moth",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":300,
-                 "x":5426,
-                 "y":4150
+                 "x":6605.22366625978,
+                 "y":4175.56185826093
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -90,7 +90,7 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":17,
+ "nextobjectid":22,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
