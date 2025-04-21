@@ -741,7 +741,6 @@ public class Avatar extends ObstacleSprite {
                 }
             }
 
-
         } else if (getGroundedState() == GroundState.AIRBORNE) {
             float vy = obstacle.getLinearVelocity().y;
             if (vy > 0) {
@@ -764,6 +763,7 @@ public class Avatar extends ObstacleSprite {
                 justLanded = true;
                 doOnce = true;
             } else {
+                System.out.println("vy = 0");
                 srcIndex = frameIndex * FRAME_WIDTH;
                 animationTexture = hasTorch ? animationTextureJumpTorchFall : animationTextureJumpNoTorchFall;
             }

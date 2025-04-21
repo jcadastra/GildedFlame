@@ -123,7 +123,7 @@ public class Moth extends Enemy {
         if (dustCount >= DUST_FRAME_DURATION * TOTAL_DUST_FRAMES){
             dustCount = 0;
         }
-        System.out.println("dustCount: " + dustCount + " dustIndex: " + dustIndex);
+
     }
 
     private void resetSpeed() {
@@ -215,7 +215,6 @@ public class Moth extends Enemy {
         updateFrame(IN_LIGHT_FRAME_DURATION, TOTAL_IN_LIGHT_FRAMES);
         resetAttackTimer();
         if (rr != null) {
-            System.out.println("in light: " + rr.targetObject);
             if (rr.targetObject instanceof Torch && ((Torch) rr.targetObject).canBePickedUp()) {
                 setState(EnemyState.TRANCE);
                 resetTranceTimer();
@@ -227,7 +226,7 @@ public class Moth extends Enemy {
             }
         } else {
             stop();
-            System.out.println("rr = null");
+//            System.out.println("rr = null");
         }
     }
 
@@ -410,7 +409,6 @@ public class Moth extends Enemy {
                     initialY = drawY;
                     doOnceAttack = false;
                 }
-                System.out.println("ATTACK dust index: " + dustIndex);
                 drawAnimation(batch, dustAnimationTexture, dustIndex, initialX, initialY, flipX);
                 drawAnimation(batch, attackAnimationTexture, frameIndex, drawX, drawY, flipX);
                 break;
