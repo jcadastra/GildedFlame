@@ -18,8 +18,13 @@ public class GameObject extends EnhancedObstacleSprite {
      * @param y      The world y-position.
      * @param units  The physics unit scale.
      */
-    public GameObject(float x, float y, float width, float height, float units) {
+    public GameObject(float x, float y, float width, float height, float units, Boolean centerInBottomLeft) {
         super();
+
+        if (centerInBottomLeft) {
+            x += width / 2;
+            y += height / 2;
+        }
 
         BoxObstacle temp = new BoxObstacle(x,y,width,height);
         obstacle = new ObstacleSprite(temp).getObstacle();

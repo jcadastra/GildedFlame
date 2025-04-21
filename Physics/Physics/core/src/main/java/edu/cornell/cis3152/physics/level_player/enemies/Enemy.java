@@ -254,7 +254,7 @@ public class Enemy extends ObstacleSprite {
                 Object userData = fixture.getBody().getUserData();
                 if (userData instanceof ObstacleSprite) {
                     ObstacleSprite target = (ObstacleSprite) userData;
-                    if (target.getName().equals("platform") || target.getName().equals("enemy") || target.getName().equals("ground") || target.getName().equals("floor")) {
+                    if (target.getName().contains("platform") || target.getName().contains("enemy") || target.getName().contains("ground") || target.getName().contains("floor")) {
 
                         groundDetected[0] = true;
                     } else {

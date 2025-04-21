@@ -655,7 +655,7 @@ public class GameplayScene implements Screen {
                     if (tileId == 2 || tileId == 3 || tileId == 4) {
                         name = "platform";
                     } else if (tileId == 8 || tileId == 9 || tileId == 10) {
-                        name = "floor";
+                        name = "platform";
                     } else {
                         name = "wall";
                     }
@@ -763,7 +763,7 @@ public class GameplayScene implements Screen {
                             System.out.println("goal door texture: " + texture);
                             float size = 1f;
 
-                            GameObject goalDoor = new GameObject(x,y,size*1.47f,size,units);
+                            GameObject goalDoor = new GameObject(x,y,size*1.47f,size,units, true);
                             goalDoor.getObstacle().setSensor(true);
                             goalDoor.getObstacle().setBodyType(BodyType.StaticBody);
                             goalDoor.getObstacle().setName("goalDoor");
@@ -972,7 +972,22 @@ public class GameplayScene implements Screen {
                             if (objName.matches("\\d+")) {
                                 ropeAnchors.put(objName, object);
                             } else {
-                                System.out.println("Unknown object: " + objName);
+                                Texture temp = directory.getEntry(objName, Texture.class);
+                                if (temp != null) {
+
+                                    float width = object.getFloat("width") / levelData.getInt("tilewidth");
+                                    float height = object.getFloat("height") / levelData.getInt("tileheight");
+
+                                    GameObject decoration = new GameObject(x,y,width,height, units, true);
+                                    decoration.getObstacle().setSensor(true);  // set as sensor
+                                    decoration.getObstacle().setBodyType(BodyType.StaticBody);
+                                    decoration.setTexture(temp);
+                                    decoration.getObstacle().setName(objName);
+
+                                    addSprite(decoration);
+                                } else {
+                                    System.out.println("Unknown object: " + objName);
+                                }
                             }
                             break;
                     }
