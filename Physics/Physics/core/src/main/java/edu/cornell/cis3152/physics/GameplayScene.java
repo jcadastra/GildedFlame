@@ -521,6 +521,7 @@ public class GameplayScene implements Screen {
         }
         sprites.clear();
         addQueue.clear();
+        runeSet.clear();
         if (world != null) {
             world.dispose();
         }
@@ -815,6 +816,7 @@ public class GameplayScene implements Screen {
                             runeTemp.registerEventAction(awef);
                             runeSet.add(runeTemp);
                             addSprite(runeTemp);
+                            break;
 
                         case "button":
                             float rotationRad = 0f;
@@ -1133,52 +1135,52 @@ public class GameplayScene implements Screen {
 //        RainBlock rainBlocktemp = new RainBlock(3,3,10,10,units, torchFire.getRadius());
 //        addSprite(rainBlocktemp);
 
-        if (levelName.equals("rope_test")) {
-            // SAMPLE BUTTON CODE BELOW::
-            Button button = new Button(new Vector2(24,2.75f), 0, true, true, units);
-            Button button2 = new Button(new Vector2(30.75f,7f), (float) Math.PI/2, false, false, units);
-            BoxObstacle temp = new BoxObstacle(5,5,5,.5f);
-            temp.setPhysicsUnits(units);
-            temp.setName("floor");
-            ObstacleSprite thing = new ObstacleSprite(temp);
-            thing.getObstacle().setBodyType(BodyType.KinematicBody);
-            thing.getObstacle().setFriction(.5f);
-            addSprite(thing);
+//        if (levelName.equals("rope_test")) {
+//            // SAMPLE BUTTON CODE BELOW::
+//            Button button = new Button(new Vector2(24,2.75f), 0, true, true, units);
+//            Button button2 = new Button(new Vector2(30.75f,7f), (float) Math.PI/2, false, false, units);
+//            BoxObstacle temp = new BoxObstacle(5,5,5,.5f);
+//            temp.setPhysicsUnits(units);
+//            temp.setName("floor");
+//            ObstacleSprite thing = new ObstacleSprite(temp);
+//            thing.getObstacle().setBodyType(BodyType.KinematicBody);
+//            thing.getObstacle().setFriction(.5f);
+//            addSprite(thing);
+//
+//    //        Array<Object> actionArray = new Array<>(new Object[]{thing, "move", new Vector2(8, 10), new Vector2(10, 10)});
+//            Function<Float, Float> movementFunc = Interpolation.swing::apply;
+//            EventAction<Vector2> eventAction = new EventAction<Vector2>(thing, "move", new Vector2(8, 10), new Vector2(16, 5), 4f, movementFunc);
+//    //        Object[] actionArray = new Object[]{thing, "rotate", 0f, (float) (Math.PI), 300, movementFunc};
+//    //        Object[] actionArray = new Object[]{thing, "move", new Vector2(8, 10), new Vector2(16, 5), 100, movementFunc};
+//
+//            Event<Integer,Vector2> event = new Event<Integer,Vector2>(button, button::getState,
+//                state -> state == 1,  eventAction);
+//            eventHandler.registerEvent(event);
+//
+//
+//            EventAction<Float> eventAction2 = new EventAction<Float>(thing, "rotate", 0f, (float) (Math.PI), 4, movementFunc);
+//            Event<Integer,Float> event2 = new Event<Integer, Float>(button, button::getState,
+//                state -> state == 1,  eventAction2);
+//            eventHandler.registerEvent(event2);
+//
+//            eventAction = new EventAction<>("demo");
+//            event = new Event<Integer,Vector2>(button2, button2::getState,
+//                state -> state == 1,  eventAction);
+//            eventHandler.registerEvent(event);
+//
+//            addSpriteGroup(button);
+////            addSpriteGroup(button2);
+//
+//            Ladder tempLadder = new Ladder(3,3,5f, units);
+//    //        addSprite(tempLadder);
+//            Rune runeTemp = new Rune(3,3, units, new float[]{0, .5f});
+//            EventAction<Float> awef = new EventAction<Float>(thing, "rotate", thing.getObstacle().getAngle(), (float) Math.PI);
+//            runeTemp.registerEventAction(awef);
+//            runeSet.add(runeTemp);
+//            addSprite(runeTemp);
 
-    //        Array<Object> actionArray = new Array<>(new Object[]{thing, "move", new Vector2(8, 10), new Vector2(10, 10)});
-            Function<Float, Float> movementFunc = Interpolation.swing::apply;
-            EventAction<Vector2> eventAction = new EventAction<Vector2>(thing, "move", new Vector2(8, 10), new Vector2(16, 5), 4f, movementFunc);
-    //        Object[] actionArray = new Object[]{thing, "rotate", 0f, (float) (Math.PI), 300, movementFunc};
-    //        Object[] actionArray = new Object[]{thing, "move", new Vector2(8, 10), new Vector2(16, 5), 100, movementFunc};
 
-            Event<Integer,Vector2> event = new Event<Integer,Vector2>(button, button::getState,
-                state -> state == 1,  eventAction);
-            eventHandler.registerEvent(event);
-
-
-            EventAction<Float> eventAction2 = new EventAction<Float>(thing, "rotate", 0f, (float) (Math.PI), 4, movementFunc);
-            Event<Integer,Float> event2 = new Event<Integer, Float>(button, button::getState,
-                state -> state == 1,  eventAction2);
-            eventHandler.registerEvent(event2);
-
-            eventAction = new EventAction<>("demo");
-            event = new Event<Integer,Vector2>(button2, button2::getState,
-                state -> state == 1,  eventAction);
-            eventHandler.registerEvent(event);
-
-            addSpriteGroup(button);
-//            addSpriteGroup(button2);
-
-            Ladder tempLadder = new Ladder(3,3,5f, units);
-    //        addSprite(tempLadder);
-            Rune runeTemp = new Rune(3,3, units, new float[]{0, .5f});
-            EventAction<Float> awef = new EventAction<Float>(thing, "rotate", thing.getObstacle().getAngle(), (float) Math.PI);
-            runeTemp.registerEventAction(awef);
-            runeSet.add(runeTemp);
-            addSprite(runeTemp);
-
-
-        }
+//        }
 
 //        if (levelName.equals("moth_intro")) {
 //            temp.deactivateAnchor(1);
@@ -1458,6 +1460,7 @@ public class GameplayScene implements Screen {
 
     @SuppressWarnings("unchecked")
     private void updateRunes(float dt) {
+        System.out.println(runeSet.size());
         for (Rune rune : runeSet) {
             System.out.println(rune.getPowerLevel());
             if (!rune.returnInLight()) {
@@ -1472,6 +1475,7 @@ public class GameplayScene implements Screen {
             }
 
             for (EventAction<?> undefEventAction : rune.getEventAction()) {
+                System.out.println("help");
 
                 if (undefEventAction.getInitialValue() instanceof Vector2) {
                     EventAction<Vector2> eventAction = (EventAction<Vector2>) undefEventAction;
