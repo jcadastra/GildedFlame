@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "example_level.tmj",
+    "activeFile": "hardLevel.tmj",
     "expandedProjectPaths": [
         "."
     ],
@@ -22,6 +22,33 @@
                 "x": 4805.2525680398185,
                 "y": 2700.8365985386004
             }
+        },
+        "C:/Users/Documents/cs3152/The-Gilded-Flame/Physics/Physics/assets/EnemyTiles.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Documents/cs3152/The-Gilded-Flame/Physics/Physics/assets/GameObjectTiles.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Documents/cs3152/The-Gilded-Flame/Physics/Physics/assets/PlatformTiles.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Documents/cs3152/The-Gilded-Flame/Physics/Physics/assets/PlayerTorchTiles.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Documents/cs3152/The-Gilded-Flame/Physics/Physics/assets/EnemyTiles.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Documents/cs3152/The-Gilded-Flame/Physics/Physics/assets/GameObjectTiles.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1
+        },
+        "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Documents/cs3152/The-Gilded-Flame/Physics/Physics/assets/PlatformTiles.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1
+        },
+        "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Documents/cs3152/The-Gilded-Flame/Physics/Physics/assets/PlayerTorchTiles.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1
         },
         "C:/Users/ericj/Downloads/EnemyTiles.tsx": {
             "scaleInDock": 1
@@ -43,7 +70,15 @@
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 4120.724346076459,
-                "y": 1582.5479190935089
+                "y": 2558.508948427407
+            }
+        },
+        "C:/Users/ericj/Downloads/test4.tmj": {
+            "scale": 0.147546875,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 4805.2525680398185,
+                "y": 2700.8365985386
             }
         },
         "EnemyTiles.tsx": {
@@ -73,13 +108,13 @@
         },
         "example_level.tmj": {
             "expandedObjectLayers": [
-                5
+                2
             ],
-            "scale": 0.12,
-            "selectedLayer": 2,
+            "scale": 0.125,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 4712.5,
-                "y": 2612.5
+                "x": 4544,
+                "y": 3620
             }
         },
         "example_level.tmx": {
@@ -91,7 +126,7 @@
             "scale": 0.125,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 2960,
+                "x": 2952,
                 "y": 3420
             }
         },
@@ -100,10 +135,10 @@
                 3
             ],
             "scale": 0.147546875,
-            "selectedLayer": 3,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 4798.4750608916665,
-                "y": 2700.8365985386004
+                "x": 4795.08630731759,
+                "y": 2694.059091390448
             }
         },
         "example_level2.tmx": {
@@ -114,6 +149,14 @@
                 "y": 2700.8365985386004
             }
         },
+        "hardLevel.tmj": {
+            "scale": 0.0625,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 4128,
+                "y": 3592
+            }
+        },
         "level 4 (1).tmj": {
             "scale": 0.147546875,
             "selectedLayer": 1,
@@ -122,17 +165,46 @@
                 "y": 3080.3769988351164
             }
         },
+        "mediumLevel.tmj": {
+            "scale": 0.0649,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": -2634.82280431433,
+                "y": 3328.1972265023114
+            }
+        },
+        "qq.tmj": {
+            "scale": 0.147546875,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 4805.2525680398185,
+                "y": 2694.0590913904484
+            }
+        },
+        "rrrr.tmj": {
+            "expandedObjectLayers": [
+                2,
+                5,
+                6
+            ],
+            "scale": 0.125,
+            "selectedLayer": 4,
+            "viewCenter": {
+                "x": 4796,
+                "y": 2700
+            }
+        },
         "sample.tmj": {
             "expandedObjectLayers": [
                 2,
                 6,
                 5
             ],
-            "scale": 0.25,
+            "scale": 0.125,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 4640,
-                "y": 4270
+                "x": 4976,
+                "y": 3700
             }
         },
         "temp.tmj": {
@@ -155,11 +227,11 @@
             "expandedObjectLayers": [
                 3
             ],
-            "scale": 0.125,
+            "scale": 0.12,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 3416,
-                "y": 6188
+                "x": 4795.833333333334,
+                "y": 2695.833333333333
             }
         },
         "test2.tmx": {
@@ -169,16 +241,19 @@
             "scale": 0.0625,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 4752,
-                "y": 2696
+                "x": 4792,
+                "y": 2712
             }
         },
         "test3.tmj": {
-            "scale": 0.128546875,
-            "selectedLayer": 0,
+            "expandedObjectLayers": [
+                3
+            ],
+            "scale": 0.0463,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 4799.805518414974,
-                "y": 2703.2940318463593
+                "x": 4784.017278617711,
+                "y": 2710.583153347732
             }
         },
         "test3.tmx": {
@@ -193,6 +268,22 @@
                 "y": 2620
             }
         },
+        "test4 (1).tmj": {
+            "scale": 0.147546875,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 4805.2525680398185,
+                "y": 2700.8365985386
+            }
+        },
+        "test4.tmj": {
+            "scale": 0.147546875,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 4805.2525680398185,
+                "y": 2700.8365985386
+            }
+        },
         "test_map.tmj": {
             "scale": 0.30924479166666663,
             "selectedLayer": 0,
@@ -203,15 +294,15 @@
         },
         "test_map.tmx": {
             "expandedObjectLayers": [
-                2,
                 4,
+                2,
                 3
             ],
             "scale": 0.5,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 960,
-                "y": 311
+                "x": 959,
+                "y": 429
             }
         },
         "tileset.tsx": {
@@ -226,13 +317,21 @@
                 "x": 4804.330827067671,
                 "y": 2696.6616541353383
             }
+        },
+        "ww.tmj": {
+            "scale": 0.147546875,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 4805.2525680398185,
+                "y": 2694.0590913904484
+            }
         }
     },
     "last.exportedFilePath": "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/assets",
     "last.imagePath": "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/assets/tiled_images",
     "map.height": 18,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
-    "map.lastUsedFormat": "tmx",
+    "map.lastUsedFormat": "json",
     "map.tileHeight": 300,
     "map.tileWidth": 300,
     "map.width": 32,
@@ -240,31 +339,30 @@
         "test_map.tmx",
         "EnemyTiles.tsx",
         "GameObjectTiles.tsx",
-        "PlayerTorchTiles.tsx",
         "test2.tmx",
         "PlatformTiles.tsx",
-        "example_level.tmj",
         "test2.tmj",
         "example_level2.tmj",
-        "sample.tmj",
-        "C:/Users/ericj/Downloads/level 3.tmj",
-        "example_level.tmx"
+        "rrrr.tmj",
+        "test3.tmj",
+        "mediumLevel.tmj",
+        "hardLevel.tmj"
     ],
     "project": "tiled.tiled-project",
-    "property.type": "string",
+    "property.type": "int",
     "recentFiles": [
-        "example_level.tmj",
-        "temp.tmj",
-        "test.tmj",
-        "level 4 (1).tmj",
-        "(old)example_level.tmj",
-        "PlayerTorchTiles.tsx",
         "test_map.tmx",
         "EnemyTiles.tsx",
         "GameObjectTiles.tsx",
         "test2.tmx",
         "PlatformTiles.tsx",
-        "example_level.tmx"
+        "test2.tmj",
+        "example_level2.tmj",
+        "rrrr.tmj",
+        "test3.tmj",
+        "mediumLevel.tmj",
+        "hardLevel.tmj",
+        "qq.tmj"
     ],
     "tileset.embedInMap": true,
     "tileset.lastUsedFormat": "tsx",

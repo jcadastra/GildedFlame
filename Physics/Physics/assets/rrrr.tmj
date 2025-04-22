@@ -1,4 +1,12 @@
 { "compressionlevel":-1,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"json",
+         "target":"example_level2.tmj"
+        }
+    },
  "height":18,
  "infinite":false,
  "layers":[
@@ -359,8 +367,8 @@
                  "type":"",
                  "visible":true,
                  "width":134,
-                 "x":7085,
-                 "y":3113
+                 "x":2853,
+                 "y":2561
                 }, 
                 {
                  "gid":31,
@@ -371,8 +379,8 @@
                  "type":"",
                  "visible":true,
                  "width":150,
-                 "x":5357,
-                 "y":1433
+                 "x":5365,
+                 "y":1177
                 }, 
                 {
                  "gid":39,
@@ -388,12 +396,12 @@
                         {
                          "name":"platformPosition",
                          "type":"string",
-                         "value":"25,8"
+                         "value":"10,7"
                         }, 
                         {
                          "name":"platformWidth",
                          "type":"string",
-                         "value":"5"
+                         "value":"4"
                         }, 
                         {
                          "name":"thresholds",
@@ -414,7 +422,7 @@
          "y":0
         }],
  "nextlayerid":7,
- "nextobjectid":107,
+ "nextobjectid":108,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

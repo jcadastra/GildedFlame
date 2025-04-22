@@ -773,28 +773,6 @@ public class GameplayScene implements Screen {
                             addSprite(goalDoor);
                             break;
 
-                        /*case "window":
-                            System.out.println("window");
-                            texture = directory.getEntry("window", Texture.class);
-                            float width = object.getFloat("width") / levelData.getInt("tilewidth");
-                            float height = object.getFloat("height") / levelData.getInt("tileheight");
-
-                            // Define rectangle points (counter-clockwise)
-                            float[] points = new float[]{
-                                -width / 2f, height / 2f,
-                                -width / 2f, -height / 2f,
-                                width / 2f, -height / 2f,
-                                width / 2f, height / 2f
-                            };
-
-                            GameObject decoration = new GameObject(points, pos[0], pos[1], units);
-                            decoration.getObstacle().setSensor(true);  // set as sensor
-                            decoration.setTexture(texture);
-                            decoration.getObstacle().setName(objName);
-
-                            addSprite(decoration);
-                            break;*/
-
                         case "rune":
                             float platWidth = 1f;
                             float platHeight = 1f;
@@ -835,11 +813,13 @@ public class GameplayScene implements Screen {
                             tmp.setBodyType(BodyType.KinematicBody);
                             tmp.setFriction(0.5f);
 
+
+
                             ObstacleSprite plat = new ObstacleSprite(tmp);
                             plat.getObstacle().setBodyType(BodyType.KinematicBody);
                             plat.getObstacle().setFriction(.5f);
                             addSprite(plat);
-                            EventAction<Float> awef = new EventAction<Float>(plat, "rotate", plat.getObstacle().getAngle(), (float) Math.PI);
+                            EventAction<Float> awef = new EventAction<Float>(plat, "move", plat.getObstacle().getAngle(), (float) Math.PI);
                             runeTemp.registerEventAction(awef);
                             runeSet.add(runeTemp);
                             addSprite(runeTemp);
@@ -872,7 +852,7 @@ public class GameplayScene implements Screen {
                                     case "doublesided":
                                         doubleSided = Boolean.parseBoolean(value);
                                         break;
-                                    case "rotationRadians":
+                                    case "rotationRadiance":
                                         rotationRad = Float.parseFloat(value);
                                         break;
                                     case "rotateEvent":
@@ -1353,7 +1333,7 @@ public class GameplayScene implements Screen {
         if (avatar.isJumping()) {
             avatar.setGroundedState(GroundState.AIRBORNE);
             SoundEffectManager sounds = SoundEffectManager.getInstance();
-            soundEngine.jump();
+//            soundEngine.jump();
         }
 
         if ((queueAddTorch && activeTorchJoint == null) || (activeTorchJoint != null &&
