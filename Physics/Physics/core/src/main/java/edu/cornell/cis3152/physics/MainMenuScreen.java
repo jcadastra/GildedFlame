@@ -65,33 +65,24 @@ public class MainMenuScreen implements Screen {
         Drawable drawable = new TextureRegionDrawable(texture);
 
         Texture newGameText = new Texture(Gdx.files.internal("ui/newGameButt.png"));
-        Texture newGameClickText = new Texture(Gdx.files.internal("ui/newGameButtClick.png"));
 
         TextureRegionDrawable buttonUp = new TextureRegionDrawable(new TextureRegion(newGameText));
-        TextureRegionDrawable buttonOver = new TextureRegionDrawable(new TextureRegion(newGameClickText));
 
 
         ImageButton.ImageButtonStyle newGame = new ImageButton.ImageButtonStyle();
         newGame.up = buttonUp;
-        newGame.over = buttonOver;
 
         Texture contText = new Texture(Gdx.files.internal("ui/contbutt.png"));
-        Texture contClickText = new Texture(Gdx.files.internal("ui/contButtClick.png"));
         TextureRegionDrawable contButtUp = new TextureRegionDrawable(new TextureRegion(contText));
-        TextureRegionDrawable contButtOver = new TextureRegionDrawable(new TextureRegion(contClickText));
 
         ImageButton.ImageButtonStyle contButt = new ImageButton.ImageButtonStyle();
         contButt.up = contButtUp;
-        contButt.over = contButtOver;
 
         Texture settingsText = new Texture(Gdx.files.internal("ui/settingsbutt.png"));
-        Texture settingsClickText = new Texture(Gdx.files.internal("ui/settingsButtClick.png"));
         TextureRegionDrawable settingsTextUp = new TextureRegionDrawable(new TextureRegion(settingsText));
-        TextureRegionDrawable settingsTextOver = new TextureRegionDrawable(new TextureRegion(settingsClickText));
 
         ImageButton.ImageButtonStyle settingsButt = new ImageButton.ImageButtonStyle();
         settingsButt.up = settingsTextUp;
-        settingsButt.over = settingsTextOver;
 
 
 
