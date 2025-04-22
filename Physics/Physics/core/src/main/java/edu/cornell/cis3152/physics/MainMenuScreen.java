@@ -3,23 +3,24 @@ package edu.cornell.cis3152.physics;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.ScreenUtils;
-import edu.cornell.gdiac.graphics.SpriteBatch;
 import edu.cornell.gdiac.util.ScreenListener;
+import com.badlogic.gdx.audio.Sound;
+
 
 public class MainMenuScreen implements Screen {
     private Stage stage;
@@ -27,15 +28,7 @@ public class MainMenuScreen implements Screen {
     private Texture bgTexture;
     private boolean startClicked = false;
     private ScreenListener listener;
-
-    /*Checker for controller support*/
-    private boolean prevButtonA = false;
-    private TextButton playButton;
-
-    private ParticleEngine particleEngine;
-
-    /*Gets the controller*/
-    private InputController inputController = InputController.getInstance();
+    private Sound clickSound;
 
     public void setScreenListener(ScreenListener listener) {
         this.listener = listener;
@@ -44,6 +37,7 @@ public class MainMenuScreen implements Screen {
     public MainMenuScreen() {
         stage = new Stage(new ScreenViewport());
         skin = new Skin();
+        clickSound = Gdx.audio.newSound(Gdx.files.internal("soundEffects/clickSound.mp3"));
 
         bgTexture = new Texture(Gdx.files.internal("loading/menuScreen.png"));
         Image bgImage = new Image(bgTexture);
@@ -58,6 +52,9 @@ public class MainMenuScreen implements Screen {
     }
 
     private void createBasicUI() {
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
+
         BitmapFont font = new BitmapFont();
 
         Pixmap pixmap = new Pixmap(200, 60, Pixmap.Format.RGB888);
@@ -67,79 +64,134 @@ public class MainMenuScreen implements Screen {
         pixmap.dispose();
         Drawable drawable = new TextureRegionDrawable(texture);
 
-        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        textButtonStyle.up = drawable;
-        textButtonStyle.font = font;
-        skin.add("default", textButtonStyle);
+        Texture newGameText = new Texture(Gdx.files.internal("ui/newGameButt.png"));
+        Texture newGameClickText = new Texture(Gdx.files.internal("ui/newGameButtClick.png"));
 
-        // Create the "Choose Level" button.
-        textButtonStyle.fontColor = Color.DARK_GRAY;
+        TextureRegionDrawable buttonUp = new TextureRegionDrawable(new TextureRegion(newGameText));
+        TextureRegionDrawable buttonOver = new TextureRegionDrawable(new TextureRegion(newGameClickText));
 
-        playButton = new TextButton("Choose Level", skin);
-        playButton.setSize(200, 60);
-        playButton.setPosition(
-                (Gdx.graphics.getWidth() / 2f - 200 / 2f) + 325,
-                Gdx.graphics.getHeight() / 2 - 30
+
+        ImageButton.ImageButtonStyle newGame = new ImageButton.ImageButtonStyle();
+        newGame.up = buttonUp;
+        newGame.over = buttonOver;
+
+        Texture contText = new Texture(Gdx.files.internal("ui/contbutt.png"));
+        Texture contClickText = new Texture(Gdx.files.internal("ui/contButtClick.png"));
+        TextureRegionDrawable contButtUp = new TextureRegionDrawable(new TextureRegion(contText));
+        TextureRegionDrawable contButtOver = new TextureRegionDrawable(new TextureRegion(contClickText));
+
+        ImageButton.ImageButtonStyle contButt = new ImageButton.ImageButtonStyle();
+        contButt.up = contButtUp;
+        contButt.over = contButtOver;
+
+        Texture settingsText = new Texture(Gdx.files.internal("ui/settingsbutt.png"));
+        Texture settingsClickText = new Texture(Gdx.files.internal("ui/settingsButtClick.png"));
+        TextureRegionDrawable settingsTextUp = new TextureRegionDrawable(new TextureRegion(settingsText));
+        TextureRegionDrawable settingsTextOver = new TextureRegionDrawable(new TextureRegion(settingsClickText));
+
+        ImageButton.ImageButtonStyle settingsButt = new ImageButton.ImageButtonStyle();
+        settingsButt.up = settingsTextUp;
+        settingsButt.over = settingsTextOver;
+
+
+
+
+
+        ImageButton imageButton = new ImageButton(newGame);
+        ImageButton contButt1 = new ImageButton(contButt);
+        ImageButton settingsButt1 = new ImageButton(settingsButt);
+
+        imageButton.setSize(screenWidth * 0.2f, screenHeight * 0.06f);
+        imageButton.setPosition(
+            screenWidth * 0.69f,
+            screenHeight * 0.5f
         );
-        particleEngine = new ParticleEngine(playButton);
-//        if (inputController.isUsingController()){// show controller select
-//            playButton.setColor(Color.GRAY);
-//        }
 
-        // for mouse and keyboard
-        playButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+        contButt1.setSize(screenWidth * 0.2f, screenHeight * 0.06f);
+        contButt1.setPosition(
+            screenWidth * 0.69f,
+            screenHeight * 0.4f
+        );
+
+        settingsButt1.setSize(screenWidth * 0.2f, screenHeight * 0.06f);
+        settingsButt1.setPosition(
+            screenWidth * 0.69f,
+            screenHeight * 0.3f
+        );
+
+
+
+// Add your input listener
+        imageButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
             @Override
             public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
                                      float x, float y, int pointer, int button) {
-                System.out.println("Button pressed");
+                System.out.println("ImageButton pressed");
+                clickSound.play();
                 startClicked = true;
-                System.out.println(startClicked);
                 if (listener != null) {
-                    // Use an exit code of 1 (this code can be customized as needed)
+                    listener.exitScreen(MainMenuScreen.this, 1);
+                }
+                return true;
+            }
+        });
+        contButt1.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+            @Override
+            public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
+                                     float x, float y, int pointer, int button) {
+                clickSound.play();
+                System.out.println("ImageButton pressed");
+                startClicked = true;
+                if (listener != null) {
+                    listener.exitScreen(MainMenuScreen.this, 1);
+                }
+                return true;
+            }
+        });
+        settingsButt1.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+            @Override
+            public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
+                                     float x, float y, int pointer, int button) {
+                clickSound.play();
+                System.out.println("ImageButton pressed");
+                startClicked = true;
+                if (listener != null) {
                     listener.exitScreen(MainMenuScreen.this, 1);
                 }
                 return true;
             }
         });
 
-        stage.addActor(playButton);
-    }
 
-    /*Controller select method for firing event. Only supports the playButton right now*/
-    private void controllerSelect(){
-        // begin controller listening
-        if (inputController.isUsingController()){
-            boolean start= inputController.xbox.getA();
-            if(start && !prevButtonA){
-                InputEvent downEvent = new InputEvent();
-                downEvent.setType(InputEvent.Type.touchDown);
-                downEvent.setStage(stage);
-                downEvent.setTarget(playButton);
-                downEvent.setButton(0);
-                playButton.fire(downEvent);
 
-                InputEvent upEvent = new InputEvent();
-                upEvent.setType(InputEvent.Type.touchUp);
-                upEvent.setStage(stage);
-                upEvent.setTarget(playButton);
-                upEvent.setButton(0);
-                playButton.fire(upEvent);
-            }
-            prevButtonA =start;}
+// Add the ImageButton to your stage
+        stage.addActor(imageButton);
+        stage.addActor(contButt1);
+        stage.addActor(settingsButt1);
+
+
+        Texture topRightTexture = new Texture(Gdx.files.internal("ui/textbutt.png"));
+        Image topRightImage = new Image(topRightTexture);
+
+        topRightImage.setSize(screenWidth * 0.3f, screenHeight * 0.2f);
+
+        topRightImage.setPosition(
+            screenWidth * 0.65f,
+            screenHeight * 0.65f
+        );
+
+        // Add the image actor to the stage
+        stage.addActor(topRightImage);
+
     }
 
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        controllerSelect();
+
         stage.act(delta);
         stage.draw();
-        if (inputController.isUsingController()){//special effect for selection
-        Batch batch = stage.getBatch();
-        batch.begin();
-        particleEngine.draw(batch,playButton);
-        batch.end();}
     }
 
     @Override
@@ -150,7 +202,6 @@ public class MainMenuScreen implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
-
     }
 
     @Override
