@@ -541,6 +541,7 @@ public class GameplayScene implements Screen {
 
         world = new World(gravity, false);
         world.setContactListener(contactListener);
+        contactListener.reset();
         setComplete(false);
         setFailure(false);
         loadLevel(levelName, "rope_test");
@@ -1314,6 +1315,7 @@ public class GameplayScene implements Screen {
         fireController.update();
         eventHandler.update();
         contactListener.sustainedContact();
+        lightController.update(contactListener.beginSmother());
 
         InputController input = InputController.getInstance();
 
@@ -1461,11 +1463,7 @@ public class GameplayScene implements Screen {
 //        System.out.println(camera.viewportWidth + ", " + camera.viewportHeight);
         float visibleW =  camera.viewportWidth/2*camera.zoom; //half of world visible, zoomed
         float visibleH = camera.viewportHeight/2*camera.zoom;
-//        System.out.println("actual height and width: " + height +", " + width);
-//        System.out.println(visibleW + ": W, H ;" + visibleH + ";; " + camera.zoom);
-//        System.out.println("gutters, top: " + fitViewport.getTopGutterHeight() + ", bottom: " + fitViewport.getBottomGutterHeight() + ", left: " + fitViewport.getLeftGutterWidth() + ", right: " + fitViewport.getRightGutterWidth());
-//        System.out.println("screen width and height " + fitViewport.getScreenWidth() + ", " + fitViewport.getScreenHeight() + " ;; now world: " + fitViewport.getWorldWidth() + ", " + fitViewport.getWorldHeight());
-//        System.out.println("cam viewports: " + camera.viewportWidth + ", " + camera.viewportHeight);
+
 
 
         camera.position.x = MathUtils.clamp(camera.position.x,
@@ -1970,6 +1968,8 @@ public class GameplayScene implements Screen {
         for (FloatingLight light : floatingLights){
             if (light.isOff()){
                 lightController.turnOffAmbientLight(light);
+            }else{
+                lightController.attachAmbientLight(light);
             }
         }
         lightController.render();
@@ -1989,7 +1989,7 @@ public class GameplayScene implements Screen {
         this.height = height;
         if (camera == null) {
             camera = new OrthographicCamera();
-            camera.zoom = 0.8f;
+            camera.zoom = 0.7f;
         }
         camera.setToOrtho( false, width, height );
 //        scale.x = width/bounds.width;

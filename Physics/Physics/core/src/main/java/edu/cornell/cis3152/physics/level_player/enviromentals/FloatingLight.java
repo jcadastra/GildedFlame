@@ -77,7 +77,7 @@ public class FloatingLight extends ObstacleSprite {
                         direction.nor().scl(speed * deltaTime);
                         position.add(direction);
                     }
-                    if (position.dst2(destination) < radius) {//stop moving
+                    if (position.dst2(destination) < 0.01f) {//stop moving
                         position = obstacle.getPosition();
                         destination = start.cpy();
                         start = position.cpy();
@@ -88,7 +88,7 @@ public class FloatingLight extends ObstacleSprite {
                 case OFF:
                     // Do nothing or flicker/dim if desired
                     offCounter--;
-                    if (offCounter < 0) {state = FloatingLightState.TRAVELING;}
+                    if (offCounter < 0) {state = FloatingLightState.CIRCULATING;}
                     break;
             }
 
