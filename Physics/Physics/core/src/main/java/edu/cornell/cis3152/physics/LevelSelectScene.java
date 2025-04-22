@@ -4,10 +4,12 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import edu.cornell.gdiac.util.ScreenListener;
@@ -49,110 +51,132 @@ public class LevelSelectScene implements Screen {
     }
 
     private void createBasicUI() {
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
         Texture chamberLabelTexture = new Texture(Gdx.files.internal("ui/chamber_sel.png"));
         Image chamberLabel = new Image(chamberLabelTexture);
-        chamberLabel.setSize(500, 100);
+        chamberLabel.setSize(screenWidth * 0.5f, screenHeight * 0.1f);
         chamberLabel.setPosition(
-            (Gdx.graphics.getWidth() - chamberLabel.getWidth()) / 2f,
-            Gdx.graphics.getHeight() - chamberLabel.getHeight() - 60
+            screenWidth * 0.25f,
+            screenHeight * 0.85f
         );
         stage.addActor(chamberLabel);
         Texture chapLableTexture = new Texture(Gdx.files.internal("ui/chap_title.png"));
         Image chapLabel = new Image(chapLableTexture);
-        chapLabel.setSize(250, 50);
+        chapLabel.setSize(screenWidth * 0.2f, screenHeight * 0.05f);
+        float verticalSpacing = screenHeight * 0.02f;
         chapLabel.setPosition(
-            (Gdx.graphics.getWidth() - chamberLabel.getWidth()) / 2f + 125,
-            Gdx.graphics.getHeight() - chamberLabel.getHeight() - 150
+            (screenWidth - screenWidth * 0.2f) / 2f,
+            chamberLabel.getY() - screenHeight * 0.05f - verticalSpacing
         );
         stage.addActor(chapLabel);
 
 
-        // Load door textures
-        Texture door1Texture = new Texture(Gdx.files.internal("ui/doors/door1.png"));
-        Texture door2Texture = new Texture(Gdx.files.internal("ui/doors/door2.png"));
-        Texture door3Texture = new Texture(Gdx.files.internal("ui/doors/door3.png"));
-        Texture door4Texture = new Texture(Gdx.files.internal("ui/doors/door4.png"));
-        Texture door5Texture = new Texture(Gdx.files.internal("ui/doors/door5.png"));
+        Texture[] doorTextures = new Texture[] {
+            new Texture(Gdx.files.internal("ui/doors/door1.png")),
+            new Texture(Gdx.files.internal("ui/doors/door2.png")),
+            new Texture(Gdx.files.internal("ui/doors/door3.png")),
+            new Texture(Gdx.files.internal("ui/doors/door4.png")),
+            new Texture(Gdx.files.internal("ui/doors/door5.png"))
+        };
 
-        // Create ImageButtons using these textures
-        Image door1 = new Image(door1Texture);
-        Image door2 = new Image(door2Texture);
-        Image door3 = new Image(door3Texture);
-        Image door4 = new Image(door4Texture); // not interactive
-        Image door5 = new Image(door5Texture); // not interactive
+        float doorWidth = screenWidth * 0.15f;
+        float doorHeight = screenHeight * 0.2f;
+        float spacing = screenWidth * 0.03f; //
+        float totalWidth = doorWidth * doorTextures.length + spacing * (doorTextures.length - 1);
+        int centerIndex = doorTextures.length / 2; // 2 for 5 doors
+        float startX = screenWidth / 2f - doorWidth / 3f - (centerIndex * (doorWidth + spacing));
+        float yPos = screenHeight * 0.185f;
 
-        float buttonWidth = 200;
-        float buttonHeight = 200; // Adjust based on your image
-        float spacing = 50;
+        for (int i = 0; i < doorTextures.length; i++) {
+            final int levelIndex = i + 1;
+            final Texture defaultTexture = doorTextures[i];
+            final Texture hoverTexture = (i < 3)
+                ? new Texture(Gdx.files.internal("ui/doors/door" + levelIndex + "_click.png"))
+                : defaultTexture;
 
-        float centerX = (Gdx.graphics.getWidth() / 2f - buttonWidth / 2f) + 325;
-        float startY = Gdx.graphics.getHeight() / 2f + 3 * buttonHeight / 2f - 30;
+            Image door = new Image(defaultTexture);
+            door.setSize(doorWidth, doorHeight);
+            door.setPosition(startX + i * (doorWidth + spacing), yPos);
 
-        // Place all doors on the same row horizontally
-        float yPosition = startY - 2 * (buttonHeight + spacing);
-        door1.setSize(buttonWidth, buttonHeight);
-        door1.setPosition(centerX - 800, startY - 2 * (buttonHeight + spacing));
-        door2.setSize(buttonWidth, buttonHeight);
-        door2.setPosition(centerX - 533, startY - 2 * (buttonHeight + spacing));
-        door3.setSize(buttonWidth, buttonHeight);
-        door3.setPosition(centerX - 266, startY - 2 * (buttonHeight + spacing));
+            if (i < 3) {
+                door.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+                    @Override
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                        selectedLevel = levelIndex;
+                        if (listener != null) {
+                            listener.exitScreen(LevelSelectScene.this, 1);
+                        }
+                        return true;
+                    }
 
+                    @Override
+                    public void enter(InputEvent event, float x, float y, int pointer, com.badlogic.gdx.scenes.scene2d.Actor fromActor) {
+                        ((Image) event.getListenerActor()).setDrawable(new Image(hoverTexture).getDrawable());
+                    }
 
-        door4.setSize(buttonWidth, buttonHeight);
-        door4.setPosition(centerX, yPosition);
+                    @Override
+                    public void exit(InputEvent event, float x, float y, int pointer, com.badlogic.gdx.scenes.scene2d.Actor toActor) {
+                        ((Image) event.getListenerActor()).setDrawable(new Image(defaultTexture).getDrawable());
+                    }
+                });
 
-        door5.setSize(buttonWidth, buttonHeight);
-        door5.setPosition(centerX + 266, yPosition);
-
-        // Interactive input only for first 3 doors
-        door1.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                selectedLevel = 1;
-                if (listener != null) {
-                    listener.exitScreen(LevelSelectScene.this, 1);
-                }
-                return true;
+                levels.add(door);
             }
-        });
 
-        door2.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                selectedLevel = 2;
-                if (listener != null) {
-                    listener.exitScreen(LevelSelectScene.this, 1);
-                }
-                return true;
-            }
-        });
-
-        door3.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                selectedLevel = 3;
-                if (listener != null) {
-                    listener.exitScreen(LevelSelectScene.this, 1);
-                }
-                return true;
-            }
-        });
-
-        // Store for controller highlighting (only interactive ones)
-        levels.add(door1);
-        levels.add(door2);
-        levels.add(door3);
-
-        if (inputController.isUsingController() && levels.notEmpty()) {
-            particleEngine = new ParticleEngine(levels.get(0));
+            stage.addActor(door);
         }
+        Texture l_arrow_text = new Texture(Gdx.files.internal("ui/l_arrow.png"));
+        Texture l_arrow_hov_text = new Texture(Gdx.files.internal("ui/l_arrow_click.png"));
+        Image l_arrow = new Image(l_arrow_text);
+        l_arrow.setSize(screenWidth * 0.05f, screenHeight * 0.05f);
+        l_arrow.setPosition(
+            screenWidth * 0.01f,
+            screenHeight * 0.25f
+        );
+        stage.addActor(l_arrow);
 
-        // Add all doors to stage
-        stage.addActor(door1);
-        stage.addActor(door2);
-        stage.addActor(door3);
-        stage.addActor(door4);
-        stage.addActor(door5);
+        Texture r_arrow_text = new Texture(Gdx.files.internal("ui/r_arrow.png"));
+        Texture r_arrow_hov_text = new Texture(Gdx.files.internal("ui/r_arrow_click.png"));
+        Image r_arrow = new Image(r_arrow_text);
+        r_arrow.setSize(screenWidth * 0.05f, screenHeight * 0.05f);
+        r_arrow.setPosition(
+            screenWidth * 0.94f,
+            screenHeight * 0.25f
+        );
+        stage.addActor(r_arrow);
+        final TextureRegionDrawable l_arrow_drawable = new TextureRegionDrawable(new TextureRegion(l_arrow_text));
+        final TextureRegionDrawable l_arrow_hover_drawable = new TextureRegionDrawable(new TextureRegion(l_arrow_hov_text));
+        final TextureRegionDrawable r_arrow_drawable = new TextureRegionDrawable(new TextureRegion(r_arrow_text));
+        final TextureRegionDrawable r_arrow_hover_drawable = new TextureRegionDrawable(new TextureRegion(r_arrow_hov_text));
+
+        l_arrow.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, com.badlogic.gdx.scenes.scene2d.Actor fromActor) {
+                ((Image) event.getListenerActor()).setDrawable(l_arrow_hover_drawable);
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, com.badlogic.gdx.scenes.scene2d.Actor toActor) {
+                ((Image) event.getListenerActor()).setDrawable(l_arrow_drawable);
+            }
+        });
+
+        r_arrow.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, com.badlogic.gdx.scenes.scene2d.Actor fromActor) {
+                ((Image) event.getListenerActor()).setDrawable(r_arrow_hover_drawable);
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, com.badlogic.gdx.scenes.scene2d.Actor toActor) {
+                ((Image) event.getListenerActor()).setDrawable(r_arrow_drawable);
+            }
+        });
+
+
+
+
     }
 
     private void updateLevelHighlight(){

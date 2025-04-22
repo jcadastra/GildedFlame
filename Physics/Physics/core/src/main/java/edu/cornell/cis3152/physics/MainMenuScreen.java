@@ -52,6 +52,9 @@ public class MainMenuScreen implements Screen {
     }
 
     private void createBasicUI() {
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
+
         BitmapFont font = new BitmapFont();
 
         Pixmap pixmap = new Pixmap(200, 60, Pixmap.Format.RGB888);
@@ -89,21 +92,22 @@ public class MainMenuScreen implements Screen {
         ImageButton contButt1 = new ImageButton(contButt);
         ImageButton settingsButt1 = new ImageButton(settingsButt);
 
-        imageButton.setSize(200, 60);
+        imageButton.setSize(screenWidth * 0.2f, screenHeight * 0.06f);
         imageButton.setPosition(
-            (Gdx.graphics.getWidth() / 2f - 200 / 2f) + 425,
-            Gdx.graphics.getHeight() / 2f + 30
-        );
-        contButt1.setSize(200, 60);
-        contButt1.setPosition(
-            (Gdx.graphics.getWidth() / 2f - 200 / 2f) + 425,
-            Gdx.graphics.getHeight() / 2f - 60
+            screenWidth * 0.69f,
+            screenHeight * 0.5f
         );
 
-        settingsButt1.setSize(200, 60);
+        contButt1.setSize(screenWidth * 0.2f, screenHeight * 0.06f);
+        contButt1.setPosition(
+            screenWidth * 0.69f,
+            screenHeight * 0.4f
+        );
+
+        settingsButt1.setSize(screenWidth * 0.2f, screenHeight * 0.06f);
         settingsButt1.setPosition(
-            (Gdx.graphics.getWidth() / 2f - 200 / 2f) + 425,
-            Gdx.graphics.getHeight() / 2f - 150
+            screenWidth * 0.69f,
+            screenHeight * 0.3f
         );
 
 
@@ -160,11 +164,11 @@ public class MainMenuScreen implements Screen {
         Texture topRightTexture = new Texture(Gdx.files.internal("ui/textbutt.png"));
         Image topRightImage = new Image(topRightTexture);
 
-        topRightImage.setSize(300, 150);
+        topRightImage.setSize(screenWidth * 0.3f, screenHeight * 0.2f);
 
         topRightImage.setPosition(
-            Gdx.graphics.getWidth() - topRightImage.getWidth()-60,
-            Gdx.graphics.getHeight() - topRightImage.getHeight()-80
+            screenWidth * 0.65f,
+            screenHeight * 0.65f
         );
 
         // Add the image actor to the stage
