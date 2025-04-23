@@ -239,7 +239,9 @@ public class CollisionController implements ContactListener {
                         moth.resetSmotherTimer();
                         moth.setState(EnemyState.SMOTHER);
                         beginSmother = true;
-                        beginSmother();
+                        //beginSmother();
+                    }else{
+                        beginSmother = false;
                     }
                 }
 
@@ -576,6 +578,8 @@ public class CollisionController implements ContactListener {
             Moth moth = (Moth) idX(bd1, bd2, Moth.class);
             if (moth.getState() != EnemyState.DAZED) {
                 moth.setState(EnemyState.OUT_OF_LIGHT);
+            }else {
+                beginSmother = false;
             }
 
             ContactKey key = new ContactKey(fix1, fix2);
@@ -657,6 +661,9 @@ public class CollisionController implements ContactListener {
             Moth moth = (Moth) idX(bd1, bd2, Moth.class);
             if (moth.getState() == EnemyState.SMOTHER) {
                 contact.setEnabled(false);
+                beginSmother = true;
+            }else{
+                beginSmother = false;
             }
         }
     }

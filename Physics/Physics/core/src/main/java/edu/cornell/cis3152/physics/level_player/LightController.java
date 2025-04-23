@@ -53,6 +53,7 @@ public class LightController {
     private Lighting.LightState torchLightState;
 
     private int numRays;
+    private float lightRadius;
 
     private float BOX_TO_WORLD = 32.0f;
 
@@ -124,6 +125,7 @@ public class LightController {
         // Create a separate camera for box2dlights
         this.camera = new OrthographicCamera(bounds.width, bounds.height);//Uses physic units
         this.camera.position.set(bounds.width/2.0f,bounds.height/2.0f,0);
+        lightRadius = 5f;
         camera.zoom = 0.7f;
         //this.camera.setToOrtho(false, bounds.width, bounds.height);
         camera.zoom=0.7f;
@@ -213,17 +215,21 @@ public class LightController {
 
     public void attachAmbientLight (ObstacleSprite sprite){
         PointLight light = lightPool.get(lightIndex);
-        lightAssignments.put(sprite.getObstacle().getBody(), light);
-        if (sprite.getClass()== FloatingLight.class){
-            light.setColor(Color.LIGHT_GRAY);
-            light.setColor(Color.LIGHT_GRAY.r,Color.LIGHT_GRAY.g,Color.LIGHT_GRAY.b,0.3f);
-            light.attachToBody(sprite.getObstacle().getBody());
-            light.setActive(true);
-            light.setSoft(true);
-            light.setContactFilter(CATEGORY_LIGHT,(short)0,
-                (short)CATEGORY_ENVIRONMENT);
-        }
-        lightIndex = (lightIndex + 1)%maxLights;
+        if (lightAssignments.get(sprite.getObstacle().getBody())== null){//check if it's already attached
+            System.out.println("attaching new light");
+            lightAssignments.put(sprite.getObstacle().getBody(), light);
+            if (sprite.getClass()== FloatingLight.class){
+                //light.setColor(Color.LIGHT_GRAY);
+                light.setColor(Color.LIGHT_GRAY.r,Color.LIGHT_GRAY.g,Color.LIGHT_GRAY.b,1f);
+                light.setDistance(1f);
+                light.attachToBody(sprite.getObstacle().getBody());
+                light.setActive(true);
+                light.setSoft(true);
+                light.setContactFilter(CATEGORY_LIGHT,(short)0,
+                    (short)CATEGORY_ENVIRONMENT);
+            }
+            lightIndex = (lightIndex + 1)%maxLights;
+    }
     }
 
     public void turnOffAmbientLight(ObstacleSprite sprite){
@@ -397,7 +403,7 @@ public class LightController {
     public void update(Boolean beginSmother){
         if (beginSmother){
             //torchLight.waver(flickerCount);
-            System.out.println("flickerCount"+flickerCount);
+            //System.out.println("flickerCount"+flickerCount);
             flickerCount--;
             if (flickerCount%60==0&&flickerCount>0){
                 torchLightState=Lighting.LightState.LIGHT_WAVER;
@@ -406,6 +412,11 @@ public class LightController {
             }
             if(flickerCount<=0){
                 torchLightState = Lighting.LightState.LIGHT_OFF;
+            }
+        }else{
+            if (torchLightState==Lighting.LightState.LIGHT_ON){
+                System.out.println("reset light radius");
+                torchLighting.setDistance(lightRadius);
             }
         }
     }

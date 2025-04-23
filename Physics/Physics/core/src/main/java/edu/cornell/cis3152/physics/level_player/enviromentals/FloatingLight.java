@@ -39,7 +39,7 @@ public class FloatingLight extends ObstacleSprite {
             this.speed = 2;
             this.state = FloatingLightState.CIRCULATING;
             destination = end;
-            obstacle = new WheelObstacle(position.x,position.y,radius);
+            obstacle = new WheelObstacle(position.x,position.y,1);
             obstacle.setPosition(position.x, position.y);
             obstacle.setDensity(0.0001f); // Set appropriate physical properties
             obstacle.setMass(0.001f);
@@ -71,18 +71,20 @@ public class FloatingLight extends ObstacleSprite {
                     Vector2 direction = destination.cpy().sub(position);
                     float distance = direction.len();
                     if (distance < travelThreshold) {
-                        position.set(destination);
+                        position = new Vector2(obstacle.getX(), obstacle.getY());
+                        destination = start.cpy();
+                        start = position.cpy();
                         state = FloatingLightState.OFF;
                     } else {
                         direction.nor().scl(speed * deltaTime);
                         position.add(direction);
                     }
-                    if (position.dst2(destination) < 0.01f) {//stop moving
-                        position = obstacle.getPosition();
-                        destination = start.cpy();
-                        start = position.cpy();
-                        state = FloatingLightState.OFF;
-                    }
+//                    if (position.dst2(destination) < 0.01f) {//stop moving
+//                        position = obstacle.getPosition();
+//                        destination = start.cpy();
+//                        start = position.cpy();
+//                        state = FloatingLightState.OFF;
+//                    }
                     break;
 
                 case OFF:
