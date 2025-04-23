@@ -129,7 +129,13 @@ public class CollisionController implements ContactListener {
             ObstacleSprite bd1 = (ObstacleSprite) body1.getUserData();
             ObstacleSprite bd2 = (ObstacleSprite) body2.getUserData();
 
-            if (isXandY(bd1, bd2, Fire.class, Fire.class) == 2) {
+            if (isX(bd1, bd2, Fire.class) == 2) {
+                return;
+            }
+            if (isX(bd1, bd2, Smoke.class) == 2) {
+                return;
+            }
+            if (isX(bd1, bd2, "rain") == 2) {
                 return;
             }
 

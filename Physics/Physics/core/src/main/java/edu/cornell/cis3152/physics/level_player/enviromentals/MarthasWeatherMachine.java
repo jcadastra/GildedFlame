@@ -29,6 +29,7 @@ public class MarthasWeatherMachine {
     private World world;
 
     private Stack<RainFlag> rainflags;
+    private Vector2 rainRestPos = new Vector2(-2,-2);
 
 
     public MarthasWeatherMachine(float physicsUnits, int rainFreq) {
@@ -75,20 +76,18 @@ public class MarthasWeatherMachine {
                 return;
             }
 
-            newDrop.getObstacle().setPosition(random.nextInt(32) + random.nextFloat(), 18);
+            newDrop.getObstacle().setPosition(random.nextInt(40) + random.nextFloat(), 18);
             newDrop.getObstacle().setLinearVelocity(new Vector2(0,-5));
         }
     }
 
     private ObstacleSprite getFreeRain() {
-        System.out.println(rainDrops.size());
-        for (ObstacleSprite os : rainDrops) {
-            Vector2  ref = new Vector2(-2,-2);
-            if (Objects.equals(os.getObstacle().getPosition(), ref)) {
-                return os;
+        for (ObstacleSprite rainDrop : rainDrops) {
+            if (rainDrop.getObstacle().getPosition().epsilonEquals(rainRestPos, 1e-3f) || rainDrop.getObstacle().getPosition().y < rainRestPos.y) {
+                return rainDrop;
             }
         }
-        WheelObstacle rainTemp = new WheelObstacle(-2,-2,.5f);
+        WheelObstacle rainTemp = new WheelObstacle(rainRestPos.x, rainRestPos.y,.5f);
         rainTemp.setBodyType(BodyType.DynamicBody);
         rainTemp.setSensor(true);
         rainTemp.setGravityScale(0);
@@ -96,7 +95,6 @@ public class MarthasWeatherMachine {
         ObstacleSprite rain = new ObstacleSprite(rainTemp);
         rain.getObstacle().setUserData(rain);
         rain.getObstacle().setPhysicsUnits(physicsUnits);
-
         rainDrops.add(rain);
         rainflags.add(new RainFlag("addRain" , rain));
         return rain;
@@ -104,7 +102,7 @@ public class MarthasWeatherMachine {
 
     public void resetRain(ObstacleSprite rain) {
         rain.getObstacle().setLinearVelocity(Vector2.Zero);
-        rain.getObstacle().setPosition(-2,-2);
+        rain.getObstacle().setPosition(rainRestPos);
     }
 
     public boolean inRain(ObstacleSprite sprite) {

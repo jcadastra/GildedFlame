@@ -616,7 +616,7 @@ public class GameplayScene implements Screen {
         float units = height / bounds.height;
         phyiscsUnits = units;
 
-        weatherMachine = new MarthasWeatherMachine(phyiscsUnits,15);
+        weatherMachine = new MarthasWeatherMachine(phyiscsUnits,10);
         JsonValue levelData = directory.getEntry(levelName,JsonValue.class);
         JsonValue levelInfo = directory.getEntry(levelInfoName, JsonValue.class);
 

@@ -11,11 +11,11 @@ import edu.cornell.gdiac.physics2.WheelObstacle;
 public class Smoke extends ObstacleSprite {
     private Fire source;
     private int lifeLimit;
+    private int storedLifeLimit;
     public Smoke(float x,float y, float units, Vector2 velocity) {
         super();
-
         float s = 0.3f;
-        lifeLimit = 120;
+        lifeLimit = storedLifeLimit = 120;
 
         obstacle = new WheelObstacle(x, y, s);
 
@@ -28,6 +28,7 @@ public class Smoke extends ObstacleSprite {
         obstacle.setDensity(0.001f);
         obstacle.setVX(velocity.x);
         obstacle.setVY(velocity.y);
+
     }
 
     public void setSource(Fire f) {
@@ -39,12 +40,9 @@ public class Smoke extends ObstacleSprite {
 
     public void updateLifeSpan() {
         lifeLimit--;
-        if (lifeLimit <= 0) {
-            dispose();
-        }
     }
 
-    public void dispose() {
-        obstacle.markRemoved(true);
-    }
+    public int getLifeSpan() {return lifeLimit;}
+    public void resetLifeSpan() {lifeLimit = storedLifeLimit;}
+
 }

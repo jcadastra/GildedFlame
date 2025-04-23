@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.ShortArray;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
@@ -45,6 +46,7 @@ public class FireController {
     private EarClippingTriangulator cutter;
     private Random rand;
     private int fireID = 1;
+    private Vector2 smokeRestPos = new Vector2(-2,-2);
 
     public boolean isBodyOnFire(EnhancedObstacleSprite s) {
         return nFireDiagrams.getOrDefault(s, null) != null;
@@ -117,8 +119,6 @@ public class FireController {
                         } else if (fire.getStrength() < 1) {
                             fire.modifStrength(.02f);
                         }
-//                        System.out.println(
-//                            fire.getStrength() + ", " + fire.fireID + ", " + object.getName());
 
                         if (fire.getStrength() <= .01) {
                             fireFlags.add(new FireFlag("killFire", fire));
@@ -155,6 +155,10 @@ public class FireController {
 
     private void updateSmoke() {
         for (Smoke smoke : allSmoke) {
+            if (smoke.getObstacle().getPosition().epsilonEquals(smokeRestPos,(float) 1e-3)) {
+                continue;
+            }
+            smoke.updateLifeSpan();
             Obstacle smokeObstacle = smoke.getObstacle();
             float currentVX = smokeObstacle.getVX();
             float newVX = (float) (currentVX + Math.signum(currentVX) * -.01);
@@ -164,7 +168,10 @@ public class FireController {
                 smokeObstacle.setVX(newVX);
             }
 
-            smoke.updateLifeSpan();
+            if (smoke.getLifeSpan() < 0) {
+                smokeObstacle.setLinearVelocity(Vector2.Zero);
+                smokeObstacle.setPosition(smokeRestPos);
+            }
         }
     }
 
@@ -389,11 +396,22 @@ public class FireController {
     }
 
     public void spawnSmoke(Fire fire) {
+        for (Smoke smoke : allSmoke) {
+            if (smoke.getObstacle().getPosition().epsilonEquals(smokeRestPos, 1e-3f)) {
+                smoke.getObstacle().setPosition(fire.getObstacle().getPosition().x, fire.getObstacle().getPosition().y + fire.getRadius()/1.5f);
+                smoke.getObstacle().setLinearVelocity(new Vector2((rand.nextFloat()-.5f) * 2,1f));
+                smoke.resetLifeSpan();
+                smoke.setSource(fire);
+                return;
+            }
+        }
+
         Smoke smoke = new Smoke(fire.getObstacle().getPosition().x, fire.getObstacle().getPosition().y + fire.getRadius()/1.5f,
             fire.getObstacle().getPhysicsUnits(), new Vector2((rand.nextFloat()-.5f) * 2,1f));
         smoke.getObstacle().setName("smoke");
         smoke.setSource(fire);
         ObstacleSprite smokeObj = new ObstacleSprite(smoke.getObstacle());
+        smokeObj.getObstacle().setUserData(smokeObj);
         smokeObj.setTexture(assetDirectory.getEntry("platform-flame-smoke", Texture.class));
         fireFlags.push(new FireFlag("spawnSmoke", fire, smokeObj));
         allSmoke.add(smoke);
