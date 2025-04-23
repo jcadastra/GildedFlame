@@ -50,6 +50,7 @@ import edu.cornell.cis3152.physics.level_player.utils.Event;
 import edu.cornell.cis3152.physics.level_player.utils.FireFlag;
 import edu.cornell.cis3152.physics.level_player.utils.ObstacleGroup;
 
+import edu.cornell.cis3152.physics.level_player.utils.RainFlag;
 import edu.cornell.cis3152.physics.level_player.utils.TweenElement;
 
 import java.util.*;
@@ -192,6 +193,7 @@ public class GameplayScene implements Screen {
     protected FireController fireController;
     protected EventHandler eventHandler;
     protected SoundEngine soundEngine;
+    protected MarthasWeatherMachine weatherMachine;
     protected HashSet<Rune> runeSet;
     protected PooledList<TweenElement<Float>> tweenedMovmentObjectsFloat;
     protected PooledList<TweenElement<Vector2>> tweenedMovmentObjectsVec2;
@@ -614,6 +616,7 @@ public class GameplayScene implements Screen {
         float units = height / bounds.height;
         phyiscsUnits = units;
 
+        weatherMachine = new MarthasWeatherMachine(phyiscsUnits,15);
         JsonValue levelData = directory.getEntry(levelName,JsonValue.class);
         JsonValue levelInfo = directory.getEntry(levelInfoName, JsonValue.class);
 
@@ -1268,10 +1271,12 @@ public class GameplayScene implements Screen {
      */
     public void update(float dt) {
         soundEngine.tendToMusicLoop();
+
         updateRunes(dt);
         supplementaryCollisionActions();
         supplementaryFireActions();
         supplementaryEventActions(dt);
+        supplementaryRainActions();
         updateTweenedMovementObjectsVec2(dt);
         updateTweenedMovementObjectsFloat(dt);
 
@@ -1289,7 +1294,8 @@ public class GameplayScene implements Screen {
         }
 
         torch.update();
-        fireController.update();
+        weatherMachine.update(world);
+        fireController.update(weatherMachine);
         eventHandler.update();
         contactListener.sustainedContact();
 
@@ -1565,6 +1571,9 @@ public class GameplayScene implements Screen {
                 case "queueFailure":
                     queueFailure = true;
                     break;
+                case "resetRain":
+                    weatherMachine.resetRain(todo_action.getSubject());
+                    break;
                 case "debugKillObj":
                     // not safe operation, for now will kill game on reload
                     world.destroyBody(todo_action.getSubject().getObstacle().getBody());
@@ -1752,6 +1761,20 @@ public class GameplayScene implements Screen {
 
         for (Button button : toggleButtons) {
             button.toggleButton(world);
+        }
+    }
+
+    private void supplementaryRainActions () {
+        Stack<RainFlag> todos = weatherMachine.getRainflags();
+        while (!todos.isEmpty()) {
+            RainFlag todo = todos.pop();
+            switch (todo.getName()) {
+                case "addRain":
+//                    todo.getSubject().setTexture(directory.getEntry("platform-torch", Texture.class));
+
+                    addSprite(todo.getSubject());
+                    break;
+            }
         }
     }
 

@@ -2,6 +2,7 @@ package edu.cornell.cis3152.physics.level_player;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import edu.cornell.cis3152.physics.level_player.enviromentals.*;
@@ -95,7 +96,7 @@ public class FireController {
      * runs comparisons on all the values and dspreads fire/marks objects for destruction as needed/
      * creates Smoke
      */
-    public void update() {
+    public void update(MarthasWeatherMachine weatherMachine) {
         for (EnhancedObstacleSprite object : firesOnShape.keySet()) {
             ObstacleMaterial obstacleMaterial = object.getMaterial();
                 for (Fire fire : firesOnShape.get(object)) {
@@ -109,17 +110,19 @@ public class FireController {
                             }
                         }
 
-//                        if (fire.getInRain()) {
-//                            fire.modifStrength(-.01f);
-//                        } else if (fire.getStrength() < 1) {
-//                            fire.modifStrength(.02f);
-//                        }
-////                        System.out.println(
-////                            fire.getStrength() + ", " + fire.fireID + ", " + object.getName());
-//
-//                        if (fire.getStrength() <= .01) {
-//                            fireFlags.add(new FireFlag("killFire", fire));
-//                        }
+                        fire.setInRain(weatherMachine.inRain(fire));
+
+                        if (fire.getInRain()) {
+                            fire.modifStrength(-.01f);
+                        } else if (fire.getStrength() < 1) {
+                            fire.modifStrength(.02f);
+                        }
+//                        System.out.println(
+//                            fire.getStrength() + ", " + fire.fireID + ", " + object.getName());
+
+                        if (fire.getStrength() <= .01) {
+                            fireFlags.add(new FireFlag("killFire", fire));
+                        }
                     }
             }
         }

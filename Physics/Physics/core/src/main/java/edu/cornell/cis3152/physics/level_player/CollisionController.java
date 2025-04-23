@@ -2,6 +2,7 @@ package edu.cornell.cis3152.physics.level_player;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import edu.cornell.cis3152.physics.level_player.enemies.*;
 import edu.cornell.cis3152.physics.level_player.enemies.Enemy.EnemyState;
@@ -132,8 +133,12 @@ public class CollisionController implements ContactListener {
                 return;
             }
 
-            if (isXandY(bd1, bd2, Fire.class, RainBlock.class) == 1) {
-                ((Fire) idX(bd1, bd2, Fire.class)).setInRain(true);
+            if (isX(bd1, bd2, "rain") == 1) {
+                ObstacleSprite nonRain = bd1.getObstacle().getName().contains("rain") ? bd2 : bd1;
+                if ((nonRain.getObstacle().getBodyType() == BodyType.KinematicBody || nonRain.getObstacle().getBodyType() == BodyType.StaticBody)
+                    && !nonRain.getObstacle().isSensor()) {
+                    collisionFlags.add(new CollisionFlag("resetRain",idX(bd1, bd2, "rain") ));
+                }
             }
 
 //            if (isXandY(bd1,bd2,Traci.class,EnhancedObstacleSprite.class) == 1) {
@@ -532,10 +537,6 @@ public class CollisionController implements ContactListener {
             ((Rune) idX(bd1,bd2,Rune.class)).subInLight();
             ContactKey key = new ContactKey(fix1, fix2);
             sustainedContacts.remove(key);
-        }
-
-        if (isXandY(bd1, bd2, Fire.class, RainBlock.class) == 1) {
-            ((Fire) idX(bd1, bd2, Fire.class)).setInRain(false);
         }
 
         /**

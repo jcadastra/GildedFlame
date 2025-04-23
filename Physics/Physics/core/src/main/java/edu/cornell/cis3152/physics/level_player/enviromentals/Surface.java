@@ -75,6 +75,7 @@ public class Surface extends ObstacleSprite {
         }
 
         // Build triangulated mesh using original visual points
+        // TODO: pull out the triangulator to prevent from repeated accessing?
         Poly2 poly = new Poly2();
         PolyTriangulator triangulator = new PolyTriangulator();
         triangulator.set(visualPoints);
