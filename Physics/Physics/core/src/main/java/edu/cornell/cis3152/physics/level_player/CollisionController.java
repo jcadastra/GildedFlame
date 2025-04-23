@@ -267,7 +267,7 @@ public class CollisionController implements ContactListener {
             if (isXandY(bd1, bd2, Lighting.class, Moth.class) == 1) {
                 Lighting light = (Lighting) idX(bd1, bd2, Lighting.class);
                 Moth moth = (Moth) idX(bd1, bd2, Moth.class);
-                if (moth.getState() != EnemyState.JUMP && moth.getState() != EnemyState.SMOTHER && moth.getState() != EnemyState.DAZED && moth.getState() != EnemyState.ATTACK && moth.getState() != EnemyState.JUMP) {
+                if (moth.getState() != EnemyState.JUMP && moth.getState() != EnemyState.SMOTHER && moth.getState() != EnemyState.DAZED && moth.getState() != EnemyState.ATTACK && moth.getState() != EnemyState.TRANCE) {
                     moth.setState(EnemyState.IN_LIGHT);
 
                     float lx = light.getObstacle().getX();
@@ -488,7 +488,15 @@ public class CollisionController implements ContactListener {
                 collisionFlags.push(new CollisionFlag("traciAirborne", bd1 instanceof Avatar ? fix2 : fix1));
             }
         }
+        if (isXandY (bd1,bd2, "platform", Enemy.class) == 1){
+            Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
+            enemy.setGrounded(false);
+        }
 
+        if (isXandY (bd1,bd2, "floor", Enemy.class) == 1){
+            Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
+            enemy.setGrounded(false );
+        }
         /**
          * Totem and Light collision:
          * When the totem leaves the light radius, it will go to the CD stage for FreezeTimer seconds, then it
