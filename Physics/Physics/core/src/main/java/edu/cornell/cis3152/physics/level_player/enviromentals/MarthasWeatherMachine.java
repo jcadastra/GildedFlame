@@ -87,14 +87,14 @@ public class MarthasWeatherMachine {
                 return rainDrop;
             }
         }
-        WheelObstacle rainTemp = new WheelObstacle(rainRestPos.x, rainRestPos.y,.5f);
+        WheelObstacle rainTemp = new WheelObstacle(rainRestPos.x, rainRestPos.y,.25f);
         rainTemp.setBodyType(BodyType.DynamicBody);
+        rainTemp.setPhysicsUnits(physicsUnits);
         rainTemp.setSensor(true);
         rainTemp.setGravityScale(0);
         rainTemp.setName("rain");
         ObstacleSprite rain = new ObstacleSprite(rainTemp);
         rain.getObstacle().setUserData(rain);
-        rain.getObstacle().setPhysicsUnits(physicsUnits);
         rainDrops.add(rain);
         rainflags.add(new RainFlag("addRain" , rain));
         return rain;
