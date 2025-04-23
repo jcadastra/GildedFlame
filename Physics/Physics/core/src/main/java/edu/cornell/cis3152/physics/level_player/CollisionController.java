@@ -1,5 +1,6 @@
 package edu.cornell.cis3152.physics.level_player;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
@@ -229,20 +230,18 @@ public class CollisionController implements ContactListener {
             if (isXandY(bd1, bd2, Moth.class, Torch.class) == 1) {
                 Moth moth = (Moth) idX(bd1, bd2, Moth.class);
                 Torch torch = (Torch) idX(bd1, bd2, Torch.class);
-                if (moth.getState() != EnemyState.DAZED && torch.canBePickedUp()) {
+                if (moth.getState() != EnemyState.DAZED && !Avatar.getHasTorch()) {
                     float mothX  = moth.getObstacle().getBody().getPosition().x;
                     float torchX = torch.getObstacle().getBody().getPosition().x;
-
-                    float threshold = moth.getWidth() * 0.5f;
-
-                    if (Math.abs(mothX - torchX) <= threshold) {
-                        moth.resetSmotherTimer();
-                        moth.setState(EnemyState.SMOTHER);
-                        beginSmother = true;
-                        beginSmother();
-                    }
+                    moth.resetSmotherTimer();
+                    moth.setState(EnemyState.SMOTHER);
+                    beginSmother = true;
+                    beginSmother();
+                } else if (moth.getState() != EnemyState.DAZED && Avatar.getHasTorch()) {
+                    moth.setState(EnemyState.CD);
+                } else {
+                    // still stay in the smother state;
                 }
-
             }
 
             if (isXandY(bd1, bd2, Moth.class, Moth.class) == 2) {
@@ -336,7 +335,6 @@ public class CollisionController implements ContactListener {
             }
 
             if (isX(bd1, bd2, Avatar.class) == 1 && isX(bd1,bd2,"goalDoor") == 1) {
-                System.out.println("detected collision");
                 ContactKey key = new ContactKey(fix1, fix2);
                 sustainedContacts.put(key, -1);
             }
@@ -575,7 +573,8 @@ public class CollisionController implements ContactListener {
         if (isXandY(bd1, bd2, Moth.class, Torch.class) == 1) {
             Moth moth = (Moth) idX(bd1, bd2, Moth.class);
             if (moth.getState() != EnemyState.DAZED) {
-                moth.setState(EnemyState.OUT_OF_LIGHT);
+
+                moth.setState(EnemyState.IN_LIGHT);
             }
 
             ContactKey key = new ContactKey(fix1, fix2);
@@ -634,14 +633,15 @@ public class CollisionController implements ContactListener {
 
         if (isXandY(bd1, bd2, Moth.class, Torch.class) == 1) {
             Moth moth = (Moth) idX(bd1, bd2, Moth.class);
-            if (moth.getState() == EnemyState.DAZED) {
+            if (moth.getState() == EnemyState.DAZED || moth.getState() == EnemyState.SMOTHER || moth.getState() == EnemyState.JUMP) {
                 contact.setEnabled(false);
             }
         }
 
+
         if (isXandY(bd1, bd2, Moth.class, Avatar.class) == 1) {
             Moth moth = (Moth) idX(bd1, bd2, Moth.class);
-            if (moth.getState() == EnemyState.DAZED) {
+            if (moth.getState() == EnemyState.DAZED ) {
                 contact.setEnabled(false);
             }
         }
@@ -653,12 +653,12 @@ public class CollisionController implements ContactListener {
             }
         }
 
-        if (isXandY(bd1, bd2, Moth.class, Torch.class) == 1) {
-            Moth moth = (Moth) idX(bd1, bd2, Moth.class);
-            if (moth.getState() == EnemyState.SMOTHER) {
-                contact.setEnabled(false);
-            }
-        }
+//        if (isXandY(bd1, bd2, Moth.class, Torch.class) == 1) {
+//            Moth moth = (Moth) idX(bd1, bd2, Moth.class);
+//            if (moth.getState() == EnemyState.SMOTHER || moth.getState() == EnemyState.JUMP) {
+//                contact.setEnabled(false);
+//            }
+//        }
     }
 
     private int isXandY(ObstacleSprite a, ObstacleSprite b, String x, String y) {

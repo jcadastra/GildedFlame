@@ -1,10 +1,13 @@
 package edu.cornell.cis3152.physics.level_player.enemies;
 
 import box2dLight.Light;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Fire;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Lighting;
@@ -16,6 +19,8 @@ import edu.cornell.gdiac.graphics.SpriteBatch;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
 
 public class Moth extends Enemy {
+    public static final short LIGHT_BIT = 0x0002;
+    private boolean enteredDazed = false;
     public static final int FRAME_SIZE = 500;
     // Frame counts
     public static final int TOTAL_ATTACK_FRAMES = 1;
@@ -23,12 +28,12 @@ public class Moth extends Enemy {
     public static final int TOTAL_IN_LIGHT_FRAMES = 4; // same as frustrated
     public static final int TOTAL_OUT_OF_LIGHT_FRAMES = 6;
     public static final int TOTAL_JUMP_FRAMES = 1;
-    private static final int TOTAL_TRANCE_FRAMES = 4;
     public static final int TOTAL_SMOTHER_FRAMES = 6;
     public static final int TOTAL_CD_FRAMES = 18;
     public static final int TOTAL_DAZED_FRAMES = 4;
     public static final int TOTAL_FRUSTRATED_FRAMES = 4;
     public static final int TOTAL_DUST_FRAMES = 8;
+    private static final int TOTAL_TRANCE_FRAMES = 4;
     // Frame durations
     private static final int ATTACK_FRAME_DURATION = 12;
     private static final int ANGRY_FRAME_DURATION = 12;
@@ -65,6 +70,7 @@ public class Moth extends Enemy {
     private final Timer dazedTimer;
     private final Timer tranceTimer;
     float DETECTION_DISTANCE = 8;
+    Vector2 torchPos;
     private int frameCount = 0;
     private int frameIndex = 0;
     private int dustCount = 0;
@@ -73,14 +79,9 @@ public class Moth extends Enemy {
     private float initialY;
     private boolean doOnceAttack = true;
     private EnemyState nextFrameState;
-    private boolean doNextFrameState = false;
-
-    Vector2 torchPos;
-
+    private final boolean doNextFrameState = false;
     private boolean hasJumped = false;
-    private void setHasJumped(boolean val) {
-        hasJumped = val;
-    }
+
     public Moth(int id, float units, JsonValue value, AssetDirectory directory, Vector2 position) {
         super(id, units, value, directory, position);
         rr = null;
@@ -105,6 +106,10 @@ public class Moth extends Enemy {
         dazedTimer = new Timer(data.getInt("dazedTimer"));
     }
 
+    private void setHasJumped(boolean val) {
+        hasJumped = val;
+    }
+
     private void resetFrames() {
         frameCount = 0;
         frameIndex = 0;
@@ -123,10 +128,10 @@ public class Moth extends Enemy {
         }
     }
 
-    private void updateDustFrame(){
+    private void updateDustFrame() {
         dustCount++;
         dustIndex = (dustCount / DUST_FRAME_DURATION) % TOTAL_DUST_FRAMES;
-        if (dustCount >= DUST_FRAME_DURATION * TOTAL_DUST_FRAMES){
+        if (dustCount >= DUST_FRAME_DURATION * TOTAL_DUST_FRAMES) {
             dustCount = 0;
         }
 
@@ -221,19 +226,19 @@ public class Moth extends Enemy {
         updateFrame(IN_LIGHT_FRAME_DURATION, TOTAL_IN_LIGHT_FRAMES);
         resetAttackTimer();
         if (rr != null) {
-            System.out.println("rr.targetObject: " + ((ObstacleSprite) rr.targetObject).getObstacle().getName());
-            System.out.println(((ObstacleSprite) rr.targetObject).getObstacle().isSensor());
-            if (rr.targetObject instanceof Torch && !Avatar.getHasTorch()){
+            if (rr.targetObject instanceof Torch && !Avatar.getHasTorch()) {
                 setState(EnemyState.TRANCE);
                 resetTranceTimer();
-            } else if (rr.targetObject instanceof Avatar) {
+            } else if (rr.targetObject instanceof Avatar && Avatar.getHasTorch()) {
                 setState(EnemyState.CD);
-            } else if (rr.targetObject instanceof Fire){
+            } else if (rr.targetObject instanceof Fire) {
                 setState(EnemyState.TRANCE);
             } else {
-                setState(EnemyState.FRUSTRATED);
+//                setState(EnemyState.FRUSTRATED);
+                stop();
             }
         } else {
+//            setState(EnemyState.FRUSTRATED);
             System.out.println("rr is null");
             stop();
         }
@@ -244,7 +249,6 @@ public class Moth extends Enemy {
         if (rr == null || !(rr.targetObject instanceof Avatar)) {
             setState(EnemyState.OUT_OF_LIGHT);
         } else {
-            System.out.println(rr.targetObject);
             if (isAttackTimerZero()) {
                 setState(EnemyState.ATTACK);
             } else { // loops through cd state
@@ -303,12 +307,23 @@ public class Moth extends Enemy {
     @Override
     public void trance() {
         updateFrame(TRANCE_FRAME_DURATION, TOTAL_TRANCE_FRAMES);
-        if (isTranceTimerZero()){
-            setState(EnemyState.JUMP);
+        if (rr != null){
+            if (rr.targetObject instanceof Torch){
+                if (isTranceTimerZero()) {
+                    setState(EnemyState.JUMP);
+                } else {
+                    decrementTranceTimer();
+                    stop();
+                }
+            }
+            else {
+                System.out.println("LOST SIGHT OF TORCH");
+                setState(EnemyState.IN_LIGHT);
+            }
         } else {
-            decrementTranceTimer();
-            stop();
+            System.out.println("rr is null: 324");
         }
+
 
     }
 
@@ -319,25 +334,26 @@ public class Moth extends Enemy {
         if (hasJumped) {
             return;
         }
-            if (rr != null && rr.targetObject instanceof Torch){
+        if (rr != null) {
+            if (rr.targetObject instanceof Torch){
                 Torch torch = (Torch) rr.targetObject;
                 torchPos = torch.getObstacle().getPosition();
-            } else {
-                if (rr == null) {
-                    System.out.println("null check");
-                } else {
-                }
             }
-            body.setType(BodyDef.BodyType.DynamicBody);
-            body.setAwake(true);
-            body.setGravityScale(0.5f);
-            float jumpVy  = 3f;
-            float gEff    = Math.abs(body.getWorld().getGravity().y * body.getGravityScale());
-            float T       = (2f * jumpVy) / gEff;
-            float dx      = torchPos.x - body.getPosition().x;
-            float jumpVx  = dx / T;
-            body.setLinearVelocity(jumpVx, jumpVy);
-            setHasJumped(true);
+        } else {
+            System.out.println("null check");
+            setState(EnemyState.IN_LIGHT);
+
+        }
+        body.setType(BodyDef.BodyType.DynamicBody);
+        body.setAwake(true);
+        body.setGravityScale(0.5f);
+        float jumpVy = 3f;
+        float gEff = Math.abs(body.getWorld().getGravity().y * body.getGravityScale());
+        float T = (2f * jumpVy) / gEff;
+        float dx = torchPos.x - body.getPosition().x;
+        float jumpVx = dx / T;
+        body.setLinearVelocity(jumpVx, jumpVy);
+        setHasJumped(true);
     }
 
     @Override
@@ -352,26 +368,47 @@ public class Moth extends Enemy {
         }
     }
 
+
+    public void onEnterDazed() {
+        Body b = obstacle.getBody();
+        for (Fixture f : b.getFixtureList()) {
+            Filter filter = f.getFilterData();
+            // remove the LIGHT_BIT so moth no longer collides with lighting
+            filter.maskBits &= ~LIGHT_BIT;
+            f.setFilterData(filter);
+        }
+    }
     @Override
     public void dazed() {
-        Body body = obstacle.getBody();
+        if (!enteredDazed) {
+            onEnterDazed();
+            enteredDazed = true;
+        }
 //        resetFrames();
         if (isDazedTimerZero()) {
+            Body b = obstacle.getBody();
+            for (Fixture f : b.getFixtureList()) {
+                Filter filter = f.getFilterData();
+                // put the LIGHT_BIT back so moth can collide with lighting again
+                filter.maskBits |= LIGHT_BIT;
+                f.setFilterData(filter);
+            }
+
             setState(EnemyState.OUT_OF_LIGHT);
             onExitDazed();
             return;
         }
+        Body body = obstacle.getBody();
         obstacle.setBodyType(BodyDef.BodyType.DynamicBody);
         updateFrame(DAZED_FRAME_DURATION, TOTAL_DAZED_FRAMES);
         body.setGravityScale(1.0f);
         Vector2 vel = body.getLinearVelocity();
         body.setLinearVelocity(0f, vel.y);
         decrementDazedTimer();
-
     }
 
     private void onExitDazed() {
-        if (rr != null && rr.targetObject instanceof Torch && ((Torch)rr.targetObject).canBePickedUp()) {
+        if (rr != null && rr.targetObject instanceof Torch && ((Torch) rr.targetObject).canBePickedUp()) {
             resetSmotherTimer();
             setState(EnemyState.SMOTHER);
             return;
@@ -384,8 +421,15 @@ public class Moth extends Enemy {
 
     @Override
     public void frustrated() {
-            stop();
-            updateFrame(FRUSTRATED_FRAME_DURATION, TOTAL_FRUSTRATED_FRAMES);
+        if (rr != null) {
+            if (rr.targetObject instanceof Avatar && Avatar.getHasTorch()) {
+                setState(EnemyState.CD);
+            } else {
+                System.out.print(rr.targetObject);
+            }
+        }
+        stop();
+        updateFrame(FRUSTRATED_FRAME_DURATION, TOTAL_FRUSTRATED_FRAMES);
     }
 
     private void drawAnimation(SpriteBatch batch, Texture tex, int frame, float drawX, float drawY, boolean flipX) {
@@ -415,7 +459,7 @@ public class Moth extends Enemy {
                 drawAnimation(batch, cdAnimationTexture, frameIndex, drawX, drawY, flipX);
                 break;
             case ATTACK:
-                if (doOnceAttack){
+                if (doOnceAttack) {
                     initialX = drawX;
                     initialY = drawY;
                     doOnceAttack = false;
