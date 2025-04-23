@@ -1,15 +1,19 @@
 package edu.cornell.cis3152.physics.level_player.enemies;
 
+import box2dLight.Light;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.utils.JsonValue;
+import edu.cornell.cis3152.physics.level_player.enviromentals.Fire;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Lighting;
+import edu.cornell.cis3152.physics.level_player.enviromentals.Smoke;
 import edu.cornell.cis3152.physics.level_player.player.Torch;
 import edu.cornell.cis3152.physics.level_player.player.Avatar;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.graphics.SpriteBatch;
+import edu.cornell.gdiac.physics2.ObstacleSprite;
 
 public class Moth extends Enemy {
     public static final int FRAME_SIZE = 500;
@@ -68,6 +72,8 @@ public class Moth extends Enemy {
     private float initialX;
     private float initialY;
     private boolean doOnceAttack = true;
+    private EnemyState nextFrameState;
+    private boolean doNextFrameState = false;
 
     Vector2 torchPos;
 
@@ -215,26 +221,30 @@ public class Moth extends Enemy {
         updateFrame(IN_LIGHT_FRAME_DURATION, TOTAL_IN_LIGHT_FRAMES);
         resetAttackTimer();
         if (rr != null) {
-            if (rr.targetObject instanceof Torch && ((Torch) rr.targetObject).canBePickedUp()) {
+            System.out.println("rr.targetObject: " + ((ObstacleSprite) rr.targetObject).getObstacle().getName());
+            System.out.println(((ObstacleSprite) rr.targetObject).getObstacle().isSensor());
+            if (rr.targetObject instanceof Torch && !Avatar.getHasTorch()){
                 setState(EnemyState.TRANCE);
                 resetTranceTimer();
             } else if (rr.targetObject instanceof Avatar) {
                 setState(EnemyState.CD);
+            } else if (rr.targetObject instanceof Fire){
+                setState(EnemyState.TRANCE);
             } else {
-//                System.out.println("Frustrated");
                 setState(EnemyState.FRUSTRATED);
             }
         } else {
+            System.out.println("rr is null");
             stop();
-//            System.out.println("rr = null");
         }
     }
 
     @Override
     public void cd() {
-        if (rr == null) {
+        if (rr == null || !(rr.targetObject instanceof Avatar)) {
             setState(EnemyState.OUT_OF_LIGHT);
         } else {
+            System.out.println(rr.targetObject);
             if (isAttackTimerZero()) {
                 setState(EnemyState.ATTACK);
             } else { // loops through cd state
@@ -280,6 +290,7 @@ public class Moth extends Enemy {
     @Override
     public void out_of_light() {
         setSpeed(2.0f);
+        resetTranceTimer();
         updateFrame(OUT_OF_LIGHT_FRAME_DURATION, TOTAL_OUT_OF_LIGHT_FRAMES);
         if (rr != null && !Float.isNaN(rr.targetDistance)) {
             if (rr.targetDistance < DETECTION_DISTANCE && rr.targetObject instanceof Lighting) {
@@ -306,9 +317,6 @@ public class Moth extends Enemy {
         updateFrame(JUMP_FRAME_DURATION, TOTAL_JUMP_FRAMES);
         Body body = obstacle.getBody();
         if (hasJumped) {
-            if (isGrounded()){
-                System.out.println("HERE");
-            }
             return;
         }
             if (rr != null && rr.targetObject instanceof Torch){

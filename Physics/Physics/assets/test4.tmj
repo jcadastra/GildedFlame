@@ -1,4 +1,12 @@
 { "compressionlevel":-1,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"json",
+         "target":"..\/..\/..\/..\/..\/..\/OneDrive\/Desktop\/qq.tmj"
+        }
+    },
  "height":18,
  "infinite":false,
  "layers":[
