@@ -53,7 +53,6 @@ public class LightController {
     private Lighting.LightState torchLightState;
 
     private int numRays;
-    private float lightRadius;
 
     private float BOX_TO_WORLD = 32.0f;
 
@@ -125,10 +124,9 @@ public class LightController {
         // Create a separate camera for box2dlights
         this.camera = new OrthographicCamera(bounds.width, bounds.height);//Uses physic units
         this.camera.position.set(bounds.width/2.0f,bounds.height/2.0f,0);
-        lightRadius = 5f;
         camera.zoom = 0.7f;
         //this.camera.setToOrtho(false, bounds.width, bounds.height);
-        camera.zoom=0.7f;
+        camera.zoom=0.6f;
         this.camera.update();
         //rayHandler = new RayHandler(world,(int)this.camera.viewportWidth,(int)this.camera.viewportHeight);
         rayHandler = new RayHandler(world,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
@@ -415,7 +413,7 @@ public class LightController {
             }
         }else{
             if (torchLightState==Lighting.LightState.LIGHT_ON){
-                torchLighting.setDistance(lightRadius);
+                torchLighting.setDistance(5f);
             }
         }
     }
