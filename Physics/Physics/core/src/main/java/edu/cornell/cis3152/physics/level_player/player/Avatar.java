@@ -795,11 +795,16 @@ public class Avatar extends ObstacleSprite {
             }
             batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits() * 1.5f, srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, !isFacingRight(), false);
         } else if (justLanded) {
-            jumpFrameCount++;
-            frameIndex = (jumpFrameCount / JUMP_FRAME_LAND_DURATION);
-            if (frameIndex == TOTAL_JUMP_LAND_FRAMES) {
+
+
+//
+            if (frameIndex >= TOTAL_JUMP_LAND_FRAMES) {
+                frameIndex = TOTAL_JUMP_LAND_FRAMES -1;
                 justLanded = false;
+            } else {
+                jumpFrameCount++;
             }
+            frameIndex = (jumpFrameCount / JUMP_FRAME_LAND_DURATION);
             srcIndex = frameIndex * FRAME_WIDTH;
             animationTexture = hasTorch ? animationTextureJumpTorchLand : animationTextureJumpNoTorchLand;
             batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits() * 1.5f, srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, !isFacingRight(), false);
@@ -810,7 +815,6 @@ public class Avatar extends ObstacleSprite {
             animationTexture = hasTorch ? animationTextureMovementTorch : animationTextureMovementNoTorch;
             batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits() * 1.5f, srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, !isFacingRight(), false);
         } else {
-
             cdFrameCount++;
             frameIndex = (cdFrameCount / FRAME_DURATION) % TOTAL_FRAMES;
             srcIndex = frameIndex * FRAME_WIDTH;
