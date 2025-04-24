@@ -235,6 +235,9 @@ public class Enemy extends ObstacleSprite {
     }
     public boolean isAboutToFall() {
 //        if (!isGrounded()) return false;
+        if (this instanceof Moth && this.getState() == EnemyState.ATTACK){
+            return false; // override this so that the moth can drop platforms when dashing
+        }
 
         Body body = obstacle.getBody();
         if (body == null) return false;
@@ -363,7 +366,7 @@ public class Enemy extends ObstacleSprite {
         Body body = obstacle.getBody();
         float direction;
         obstacle.setBodyType(BodyDef.BodyType.DynamicBody);
-        if (isAboutToFall() && !isGrounded()) {
+        if (isAboutToFall()) {
             changeDirection();
         }
         if (isFacingRight()) {

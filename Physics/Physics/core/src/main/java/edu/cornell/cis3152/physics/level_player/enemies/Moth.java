@@ -43,8 +43,8 @@ public class Moth extends Enemy {
     // Frame durations
     private static final int ATTACK_FRAME_DURATION = 12;
     private static final int ANGRY_FRAME_DURATION = 12;
-    private static final int IN_LIGHT_FRAME_DURATION = 12;
-    private static final int OUT_OF_LIGHT_FRAME_DURATION = 12;
+    private static final int IN_LIGHT_FRAME_DURATION = 9;
+    private static final int OUT_OF_LIGHT_FRAME_DURATION = 6;
     private static final int JUMP_FRAME_DURATION = 12;
     private static final int TRANCE_FRAME_DURATION = 36;
     private static final int SMOTHER_FRAME_DURATION = 12;

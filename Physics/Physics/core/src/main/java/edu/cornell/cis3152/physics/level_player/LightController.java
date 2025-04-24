@@ -124,9 +124,8 @@ public class LightController {
         // Create a separate camera for box2dlights
         this.camera = new OrthographicCamera(bounds.width, bounds.height);//Uses physic units
         this.camera.position.set(bounds.width/2.0f,bounds.height/2.0f,0);
-        camera.zoom = 0.7f;
         //this.camera.setToOrtho(false, bounds.width, bounds.height);
-        camera.zoom=0.7f;
+        camera.zoom=0.6f;
         this.camera.update();
         //rayHandler = new RayHandler(world,(int)this.camera.viewportWidth,(int)this.camera.viewportHeight);
         rayHandler = new RayHandler(world,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
@@ -154,8 +153,8 @@ public class LightController {
 
         torchLighting.setContactFilter(CATEGORY_LIGHT, (short)0, (short) CATEGORY_ENVIRONMENT);
         //rayHandler.useCustomViewport(viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
-//        rayHandler.useDiffuseLight(true);
-        rayHandler.useDiffuseLight(false);
+        rayHandler.useDiffuseLight(true);
+//        rayHandler.useDiffuseLight(false);
         // Background light color⬇️, modify if needed
         //rayHandler.setAmbientLight(0.15f, 0.15f, 0.35f, 1f); // same hue, just darker
         rayHandler.setAmbientLight(Color.BLACK);
