@@ -372,6 +372,13 @@ public class CollisionController implements ContactListener {
                 sustainedContacts.put(key, -1);
             }
 
+            if (isX(bd1, bd2, Torch.class) == 1) {
+                ObstacleSprite nonTorch = bd1 instanceof Torch ? bd2 : bd1;
+                if (!nonTorch.getObstacle().isSensor()) {
+//                    idX(bd1,bd2,Torch.class).getObstacle().setAngularVelocity(0);
+                }
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }

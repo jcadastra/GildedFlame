@@ -91,7 +91,7 @@ public class Torch extends EnhancedObstacleSprite {
      *
      * This method should be called after the force attribute is set.
      */
-    public void applyThrowForce(int direc) {
+    public void applyThrowForce(int direc, float timeTillGround) {
         if (!obstacle.isActive()) {
             return;
         }
@@ -99,7 +99,30 @@ public class Torch extends EnhancedObstacleSprite {
         Body body = obstacle.getBody();
         Vector2 appliedForce = getThrowForce(direc);
         body.applyLinearImpulse(appliedForce,obstacle.getPosition(),true);
-        body.applyAngularImpulse(data.getFloat("angular_force") * direc,true);
+        body.applyAngularImpulse(data.getFloat("angular_force") * -direc,true);
+
+        float theta0 = body.getAngle(); // current angle in radians
+        float currentOmega = body.getAngularVelocity(); // current angular velocity in rad/s
+
+// Compute the current predicted angle at landing
+        float thetaFinal = theta0 + currentOmega * timeTillGround;
+        float modFinal = thetaFinal % (2 * (float)Math.PI);
+
+// Target is pi/2
+        float targetAngle = (float)(Math.PI / 2);
+
+// Compute the shortest angular offset to get to the target
+        float delta = targetAngle - modFinal;
+// Wrap delta to [-PI, PI] for minimal adjustment
+        if (delta > Math.PI) delta -= 2 * Math.PI;
+        if (delta < -Math.PI) delta += 2 * Math.PI;
+
+// Adjust omega just enough to correct this over the remaining time
+        float omegaAdjustment = delta / timeTillGround;
+        float newOmega = currentOmega + omegaAdjustment;
+
+// Apply the corrected angular velocity
+        body.setAngularVelocity(newOmega);
     }
 
     public Vector2 getThrowForce(int direc) {

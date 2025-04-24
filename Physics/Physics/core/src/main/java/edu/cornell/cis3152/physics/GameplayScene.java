@@ -331,6 +331,7 @@ public class GameplayScene implements Screen {
     private int dotTorchArcCount = 120;
     private int deltaTorchArc = 4;
     private float animationOffsetTorchArc = .18f;
+    private float expectedDTForTorchToHitGround = 0;
 
 
     /**
@@ -1337,16 +1338,13 @@ public class GameplayScene implements Screen {
             avatar.setHasTorch(false);
             world.destroyJoint(activeTorchJoint);
             activeTorchJoint = null;
-            torch.applyThrowForce(avatar.isFacingRight() ? 1 : -1);
+            torch.applyThrowForce(avatar.isFacingRight() ? 1 : -1, expectedDTForTorchToHitGround);
             torch.resetPickUp();
             torch.getObstacle().setSensor(false);
             soundEngine.throwTorch();
         }
-        if (input.assistParabola()) {
-            generateTorchArc();
-        } else {
-            hideArc();
-        }
+
+        generateTorchArc(input.assistParabola());
 
         avatar.applyForce();
 
@@ -1371,7 +1369,7 @@ public class GameplayScene implements Screen {
     }
 
 
-    private void generateTorchArc() {
+    private void generateTorchArc(boolean viewParabola) {
         dtTorchArcOffset %= deltaTorchArc;
 
         if (!avatar.getHasTorch()) {
@@ -1405,6 +1403,7 @@ public class GameplayScene implements Screen {
                 world.rayCast(raycastCallback, lastTP, trajectoryPosition);
                 if (hit[0] != null && !hit[0].isSensor()) {
                     arcPoints.add(hitpoint[0]);
+                    expectedDTForTorchToHitGround = t;
                     break;
                 }
             }
@@ -1414,6 +1413,11 @@ public class GameplayScene implements Screen {
                 arcPoints.add(new Vector2(x, y));
             }
             generatedCount++;
+        }
+
+        if (!viewParabola) {
+            hideArc();
+            return;
         }
 
         for (int i = 0; i < dotTorchArcCount / deltaTorchArc; i++) {
@@ -1429,9 +1433,9 @@ public class GameplayScene implements Screen {
     }
 
     private void hideArc() {
-        if (torchArc.get(0).getObstacle().getPosition().x == -1 && torchArc.get(0).getObstacle().getPosition().y == -1) {
-            return;
-        }
+//        if (torchArc.get(0).getObstacle().getPosition().x == -1 && torchArc.get(0).getObstacle().getPosition().y == -1) {
+//            return;
+//        }
         for (ObstacleSprite i : torchArc) {
             i.getObstacle().setPosition(-1,-1);
         }
