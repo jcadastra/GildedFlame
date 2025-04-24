@@ -30,6 +30,7 @@ public class LightController {
     private World world;
     private RayHandler rayHandler;
     private OrthographicCamera camera;
+    private float cameraZoomLevel;
 
     /** All of the active environmental Lightings that we loaded from the JSON file */
     private Array<Lighting> lights = new Array<>();
@@ -116,17 +117,17 @@ public class LightController {
     public void setRadius(int radius){
 
     }
-    public LightController(Vector2 points, World world, OrthographicCamera camera, Rectangle bounds, float physicsUnits){
+    public LightController(Vector2 points, World world, OrthographicCamera camera, Rectangle bounds, float physicsUnits, float cameraZoomLevel){
         this.BOX_TO_WORLD = physicsUnits;
         this.world = world;
         this.bounds = bounds;
+        this.cameraZoomLevel = cameraZoomLevel;
         //this.camera = camera;
         // Create a separate camera for box2dlights
         this.camera = new OrthographicCamera(bounds.width, bounds.height);//Uses physic units
         this.camera.position.set(bounds.width/2.0f,bounds.height/2.0f,0);
-        camera.zoom = 0.7f;
         //this.camera.setToOrtho(false, bounds.width, bounds.height);
-        camera.zoom=0.6f;
+        camera.zoom=cameraZoomLevel;
         this.camera.update();
         //rayHandler = new RayHandler(world,(int)this.camera.viewportWidth,(int)this.camera.viewportHeight);
         rayHandler = new RayHandler(world,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
@@ -305,9 +306,9 @@ public class LightController {
 //        //System.out.println("graphics"+Gdx.graphics.getWidth()+","+Gdx.graphics.getHeight());
 //        rayHandler.setCombinedMatrix(this.camera);
         //attachTorchLight(fire);
-        camera.zoom=0.7f;
+        camera.zoom=cameraZoomLevel;
         inBounds();
-        camera.zoom = 0.7f;
+        camera.zoom = cameraZoomLevel;
         this.camera.update();
         rayHandler.setCombinedMatrix(camera);
         rayHandler.update();
