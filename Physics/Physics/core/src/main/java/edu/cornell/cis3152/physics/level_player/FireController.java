@@ -71,10 +71,6 @@ public class FireController {
         }
         return returnSet;
     }
-//
-//    public Fire getTorchFire(Torch torch) {
-//        return getLitFires().isEmpty() ? null : getLitFires().iterator().next();
-//    }
 
     public void resetStorage() {
         nFireDiagrams = new HashMap<>();
