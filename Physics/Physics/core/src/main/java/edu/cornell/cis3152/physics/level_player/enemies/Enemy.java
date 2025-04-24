@@ -6,12 +6,15 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Fire;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Lighting;
+import edu.cornell.cis3152.physics.level_player.player.Avatar;
+import edu.cornell.cis3152.physics.level_player.player.Torch;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.graphics.SpriteBatch;
 import edu.cornell.gdiac.graphics.SpriteSheet;
 import edu.cornell.gdiac.math.Path2;
 import edu.cornell.gdiac.math.PathFactory;
 import edu.cornell.gdiac.physics2.BoxObstacle;
+import edu.cornell.gdiac.physics2.Obstacle;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
 import edu.cornell.gdiac.physics2.PolygonObstacle;
 
@@ -66,10 +69,8 @@ public class Enemy extends ObstacleSprite {
         float[] verts = {
             half, half,
             -half, half, //top vertices
-
             -half, (-half + cut),
             0, (-half), //bottom left slice
-
             half, (-half + cut) //bottom right
 
         };
@@ -205,16 +206,16 @@ public class Enemy extends ObstacleSprite {
             case SMOTHER:
                 smother();
                 break;
-            case FRUSTRATED:
-                frustrated();
-                break;
+//            case FRUSTRATED:
+//                frustrated();
+//                break;
             default:
                 break;
         }
     }
 
     public void updateRayCast() {
-        if (getState() == EnemyState.JUMP || getState() == EnemyState.IN_LIGHT || getState() == EnemyState.CD) {
+        if (getState() == EnemyState.JUMP || getState() == EnemyState.IN_LIGHT || getState() == EnemyState.CD || getState() == EnemyState.FRUSTRATED) {
             rr = raycastInLight();
         } else {
             rr = raycast();
@@ -234,13 +235,16 @@ public class Enemy extends ObstacleSprite {
     }
     public boolean isAboutToFall() {
 //        if (!isGrounded()) return false;
+        if (this instanceof Moth && this.getState() == EnemyState.ATTACK){
+            return false; // override this so that the moth can drop platforms when dashing
+        }
 
         Body body = obstacle.getBody();
         if (body == null) return false;
 
         Vector2 position = body.getPosition();
         float rayLength = 1.0f;
-        float xOffset = isFacingRight() ? (width / 2 - 0.4f) : (-width / 2 + 0.4f);
+        float xOffset = isFacingRight() ? (width / 2) : (-width / 2);
         Vector2 rayStart = new Vector2(position.x + xOffset, position.y - height / 2);
 
         Vector2 rayEnd = rayStart.cpy().add(0, -rayLength);
@@ -257,7 +261,6 @@ public class Enemy extends ObstacleSprite {
 
                         groundDetected[0] = true;
                     } else {
-//                        System.out.println(target.getName());
                     }
                 }
                 return fraction;
@@ -291,6 +294,9 @@ public class Enemy extends ObstacleSprite {
         final Vector2[] closestPoint = {null};
         final float[] closestFraction = {Float.MAX_VALUE};
         RayCastCallback callback = (fixture, point, normal, fraction) -> {
+            if (fixture.isSensor()){
+                return -1;
+            }
             if (fraction < closestFraction[0]) {
                 closestObject[0] = fixture.getBody().getUserData();
                 closestPoint[0] = new Vector2(point);
@@ -328,9 +334,13 @@ public class Enemy extends ObstacleSprite {
         final Vector2[] closestPoint = {null};
         final float[] closestFraction = {Float.MAX_VALUE};
         RayCastCallback callback = (fixture, point, normal, fraction) -> {
-            Object detectedObject = fixture.getBody().getUserData();
-            if (detectedObject instanceof Lighting || detectedObject instanceof Fire) {
+            if (fixture.isSensor() && !(fixture.getBody().getUserData() instanceof Torch)){
                 return -1;
+            } else {
+                Object detectedObject = fixture.getBody().getUserData();
+                if (detectedObject instanceof Lighting || detectedObject instanceof Fire) {
+                    return -1;
+                }
             }
             if (fraction < closestFraction[0]) {
                 closestObject[0] = fixture.getBody().getUserData();
@@ -353,11 +363,10 @@ public class Enemy extends ObstacleSprite {
     }
 
     public void move() {
-//        System.out.print("MOVE: " );
         Body body = obstacle.getBody();
         float direction;
         obstacle.setBodyType(BodyDef.BodyType.DynamicBody);
-        if (isAboutToFall() && !isGrounded()) {
+        if (isAboutToFall()) {
             changeDirection();
         }
         if (isFacingRight()) {
@@ -409,9 +418,12 @@ public class Enemy extends ObstacleSprite {
 
     }
     public void stop() {
-        float currY = obstacle.getLinearVelocity().y;
-        obstacle.getBody().setLinearVelocity(0, currY);
-        obstacle.setBodyType(BodyDef.BodyType.StaticBody);
+        Obstacle thisEnemy = Enemy.this.getObstacle();
+        float currY = thisEnemy.getLinearVelocity().y;
+        thisEnemy.setLinearVelocity(new Vector2(0, currY));
+        if (this instanceof Totem){
+            thisEnemy.setBodyType(BodyDef.BodyType.StaticBody);
+        }
     }
 
     @Override
@@ -465,5 +477,4 @@ public class Enemy extends ObstacleSprite {
             this.targetDistance = distance;
         }
     }
-
 }
