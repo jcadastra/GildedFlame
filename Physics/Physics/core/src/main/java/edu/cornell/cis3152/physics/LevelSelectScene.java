@@ -217,10 +217,10 @@ public class LevelSelectScene implements Screen {
             // starts listening for level change
             boolean moved = false; // debounce flag
 
-            float vertical = xbox.getLeftY();
+            float horizontal = xbox.getLeftX();
             if (joystickCooldown <=0){
-                // Move UP
-                if (vertical < -0.4f && !moved) {
+                // Move LEFT
+                if (horizontal < -0.4f && !moved) {
                     particleEngine.dispose();
                     levels.get(currentIndex).setColor(Color.WHITE);
                     currentIndex = (currentIndex - 1 + levels.size) % levels.size;
@@ -230,8 +230,8 @@ public class LevelSelectScene implements Screen {
                     joystickCooldown = 0.25f;
                 }
 
-                // Move DOWN
-                else if (vertical > 0.4f && !moved) {
+                // Move RIGHT
+                else if (horizontal > 0.4f && !moved) {
                     levels.get(currentIndex).setColor(Color.WHITE);
                     particleEngine.dispose();
                     currentIndex = (currentIndex + 1) % levels.size;
@@ -242,7 +242,7 @@ public class LevelSelectScene implements Screen {
                 }
 
                 // Reset debounce when stick is near center
-                if (Math.abs(vertical) <= 0.01f) {
+                if (Math.abs(horizontal) <= 0.01f) {
                     moved = false;
                 }
             }

@@ -415,7 +415,6 @@ public class LightController {
             }
         }else{
             if (torchLightState==Lighting.LightState.LIGHT_ON){
-                System.out.println("reset light radius");
                 torchLighting.setDistance(lightRadius);
             }
         }
