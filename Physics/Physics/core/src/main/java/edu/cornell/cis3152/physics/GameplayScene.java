@@ -746,6 +746,7 @@ public class GameplayScene implements Screen {
                             moth.setTexture(texture);
                             addSprite(moth);
                             moth.createSensor();
+                            moth.setTorchFire(this.torchFire);
                             enemies.add(moth);
                             break;
 
@@ -1325,7 +1326,7 @@ public class GameplayScene implements Screen {
         avatar.setJumping(input.didPrimary());
         avatar.setShooting(input.didSecondary());
 
-        if (!(avatar.getBodyTouchedClimbables().isEmpty()) && !avatar.getHasTorch() && !avatar.getGroundedState().equals(GroundState.CLIMBING)
+        if (!(avatar.getBodyTouchedClimbables().isEmpty()) && !Avatar.getHasTorch() && !avatar.getGroundedState().equals(GroundState.CLIMBING)
              && input.didVertical()) {
             avatar.setGroundedState(GroundState.CLIMBING);
             avatar.getObstacle().getBody().setLinearVelocity(Vector2.Zero);

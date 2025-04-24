@@ -44,7 +44,7 @@ import java.util.function.Predicate;
  * connected to a obstacle. It is designed to be the same size as the
  * physics object, and it tracks the physics object, matching its position
  * and angle at all times.
- *
+ * <p>
  * Note that unlike a traditional ObstacleSprite, this attaches some additional
  * information to the obstacle. In particular, we add a sensor fixture. This
  * sensor is used to prevent double-jumping. However, we only have one mesh,
@@ -69,13 +69,12 @@ public class Avatar extends ObstacleSprite {
     public static final int FRAME_WIDTH = 350;
 
     public static final int MOVEMENT_FRAME_DURATION = 16;
-    private static final int JUMP_FRAME_DURATION = 6;
-    private static final int JUMP_FRAME_LAND_DURATION = 6;
-
     public static final int THROW_TOTAL_FRAMES = 3;
     public static final int THROW_FRAME_DURATION = 6;
-    public static int throwCount = 0;
+    private static final int JUMP_FRAME_DURATION = 6;
+    private static final int JUMP_FRAME_LAND_DURATION = 6;
     private static final int FRAME_DURATION = 12;
+    public static int throwCount = 0;
     protected static AssetDirectory directory;
     private static Texture animationTextureIdleTorch;
     private static Texture animationTextureIdleNoTorch;
@@ -93,6 +92,10 @@ public class Avatar extends ObstacleSprite {
     private static Texture animationTextureJumpThrowUp;
     private static Texture animationTextureClimbUp;
     private static Texture animationTextureClimbDown;
+    /**
+     * Whether the player has torch in hand
+     */
+    private static boolean hasTorch;
     /**
      * The initializing data (to avoid magic numbers)
      */
@@ -170,10 +173,6 @@ public class Avatar extends ObstacleSprite {
      * Whether we are actively shooting
      */
     private boolean isShooting;
-    /**
-     * Whether the player has torch in hand
-     */
-    private static boolean hasTorch;
     private boolean doOnce;
     /**
      * The outline of the sensor obstacle
@@ -286,6 +285,20 @@ public class Avatar extends ObstacleSprite {
         this.bodyTouchedClimbables = new HashSet<>();
     }
 
+    /**
+     * Returns true if Traci has torch.
+     */
+    public static boolean getHasTorch() {
+        return hasTorch;
+    }
+
+    /**
+     * Sets whether Traci has torch.
+     */
+    public void setHasTorch(boolean value) {
+        hasTorch = value;
+    }
+
     public float getUnits() {
         return units;
     }
@@ -366,19 +379,6 @@ public class Avatar extends ObstacleSprite {
         isJumping = value;
     }
 
-    /**
-     * Returns true if Traci has torch.
-     */
-    public static boolean getHasTorch() {
-        return hasTorch;
-    }
-
-    /**
-     * Sets whether Traci has torch.
-     */
-    public void setHasTorch(boolean value) {
-        hasTorch = value;
-    }
     /**
      * Returns true if Traci had torch.
      */
@@ -547,8 +547,6 @@ public class Avatar extends ObstacleSprite {
             return;
         }
         Vector2 pos = obstacle.getPosition();
-        float vx = obstacle.getVX();
-        float vy = obstacle.getVY();
         Body body = obstacle.getBody();
 
         if (groundState.equals(GroundState.CLIMBING)) {
@@ -603,18 +601,22 @@ public class Avatar extends ObstacleSprite {
                 body.applyLinearImpulse(forceCache, pos, true);
             }
         } else {
-            // TYPICAL MOVEMENT LOGIC
-//            getObstacle().getBody().setGravityScale(1);
+            float desiredX = movement.x;
+            float vx = body.getLinearVelocity().x;
 
-            if (getMovement().x == 0f) {
-                forceCache.set(-getDamping() * vx, 0);
-                body.applyForce(forceCache, pos, true);
+            if (desiredX != 0 && vx * desiredX < 0) {
+                obstacle.setVX(0);
+                vx = 0;
             }
+            if (desiredX == 0f) {
+                forceCache.set(-damping * vx, 0);
+                body.applyForce(forceCache, pos, true);
 
-            if (Math.abs(vx) >= getMaxSpeed()) {
-                obstacle.setVX(Math.signum(vx) * getMaxSpeed());
+            } else if (Math.abs(vx) >= maxspeed) {
+                obstacle.setVX(Math.signum(desiredX) * maxspeed);
+
             } else {
-                forceCache.set(getMovement().x, 0);
+                forceCache.set(desiredX, 0);
                 body.applyForce(forceCache, pos, true);
             }
 
@@ -661,12 +663,12 @@ public class Avatar extends ObstacleSprite {
             doOnce = false;
         }
 
-        if (!hasTorch && hadTorch){
-            if (throwSwitch){
+        if (!hasTorch && hadTorch) {
+            if (throwSwitch) {
                 throwSwitch = false;
                 setHadTorch((getHasTorch()));
             }
-        } else if (!hadTorch && hasTorch){
+        } else if (!hadTorch && hasTorch) {
             setHadTorch(getHasTorch());
         }
 
@@ -726,8 +728,8 @@ public class Avatar extends ObstacleSprite {
         } else if (getHadTorch() && !getHasTorch()) {
             throwFrameIndex = throwCount / THROW_FRAME_DURATION;
             throwCount++;
-            if (throwFrameIndex <= THROW_TOTAL_FRAMES){
-                if (throwFrameIndex == THROW_TOTAL_FRAMES){
+            if (throwFrameIndex <= THROW_TOTAL_FRAMES) {
+                if (throwFrameIndex == THROW_TOTAL_FRAMES) {
                     throwFrameIndex = 0;
                     throwCount = 0;
                     throwSwitch = true;
