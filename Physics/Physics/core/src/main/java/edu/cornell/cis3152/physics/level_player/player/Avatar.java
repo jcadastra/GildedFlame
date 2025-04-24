@@ -73,6 +73,8 @@ public class Avatar extends ObstacleSprite {
     public static final int THROW_FRAME_DURATION = 6;
     private static final int JUMP_FRAME_DURATION = 6;
     private static final int JUMP_FRAME_LAND_DURATION = 6;
+    private static final int DEATH_TOTAL_FRAMES = 9;
+    private static final int DEATH_FRAME_DURATION = 12;
     private static final int FRAME_DURATION = 12;
     public static int throwCount = 0;
     protected static AssetDirectory directory;
@@ -92,6 +94,7 @@ public class Avatar extends ObstacleSprite {
     private static Texture animationTextureJumpThrowUp;
     private static Texture animationTextureClimbUp;
     private static Texture animationTextureClimbDown;
+    private static Texture animationTextureDeath;
     /**
      * Whether the player has torch in hand
      */
@@ -232,6 +235,7 @@ public class Avatar extends ObstacleSprite {
         animationTextureThrow = directory.getEntry("platform-playerTHROW", Texture.class);
         animationTextureClimbUp = directory.getEntry("platform-playerCLIMBUP", Texture.class);
         animationTextureClimbDown = directory.getEntry("platform-playerCLIMBDOWN", Texture.class);
+        animationTextureDeath = directory.getEntry("platform-playerDEATH", Texture.class);
 
 
         // The capsule is smaller than the image
@@ -411,7 +415,9 @@ public class Avatar extends ObstacleSprite {
      * Sets whether Traci is on the ground.
      */
     public void setGroundedState(GroundState state) {
-        groundState = state;
+        if (!isDead()){
+            groundState = state;
+        }
     }
 
     /**
@@ -494,6 +500,18 @@ public class Avatar extends ObstacleSprite {
             fixture.getFilterData().maskBits &= ~TOTEM; // remove
         } else {
             fixture.getFilterData().maskBits |= TOTEM;  // add
+        }
+    }
+
+    public boolean isDead(){
+        return (groundState == GroundState.DEAD);
+    }
+
+    public void die() {
+        if (groundState != GroundState.DEAD) {
+            groundState = GroundState.DEAD;
+            cdFrameCount = 0;
+            frameIndex = 0;
         }
     }
 
@@ -657,7 +675,14 @@ public class Avatar extends ObstacleSprite {
      */
     @Override
     public void update(float dt) {
-        // Apply cooldowns
+
+
+        if (groundState == GroundState.DEAD) {
+            cdFrameCount++;
+            frameIndex = (cdFrameCount / DEATH_FRAME_DURATION) % DEATH_TOTAL_FRAMES;
+            return;
+        }
+
         if (justLanded && doOnce) {
             resetJumpFrames();
             doOnce = false;
@@ -708,7 +733,11 @@ public class Avatar extends ObstacleSprite {
         float drawY = obstacle.getY() - getHeight() / 2f;
         Texture animationTexture;
         int srcIndex;
-        if (groundState == GroundState.CLIMBING) {
+        if (groundState == GroundState.DEAD) {
+            int srcX = frameIndex * FRAME_WIDTH;
+            batch.draw(animationTextureDeath, (obstacle.getX() - width / 2f) * units, (obstacle.getY() - height / 2f) * units, units, units * 1.5f, srcX, 0, FRAME_WIDTH, FRAME_HEIGHT, !faceRight, false);
+
+        } else if (groundState == GroundState.CLIMBING) {
             if (movement.y > 0) {
                 cdFrameCount++;
                 frameIndex = (cdFrameCount / FRAME_DURATION) % TOTAL_FRAMES;
@@ -866,7 +895,7 @@ public class Avatar extends ObstacleSprite {
     }
 
     public enum GroundState {
-        GROUNDED, AIRBORNE, CLIMBING
+        GROUNDED, AIRBORNE, CLIMBING, DEAD
     }
 }
 

@@ -294,7 +294,7 @@ public class GameplayScene implements Screen {
      * @param value whether the level is failed.
      */
     public void setFailure(boolean value) {
-        if (value) {
+        if (value && !failed) {
             countdown = EXIT_COUNT;
         }
         failed = value;
@@ -408,6 +408,8 @@ public class GameplayScene implements Screen {
     /**
      * Disposes of all (non-static) resources allocated to this mode.
      */
+
+
     public void dispose() {
         if (world != null) {
             for(ObstacleSprite sprite : sprites) {
@@ -1267,16 +1269,21 @@ public class GameplayScene implements Screen {
         }
 
         contactListener.processPendingMerges();
+        if (!failed && (avatar.getObstacle().getY() < -1 || activeFireJoint == null || queueFailure)) {
+            setFailure(true);
+            avatar.die();
+        }
 
-        if (!isFailure() && avatar.getObstacle().getY() < -1) {
-            setFailure(true);
-            return false;
+        if (failed) {
+            if (countdown > 0) {
+                countdown--;
+                return true;
+            } else {
+                reset();
+                return false;
+            }
         }
-        if (activeFireJoint == null || queueFailure) {
-            setFailure(true);
-            return false;
-        }
-        return true;
+        return true; // should never get here
     }
 
     /**
@@ -1333,12 +1340,12 @@ public class GameplayScene implements Screen {
             avatar.applyClimbingPhysics();
         }
 
-        if (avatar.getGroundedState().equals(GroundState.CLIMBING) && avatar.getBodyTouchedClimbables().isEmpty()) {
+        if (avatar.getGroundedState().equals(GroundState.CLIMBING) && avatar.getBodyTouchedClimbables().isEmpty() ) {
             avatar.setGroundedState(GroundState.AIRBORNE);
             avatar.removeClimbingPhysics();
         }
 
-        if (input.getThrowing() && avatar.getHasTorch() && activeTorchJoint != null) {
+        if (input.getThrowing() && Avatar.getHasTorch() && activeTorchJoint != null) {
             avatar.setHasTorch(false);
             world.destroyJoint(activeTorchJoint);
             activeTorchJoint = null;
@@ -1585,6 +1592,7 @@ public class GameplayScene implements Screen {
                     break;
                 case "queueFailure":
                     queueFailure = true;
+                    avatar.die();
                     break;
                 case "debugKillObj":
                     // not safe operation, for now will kill game on reload
