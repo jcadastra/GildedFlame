@@ -15,6 +15,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Fire;
+import edu.cornell.cis3152.physics.level_player.enviromentals.FloatingLight;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Lighting;
 import edu.cornell.cis3152.physics.level_player.player.Avatar;
 //import edu.cornell.cis3152.physics.level_player.player.Traci;
@@ -82,7 +83,7 @@ public class LightController {
         lightPool = new Array<>();
 
         for (int i = 0; i < maxLights; i++) {
-            PointLight light = new PointLight(rayHandler, 64, Color.LIGHT_GRAY, 1f, 0, 0);
+            PointLight light = new PointLight(rayHandler, 64, Color.LIGHT_GRAY, 0.5f, 0, 0);
             light.setActive(false);  // Hide initially
             lightPool.add(light);
         }
@@ -123,9 +124,8 @@ public class LightController {
         // Create a separate camera for box2dlights
         this.camera = new OrthographicCamera(bounds.width, bounds.height);//Uses physic units
         this.camera.position.set(bounds.width/2.0f,bounds.height/2.0f,0);
-        camera.zoom = 0.7f;
         //this.camera.setToOrtho(false, bounds.width, bounds.height);
-        camera.zoom=0.7f;
+        camera.zoom=0.6f;
         this.camera.update();
         //rayHandler = new RayHandler(world,(int)this.camera.viewportWidth,(int)this.camera.viewportHeight);
         rayHandler = new RayHandler(world,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
@@ -151,24 +151,20 @@ public class LightController {
             (short)CATEGORY_ENVIRONMENT);
         playerLight.setSoft(true);
 
-
-        //TODO:right now the light is interacting with nothing, discuss if this is the bahviour we want?
         torchLighting.setContactFilter(CATEGORY_LIGHT, (short)0, (short) CATEGORY_ENVIRONMENT);
         //rayHandler.useCustomViewport(viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
         rayHandler.useDiffuseLight(true);
 //        rayHandler.useDiffuseLight(false);
         // Background light color⬇️, modify if needed
-        rayHandler.setAmbientLight(0.15f, 0.15f, 0.35f, 1f); // same hue, just darker
-        //rayHandler.setAmbientLight(Color.BLACK);
+        //rayHandler.setAmbientLight(0.15f, 0.15f, 0.35f, 1f); // same hue, just darker
+        rayHandler.setAmbientLight(Color.BLACK);
         rayHandler.setShadows(true);
         //rayHandler.setBlur(true);
-        //System.out.println(torchLighting==null);
-        //System.out.println(points.x+","+points.y);
         debug = false;
         initLights(rayHandler);
-        //torchLighting.setPosition(camera.position.x, camera.position.y);
-        //System.out.println("light pos "+ torchLighting.getX()+","+torchLighting.getY());
     }
+
+
     public LightController(JsonValue data, World world, OrthographicCamera camera){
         this.world = world;
         this.camera = camera;
@@ -217,16 +213,25 @@ public class LightController {
     public void attachAmbientLight (ObstacleSprite sprite){
         PointLight light = lightPool.get(lightIndex);
         lightAssignments.put(sprite.getObstacle().getBody(), light);
-        light.attachToBody(sprite.getObstacle().getBody());
-        light.setActive(true);
-        light.setContactFilter(CATEGORY_LIGHT,(short)0,
-            (short)CATEGORY_ENVIRONMENT);
+        if (sprite.getClass()== FloatingLight.class){
+            light.setColor(Color.LIGHT_GRAY);
+            light.setColor(Color.LIGHT_GRAY.r,Color.LIGHT_GRAY.g,Color.LIGHT_GRAY.b,0.3f);
+            light.attachToBody(sprite.getObstacle().getBody());
+            light.setActive(true);
+            light.setSoft(true);
+            light.setContactFilter(CATEGORY_LIGHT,(short)0,
+                (short)CATEGORY_ENVIRONMENT);
+        }
         lightIndex = (lightIndex + 1)%maxLights;
     }
 
     public void turnOffAmbientLight(ObstacleSprite sprite){
-        lightAssignments.get(sprite.getObstacle().getBody()).setActive(false);
-        lightAssignments.remove(sprite);
+        PointLight light = lightAssignments.get(sprite.getObstacle().getBody());
+        if (light != null){
+            light.setActive(false);
+            System.out.println("light turned off");
+            lightAssignments.remove(sprite.getObstacle().getBody());
+        }
     }
     public void translate(){
 
@@ -255,7 +260,7 @@ public class LightController {
                 //flickerCount--;
                 //System.out.println(flickerCount);
                 float dis = torchLighting.getDistance()-1;
-                System.out.println("new distance: " + dis*flickerCount/flickerMax);
+                //System.out.println("new distance: " + dis*flickerCount/flickerMax);
                 torchLighting.setDistance(1+dis*flickerCount/flickerMax);
                 if (flickerCount <0){
                 torchLightState = Lighting.LightState.LIGHT_OFF;}
@@ -391,7 +396,7 @@ public class LightController {
     public void update(Boolean beginSmother){
         if (beginSmother){
             //torchLight.waver(flickerCount);
-            System.out.println("flickerCount"+flickerCount);
+//            System.out.println("flickerCount"+flickerCount);
             flickerCount--;
             if (flickerCount%60==0&&flickerCount>0){
                 torchLightState=Lighting.LightState.LIGHT_WAVER;

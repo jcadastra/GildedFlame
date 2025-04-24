@@ -294,7 +294,7 @@ public class GameplayScene implements Screen {
      * @param value whether the level is failed.
      */
     public void setFailure(boolean value) {
-        if (value) {
+        if (value && !failed) {
             countdown = EXIT_COUNT;
         }
         failed = value;
@@ -408,6 +408,8 @@ public class GameplayScene implements Screen {
     /**
      * Disposes of all (non-static) resources allocated to this mode.
      */
+
+
     public void dispose() {
         if (world != null) {
             for(ObstacleSprite sprite : sprites) {
@@ -541,6 +543,7 @@ public class GameplayScene implements Screen {
 
         world = new World(gravity, false);
         world.setContactListener(contactListener);
+        contactListener.reset();
         setComplete(false);
         setFailure(false);
         loadLevel(levelName, "rope_test");
@@ -745,6 +748,7 @@ public class GameplayScene implements Screen {
                             moth.setTexture(texture);
                             addSprite(moth);
                             moth.createSensor();
+                            moth.setTorchFire(this.torchFire);
                             enemies.add(moth);
                             break;
 
@@ -839,8 +843,10 @@ public class GameplayScene implements Screen {
                             plat.getObstacle().setBodyType(BodyType.KinematicBody);
                             plat.getObstacle().setFriction(.5f);
                             addSprite(plat);
-                            EventAction<Float> awef = new EventAction<Float>(plat, "rotate", plat.getObstacle().getAngle(), (float) Math.PI);
-                            runeTemp.registerEventAction(awef);
+//                            EventAction<Float> awef = new EventAction<Float>(plat, "rotate", plat.getObstacle().getAngle(), (float) Math.PI);
+                            EventAction<Vector2> mo = new EventAction<Vector2>(plat, "move", new Vector2(8,10), new Vector2(16,10));
+//                            runeTemp.registerEventAction(awef);
+                            runeTemp.registerEventAction(mo);
                             runeSet.add(runeTemp);
                             addSprite(runeTemp);
                             break;
@@ -1263,16 +1269,21 @@ public class GameplayScene implements Screen {
         }
 
         contactListener.processPendingMerges();
+        if (!failed && (avatar.getObstacle().getY() < -1 || activeFireJoint == null || queueFailure)) {
+            setFailure(true);
+            avatar.die();
+        }
 
-        if (!isFailure() && avatar.getObstacle().getY() < -1) {
-            setFailure(true);
-            return false;
+        if (failed) {
+            if (countdown > 0) {
+                countdown--;
+                return true;
+            } else {
+                reset();
+                return false;
+            }
         }
-        if (activeFireJoint == null || queueFailure) {
-            setFailure(true);
-            return false;
-        }
-        return true;
+        return true; // should never get here
     }
 
     /**
@@ -1312,6 +1323,7 @@ public class GameplayScene implements Screen {
         fireController.update();
         eventHandler.update();
         contactListener.sustainedContact();
+        lightController.update(contactListener.beginSmother());
 
         InputController input = InputController.getInstance();
 
@@ -1321,19 +1333,19 @@ public class GameplayScene implements Screen {
         avatar.setJumping(input.didPrimary());
         avatar.setShooting(input.didSecondary());
 
-        if (!(avatar.getBodyTouchedClimbables().isEmpty()) && !avatar.getHasTorch() && !avatar.getGroundedState().equals(GroundState.CLIMBING)
+        if (!(avatar.getBodyTouchedClimbables().isEmpty()) && !Avatar.getHasTorch() && !avatar.getGroundedState().equals(GroundState.CLIMBING)
              && input.didVertical()) {
             avatar.setGroundedState(GroundState.CLIMBING);
             avatar.getObstacle().getBody().setLinearVelocity(Vector2.Zero);
             avatar.applyClimbingPhysics();
         }
 
-        if (avatar.getGroundedState().equals(GroundState.CLIMBING) && avatar.getBodyTouchedClimbables().isEmpty()) {
+        if (avatar.getGroundedState().equals(GroundState.CLIMBING) && avatar.getBodyTouchedClimbables().isEmpty() ) {
             avatar.setGroundedState(GroundState.AIRBORNE);
             avatar.removeClimbingPhysics();
         }
 
-        if (input.getThrowing() && avatar.getHasTorch() && activeTorchJoint != null) {
+        if (input.getThrowing() && Avatar.getHasTorch() && activeTorchJoint != null) {
             avatar.setHasTorch(false);
             world.destroyJoint(activeTorchJoint);
             activeTorchJoint = null;
@@ -1459,11 +1471,7 @@ public class GameplayScene implements Screen {
 //        System.out.println(camera.viewportWidth + ", " + camera.viewportHeight);
         float visibleW =  camera.viewportWidth/2*camera.zoom; //half of world visible, zoomed
         float visibleH = camera.viewportHeight/2*camera.zoom;
-//        System.out.println("actual height and width: " + height +", " + width);
-//        System.out.println(visibleW + ": W, H ;" + visibleH + ";; " + camera.zoom);
-//        System.out.println("gutters, top: " + fitViewport.getTopGutterHeight() + ", bottom: " + fitViewport.getBottomGutterHeight() + ", left: " + fitViewport.getLeftGutterWidth() + ", right: " + fitViewport.getRightGutterWidth());
-//        System.out.println("screen width and height " + fitViewport.getScreenWidth() + ", " + fitViewport.getScreenHeight() + " ;; now world: " + fitViewport.getWorldWidth() + ", " + fitViewport.getWorldHeight());
-//        System.out.println("cam viewports: " + camera.viewportWidth + ", " + camera.viewportHeight);
+
 
 
         camera.position.x = MathUtils.clamp(camera.position.x,
@@ -1584,6 +1592,7 @@ public class GameplayScene implements Screen {
                     break;
                 case "queueFailure":
                     queueFailure = true;
+                    avatar.die();
                     break;
                 case "debugKillObj":
                     // not safe operation, for now will kill game on reload
@@ -1968,6 +1977,8 @@ public class GameplayScene implements Screen {
         for (FloatingLight light : floatingLights){
             if (light.isOff()){
                 lightController.turnOffAmbientLight(light);
+            }else{
+                lightController.attachAmbientLight(light);
             }
         }
         lightController.render();
@@ -1987,7 +1998,7 @@ public class GameplayScene implements Screen {
         this.height = height;
         if (camera == null) {
             camera = new OrthographicCamera();
-            camera.zoom = 0.8f;
+            camera.zoom = 0.7f;
         }
         camera.setToOrtho( false, width, height );
 //        scale.x = width/bounds.width;
