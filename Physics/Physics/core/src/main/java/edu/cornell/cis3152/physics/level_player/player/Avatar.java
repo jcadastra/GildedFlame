@@ -675,7 +675,6 @@ public class Avatar extends ObstacleSprite {
      */
     @Override
     public void update(float dt) {
-        System.out.println(getGroundedState());
 
         if (groundState == GroundState.DEAD) {
             cdFrameCount++;
