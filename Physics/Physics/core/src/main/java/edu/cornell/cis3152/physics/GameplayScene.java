@@ -103,6 +103,7 @@ public class GameplayScene implements Screen {
     protected AssetDirectory directory;
     /** The drawing camera for this scene */
     protected OrthographicCamera camera;
+    protected float cameraZoomLevel = .6f;
     /** Reference to the sprite batch */
     protected SpriteBatch batch;
 
@@ -700,7 +701,7 @@ public class GameplayScene implements Screen {
                             l.createSensor();
                             torchFire = new Fire(units, new Vector2(10,10));
                             addSprite(torchFire);
-                            lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds, units);
+                            lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds, units, cameraZoomLevel);
                             lightController.attachTorchLight(torchFire);
                             lightController.resetCamera(camera.position.x,camera.position.y);
                             lightController.attachPlayerLight(avatar);
@@ -1989,7 +1990,7 @@ public class GameplayScene implements Screen {
         this.height = height;
         if (camera == null) {
             camera = new OrthographicCamera();
-            camera.zoom = 0.7f;
+            camera.zoom = cameraZoomLevel;
         }
         camera.setToOrtho( false, width, height );
 //        scale.x = width/bounds.width;
