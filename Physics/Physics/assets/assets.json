@@ -296,8 +296,8 @@
     "platform-plop": "platform/plop.wav"
   },
   "fonts": {
-    "shared-retro": {
-      "file": "shared/RetroGame.ttf",
+    "shared-unica": {
+      "file": "shared/UnicaOne-Regular.ttf",
       "size": 64
     }
   }

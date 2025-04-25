@@ -373,7 +373,7 @@ public class GameplayScene implements Screen {
         bounds = new Rectangle(0,0,defaults.get("bounds").getFloat( 0 ), defaults.get("bounds").getFloat( 1 ));
         resize(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 
-        displayFont = directory.getEntry( "shared-retro" ,BitmapFont.class);
+        displayFont = directory.getEntry( "shared-unica" ,BitmapFont.class);
         goodMessage = new TextLayout();
         goodMessage.setFont( displayFont );
         goodMessage.setAlignment( TextAlign.middleCenter );
