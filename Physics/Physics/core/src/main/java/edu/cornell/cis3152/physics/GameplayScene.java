@@ -373,7 +373,7 @@ public class GameplayScene implements Screen {
         bounds = new Rectangle(0,0,defaults.get("bounds").getFloat( 0 ), defaults.get("bounds").getFloat( 1 ));
         resize(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 
-        displayFont = directory.getEntry( "shared-retro" ,BitmapFont.class);
+        displayFont = directory.getEntry( "shared-unica" ,BitmapFont.class);
         goodMessage = new TextLayout();
         goodMessage.setFont( displayFont );
         goodMessage.setAlignment( TextAlign.middleCenter );
@@ -690,9 +690,6 @@ public class GameplayScene implements Screen {
                             //System.out.println("position" + pos[0] + " " + pos[1]);
                             addSprite(avatar);
                             avatar.createSensor();
-                            if(lightController!= null){
-                                lightController.attachPlayerLight(avatar);
-                            }
                             break;
 
                         case "torch":
@@ -701,10 +698,7 @@ public class GameplayScene implements Screen {
                             l.createSensor();
                             torchFire = new Fire(units, new Vector2(10,10));
                             addSprite(torchFire);
-                            lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds, units, cameraZoomLevel);
-                            lightController.attachTorchLight(torchFire);
-                            lightController.resetCamera(camera.position.x,camera.position.y);
-                            lightController.attachPlayerLight(avatar);
+
 
                             particleEngine = new ParticleEngine(torchFire, units);
                             particleEngine.newFires(fireController);
@@ -721,23 +715,6 @@ public class GameplayScene implements Screen {
                             activeLightJoint = world.createJoint(torch.attachObj(l));
                             activeFireJoint = world.createJoint(torch.attachObj(torchFire));
 
-                            //floating lights
-                            floatingLights = new FloatingLight[3];
-                            Vector2 goalPos = goalDoor.getObstacle().getPosition();
-                            FloatingLight goalLight = new FloatingLight(units,goalPos,1,goalPos);
-                            floatingLights[0] = goalLight;
-                            Vector2 centerPos = new Vector2(bounds.width/2,bounds.height/2);
-                            FloatingLight centerLight = new FloatingLight(units,centerPos,1,centerPos);
-                            floatingLights[1] = centerLight;
-                            Vector2 edgePos1 = new Vector2(bounds.width-5,5);
-                            Vector2 edgePos2 = new Vector2(5,5);
-                            FloatingLight edgeLight = new FloatingLight(units,edgePos1,1,edgePos2);
-                            floatingLights[2] = edgeLight;
-                            for (int i = 0; i <floatingLights.length; i++){
-                                addSprite(floatingLights[i]);}
-                            for (FloatingLight floatingLight: floatingLights) {
-                                lightController.attachAmbientLight(floatingLight);
-                            }
                             break;
 
                         case "moth":
@@ -1040,6 +1017,7 @@ public class GameplayScene implements Screen {
 
                 }
             }
+
         }
 
 
@@ -1213,6 +1191,27 @@ public class GameplayScene implements Screen {
 //        if (levelName.equals("moth_intro")) {
 //            temp.deactivateAnchor(1);
 //        }
+        lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds, units, cameraZoomLevel);
+        lightController.attachTorchLight(torchFire);
+        lightController.resetCamera(camera.position.x,camera.position.y);
+        lightController.attachPlayerLight(avatar);
+        //floating lights
+        floatingLights = new FloatingLight[3];
+        Vector2 goalPos = goalDoor.getObstacle().getPosition();
+        FloatingLight goalLight = new FloatingLight(units,goalPos,1,goalPos);
+        floatingLights[0] = goalLight;
+        Vector2 centerPos = new Vector2(bounds.width/2,bounds.height/2);
+        FloatingLight centerLight = new FloatingLight(units,centerPos,1,centerPos);
+        floatingLights[1] = centerLight;
+        Vector2 edgePos1 = new Vector2(bounds.width-5,5);
+        Vector2 edgePos2 = new Vector2(5,5);
+        FloatingLight edgeLight = new FloatingLight(units,edgePos1,1,edgePos2);
+        floatingLights[2] = edgeLight;
+        for (int i = 0; i <floatingLights.length; i++){
+            addSprite(floatingLights[i]);}
+        for (FloatingLight floatingLight: floatingLights) {
+            lightController.attachAmbientLight(floatingLight);
+        }
     }
     /**
      * Returns whether to process the update loop
@@ -1316,7 +1315,6 @@ public class GameplayScene implements Screen {
         fireController.update();
         eventHandler.update();
         contactListener.sustainedContact();
-        lightController.update(contactListener.beginSmother());
 
         InputController input = InputController.getInstance();
 
@@ -1973,6 +1971,7 @@ public class GameplayScene implements Screen {
                 lightController.attachAmbientLight(light);
             }
         }
+        lightController.update(contactListener.beginSmother());
         lightController.render();
     }
 
