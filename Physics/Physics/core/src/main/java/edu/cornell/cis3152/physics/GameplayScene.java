@@ -525,6 +525,12 @@ public class GameplayScene implements Screen {
             fireController.resetStorage();
         }
 
+        if (weatherMachine != null) {
+            for (ObstacleSprite rainDrop : weatherMachine.rainDrops) {
+                rainDrop.getObstacle().markRemoved(true);
+            }
+        }
+
         if (eventHandler != null) {
             eventHandler.dispose();
         }
@@ -619,7 +625,7 @@ public class GameplayScene implements Screen {
         float units = height / bounds.height;
         phyiscsUnits = units;
 
-//        weatherMachine = new MarthasWeatherMachine(phyiscsUnits,10);
+        weatherMachine = new MarthasWeatherMachine(phyiscsUnits,10);
         JsonValue levelData = directory.getEntry(levelName,JsonValue.class);
         JsonValue levelInfo = directory.getEntry(levelInfoName, JsonValue.class);
 
@@ -1035,7 +1041,6 @@ public class GameplayScene implements Screen {
                         Texture middle_texture = directory.getEntry( "platform-rope-mid", Texture.class );
                         Rope rope = new Rope(new Vector2(x1, y1), new Vector2(x2, y2), depth, thickness, piecelen, units, levelInfo.get("ropes").get(0));
                         rope.setTextures(texture, middle_texture);
-                        //temp = rope;
                         addSpriteGroup(rope);
                     }
 
@@ -1146,13 +1151,6 @@ public class GameplayScene implements Screen {
         supplementaryRainActions();
         updateTweenedMovementObjectsVec2(dt);
         updateTweenedMovementObjectsFloat(dt);
-
-        if (temp != null) {
-//            for (EnhancedObstacleSprite eos : temp.getTopEntities()) {
-//                System.out.println(eos.getObstacle().getAngle());
-//            }
-        }
-//        System.out.println("-----------");
 
         if (enemies != null) {
             for (Enemy e : enemies) {
@@ -1616,10 +1614,6 @@ public class GameplayScene implements Screen {
                     TweenElement<Float> tweenElementFloat = new TweenElement<Float>(action.getTarget(), action.getName(),
                         initialStateFloat, (Float) action.getFinalValue(), timeTill,action.getInterpolator(), supplierFloat, consumerFloat);
                     tweenedMovmentObjectsFloat.add(tweenElementFloat);
-                    break;
-
-                case "demo":
-                    temp.deactivateAnchor(1);
                     break;
             }
         }

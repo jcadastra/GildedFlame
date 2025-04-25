@@ -17,7 +17,7 @@ public class MarthasWeatherMachine {
     private RayCastCallback rayCastCallback;
     private ArrayList<Fixture> collidedObstacles;
     private float rainAngle = 0;
-    private ArrayList<ObstacleSprite> rainDrops;
+    public ArrayList<ObstacleSprite> rainDrops;
     private float physicsUnits;
     private int rainTimer;
     private int rainFreq;
