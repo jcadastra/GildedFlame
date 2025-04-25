@@ -3,20 +3,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.ScreenUtils;
 import edu.cornell.gdiac.util.ScreenListener;
 import edu.cornell.gdiac.util.XBoxController;
 
@@ -27,7 +22,7 @@ public class LevelSelectScene implements Screen {
     private ScreenListener listener;
     private Texture bgTexture;
 
-    private Array<TextButton> levels = new Array<>(10);//10 level per scene
+    private Array<Image> levels = new Array<Image>(10);//10 level per scene
     private int currentIndex = 0;
 
     private ParticleEngine particleEngine;
@@ -47,7 +42,7 @@ public class LevelSelectScene implements Screen {
         stage = new Stage(new ScreenViewport());
         skin = new Skin();
 
-        bgTexture = new Texture(Gdx.files.internal("loading/menuScreen.png"));
+        bgTexture = new Texture(Gdx.files.internal("ui/plain_back.png"));
         Image bgImage = new Image(bgTexture);
         bgImage.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage.addActor(bgImage);
@@ -56,102 +51,136 @@ public class LevelSelectScene implements Screen {
     }
 
     private void createBasicUI() {
-        // Create a basic font
-        BitmapFont font = new BitmapFont();
-
-        Pixmap pixmap = new Pixmap(200, 60, Pixmap.Format.RGB888);
-        pixmap.setColor(1, 1, 1, 1);
-        pixmap.fill();
-        Texture texture = new Texture(pixmap);
-        pixmap.dispose();
-        Drawable drawable = new TextureRegionDrawable(texture);
-
-        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        textButtonStyle.up = drawable;
-        textButtonStyle.font = font;
-        skin.add("default", textButtonStyle);
-
-        float buttonWidth = 200;
-        float buttonHeight = 60;
-        float spacing = 50;
-
-        float totalHeight = 3 * buttonHeight + 2 * spacing;
-        float centerX = (Gdx.graphics.getWidth() / 2f - buttonWidth / 2f) + 325;
-        float startY = Gdx.graphics.getHeight() / 2f + totalHeight / 2f - buttonHeight;
-
-        textButtonStyle.fontColor = Color.DARK_GRAY;
-        TextButton oneButton = new TextButton("Level 1", skin);
-        oneButton.setSize(200, 60);
-        oneButton.setPosition(centerX, startY);
-        TextButton twoButton = new TextButton("Level 2", skin);
-        twoButton.setSize(200, 60);
-        twoButton.setPosition(centerX, startY - (buttonHeight + spacing));
-        TextButton threeButton = new TextButton("Level 3", skin);
-        threeButton.setSize(200, 60);
-        threeButton.setPosition(centerX, startY - 2 * (buttonHeight + spacing));
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
+        Texture chamberLabelTexture = new Texture(Gdx.files.internal("ui/chamber_sel.png"));
+        Image chamberLabel = new Image(chamberLabelTexture);
+        chamberLabel.setSize(screenWidth * 0.5f, screenHeight * 0.1f);
+        chamberLabel.setPosition(
+            screenWidth * 0.25f,
+            screenHeight * 0.85f
+        );
+        stage.addActor(chamberLabel);
+        Texture chapLableTexture = new Texture(Gdx.files.internal("ui/chap_title.png"));
+        Image chapLabel = new Image(chapLableTexture);
+        chapLabel.setSize(screenWidth * 0.2f, screenHeight * 0.05f);
+        float verticalSpacing = screenHeight * 0.02f;
+        chapLabel.setPosition(
+            (screenWidth - screenWidth * 0.2f) / 2f,
+            chamberLabel.getY() - screenHeight * 0.05f - verticalSpacing
+        );
+        stage.addActor(chapLabel);
 
 
-        oneButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
-            @Override
-            public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
-                                     float x, float y, int pointer, int button) {
-                System.out.println("Button pressed");
-                selectedLevel = 1;
-                if (listener != null) {
-                    listener.exitScreen(LevelSelectScene.this, 1); // You choose any exit code
-                }
-                return true;
+        Texture[] doorTextures = new Texture[] {
+            new Texture(Gdx.files.internal("ui/doors/door1.png")),
+            new Texture(Gdx.files.internal("ui/doors/door2.png")),
+            new Texture(Gdx.files.internal("ui/doors/door3.png")),
+            new Texture(Gdx.files.internal("ui/doors/door4.png")),
+            new Texture(Gdx.files.internal("ui/doors/door5.png"))
+        };
 
+        float doorWidth = screenWidth * 0.15f;
+        float doorHeight = screenHeight * 0.2f;
+        float spacing = screenWidth * 0.03f; //
+        float totalWidth = doorWidth * doorTextures.length + spacing * (doorTextures.length - 1);
+        int centerIndex = doorTextures.length / 2; // 2 for 5 doors
+        float startX = screenWidth / 2f - doorWidth / 3f - (centerIndex * (doorWidth + spacing));
+        float yPos = screenHeight * 0.185f;
 
+        for (int i = 0; i < doorTextures.length; i++) {
+            final int levelIndex = i + 1;
+            final Texture defaultTexture = doorTextures[i];
+            final Texture hoverTexture = (i < 3)
+                ? new Texture(Gdx.files.internal("ui/doors/door" + levelIndex + "_click.png"))
+                : defaultTexture;
+
+            Image door = new Image(defaultTexture);
+            door.setSize(doorWidth, doorHeight);
+            door.setPosition(startX + i * (doorWidth + spacing), yPos);
+
+            if (i < 3) {
+                door.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+                    @Override
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                        selectedLevel = levelIndex;
+                        if (listener != null) {
+                            listener.exitScreen(LevelSelectScene.this, 1);
+                        }
+                        return true;
+                    }
+
+                    @Override
+                    public void enter(InputEvent event, float x, float y, int pointer, com.badlogic.gdx.scenes.scene2d.Actor fromActor) {
+                        ((Image) event.getListenerActor()).setDrawable(new Image(hoverTexture).getDrawable());
+                    }
+
+                    @Override
+                    public void exit(InputEvent event, float x, float y, int pointer, com.badlogic.gdx.scenes.scene2d.Actor toActor) {
+                        ((Image) event.getListenerActor()).setDrawable(new Image(defaultTexture).getDrawable());
+                    }
+                });
+
+                levels.add(door);
             }
-        });
-        twoButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
-            @Override
-            public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
-                                     float x, float y, int pointer, int button) {
-                System.out.println("Button pressed");
-                selectedLevel = 2;
-                if (listener != null) {
-                    listener.exitScreen(LevelSelectScene.this, 1); // You choose any exit code
-                }
-                return true;
 
-
-            }
-        });
-        threeButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
-            @Override
-            public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
-                                     float x, float y, int pointer, int button) {
-                System.out.println("Button pressed");
-                selectedLevel = 3;
-                if (listener != null) {
-                    listener.exitScreen(LevelSelectScene.this, 1); // You choose any exit code
-                }
-                return true;
-
-
-            }
-        });
-        levels.add(oneButton);
-        levels.add(twoButton);
-        levels.add(threeButton);
-
-        //controller support
-        if (inputController.isUsingController()){
-            if (levels.notEmpty()){//the first button appears as selected
-            particleEngine = new ParticleEngine(levels.get(0));}
-
+            stage.addActor(door);
         }
+        Texture l_arrow_text = new Texture(Gdx.files.internal("ui/l_arrow.png"));
+        Texture l_arrow_hov_text = new Texture(Gdx.files.internal("ui/l_arrow_click.png"));
+        Image l_arrow = new Image(l_arrow_text);
+        l_arrow.setSize(screenWidth * 0.05f, screenHeight * 0.05f);
+        l_arrow.setPosition(
+            screenWidth * 0.01f,
+            screenHeight * 0.25f
+        );
+        stage.addActor(l_arrow);
 
-        stage.addActor(oneButton);
-        stage.addActor(twoButton);
-        stage.addActor(threeButton);
+        Texture r_arrow_text = new Texture(Gdx.files.internal("ui/r_arrow.png"));
+        Texture r_arrow_hov_text = new Texture(Gdx.files.internal("ui/r_arrow_click.png"));
+        Image r_arrow = new Image(r_arrow_text);
+        r_arrow.setSize(screenWidth * 0.05f, screenHeight * 0.05f);
+        r_arrow.setPosition(
+            screenWidth * 0.94f,
+            screenHeight * 0.25f
+        );
+        stage.addActor(r_arrow);
+        final TextureRegionDrawable l_arrow_drawable = new TextureRegionDrawable(new TextureRegion(l_arrow_text));
+        final TextureRegionDrawable l_arrow_hover_drawable = new TextureRegionDrawable(new TextureRegion(l_arrow_hov_text));
+        final TextureRegionDrawable r_arrow_drawable = new TextureRegionDrawable(new TextureRegion(r_arrow_text));
+        final TextureRegionDrawable r_arrow_hover_drawable = new TextureRegionDrawable(new TextureRegion(r_arrow_hov_text));
+
+        l_arrow.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, com.badlogic.gdx.scenes.scene2d.Actor fromActor) {
+                ((Image) event.getListenerActor()).setDrawable(l_arrow_hover_drawable);
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, com.badlogic.gdx.scenes.scene2d.Actor toActor) {
+                ((Image) event.getListenerActor()).setDrawable(l_arrow_drawable);
+            }
+        });
+
+        r_arrow.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, com.badlogic.gdx.scenes.scene2d.Actor fromActor) {
+                ((Image) event.getListenerActor()).setDrawable(r_arrow_hover_drawable);
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, com.badlogic.gdx.scenes.scene2d.Actor toActor) {
+                ((Image) event.getListenerActor()).setDrawable(r_arrow_drawable);
+            }
+        });
+
+
+
 
     }
 
     private void updateLevelHighlight(){
-        TextButton currentLevel = levels.get(currentIndex);
+        Image currentLevel = levels.get(currentIndex);
 //        particleEngine = new ParticleEngine(levels.get(currentIndex));
 //            Batch batch = stage.getBatch();
 //            batch.begin();
@@ -161,7 +190,7 @@ public class LevelSelectScene implements Screen {
     }
 
     private void controllerSelect(){
-        TextButton currentLevel = levels.get(currentIndex);
+        Image currentLevel = levels.get(currentIndex);
         // begin controller listening
         if (inputController.isUsingController()){
             // starts listening for level confirmation
@@ -188,34 +217,34 @@ public class LevelSelectScene implements Screen {
             // starts listening for level change
             boolean moved = false; // debounce flag
 
-            float vertical = xbox.getLeftY();
+            float horizontal = xbox.getLeftX();
             if (joystickCooldown <=0){
-            // Move UP
-            if (vertical < -0.4f && !moved) {
-                particleEngine.dispose();
-                levels.get(currentIndex).setColor(Color.WHITE);
-                currentIndex = (currentIndex - 1 + levels.size) % levels.size;
-                currentLevel = levels.get(currentIndex);
-                moved = true;
-                updateLevelHighlight();
-                joystickCooldown = 0.25f;
-            }
+                // Move LEFT
+                if (horizontal < -0.4f && !moved) {
+                    particleEngine.dispose();
+                    levels.get(currentIndex).setColor(Color.WHITE);
+                    currentIndex = (currentIndex - 1 + levels.size) % levels.size;
+                    currentLevel = levels.get(currentIndex);
+                    moved = true;
+                    updateLevelHighlight();
+                    joystickCooldown = 0.25f;
+                }
 
-            // Move DOWN
-            else if (vertical > 0.4f && !moved) {
-                levels.get(currentIndex).setColor(Color.WHITE);
-                particleEngine.dispose();
-                currentIndex = (currentIndex + 1) % levels.size;
-                currentLevel = levels.get(currentIndex);
-                moved = true;
-                updateLevelHighlight();
-                joystickCooldown = 0.25f;
-            }
+                // Move RIGHT
+                else if (horizontal > 0.4f && !moved) {
+                    levels.get(currentIndex).setColor(Color.WHITE);
+                    particleEngine.dispose();
+                    currentIndex = (currentIndex + 1) % levels.size;
+                    currentLevel = levels.get(currentIndex);
+                    moved = true;
+                    updateLevelHighlight();
+                    joystickCooldown = 0.25f;
+                }
 
-            // Reset debounce when stick is near center
-            if (Math.abs(vertical) <= 0.01f) {
-                moved = false;
-            }
+                // Reset debounce when stick is near center
+                if (Math.abs(horizontal) <= 0.01f) {
+                    moved = false;
+                }
             }
             float time = Gdx.graphics.getDeltaTime();
             joystickCooldown -= Gdx.graphics.getDeltaTime();
