@@ -258,12 +258,13 @@ public class CollisionController implements ContactListener {
                     moth.resetSmotherTimer();
                     moth.setState(EnemyState.SMOTHER);
                     beginSmother = true;
-                    beginSmother();
                 } else if (moth.getState() != EnemyState.DAZED && Avatar.getHasTorch()) {
                     moth.setState(EnemyState.CD);
                 } else {
-                    beginSmother = false;
                     // still stay in the smother state;
+                }
+                if (moth.getState()!=EnemyState.SMOTHER){
+                    beginSmother = false;
                 }
 
             }
@@ -323,6 +324,7 @@ public class CollisionController implements ContactListener {
                         if ((moth.getState() == EnemyState.SMOTHER) && playerPos.y > mothPos.y) {
                             moth.resetDazedTimer();
                             moth.setState(EnemyState.DAZED);
+                            //beginSmother = false;
                             Body playerBody = player.getObstacle().getBody();
                             float bounceImpulse = 0.15f * player.getUnits();
                             playerBody.applyLinearImpulse(
@@ -355,6 +357,7 @@ public class CollisionController implements ContactListener {
                 if (moth.getState() == EnemyState.SMOTHER) {
                     ContactKey key2 = new ContactKey(fix1, fix2);
                     sustainedContacts.put(key2, 300);
+                    beginSmother = true;
                 }
             }
 
