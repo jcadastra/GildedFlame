@@ -61,8 +61,8 @@ public class Rope extends ObstacleGroup {
 
         // Calculate the rope’s direction.
         this.internalAngle = (pin2.cpy().sub(pin1)).angleRad();
-        ropeThickness = thickness * units/38;
-        ropePieceLen = piecelen * units/38;
+        ropeThickness = thickness * 1.5f;
+        ropePieceLen = piecelen * 1.5f;
         //ropeThickness = data.getFloat("thickness");
         //ropePieceLen = data.getFloat("piecelen");
         // Step along the rope direction.

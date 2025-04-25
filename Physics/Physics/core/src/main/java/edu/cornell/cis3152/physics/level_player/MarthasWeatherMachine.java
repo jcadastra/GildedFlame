@@ -1,4 +1,4 @@
-package edu.cornell.cis3152.physics.level_player.enviromentals;
+package edu.cornell.cis3152.physics.level_player;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -6,14 +6,10 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
 import edu.cornell.cis3152.physics.level_player.utils.RainFlag;
-import edu.cornell.gdiac.math.Poly2;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
 import edu.cornell.gdiac.physics2.WheelObstacle;
-import edu.cornell.gdiac.util.PooledList;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Random;
-import java.util.Set;
 import java.util.Stack;
 
 public class MarthasWeatherMachine {

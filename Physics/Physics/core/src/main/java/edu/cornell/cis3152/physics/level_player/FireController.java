@@ -2,13 +2,11 @@ package edu.cornell.cis3152.physics.level_player;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import edu.cornell.cis3152.physics.level_player.enviromentals.*;
 import edu.cornell.cis3152.physics.level_player.player.Torch;
 import edu.cornell.cis3152.physics.level_player.utils.FireFlag;
-import edu.cornell.cis3152.physics.level_player.utils.ObstacleGroup;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.graphics.SpriteMesh;
 import edu.cornell.gdiac.physics2.Obstacle;
@@ -19,11 +17,9 @@ import com.badlogic.gdx.utils.ShortArray;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
-import java.util.function.BiConsumer;
 
 
 public class FireController {
