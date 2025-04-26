@@ -354,6 +354,7 @@ public class CollisionController implements ContactListener {
 
 
             if (isXandY(bd1, bd2, EnhancedObstacleSprite.class, Fire.class) == 1) {
+                System.out.println("burn time");
                 Fire f = (Fire) idX(bd1, bd2, Fire.class);
                 EnhancedObstacleSprite b = (EnhancedObstacleSprite) idX(bd1, bd2, EnhancedObstacleSprite.class);
                 if (b.getMaterial().getFlammability() > 0 && !fireController.testIfFullyBurning(b)) {
@@ -431,6 +432,7 @@ public class CollisionController implements ContactListener {
                 Fire f = (Fire) idX(bd1, bd2, Fire.class);
                 EnhancedObstacleSprite b = (EnhancedObstacleSprite) idX(bd1, bd2, EnhancedObstacleSprite.class);
                 int contactTime = sustainedContacts.get(key);
+                System.out.println("burning");
 
 
                 Vector2 f_pos = f.getObstacle().getPosition().cpy();

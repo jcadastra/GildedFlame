@@ -1,25 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.11.2" name="GameObjectTiles" tilewidth="500" tileheight="500" tilecount="7" columns="0">
+<tileset version="1.10" tiledversion="1.10.2" name="GameObjects" tilewidth="934" tileheight="934" tilecount="6" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
+ <tile id="0">
+  <image width="934" height="934" source="environment/Rope/ropeEnd.png"/>
+ </tile>
+ <tile id="1">
+  <properties>
+   <property name="name" value="burnable"/>
+  </properties>
+  <image width="458" height="500" source="environment/barrel.png"/>
+ </tile>
  <tile id="2">
-  <image source="tiled_images/ropeEnd.png" width="300" height="300"/>
+  <properties>
+   <property name="name" value="nonburnable"/>
+  </properties>
+  <image width="392" height="500" source="environment/statue.png"/>
  </tile>
  <tile id="3">
-  <image source="tiled_images/button.png" width="86" height="49"/>
+  <image width="300" height="300" source="environment/tablet.png"/>
  </tile>
  <tile id="4">
-  <image source="shared/goaldoor.png" width="500" height="500"/>
+  <properties>
+   <property name="name" value="goaldoor"/>
+  </properties>
+  <image width="346" height="235" source="environment/treasure.png"/>
  </tile>
- <tile id="8">
-  <image source="tiled_images/brick.png" width="300" height="300"/>
- </tile>
- <tile id="9">
-  <image source="tiled_images/column_background.png" width="300" height="500"/>
- </tile>
- <tile id="10">
-  <image source="tiled_images/rune.png" width="73" height="93"/>
- </tile>
- <tile id="11">
-  <image source="tiled_images/Window.png" width="300" height="500"/>
+ <tile id="5">
+  <properties>
+   <property name="name" value="platform____"/>
+  </properties>
+  <image width="200" height="114" source="environment/platform.png"/>
  </tile>
 </tileset>

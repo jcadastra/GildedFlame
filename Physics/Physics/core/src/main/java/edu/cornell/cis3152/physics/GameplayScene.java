@@ -767,7 +767,7 @@ public class GameplayScene implements Screen {
                         totem.createSensor();
                         enemies.add(totem);
                     } else if (objName.contains("goaldoor")) {
-                        texture = directory.getEntry("shared-goal", Texture.class);
+                        texture = directory.getEntry("treasure", Texture.class);
                         System.out.println("goal door texture: " + texture);
                         float size = 1f;
 
@@ -780,6 +780,8 @@ public class GameplayScene implements Screen {
                         this.goalDoor = goalDoor;
                         addSprite(goalDoor);
                     } else if (objName.contains("platform")) {
+                        float width = object.getFloat("width") / levelData.getInt("tilewidth");
+                        float height = object.getFloat("height") / levelData.getInt("tileheight");
                         GameObject platform = new GameObject(x,y,width,height, units, true);
                         platform.getObstacle().setBodyType(BodyType.KinematicBody);
                         platform.getObstacle().setName(objName);
@@ -788,6 +790,8 @@ public class GameplayScene implements Screen {
                         platform.setMaterial(new ObstacleMaterial("platform", null));
                         addSprite(platform);
                     } else if (objName.contains("burnable")) {
+                        float width = object.getFloat("width") / levelData.getInt("tilewidth");
+                        float height = object.getFloat("height") / levelData.getInt("tileheight");
                         GameObject box = new GameObject(x,y,width,height, units, true);
                         box.getObstacle().setBodyType(BodyType.DynamicBody);
                         box.getObstacle().setName(objName);
@@ -798,6 +802,7 @@ public class GameplayScene implements Screen {
                         } else {
                             box.setMaterial(new ObstacleMaterial("stone", null));
                         }
+                        System.out.println("sanity check" + (box instanceof EnhancedObstacleSprite));
                         addSprite(box);
                     } else if (objName.contains("rune")) {
                         boolean hasMoveEvent = false;
@@ -992,6 +997,19 @@ public class GameplayScene implements Screen {
                                     break;
                             }
                         }
+                    } else if (objName.contains("background")) {
+                        Texture temp = directory.getEntry(objName, Texture.class);
+                        float width = object.getFloat("width") / levelData.getInt("tilewidth");
+                        float height = object.getFloat("height") / levelData.getInt("tileheight");
+                        temp.setWrap(TextureWrap.Repeat,TextureWrap.Repeat);
+
+                        GameObject decoration = new GameObject(0,0,width,height, units, true);
+                        decoration.getObstacle().setSensor(true);  // set as sensor
+                        decoration.getObstacle().setBodyType(BodyType.StaticBody);
+                        decoration.setTexture(temp);
+                        decoration.getObstacle().setName(objName);
+
+                        addSprite(decoration);
                     } else {
                         if (objName.matches("\\d+")) {
                             ropeAnchors.put(objName, object);
@@ -1148,7 +1166,6 @@ public class GameplayScene implements Screen {
      * @param dt    Number of seconds since last animation frame
      */
     public void update(float dt) {
-        System.out.println("one update ---------------");
         soundEngine.tendToMusicLoop();
 
         updateRunes(dt);
