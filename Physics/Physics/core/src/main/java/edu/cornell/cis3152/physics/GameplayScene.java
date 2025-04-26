@@ -356,6 +356,7 @@ public class GameplayScene implements Screen {
         contactListener = new CollisionController(directory, fireController);
         this.eventHandler = new EventHandler();
         this.soundEngine = soundEngine;
+        weatherMachine = new MarthasWeatherMachine();
         torchArc = new ArrayList<>();
         tweenedMovmentObjectsVec2 = new PooledList<>();
         tweenedMovmentObjectsFloat = new PooledList<>();
@@ -625,7 +626,6 @@ public class GameplayScene implements Screen {
         float units = height / bounds.height;
         phyiscsUnits = units;
 
-        weatherMachine = new MarthasWeatherMachine(phyiscsUnits,10);
         JsonValue levelData = directory.getEntry(levelName,JsonValue.class);
         JsonValue levelInfo = directory.getEntry(levelInfoName, JsonValue.class);
 
@@ -677,7 +677,6 @@ public class GameplayScene implements Screen {
 
                     Texture textur = directory.getEntry("stoneTile"+(tileId), Texture.class);
                     textur.setWrap(TextureWrap.ClampToEdge, TextureWrap.ClampToEdge);
-                    System.out.println("making : " + x + "," + y + "," + tileId);
 
                     tile.setTexture(textur);
 
@@ -988,6 +987,21 @@ public class GameplayScene implements Screen {
                                 state -> state == 1, rotateAction);
                             eventHandler.registerEvent(rotateEvent);
                         }
+                    } else if (objName.contains("weather")) {
+                        for (JsonValue prop : object.get("properties")) {
+                            String propName = prop.getString("name");
+                            String value = prop.getString("value");
+                            switch (propName) {
+                                case "rain":
+                                    if (Integer.parseInt(value) != 0) {
+                                        weatherMachine.activateRain(phyiscsUnits, Integer.parseInt(value));
+                                    }
+                                    break;
+                                case "pass":
+//                                    doubleSided = Boolean.parseBoolean(value);
+                                    break;
+                            }
+                        }
                     } else {
                         if (objName.matches("\\d+")) {
                             ropeAnchors.put(objName, object);
@@ -1150,7 +1164,9 @@ public class GameplayScene implements Screen {
         supplementaryCollisionActions();
         supplementaryFireActions();
         supplementaryEventActions(dt);
-        supplementaryRainActions();
+        if (weatherMachine.isRainActive()) {
+            supplementaryRainActions();
+        }
         updateTweenedMovementObjectsVec2(dt);
         updateTweenedMovementObjectsFloat(dt);
 
@@ -1220,7 +1236,6 @@ public class GameplayScene implements Screen {
 //                sprite.getObstacle().getBody().applyForceToCenter(new Vector2(1f,0f), true);
 //            }
 //        }
-
         updateCamera();
     }
 
@@ -1408,6 +1423,7 @@ public class GameplayScene implements Screen {
                     }
                     break;
                 case "traciGrounded":
+                    System.out.println("traciGrounded");
                     if (avatar.getGroundedState().equals(GroundState.CLIMBING)) {
                         avatar.removeClimbingPhysics();
                     }

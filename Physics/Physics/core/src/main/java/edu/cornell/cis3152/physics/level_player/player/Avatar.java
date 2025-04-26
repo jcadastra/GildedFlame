@@ -608,7 +608,8 @@ public class Avatar extends ObstacleSprite {
             Vector2 playerMovement = new Vector2(ropeDir).scl(-getMovement().y * (1f / 7 * topProtector)).add(new Vector2(perpDir).scl(getMovement().x * (1f / 10)));
 
             if (playerMovement.len() == 0 && bodyTouchedClimbables.size() > 1) {
-                playerMovement = avgPos.cpy().sub(getObstacle().getPosition());
+//                playerMovement = avgPos.cpy().sub(getObstacle().getPosition());
+                //TODO: revamp auto ccorrect
             }
             obstacle.setLinearVelocity(avgVel.add(playerMovement));
 

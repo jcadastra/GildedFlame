@@ -28,9 +28,7 @@ public class MarthasWeatherMachine {
     private Vector2 rainRestPos = new Vector2(-2,-2);
 
 
-    public MarthasWeatherMachine(float physicsUnits, int rainFreq) {
-        this.physicsUnits = physicsUnits;
-        this.rainFreq = this.rainTimer = rainFreq;
+    public MarthasWeatherMachine() {
         this.rainflags = new Stack<>();
         this.random = new Random();
         this.collidedObstacles = new ArrayList<Fixture>(){};
@@ -55,11 +53,22 @@ public class MarthasWeatherMachine {
 //        pathSmoother.clear();
     }
 
+    public void activateRain(float physicsUnits, int rainFreq) {
+        this.physicsUnits = physicsUnits;
+        this.rainFreq = this.rainTimer = rainFreq;
+    }
+
+    public boolean isRainActive() {
+        return rainFreq != 0;
+    }
+
     public void update(World world) {
         if (this.world == null) {
             this.world = world;
         }
-        generateRain();
+        if (isRainActive()) {
+            generateRain();
+        }
     }
 
     public void generateRain() {
@@ -102,6 +111,7 @@ public class MarthasWeatherMachine {
     }
 
     public boolean inRain(ObstacleSprite sprite) {
+        if (!isRainActive()) {return false;}
         Vector2 pos = sprite.getObstacle().getPosition();
         collidedObstacles.clear();
         world.rayCast(rayCastCallback, pos, new Vector2(pos.x, 18));
