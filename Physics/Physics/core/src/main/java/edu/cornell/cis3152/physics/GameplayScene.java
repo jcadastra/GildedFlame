@@ -668,7 +668,8 @@ public class GameplayScene implements Screen {
                     int index = y * width + x;
                     int tileId = tileData[index] - 1;
                     String name;
-                    if (tileId - 10 <= 0) {
+                    if (tileId - 5 <= 0 || tileId == 7 || tileId == 12 || tileId == 13 ||
+                        tileId == 14 || tileId == 15 || tileId == 29 || tileId == 31) {
                         name = "platform";
                     } else {
                         name = "wall";
@@ -679,7 +680,7 @@ public class GameplayScene implements Screen {
                     tile.getObstacle().setName(name);
 
 //                    Texture textur = directory.getEntry("stoneTile"+(tileId), Texture.class);
-                    tile.setTextureRegion(tileSetSplit[tileId / (tileSetSplit.length)][( tileId % tileSetSplit.length)]);
+                    tile.setTextureRegion(tileSetSplit[tileId / (tileSetSplit[0].length)][( tileId % tileSetSplit[0].length)]);
 
 
                     addSprite(tile);
