@@ -168,7 +168,9 @@ public class CollisionController implements ContactListener {
             }
 
             if (isXandY(bd1, bd2, "wall", Enemy.class) == 1) {
+                System.out.println("WALLL");
                 Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
+                System.out.println(enemy.getObstacle().getName());
                 enemy.setJustCollided(false);
                 enemy.changeDirection();
             }

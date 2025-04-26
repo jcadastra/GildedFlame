@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "example_level2.tmj",
+    "activeFile": "C:/Users/ericj/Downloads/test5.tmx",
     "expandedProjectPaths": [
         "."
     ],
@@ -46,6 +46,14 @@
                 "y": 1589.3254262416606
             }
         },
+        "C:/Users/ericj/Downloads/test5.tmx": {
+            "scale": 0.1759259259259259,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 4803.1578947368425,
+                "y": 2702.842105263158
+            }
+        },
         "EnemyTiles.tsx": {
             "dynamicWrapping": true,
             "scaleInDock": 0.25,
@@ -84,9 +92,9 @@
         },
         "example_level.tmx": {
             "expandedObjectLayers": [
+                4,
                 2,
-                5,
-                4
+                5
             ],
             "scale": 0.125,
             "selectedLayer": 1,
@@ -102,8 +110,8 @@
             "scale": 1,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 550,
-                "y": 2780.5
+                "x": 4799.5,
+                "y": 2699.5
             }
         },
         "example_level2.tmx": {
@@ -124,9 +132,9 @@
         },
         "sample.tmj": {
             "expandedObjectLayers": [
+                6,
                 2,
-                5,
-                6
+                5
             ],
             "scale": 0.25,
             "selectedLayer": 4,
@@ -197,8 +205,8 @@
             "scale": 0.180796875,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 4798.2024025581195,
-                "y": 2696.396162820845
+                "x": 4795.4368680321495,
+                "y": 2690.8650937689054
             }
         },
         "test_map.tmj": {
@@ -211,9 +219,9 @@
         },
         "test_map.tmx": {
             "expandedObjectLayers": [
-                2,
                 4,
-                3
+                3,
+                2
             ],
             "scale": 0.5,
             "selectedLayer": 2,
@@ -258,7 +266,8 @@
         "C:/Users/ericj/Downloads/level 3.tmj",
         "example_level.tmx",
         "example_level2.tmx",
-        "test6.tmj"
+        "test6.tmj",
+        "C:/Users/ericj/Downloads/test5.tmx"
     ],
     "project": "tiled.tiled-project",
     "property.type": "int",
@@ -271,10 +280,10 @@
         "PlatformTiles.tsx",
         "example_level.tmj",
         "test2.tmj",
-        "test6.tmj",
-        "example_level2.tmx",
-        "example_level.tmx",
-        "C:/Users/ericj/Downloads/level 3.tmj"
+        "example_level2.tmj",
+        "sample.tmj",
+        "C:/Users/ericj/Downloads/level 3.tmj",
+        "example_level.tmx"
     ],
     "tileset.embedInMap": true,
     "tileset.lastUsedFormat": "tsx",

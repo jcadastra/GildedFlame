@@ -675,7 +675,6 @@ public class GameplayScene implements Screen {
 //                    Texture textur = directory.getEntry("stoneTile"+(tileId), Texture.class);
                     tile.setTextureRegion(tileSetSplit[tileId / (tileSetSplit[0].length)][( tileId % tileSetSplit[0].length)]);
 
-
                     addSprite(tile);
                 }
             } else if (layerType.equals("objectgroup")) {
@@ -1149,6 +1148,7 @@ public class GameplayScene implements Screen {
      * @param dt    Number of seconds since last animation frame
      */
     public void update(float dt) {
+        System.out.println("one update ---------------");
         soundEngine.tendToMusicLoop();
 
         updateRunes(dt);
