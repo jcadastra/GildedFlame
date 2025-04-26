@@ -101,28 +101,12 @@ public class Torch extends EnhancedObstacleSprite {
         body.applyLinearImpulse(appliedForce,obstacle.getPosition(),true);
         body.applyAngularImpulse(data.getFloat("angular_force") * -direc,true);
 
-        float theta0 = body.getAngle(); // current angle in radians
-        float currentOmega = body.getAngularVelocity(); // current angular velocity in rad/s
-
-// Compute the current predicted angle at landing
-        float thetaFinal = theta0 + currentOmega * timeTillGround;
-        float modFinal = thetaFinal % (2 * (float)Math.PI);
-
-// Target is pi/2
-        float targetAngle = (float)(Math.PI / 2);
-
-// Compute the shortest angular offset to get to the target
-        float delta = targetAngle - modFinal;
-// Wrap delta to [-PI, PI] for minimal adjustment
-        if (delta > Math.PI) delta -= 2 * Math.PI;
-        if (delta < -Math.PI) delta += 2 * Math.PI;
-
-// Adjust omega just enough to correct this over the remaining time
-        float omegaAdjustment = delta / timeTillGround;
-        float newOmega = currentOmega + omegaAdjustment;
-
-// Apply the corrected angular velocity
-        body.setAngularVelocity(newOmega);
+        float av = body.getAngularVelocity() * 60/360;
+        float tmp = (av * timeTillGround + -direc) * .5f;
+        float x = (float) (.25*(Math.round((tmp)/.25)));
+        float spinNum = x % .5f == 0 ? x+(.25f * direc) : x;
+        System.out.println(av +", " +tmp + ", " +x+ ", " + spinNum);
+        body.setAngularVelocity(spinNum * 6);
     }
 
     public Vector2 getThrowForce(int direc) {

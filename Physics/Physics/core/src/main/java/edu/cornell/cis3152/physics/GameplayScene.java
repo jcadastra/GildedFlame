@@ -1380,7 +1380,7 @@ public class GameplayScene implements Screen {
         float dt = 1/60f;
         Vector2 start = new Vector2(torch.getObstacle().getPosition());
         // magic numbers but idk why they work
-        Vector2 vel = new Vector2(torch.getIntialThrowVelocity()).scl(1.05f * (avatar.isFacingRight() ? 1 : -1),2.1f);
+        Vector2 vel = new Vector2(torch.getIntialThrowVelocity()).scl(1.02f * (avatar.isFacingRight() ? 1 : -1),2.1f);
         float gravity = world.getGravity().y;
         final Fixture[] hit = { null };
         final Vector2[] hitpoint = {new Vector2()};
