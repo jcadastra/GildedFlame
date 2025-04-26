@@ -55,9 +55,9 @@ public class LightController {
 
     private int numRays;
 
-    private float BOX_TO_WORLD = 32.0f;
+    private float BOX_TO_WORLD;
 
-    private float WORLD_TO_BOX = 1/32.0f;
+    private float WORLD_TO_BOX;
 
     private Fire fire;
 
@@ -119,6 +119,7 @@ public class LightController {
     }
     public LightController(Vector2 points, World world, OrthographicCamera camera, Rectangle bounds, float physicsUnits, float cameraZoomLevel){
         this.BOX_TO_WORLD = physicsUnits;
+        this.WORLD_TO_BOX = 1/physicsUnits;
         this.world = world;
         this.bounds = bounds;
         this.cameraZoomLevel = cameraZoomLevel;
@@ -316,10 +317,6 @@ public class LightController {
 
     private void inBounds(){
 //        System.out.println(camera.viewportWidth+ ",  ***  , " + camera.viewportHeight);
-        //TODO: MAGIC NUMEBRS
-        int height = 18;
-        int width = 32;
-
         float visibleW =  camera.viewportWidth/2*camera.zoom; //half of world visible, zoomed
         float visibleH = camera.viewportHeight/2*camera.zoom;
 

@@ -544,7 +544,6 @@ public class CollisionController implements ContactListener {
             Avatar t = (Avatar) idX(bd1, bd2, Avatar.class);
             if ((isGround(bd1) || isGround(bd2)) && (((t.getSensorName().equals(fd2) && t != bd1) || (t.getSensorName().equals(fd1) && t != bd2)) && t.getGroundedState().equals(GroundState.GROUNDED))) {
                 collisionFlags.push(new CollisionFlag("traciAirborne", bd1 instanceof Avatar ? fix2 : fix1));
-                System.out.println("turn aig borne");
             }
         }
         if (isXandY (bd1,bd2, "platform", Enemy.class) == 1){

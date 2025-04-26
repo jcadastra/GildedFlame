@@ -38,7 +38,7 @@
          "name":"Player",
          "objects":[
                 {
-                 "gid":28,
+                 "gid":52,
                  "height":600,
                  "id":1,
                  "name":"player",
@@ -50,7 +50,7 @@
                  "y":5060
                 }, 
                 {
-                 "gid":27,
+                 "gid":51,
                  "height":300,
                  "id":2,
                  "name":"torch",
@@ -60,6 +60,41 @@
                  "width":150,
                  "x":3565,
                  "y":4406
+                }, 
+                {
+                 "gid":59,
+                 "height":300,
+                 "id":19,
+                 "name":"6",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":300,
+                 "x":4053.61247947455,
+                 "y":5044.99611096707
+                }, 
+                {
+                 "gid":59,
+                 "height":300,
+                 "id":20,
+                 "name":"5",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":300,
+                 "x":1691.84599429609,
+                 "y":3363.55111917725
+                }, 
+                {
+                 "height":0,
+                 "id":21,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":4225.73675568231,
+                 "y":4845.21648949961
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -73,7 +108,7 @@
          "name":"Enemies",
          "objects":[
                 {
-                 "gid":35,
+                 "gid":59,
                  "height":150,
                  "id":7,
                  "name":"2",
@@ -101,7 +136,7 @@
                  "y":5054
                 }, 
                 {
-                 "gid":35,
+                 "gid":59,
                  "height":150,
                  "id":8,
                  "name":"1",
@@ -113,7 +148,7 @@
                  "y":4406
                 }, 
                 {
-                 "gid":35,
+                 "gid":59,
                  "height":150,
                  "id":9,
                  "name":"3",
@@ -125,7 +160,7 @@
                  "y":1742
                 }, 
                 {
-                 "gid":35,
+                 "gid":59,
                  "height":150,
                  "id":10,
                  "name":"4",
@@ -137,7 +172,7 @@
                  "y":4190
                 }, 
                 {
-                 "gid":37,
+                 "gid":61,
                  "height":500,
                  "id":16,
                  "name":"goaldoor",
@@ -149,7 +184,7 @@
                  "y":1514
                 }, 
                 {
-                 "gid":31,
+                 "gid":55,
                  "height":300,
                  "id":17,
                  "name":"totem",
@@ -167,10 +202,10 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":19,
+ "nextobjectid":23,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.11.2",
+ "tiledversion":"1.10.2",
  "tileheight":300,
  "tilesets":[
         {
@@ -178,15 +213,15 @@
          "source":"PlatformTiles.tsx"
         }, 
         {
-         "firstgid":25,
+         "firstgid":49,
          "source":"PlayerTorchTiles.tsx"
         }, 
         {
-         "firstgid":29,
+         "firstgid":53,
          "source":"EnemyTiles.tsx"
         }, 
         {
-         "firstgid":33,
+         "firstgid":57,
          "source":"GameObjectTiles.tsx"
         }],
  "tilewidth":300,

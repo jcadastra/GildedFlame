@@ -32,6 +32,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.utils.ObjectSet;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import edu.cornell.cis3152.physics.level_player.CollisionController;
 import edu.cornell.cis3152.physics.level_player.EventHandler;
@@ -198,7 +199,7 @@ public class GameplayScene implements Screen {
     protected HashSet<Rune> runeSet;
     protected PooledList<TweenElement<Float>> tweenedMovmentObjectsFloat;
     protected PooledList<TweenElement<Vector2>> tweenedMovmentObjectsVec2;
-    protected FitViewport fitViewport;
+    protected ExtendViewport fitViewport;
 
     protected LightController lightController;
     protected ShapeRenderer shapeRenderer;
@@ -364,7 +365,7 @@ public class GameplayScene implements Screen {
         this.shapeRenderer = new ShapeRenderer();
         runeSet = new HashSet<>();
 
-        this.fitViewport = new FitViewport(16, 9);
+        this.fitViewport = new ExtendViewport(1280, 720);
 
         // pull out sounds
         volume = constants.getFloat("volume", 1.0f);
@@ -1414,7 +1415,6 @@ public class GameplayScene implements Screen {
                     }
                     break;
                 case "traciGrounded":
-                    System.out.println("traciGrounded");
                     if (avatar.getGroundedState().equals(GroundState.CLIMBING)) {
                         avatar.removeClimbingPhysics();
                     }

@@ -6,55 +6,7 @@
          "draworder":"topdown",
          "id":5,
          "name":"Background",
-         "objects":[
-                {
-                 "gid":37,
-                 "height":300,
-                 "id":31,
-                 "name":"brick",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":300,
-                 "x":7275.3029051502,
-                 "y":-909.956122701124
-                }, 
-                {
-                 "gid":40,
-                 "height":1696,
-                 "id":32,
-                 "name":"window",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1064,
-                 "x":7630.73451233718,
-                 "y":-770.108793109537
-                }, 
-                {
-                 "gid":37,
-                 "height":300,
-                 "id":76,
-                 "name":"brick",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":300,
-                 "x":6826,
-                 "y":-1702
-                }, 
-                {
-                 "gid":38,
-                 "height":2016,
-                 "id":81,
-                 "name":"column",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":776,
-                 "x":5252.66666666667,
-                 "y":-566.333333333333
-                }],
+         "objects":[],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -62,20 +14,20 @@
          "y":0
         }, 
         {
-         "data":[16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14,
-            16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14,
-            16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14,
-            16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14,
-            16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14,
-            16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14,
-            16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14,
-            16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14,
+         "data":[9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9,
+            9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9,
+            9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9,
+            9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9,
+            9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9,
+            9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9,
+            9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9,
+            9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 9, 9,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            16, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 14,
-            16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14,
-            16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14,
+            15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
+            39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39,
             16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14,
             16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14,
             16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14,
@@ -95,67 +47,7 @@
          "draworder":"topdown",
          "id":2,
          "name":"Enemies",
-         "objects":[
-                {
-                 "gid":33,
-                 "height":308,
-                 "id":86,
-                 "name":"goaldoor",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":500,
-                 "x":8650.66666666667,
-                 "y":3283.33333333333
-                }, 
-                {
-                 "gid":32,
-                 "height":300,
-                 "id":102,
-                 "name":"button",
-                 "properties":[
-                        {
-                         "name":"doublesided",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"endX",
-                         "type":"string",
-                         "value":"24"
-                        }, 
-                        {
-                         "name":"endY",
-                         "type":"string",
-                         "value":"5"
-                        }, 
-                        {
-                         "name":"latch",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"rotationRadiance",
-                         "type":"string",
-                         "value":"-90"
-                        }, 
-                        {
-                         "name":"startX",
-                         "type":"string",
-                         "value":"4"
-                        }, 
-                        {
-                         "name":"startY",
-                         "type":"string",
-                         "value":"15"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":600,
-                 "x":-1788,
-                 "y":802
-                }],
+         "objects":[],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -166,7 +58,86 @@
          "draworder":"topdown",
          "id":3,
          "name":"Player",
-         "objects":[],
+         "objects":[
+                {
+                 "gid":68,
+                 "height":600,
+                 "id":107,
+                 "name":"player",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":300,
+                 "x":209.20787885206,
+                 "y":3207.55056655724
+                }, 
+                {
+                 "gid":67,
+                 "height":300,
+                 "id":108,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":150,
+                 "x":1409.2740654453,
+                 "y":2739.00773059409
+                }, 
+                {
+                 "height":0,
+                 "id":110,
+                 "name":"torch",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1572.38165837128,
+                 "y":2548.34268770518
+                }, 
+                {
+                 "height":0,
+                 "id":111,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":379.540400296516,
+                 "y":2778.77793074235
+                }, 
+                {
+                 "height":0,
+                 "id":112,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":257.545271629779,
+                 "y":2988.88065233506
+                }, 
+                {
+                 "height":0,
+                 "id":113,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":379.540400296516,
+                 "y":3110.8757810018
+                }, 
+                {
+                 "height":0,
+                 "id":114,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":379.540400296516,
+                 "y":3110.8757810018
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -177,236 +148,7 @@
          "draworder":"topdown",
          "id":6,
          "name":"GameObject",
-         "objects":[
-                {
-                 "gid":44,
-                 "height":600,
-                 "id":41,
-                 "name":"player",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":300,
-                 "x":521.405203148717,
-                 "y":3239.48642733595
-                }, 
-                {
-                 "gid":2147483691,
-                 "height":300,
-                 "id":40,
-                 "name":"torch",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":150,
-                 "x":1077.88107592926,
-                 "y":3249.81488933602
-                }, 
-                {
-                 "gid":2147483675,
-                 "height":300,
-                 "id":60,
-                 "name":"totem",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":300,
-                 "x":2793.22298704508,
-                 "y":-671
-                }, 
-                {
-                 "gid":28,
-                 "height":300,
-                 "id":79,
-                 "name":"moth",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":300,
-                 "x":3967.66666666667,
-                 "y":-898
-                }, 
-                {
-                 "gid":2147483675,
-                 "height":300,
-                 "id":84,
-                 "name":"totem",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":300,
-                 "x":2812,
-                 "y":-1287
-                }, 
-                {
-                 "gid":2147483675,
-                 "height":300,
-                 "id":85,
-                 "name":"totem",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":300,
-                 "x":2795.33333333333,
-                 "y":-970.333333333333
-                }, 
-                {
-                 "gid":2147483675,
-                 "height":300,
-                 "id":88,
-                 "name":"totem",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":300,
-                 "x":5298,
-                 "y":-1502
-                }, 
-                {
-                 "gid":2147483675,
-                 "height":300,
-                 "id":91,
-                 "name":"totem",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":300,
-                 "x":6130,
-                 "y":-954
-                }, 
-                {
-                 "gid":2147483675,
-                 "height":300,
-                 "id":92,
-                 "name":"totem",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":300,
-                 "x":6104.66666666667,
-                 "y":-306
-                }, 
-                {
-                 "gid":2147483675,
-                 "height":300,
-                 "id":93,
-                 "name":"totem",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":300,
-                 "x":6122,
-                 "y":-628.666666666667
-                }, 
-                {
-                 "gid":2147483675,
-                 "height":300,
-                 "id":94,
-                 "name":"totem",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":300,
-                 "x":6104.61,
-                 "y":-1218
-                }, 
-                {
-                 "gid":2147483675,
-                 "height":300,
-                 "id":95,
-                 "name":"totem",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":300,
-                 "x":1115.39,
-                 "y":-1562
-                }, 
-                {
-                 "gid":2147483675,
-                 "height":300,
-                 "id":96,
-                 "name":"totem",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":300,
-                 "x":1098.72,
-                 "y":-1245.333
-                }, 
-                {
-                 "gid":31,
-                 "height":94,
-                 "id":97,
-                 "name":"2",
-                 "properties":[
-                        {
-                         "name":"depth",
-                         "type":"string",
-                         "value":"2"
-                        }, 
-                        {
-                         "name":"piecelen",
-                         "type":"string",
-                         "value":"14"
-                        }, 
-                        {
-                         "name":"thickness",
-                         "type":"string",
-                         "value":"10"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":134,
-                 "x":7085,
-                 "y":3113
-                }, 
-                {
-                 "gid":31,
-                 "height":150,
-                 "id":98,
-                 "name":"1",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":150,
-                 "x":5357,
-                 "y":1433
-                }, 
-                {
-                 "gid":39,
-                 "height":200,
-                 "id":106,
-                 "name":"rune",
-                 "properties":[
-                        {
-                         "name":"platformHeight",
-                         "type":"string",
-                         "value":"0.5"
-                        }, 
-                        {
-                         "name":"platformPosition",
-                         "type":"string",
-                         "value":"25,8"
-                        }, 
-                        {
-                         "name":"platformWidth",
-                         "type":"string",
-                         "value":"5"
-                        }, 
-                        {
-                         "name":"thresholds",
-                         "type":"string",
-                         "value":"0,0.5"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":150,
-                 "x":2461,
-                 "y":3060
-                }],
+         "objects":[],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -414,7 +156,7 @@
          "y":0
         }],
  "nextlayerid":7,
- "nextobjectid":107,
+ "nextobjectid":121,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
@@ -425,15 +167,15 @@
          "source":"PlatformTiles.tsx"
         }, 
         {
-         "firstgid":25,
+         "firstgid":49,
          "source":"EnemyTiles.tsx"
         }, 
         {
-         "firstgid":29,
+         "firstgid":53,
          "source":"GameObjectTiles.tsx"
         }, 
         {
-         "firstgid":41,
+         "firstgid":65,
          "source":"PlayerTorchTiles.tsx"
         }],
  "tilewidth":300,
