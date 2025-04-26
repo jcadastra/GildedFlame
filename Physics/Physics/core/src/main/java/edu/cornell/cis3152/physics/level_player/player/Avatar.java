@@ -71,7 +71,8 @@ public class Avatar extends ObstacleSprite {
     public static final int MOVEMENT_FRAME_DURATION = 16;
     public static final int THROW_TOTAL_FRAMES = 3;
     public static final int THROW_FRAME_DURATION = 6;
-    private static final int JUMP_FRAME_DURATION = 6;
+    public static final int CLIMB_FRAME_DURATION = 18;
+    private static final int JUMP_FRAME_DURATION = 7;
     private static final int JUMP_FRAME_LAND_DURATION = 6;
     private static final int DEATH_TOTAL_FRAMES = 9;
     private static final int DEATH_FRAME_DURATION = 12;
@@ -152,6 +153,12 @@ public class Avatar extends ObstacleSprite {
     private final float x;
     private final float y;
     private GroundState groundState;
+
+    /**
+     * isFalling compares previous position to current position
+     * -1 is currently falling, 0 is standing still, and 1 is jumping.
+     */
+    private int isFalling = 0;
     /**
      * The current horizontal movement of the character
      */
@@ -187,15 +194,14 @@ public class Avatar extends ObstacleSprite {
     private String sensorName;
     private int cdFrameCount = 0;
     private int frameIndex = 0;
-
-
+    private Vector2 prevPosition;
+    private boolean startSwitch = true;
     private int throwFrameIndex = 0;
     private boolean throwSwitch = false;
     private int jumpFrameCount = 0;
     private boolean justLanded = false;
     private boolean reachedApex = false;
     private boolean hadTorch;
-
     /**
      * Creates a new Traci avatar with the given physics data
      * <p>
@@ -303,6 +309,18 @@ public class Avatar extends ObstacleSprite {
         hasTorch = value;
     }
 
+    public Vector2 getPrevPosition() {
+        return prevPosition;
+    }
+
+    public int getIsFalling() {
+        return isFalling;
+    }
+
+    public void setIsFalling(int val) {
+        isFalling = val;
+    }
+
     public float getUnits() {
         return units;
     }
@@ -402,6 +420,10 @@ public class Avatar extends ObstacleSprite {
         return new Vector2(getObstacle().getX(), getObstacle().getY());
     }
 
+    public Vector2 getVelocity() {
+        return new Vector2(getObstacle().getLinearVelocity());
+    }
+
     /**
      * Returns true if Traci is on the ground.
      *
@@ -415,10 +437,11 @@ public class Avatar extends ObstacleSprite {
      * Sets whether Traci is on the ground.
      */
     public void setGroundedState(GroundState state) {
-        if (!isDead()){
+        if (!isDead()) {
             groundState = state;
         }
     }
+
 
     /**
      * Returns how much force to apply to get Traci moving
@@ -503,7 +526,7 @@ public class Avatar extends ObstacleSprite {
         }
     }
 
-    public boolean isDead(){
+    public boolean isDead() {
         return (groundState == GroundState.DEAD);
     }
 
@@ -675,6 +698,24 @@ public class Avatar extends ObstacleSprite {
      */
     @Override
     public void update(float dt) {
+        if (prevPosition != null) {
+            float deltaY = getLocation().y - prevPosition.y;
+            final float EPSILON = 0.005f;
+
+            if (deltaY < -EPSILON) {
+                setIsFalling(-1);
+            } else if (deltaY > EPSILON) {
+                setIsFalling(1);
+            } else {
+                setIsFalling(0);
+            }
+        }
+        if (startSwitch) {
+            prevPosition = getLocation();
+            startSwitch = false;
+        } else {
+            prevPosition = getLocation();
+        }
 
         if (groundState == GroundState.DEAD) {
             cdFrameCount++;
@@ -735,16 +776,15 @@ public class Avatar extends ObstacleSprite {
         if (groundState == GroundState.DEAD) {
             int srcX = frameIndex * FRAME_WIDTH;
             batch.draw(animationTextureDeath, (obstacle.getX() - width / 2f) * units, (obstacle.getY() - height / 2f) * units, units, units * 1.5f, srcX, 0, FRAME_WIDTH, FRAME_HEIGHT, !faceRight, false);
-
         } else if (groundState == GroundState.CLIMBING) {
             if (movement.y > 0) {
                 cdFrameCount++;
-                frameIndex = (cdFrameCount / FRAME_DURATION) % TOTAL_FRAMES;
+                frameIndex = (cdFrameCount / CLIMB_FRAME_DURATION) % TOTAL_FRAMES;
                 srcIndex = frameIndex * FRAME_WIDTH;
                 animationTexture = animationTextureClimbUp;
             } else if (movement.y < 0) {
                 cdFrameCount++;
-                frameIndex = (cdFrameCount / FRAME_DURATION) % TOTAL_FRAMES;
+                frameIndex = (cdFrameCount / CLIMB_FRAME_DURATION) % TOTAL_FRAMES;
                 srcIndex = frameIndex * FRAME_WIDTH;
                 animationTexture = animationTextureClimbDown;
             } else {
@@ -768,46 +808,36 @@ public class Avatar extends ObstacleSprite {
                     throwFrameIndex++;
                 }
             }
-
         } else if (getGroundedState() == GroundState.AIRBORNE) {
-            float vy = obstacle.getLinearVelocity().y;
-            if (vy > 0) {
-                jumpFrameCount++;
-                frameIndex = Math.min((jumpFrameCount / JUMP_FRAME_DURATION), TOTAL_JUMP_UP_FRAMES - 1);
-                if (frameIndex == TOTAL_JUMP_UP_FRAMES - 1) {
-                    reachedApex = true;
-                }
-                srcIndex = frameIndex * FRAME_WIDTH;
-                animationTexture = hasTorch ? animationTextureJumpTorchUp : animationTextureJumpNoTorchUp;
-            } else if (vy < 0) {
-                if (reachedApex) {
-                    resetJumpFrames();
-                }
-                jumpFrameCount++;
-                frameIndex = (jumpFrameCount / JUMP_FRAME_DURATION) % TOTAL_JUMP_FALL_FRAMES;
-                srcIndex = frameIndex * FRAME_WIDTH;
-                animationTexture = hasTorch ? animationTextureJumpTorchFall : animationTextureJumpNoTorchFall;
-                justLanded = true;
-                doOnce = true;
-            } else {
-                srcIndex = 0;
-                animationTexture = hasTorch ? animationTextureJumpTorchFall : animationTextureJumpNoTorchFall;
+            switch (isFalling) {
+                case (-1):
+                    if (reachedApex) {
+                        resetJumpFrames();
+                    }
+                    jumpFrameCount++;
+                    frameIndex = (jumpFrameCount / JUMP_FRAME_DURATION) % TOTAL_JUMP_FALL_FRAMES;
+                    srcIndex = frameIndex * FRAME_WIDTH;
+                    animationTexture = hasTorch ? animationTextureJumpTorchFall : animationTextureJumpNoTorchFall;
+                    justLanded = true;
+                    doOnce = true;
+                    batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits() * 1.5f, srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, !isFacingRight(), false);
+                    break;
+                case (1):
+                    jumpFrameCount++;
+                    frameIndex = Math.min((jumpFrameCount / JUMP_FRAME_DURATION), TOTAL_JUMP_UP_FRAMES - 1);
+                    if (frameIndex == TOTAL_JUMP_UP_FRAMES - 1) {
+                        reachedApex = true;
+                    }
+                    srcIndex = frameIndex * FRAME_WIDTH;
+                    animationTexture = hasTorch ? animationTextureJumpTorchUp : animationTextureJumpNoTorchUp;
+                    batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits() * 1.5f, srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, !isFacingRight(), false);
+                    break;
+                case (0):
+                    frameIndex = TOTAL_JUMP_UP_FRAMES - 1;
+                    srcIndex = frameIndex * FRAME_WIDTH;
+                    animationTexture = hasTorch ? animationTextureJumpTorchUp : animationTextureJumpNoTorchUp;
+                    batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits() * 1.5f, srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, !isFacingRight(), false);
             }
-            batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits() * 1.5f, srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, !isFacingRight(), false);
-        } else if (justLanded) {
-
-
-//
-            if (frameIndex >= TOTAL_JUMP_LAND_FRAMES) {
-                frameIndex = TOTAL_JUMP_LAND_FRAMES -1;
-                justLanded = false;
-            } else {
-                jumpFrameCount++;
-            }
-            frameIndex = (jumpFrameCount / JUMP_FRAME_LAND_DURATION);
-            srcIndex = frameIndex * FRAME_WIDTH;
-            animationTexture = hasTorch ? animationTextureJumpTorchLand : animationTextureJumpNoTorchLand;
-            batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits() * 1.5f, srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, !isFacingRight(), false);
         } else if (getMovement() != null && !getMovement().epsilonEquals(0, 0)) {
             cdFrameCount++;
             frameIndex = (cdFrameCount / MOVEMENT_FRAME_DURATION) % TOTAL_FRAMES;

@@ -1345,6 +1345,7 @@ public class GameplayScene implements Screen {
             avatar.removeClimbingPhysics();
         }
 
+
         if (input.getThrowing() && Avatar.getHasTorch() && activeTorchJoint != null) {
             avatar.setHasTorch(false);
             world.destroyJoint(activeTorchJoint);
@@ -1363,6 +1364,7 @@ public class GameplayScene implements Screen {
         avatar.applyForce();
 
         if (avatar.isJumping()) {
+
             avatar.setGroundedState(GroundState.AIRBORNE);
             SoundEffectManager sounds = SoundEffectManager.getInstance();
             soundEngine.jump();

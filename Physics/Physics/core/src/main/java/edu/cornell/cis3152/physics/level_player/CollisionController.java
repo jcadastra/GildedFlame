@@ -376,7 +376,6 @@ public class CollisionController implements ContactListener {
             }
             if (isXandY(bd1, bd2, Avatar.class, Coin.class) == 1) {
                 Coin coin = (Coin) idX(bd1, bd2, Coin.class);
-                System.out.println("collided!");
                 collisionFlags.push(new CollisionFlag("collect_coin", coin));
             }
 
@@ -550,11 +549,8 @@ public class CollisionController implements ContactListener {
 
         if (isXandY(bd1, bd2, Lighting.class, Totem.class) == 1) {
             Totem totem = (Totem) idX(bd1, bd2, Totem.class);
-
-            if (totem.getState() == EnemyState.IN_LIGHT) {
-                totem.resetFreeze();
                 totem.setState(Enemy.EnemyState.CD);
-            }
+            totem.resetFreeze();
         }
 
 
