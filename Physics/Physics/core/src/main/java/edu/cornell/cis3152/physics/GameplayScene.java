@@ -664,18 +664,20 @@ public class GameplayScene implements Screen {
                     int index = y * width + x;
                     int tileId = tileData[index];
                     String name;
-                    if (tileId == 2 || tileId == 3 || tileId == 4) {
-                        name = "platform";
-                    } else if (tileId == 8 || tileId == 9 || tileId == 10) {
+                    if (tileId - 10 <= 0) {
                         name = "platform";
                     } else {
                         name = "wall";
                     }
 
-                    float tileunits = units/300f;
-                    Surface tile = new Surface(points, units, name, settings);
+                    GameObject tile = new GameObject(minX, minY,1, 1,units,true,name.contains("platform"));
+                    tile.getObstacle().setBodyType(BodyType.StaticBody);
+                    tile.getObstacle().setName(name);
+                    tile.getObstacle().setName(name);
+
                     Texture textur = directory.getEntry("stoneTile"+(tileId), Texture.class);
-                    textur.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+                    textur.setWrap(TextureWrap.ClampToEdge, TextureWrap.ClampToEdge);
+                    System.out.println("making : " + x + "," + y + "," + tileId);
 
                     tile.setTexture(textur);
 

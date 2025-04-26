@@ -35,4 +35,24 @@ public class GameObject extends EnhancedObstacleSprite {
         obstacle.setFixedRotation(true);
         mesh.set(-(width * units)/2, -(height * units)/2, width * units, height * units);
     }
+
+    public GameObject(float x, float y, float width, float height, float units, Boolean centerInBottomLeft, Boolean custom) {
+        super();
+
+        if (centerInBottomLeft) {
+            x += width / 2;
+            y += height / 2;
+        }
+        float physHeight = height * (custom ? 0.85f : 1f);
+        float physCentreY = y + (physHeight - height) / 2f;
+        BoxObstacle temp = new BoxObstacle(x, physCentreY, width, physHeight);
+
+        obstacle = new ObstacleSprite(temp).getObstacle();
+        obstacle.setDensity(0.5f);
+        obstacle.setFriction(0.5f);
+        obstacle.setRestitution(.1f);
+        obstacle.setPhysicsUnits(units);
+        obstacle.setFixedRotation(true);
+        mesh.set(-(width * units)/2, -(height * (custom ? .85f : 1) * units)/2, width * units, (height ) * units);
+    }
 }
