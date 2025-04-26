@@ -7,7 +7,6 @@ import com.badlogic.gdx.utils.FloatArray;
 import edu.cornell.cis3152.physics.level_player.enviromentals.*;
 import edu.cornell.cis3152.physics.level_player.player.Torch;
 import edu.cornell.cis3152.physics.level_player.utils.FireFlag;
-import edu.cornell.cis3152.physics.level_player.utils.ObstacleGroup;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.graphics.SpriteMesh;
 import edu.cornell.gdiac.physics2.Obstacle;
@@ -21,7 +20,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
-import java.util.function.BiConsumer;
 
 
 public class FireController {
@@ -44,6 +42,7 @@ public class FireController {
     private EarClippingTriangulator cutter;
     private Random rand;
     private int fireID = 1;
+    private Vector2 smokeRestPos = new Vector2(-2,-2);
 
     public boolean isBodyOnFire(EnhancedObstacleSprite s) {
         return nFireDiagrams.getOrDefault(s, null) != null;
@@ -95,7 +94,7 @@ public class FireController {
      * runs comparisons on all the values and dspreads fire/marks objects for destruction as needed/
      * creates Smoke
      */
-    public void update() {
+    public void update(MarthasWeatherMachine weatherMachine) {
         for (EnhancedObstacleSprite object : firesOnShape.keySet()) {
             ObstacleMaterial obstacleMaterial = object.getMaterial();
                 for (Fire fire : firesOnShape.get(object)) {
@@ -109,17 +108,17 @@ public class FireController {
                             }
                         }
 
-//                        if (fire.getInRain()) {
-//                            fire.modifStrength(-.01f);
-//                        } else if (fire.getStrength() < 1) {
-//                            fire.modifStrength(.02f);
-//                        }
-////                        System.out.println(
-////                            fire.getStrength() + ", " + fire.fireID + ", " + object.getName());
-//
-//                        if (fire.getStrength() <= .01) {
-//                            fireFlags.add(new FireFlag("killFire", fire));
-//                        }
+                        fire.setInRain(weatherMachine.inRain(fire));
+
+                        if (fire.getInRain()) {
+                            fire.modifStrength(-.01f);
+                        } else if (fire.getStrength() < 1) {
+                            fire.modifStrength(.02f);
+                        }
+
+                        if (fire.getStrength() <= .01) {
+                            fireFlags.add(new FireFlag("killFire", fire));
+                        }
                     }
             }
         }
@@ -152,6 +151,10 @@ public class FireController {
 
     private void updateSmoke() {
         for (Smoke smoke : allSmoke) {
+            if (smoke.getObstacle().getPosition().epsilonEquals(smokeRestPos,(float) 1e-3)) {
+                continue;
+            }
+            smoke.updateLifeSpan();
             Obstacle smokeObstacle = smoke.getObstacle();
             float currentVX = smokeObstacle.getVX();
             float newVX = (float) (currentVX + Math.signum(currentVX) * -.01);
@@ -161,7 +164,10 @@ public class FireController {
                 smokeObstacle.setVX(newVX);
             }
 
-            smoke.updateLifeSpan();
+            if (smoke.getLifeSpan() < 0) {
+                smokeObstacle.setLinearVelocity(Vector2.Zero);
+                smokeObstacle.setPosition(smokeRestPos);
+            }
         }
     }
 
@@ -386,11 +392,22 @@ public class FireController {
     }
 
     public void spawnSmoke(Fire fire) {
+        for (Smoke smoke : allSmoke) {
+            if (smoke.getObstacle().getPosition().epsilonEquals(smokeRestPos, 1e-3f)) {
+                smoke.getObstacle().setPosition(fire.getObstacle().getPosition().x, fire.getObstacle().getPosition().y + fire.getRadius()/1.5f);
+                smoke.getObstacle().setLinearVelocity(new Vector2((rand.nextFloat()-.5f) * 2,1f));
+                smoke.resetLifeSpan();
+                smoke.setSource(fire);
+                return;
+            }
+        }
+
         Smoke smoke = new Smoke(fire.getObstacle().getPosition().x, fire.getObstacle().getPosition().y + fire.getRadius()/1.5f,
             fire.getObstacle().getPhysicsUnits(), new Vector2((rand.nextFloat()-.5f) * 2,1f));
         smoke.getObstacle().setName("smoke");
         smoke.setSource(fire);
         ObstacleSprite smokeObj = new ObstacleSprite(smoke.getObstacle());
+        smokeObj.getObstacle().setUserData(smokeObj);
         smokeObj.setTexture(assetDirectory.getEntry("platform-flame-smoke", Texture.class));
         fireFlags.push(new FireFlag("spawnSmoke", fire, smokeObj));
         allSmoke.add(smoke);

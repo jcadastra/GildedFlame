@@ -3,6 +3,7 @@ package edu.cornell.cis3152.physics.level_player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import edu.cornell.cis3152.physics.level_player.enemies.*;
 import edu.cornell.cis3152.physics.level_player.enemies.Enemy.EnemyState;
@@ -76,7 +77,7 @@ public class CollisionController implements ContactListener {
 
         return sprite.getName().contains("floor") || sprite.getName().contains("platform") ||
                sprite.getName().contains("barrier") || sprite.getName().contains("spinner") ||
-               sprite.getName().contains("button") || (sprite instanceof Surface);
+               sprite.getName().contains("button");
     }
 
     public Stack<CollisionFlag> getCollisionFlags() {
@@ -129,12 +130,22 @@ public class CollisionController implements ContactListener {
             ObstacleSprite bd1 = (ObstacleSprite) body1.getUserData();
             ObstacleSprite bd2 = (ObstacleSprite) body2.getUserData();
 
-            if (isXandY(bd1, bd2, Fire.class, Fire.class) == 2) {
+            if (isX(bd1, bd2, Fire.class) == 2) {
+                return;
+            }
+            if (isX(bd1, bd2, Smoke.class) == 2) {
+                return;
+            }
+            if (isX(bd1, bd2, "rain") == 2) {
                 return;
             }
 
-            if (isXandY(bd1, bd2, Fire.class, RainBlock.class) == 1) {
-                ((Fire) idX(bd1, bd2, Fire.class)).setInRain(true);
+            if (isX(bd1, bd2, "rain") == 1) {
+                ObstacleSprite nonRain = bd1.getObstacle().getName().contains("rain") ? bd2 : bd1;
+                if ((nonRain.getObstacle().getBodyType() == BodyType.KinematicBody || nonRain.getObstacle().getBodyType() == BodyType.StaticBody)
+                    && !nonRain.getObstacle().isSensor()) {
+                    collisionFlags.add(new CollisionFlag("resetRain",idX(bd1, bd2, "rain") ));
+                }
             }
 
             if (isXandY(bd1,bd2, Fire.class, Moth.class) == 1){
@@ -535,7 +546,7 @@ public class CollisionController implements ContactListener {
 
         if (isX(bd1, bd2, Avatar.class) == 1) {
             Avatar t = (Avatar) idX(bd1, bd2, Avatar.class);
-            if ((isGround(bd1) || isGround(bd2)) && ((t.getSensorName().equals(fd2) && t != bd1) || (t.getSensorName().equals(fd1) && t != bd2) && t.getGroundedState().equals(GroundState.GROUNDED))) {
+            if ((isGround(bd1) || isGround(bd2)) && (((t.getSensorName().equals(fd2) && t != bd1) || (t.getSensorName().equals(fd1) && t != bd2)) && t.getGroundedState().equals(GroundState.GROUNDED))) {
                 collisionFlags.push(new CollisionFlag("traciAirborne", bd1 instanceof Avatar ? fix2 : fix1));
             }
         }
@@ -591,10 +602,6 @@ public class CollisionController implements ContactListener {
             ((Rune) idX(bd1,bd2,Rune.class)).subInLight();
             ContactKey key = new ContactKey(fix1, fix2);
             sustainedContacts.remove(key);
-        }
-
-        if (isXandY(bd1, bd2, Fire.class, RainBlock.class) == 1) {
-            ((Fire) idX(bd1, bd2, Fire.class)).setInRain(false);
         }
 
         /**
