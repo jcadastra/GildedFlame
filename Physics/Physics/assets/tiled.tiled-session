@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "example_level.tmj",
+    "activeFile": "test2.tmx",
     "expandedProjectPaths": [
         "."
     ],
@@ -16,44 +16,24 @@
             "scaleInEditor": 1
         },
         "(old)example_level.tmj": {
-            "scale": 0.147546875,
+            "scale": 0.101234375,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4805.2525680398185,
-                "y": 2700.8365985386004
+                "x": 3319.0307146164537,
+                "y": 2701.651489427381
             }
         },
-        "C:/Users/ericj/Downloads/EnemyTiles.tsx": {
-            "scaleInDock": 1
-        },
-        "C:/Users/ericj/Downloads/GameObjectTiles.tsx": {
-            "dynamicWrapping": true,
-            "scaleInDock": 1
-        },
-        "C:/Users/ericj/Downloads/PlatformTiles.tsx": {
-            "dynamicWrapping": true,
-            "scaleInDock": 1
-        },
-        "C:/Users/ericj/Downloads/PlayerTorchTiles.tsx": {
-            "dynamicWrapping": true,
-            "scaleInDock": 1
-        },
-        "C:/Users/ericj/Downloads/level 3.tmj": {
-            "scale": 0.147546875,
-            "selectedLayer": 0,
-            "viewCenter": {
-                "x": 4120.724346076459,
-                "y": 1582.5479190935089
-            }
+        "BackgroundStickers.tsx": {
+            "dynamicWrapping": true
         },
         "EnemyTiles.tsx": {
             "dynamicWrapping": true,
-            "scaleInDock": 0.25,
+            "scaleInDock": 1,
             "scaleInEditor": 1
         },
         "GameObjectTiles.tsx": {
             "dynamicWrapping": true,
-            "scaleInDock": 0.25,
+            "scaleInDock": 1,
             "scaleInEditor": 1
         },
         "PlatformTiles.tsx": {
@@ -63,7 +43,7 @@
         },
         "PlayerTorchTiles.tsx": {
             "dynamicWrapping": true,
-            "scaleInDock": 0.25,
+            "scaleInDock": 1,
             "scaleInEditor": 1
         },
         "earthtile.tsx": {
@@ -71,84 +51,81 @@
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
-        "example_level.tmj": {
-            "expandedObjectLayers": [
-                5
-            ],
-            "scale": 0.12,
-            "selectedLayer": 2,
+        "example_level(og).tmj": {
+            "scale": 0.101234375,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 4712.5,
-                "y": 2612.5
+                "x": 4800.740855070227,
+                "y": 2701.651489427381
+            }
+        },
+        "example_level.tmj": {
+            "scale": 0.101234375,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 4800.740855070227,
+                "y": 2701.651489427381
             }
         },
         "example_level.tmx": {
             "expandedObjectLayers": [
-                2,
-                4,
                 5
             ],
             "scale": 0.125,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 2960,
-                "y": 3420
+                "x": 2456,
+                "y": 2884
             }
         },
         "example_level2.tmj": {
-            "expandedObjectLayers": [
-                3
-            ],
-            "scale": 0.147546875,
-            "selectedLayer": 3,
+            "scale": 0.101234375,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 4798.4750608916665,
-                "y": 2700.8365985386004
+                "x": 4800.740855070227,
+                "y": 2701.651489427381
             }
         },
         "example_level2.tmx": {
-            "scale": 0.147546875,
+            "expandedObjectLayers": [
+                3,
+                2,
+                4
+            ],
+            "scale": 0.0625,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4805.2525680398185,
-                "y": 2700.8365985386004
+                "x": 4432,
+                "y": 3480
             }
         },
         "level 4 (1).tmj": {
-            "scale": 0.147546875,
-            "selectedLayer": 1,
-            "viewCenter": {
-                "x": 4805.2525680398185,
-                "y": 3080.3769988351164
-            }
-        },
-        "sample.tmj": {
-            "expandedObjectLayers": [
-                2,
-                6,
-                5
-            ],
-            "scale": 0.25,
-            "selectedLayer": 4,
-            "viewCenter": {
-                "x": 4640,
-                "y": 4270
-            }
-        },
-        "temp.tmj": {
-            "scale": 0.147546875,
-            "selectedLayer": 4,
-            "viewCenter": {
-                "x": 4805.2525680398185,
-                "y": 3080.3769988351164
-            }
-        },
-        "test.tmj": {
-            "scale": 0.147546875,
+            "scale": 0.101234375,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4805.2525680398185,
-                "y": 2700.8365985386004
+                "x": 4800.740855070227,
+                "y": 2701.651489427381
+            }
+        },
+        "level.tmj": {
+            "scale": 0.101234375,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 4800.740855070227,
+                "y": 2701.651489427381
+            }
+        },
+        "platform1Tiled.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "sample.tmj": {
+            "scale": 0.125,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 4320,
+                "y": 2972
             }
         },
         "test2.tmj": {
@@ -158,8 +135,8 @@
             "scale": 0.125,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 3416,
-                "y": 6188
+                "x": 3192,
+                "y": 4436
             }
         },
         "test2.tmx": {
@@ -169,16 +146,8 @@
             "scale": 0.0625,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 4752,
-                "y": 2696
-            }
-        },
-        "test3.tmj": {
-            "scale": 0.128546875,
-            "selectedLayer": 0,
-            "viewCenter": {
-                "x": 4799.805518414974,
-                "y": 2703.2940318463593
+                "x": 4768,
+                "y": 5112
             }
         },
         "test3.tmx": {
@@ -203,20 +172,20 @@
         },
         "test_map.tmx": {
             "expandedObjectLayers": [
+                3,
                 2,
-                4,
-                3
+                4
             ],
             "scale": 0.5,
             "selectedLayer": 2,
             "viewCenter": {
                 "x": 960,
-                "y": 311
+                "y": 335
             }
         },
         "tileset.tsx": {
             "dynamicWrapping": false,
-            "scaleInDock": 0.25,
+            "scaleInDock": 0.125,
             "scaleInEditor": 0.33
         },
         "untitled.tmj": {
@@ -242,29 +211,23 @@
         "GameObjectTiles.tsx",
         "PlayerTorchTiles.tsx",
         "test2.tmx",
-        "PlatformTiles.tsx",
-        "example_level.tmj",
-        "test2.tmj",
-        "example_level2.tmj",
-        "sample.tmj",
-        "C:/Users/ericj/Downloads/level 3.tmj",
-        "example_level.tmx"
+        "PlatformTiles.tsx"
     ],
     "project": "tiled.tiled-project",
     "property.type": "string",
     "recentFiles": [
-        "example_level.tmj",
-        "temp.tmj",
-        "test.tmj",
-        "level 4 (1).tmj",
-        "(old)example_level.tmj",
-        "PlayerTorchTiles.tsx",
-        "test_map.tmx",
         "EnemyTiles.tsx",
-        "GameObjectTiles.tsx",
+        "example_level.tmx",
+        "level 4 (1).tmj",
+        "platform1Tiled.tsx",
+        "tileset.tsx",
+        "(old)example_level.tmj",
         "test2.tmx",
+        "PlayerTorchTiles.tsx",
+        "test3.tmx",
         "PlatformTiles.tsx",
-        "example_level.tmx"
+        "level.tmj",
+        "example_level2.tmj"
     ],
     "tileset.embedInMap": true,
     "tileset.lastUsedFormat": "tsx",
@@ -272,5 +235,5 @@
         "height": 300,
         "width": 300
     },
-    "tileset.type": 0
+    "tileset.type": 1
 }
