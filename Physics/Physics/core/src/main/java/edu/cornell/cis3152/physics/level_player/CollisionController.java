@@ -353,7 +353,7 @@ public class CollisionController implements ContactListener {
             }
 
 
-            if (isXandY(bd1, bd2, EnhancedObstacleSprite.class, Fire.class) == 1) {
+            if (isXandY(bd1, bd2, EnhancedObstacleSprite.class, Fire.class) == 1 ) {
                 System.out.println("burn time");
                 Fire f = (Fire) idX(bd1, bd2, Fire.class);
                 EnhancedObstacleSprite b = (EnhancedObstacleSprite) idX(bd1, bd2, EnhancedObstacleSprite.class);

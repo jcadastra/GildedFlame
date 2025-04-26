@@ -47,7 +47,7 @@ public class ParticleEngine implements Screen {
 
         //Setting the position of the ParticleEffect
         effect.setPosition(fire.getObstacle().getX()*physicsUnits, fire.getObstacle().getY()*physicsUnits);
-        effect.scaleEffect(1/5f);
+        effect.scaleEffect(1/5f * physicsUnits/32);
         //System.out.println("fire-pos"+fire.getObstacle().getX()+","+fire.getObstacle().getY());
 
     }

@@ -19,21 +19,24 @@ public class GameObject extends EnhancedObstacleSprite {
      * @param units  The physics unit scale.
      */
     public GameObject(float x, float y, float width, float height, float units, Boolean centerInBottomLeft) {
-        super();
+        super(new BoxObstacle(
+            centerInBottomLeft ? x + width / 2f : x,
+            centerInBottomLeft ? y + height / 2f : y,
+            width,
+            height
+        ));
 
-        if (centerInBottomLeft) {
-            x += width / 2;
-            y += height / 2;
-        }
-
-        BoxObstacle temp = new BoxObstacle(x,y,width,height);
-        obstacle = new ObstacleSprite(temp).getObstacle();
-        obstacle.setDensity(0.5f);
-        obstacle.setFriction(0.5f);
-        obstacle.setRestitution(.1f);
-        obstacle.setPhysicsUnits(units);
-        obstacle.setFixedRotation(true);
-        mesh.set(-(width * units)/2, -(height * units)/2, width * units, height * units);
+        getObstacle().setDensity(0.5f);
+        getObstacle().setFriction(0.5f);
+        getObstacle().setRestitution(0.1f);
+        getObstacle().setPhysicsUnits(units);
+        getObstacle().setFixedRotation(true);
+        mesh.set(
+            -(width  * units)/2f,
+            -(height * units)/2f,
+            width  * units,
+            height * units
+        );
     }
 
     public GameObject(float x, float y, float width, float height, float units, Boolean centerInBottomLeft, int tileId) {
