@@ -1175,6 +1175,7 @@ public class GameplayScene implements Screen {
         }
 
         torch.update();
+        weatherMachine.activateWind(new Vector2(0f,0));
         weatherMachine.update(world);
         fireController.update(weatherMachine);
         eventHandler.update();
@@ -1265,8 +1266,8 @@ public class GameplayScene implements Screen {
         int generatedCount = 0;
         while (generatedCount < dotTorchArcCount) {
             float t = (dt) * (generatedCount + dtTorchArcOffset);
-            float x = start.x + vel.x * t;
-            float y = start.y + t * vel.y + 0.5f * (t * t + t) * gravity;
+            float x = start.x + vel.x * t + weatherMachine.getWind().x;
+            float y = start.y + t * vel.y + 0.5f * (t * t + t) * gravity + weatherMachine.getWind().y;
             Vector2 trajectoryPosition = new Vector2(x,y);
             if (generatedCount > 0) {
                 world.rayCast(raycastCallback, lastTP, trajectoryPosition);

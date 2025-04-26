@@ -1,10 +1,12 @@
 package edu.cornell.cis3152.physics.level_player;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import edu.cornell.cis3152.physics.level_player.utils.RainFlag;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
 import edu.cornell.gdiac.physics2.WheelObstacle;
@@ -16,11 +18,11 @@ public class MarthasWeatherMachine {
 
     private RayCastCallback rayCastCallback;
     private ArrayList<Fixture> collidedObstacles;
-    private float rainAngle = 0;
     public ArrayList<ObstacleSprite> rainDrops;
     private float physicsUnits;
     private int rainTimer;
     private int rainFreq;
+    private Vector2 windVel;
     private Random random;
     private World world;
 
@@ -29,6 +31,7 @@ public class MarthasWeatherMachine {
 
 
     public MarthasWeatherMachine() {
+//        TODO: ensure rain and wind work concurrently
         this.rainflags = new Stack<>();
         this.random = new Random();
         this.collidedObstacles = new ArrayList<Fixture>(){};
@@ -37,10 +40,6 @@ public class MarthasWeatherMachine {
             return 1;
         };
         this.rainDrops = new ArrayList<ObstacleSprite>(){};
-    }
-
-    public void defineRainAngle (float angle) {
-        this.rainAngle = angle;
     }
 
     public Stack<RainFlag> getRainflags() {return rainflags;}
@@ -58,20 +57,29 @@ public class MarthasWeatherMachine {
         this.rainFreq = this.rainTimer = rainFreq;
     }
 
+    public void activateWind(Vector2 velocity) {
+        this.windVel = velocity;
+    }
+    public Vector2 getWind() {return windVel;}
+
     public boolean isRainActive() {
         return rainFreq != 0;
     }
+    public boolean isWindActive() {
+        return windVel.len()!=0;
+    }
 
     public void update(World world) {
-        if (this.world == null) {
-            this.world = world;
-        }
         if (isRainActive()) {
             generateRain();
         }
+
+        if (isWindActive()) {
+            blowWind(world);
+        }
     }
 
-    public void generateRain() {
+    private void generateRain() {
         rainTimer -= random.nextInt(3)+1;
         if (rainTimer <= 0) {
             rainTimer = rainFreq;
@@ -83,6 +91,20 @@ public class MarthasWeatherMachine {
 
             newDrop.getObstacle().setPosition(random.nextInt(40) + random.nextFloat(), 18);
             newDrop.getObstacle().setLinearVelocity(new Vector2(0,-5));
+        }
+    }
+    public void blowWind(World world) {
+        Array<Body> entities = new Array<Body>();
+        world.getBodies(entities);
+        for (Body body : entities) {
+            if (body.isActive()) {
+                ObstacleSprite obs = ((ObstacleSprite) body.getUserData());
+                if (obs.getObstacle().getBodyType() == BodyType.DynamicBody && !obs.getObstacle().isSensor()) {
+//                    body.applyForceToCenter(Vector2.X, true);
+//                    System.out.println((obs.getObstacle().getName() + ", " + body.getMass() + ", " + body.getLinearVelocity()));
+                    body.setLinearVelocity(body.getLinearVelocity().add(windVel));
+                }
+            }
         }
     }
 

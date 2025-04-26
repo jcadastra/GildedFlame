@@ -158,8 +158,8 @@ public class LightController {
         rayHandler.useDiffuseLight(true);
 //        rayHandler.useDiffuseLight(false);
         // Background light color⬇️, modify if needed
-//        rayHandler.setAmbientLight(0.15f, 0.15f, 0.35f, 0f); // same hue, just darker
-        rayHandler.setAmbientLight(Color.BLACK);
+        rayHandler.setAmbientLight(0.15f, 0.15f, 0.35f, 0f); // same hue, just darker
+//        rayHandler.setAmbientLight(Color.BLACK);
         rayHandler.setShadows(true);
         //rayHandler.setBlur(true);
         debug = false;
