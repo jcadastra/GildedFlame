@@ -667,17 +667,9 @@ public class GameplayScene implements Screen {
                     int y = height - maxY;
                     int index = y * width + x;
                     int tileId = tileData[index] - 1;
-                    String name;
-                    if (tileId - 5 <= 0 || tileId == 7 || tileId == 12 || tileId == 13 ||
-                        tileId == 14 || tileId == 15 || tileId == 29 || tileId == 31) {
-                        name = "platform";
-                    } else {
-                        name = "wall";
-                    }
 
-                    GameObject tile = new GameObject(minX, minY,1, 1,units,true,name.contains("platform"));
+                    GameObject tile = new GameObject(minX, minY,1, 1,units,true,tileId);
                     tile.getObstacle().setBodyType(BodyType.StaticBody);
-                    tile.getObstacle().setName(name);
 
 //                    Texture textur = directory.getEntry("stoneTile"+(tileId), Texture.class);
                     tile.setTextureRegion(tileSetSplit[tileId / (tileSetSplit[0].length)][( tileId % tileSetSplit[0].length)]);

@@ -36,16 +36,41 @@ public class GameObject extends EnhancedObstacleSprite {
         mesh.set(-(width * units)/2, -(height * units)/2, width * units, height * units);
     }
 
-    public GameObject(float x, float y, float width, float height, float units, Boolean centerInBottomLeft, Boolean custom) {
+    public GameObject(float x, float y, float width, float height, float units, Boolean centerInBottomLeft, int tileId) {
         super();
+
+        String name;
+        if (tileId - 5 <= 0 || tileId == 7 || tileId == 12 || tileId == 13 ||
+            tileId == 14 || tileId == 15 || tileId == 29 || tileId == 31) {
+            name = "platform";
+        } else {
+            name = "wall";
+        }
 
         if (centerInBottomLeft) {
             x += width / 2;
             y += height / 2;
         }
-        float physHeight = height * (custom ? 0.85f : 1f);
+
+        float physHeight = height * (name.equals("platform") ? 0.85f : 1f);
         float physCentreY = y + (physHeight - height) / 2f;
-        BoxObstacle temp = new BoxObstacle(x, physCentreY, width, physHeight);
+
+        float widthFactor = 1f;
+        //shrink to 80%, centered
+        if (tileId == 0 || tileId == 12) {
+            widthFactor = .8f;
+        }
+        // shrink to 90%, right justified
+        else if (tileId == 1 || tileId == 4 || tileId == 13) {
+            widthFactor = .9f;
+        }
+        // shrink to 90%, left justified
+        else if (tileId == 3 || tileId == 5 || tileId == 15) {
+            widthFactor = .9f;
+        }
+        float physCentreX = x - (width - width * widthFactor) / 2f;
+
+        BoxObstacle temp = new BoxObstacle(physCentreX,physCentreY,width  * widthFactor,physHeight);
 
         obstacle = new ObstacleSprite(temp).getObstacle();
         obstacle.setDensity(0.5f);
@@ -53,6 +78,8 @@ public class GameObject extends EnhancedObstacleSprite {
         obstacle.setRestitution(.1f);
         obstacle.setPhysicsUnits(units);
         obstacle.setFixedRotation(true);
-        mesh.set(-(width * units)/2, -(height * (custom ? .85f : 1) * units)/2, width * units, (height ) * units);
+        obstacle.setName(name);
+        //if platform ie walk on shrink height by .15 to walk on better
+        mesh.set(-(width * units)/2, -(height * (name.equals("platform") ? .85f : 1) * units)/2, width * units, (height ) * units);
     }
 }
