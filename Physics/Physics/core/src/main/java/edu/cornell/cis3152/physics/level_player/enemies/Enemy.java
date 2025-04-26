@@ -25,6 +25,7 @@ public class Enemy extends ObstacleSprite {
     private final float width;
     private final float height;
     private final float size;
+    private final float friction;
     public SpriteBatch batch;
     public RaycastResult rr;
     /**
@@ -53,6 +54,7 @@ public class Enemy extends ObstacleSprite {
         this.faceRight = true;
         this.speed = data.getFloat("speed");
         this.size = data.getFloat("size") * units;
+        this.friction = data.getFloat("friction");
 
         this.width = data.get("dimension").getFloat(0);
         this.height = data.get("dimension").getFloat(1);
