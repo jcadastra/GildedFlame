@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import edu.cornell.gdiac.assets.ParserUtils;
+import edu.cornell.gdiac.physics2.BoxObstacle;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
 import edu.cornell.gdiac.physics2.WheelObstacle;
 
@@ -14,10 +15,10 @@ public class Smoke extends ObstacleSprite {
     private int storedLifeLimit;
     public Smoke(float x,float y, float units, Vector2 velocity) {
         super();
-        float s = 0.3f;
+        float s = 0.6f;
         lifeLimit = storedLifeLimit = 120;
 
-        obstacle = new WheelObstacle(x, y, s);
+        obstacle = new BoxObstacle(x, y, s,s);
 
         obstacle.setGravityScale(0);
         obstacle.setPhysicsUnits( units );

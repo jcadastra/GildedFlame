@@ -400,6 +400,7 @@ public class FireController {
             if (smoke.getObstacle().getPosition().epsilonEquals(smokeRestPos, 1e-3f)) {
                 smoke.getObstacle().setPosition(fire.getObstacle().getPosition().x, fire.getObstacle().getPosition().y + fire.getRadius()/1.5f);
                 smoke.getObstacle().setLinearVelocity(new Vector2((rand.nextFloat()-.5f) * 2,1f));
+                smoke.getObstacle().setAngle((float) (rand.nextFloat() * 2 * Math.PI));
                 smoke.resetLifeSpan();
                 smoke.setSource(fire);
                 return;
@@ -415,6 +416,7 @@ public class FireController {
         smokeObj.setTexture(assetDirectory.getEntry("platform-flame-smoke", Texture.class));
         fireFlags.push(new FireFlag("spawnSmoke", fire, smokeObj));
         allSmoke.add(smoke);
+        smoke.getObstacle().setAngle((float) (rand.nextFloat() * 2 * Math.PI));
     }
 
     /**
