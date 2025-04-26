@@ -25,6 +25,7 @@
 package edu.cornell.cis3152.physics;
 
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
@@ -650,6 +651,9 @@ public class GameplayScene implements Screen {
                     tileData[i] = data.getInt(i);
                 }
 
+                Texture tileSet = directory.getEntry("platform-tiles", Texture.class);
+                TextureRegion[][] tileSetSplit = TextureRegion.split(tileSet,300,300);
+
                 List<float[]> polygons = extractSurfaces(tileData, width, height);
 
                 for (float[] points : polygons) {
@@ -662,7 +666,7 @@ public class GameplayScene implements Screen {
                     int x = minX;
                     int y = height - maxY;
                     int index = y * width + x;
-                    int tileId = tileData[index];
+                    int tileId = tileData[index] - 1;
                     String name;
                     if (tileId - 10 <= 0) {
                         name = "platform";
@@ -675,10 +679,9 @@ public class GameplayScene implements Screen {
                     tile.getObstacle().setName(name);
                     tile.getObstacle().setName(name);
 
-                    Texture textur = directory.getEntry("stoneTile"+(tileId), Texture.class);
-                    textur.setWrap(TextureWrap.ClampToEdge, TextureWrap.ClampToEdge);
-
-                    tile.setTexture(textur);
+//                    Texture textur = directory.getEntry("stoneTile"+(tileId), Texture.class);
+                    System.out.println(tileId + ", "+ tileId/6 + ", " + tileId % 6);
+                    tile.setTextureRegion(tileSetSplit[tileId / 6][( tileId % 6)]);
 
 
                     addSprite(tile);
@@ -812,7 +815,6 @@ public class GameplayScene implements Screen {
                         Vector2 platformEndPos = null;
                         float startDegree = Integer.MAX_VALUE;
                         float endDegree = 0f;
-                        float duration = 1f;
                         String targetName = "";
                         float[] thresholds = null;
 
@@ -839,9 +841,6 @@ public class GameplayScene implements Screen {
                                     break;
                                 case "endDegree":
                                     endDegree = Float.parseFloat(value);
-                                    break;
-                                case "time":
-                                    duration = Float.parseFloat(value);
                                     break;
                                 case "platformName":
                                     targetName = value;
