@@ -202,6 +202,7 @@ public class Avatar extends ObstacleSprite {
     private boolean justLanded = false;
     private boolean reachedApex = false;
     private boolean hadTorch;
+
     /**
      * Creates a new Traci avatar with the given physics data
      * <p>
@@ -441,7 +442,6 @@ public class Avatar extends ObstacleSprite {
             groundState = state;
         }
     }
-
 
     /**
      * Returns how much force to apply to get Traci moving
@@ -779,12 +779,12 @@ public class Avatar extends ObstacleSprite {
         } else if (groundState == GroundState.CLIMBING) {
             if (movement.y > 0) {
                 cdFrameCount++;
-                frameIndex = (cdFrameCount / CLIMB_FRAME_DURATION) % TOTAL_FRAMES;
+                frameIndex = (cdFrameCount / FRAME_DURATION) % TOTAL_FRAMES;
                 srcIndex = frameIndex * FRAME_WIDTH;
                 animationTexture = animationTextureClimbUp;
             } else if (movement.y < 0) {
                 cdFrameCount++;
-                frameIndex = (cdFrameCount / CLIMB_FRAME_DURATION) % TOTAL_FRAMES;
+                frameIndex = (cdFrameCount / FRAME_DURATION) % TOTAL_FRAMES;
                 srcIndex = frameIndex * FRAME_WIDTH;
                 animationTexture = animationTextureClimbDown;
             } else {
