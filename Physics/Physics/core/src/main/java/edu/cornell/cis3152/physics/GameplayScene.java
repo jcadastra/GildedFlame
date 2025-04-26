@@ -677,11 +677,9 @@ public class GameplayScene implements Screen {
                     GameObject tile = new GameObject(minX, minY,1, 1,units,true,name.contains("platform"));
                     tile.getObstacle().setBodyType(BodyType.StaticBody);
                     tile.getObstacle().setName(name);
-                    tile.getObstacle().setName(name);
 
 //                    Texture textur = directory.getEntry("stoneTile"+(tileId), Texture.class);
-                    System.out.println(tileId + ", "+ tileId/6 + ", " + tileId % 6);
-                    tile.setTextureRegion(tileSetSplit[tileId / 6][( tileId % 6)]);
+                    tile.setTextureRegion(tileSetSplit[tileId / (tileSetSplit.length)][( tileId % tileSetSplit.length)]);
 
 
                     addSprite(tile);
