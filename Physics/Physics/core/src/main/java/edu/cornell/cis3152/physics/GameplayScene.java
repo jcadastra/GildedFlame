@@ -1155,7 +1155,7 @@ public class GameplayScene implements Screen {
             setFailure(true);
             return false;
         }
-        if (activeFireJoint == null || queueFailure) {
+        if (activeFireJoint == null || torch.getObstacle().getY() < 0|| queueFailure) {
             setFailure(true);
             return false;
         }
