@@ -248,21 +248,21 @@ public class LightController {
                //check if it's already attached
                    // System.out.println("attaching new light");
                     if(lightInUse[lightIndex]!=1){//only when fire is not using it
-                    lightAssignments.put(sprite.getObstacle().getBody(), light);
-                    //light.setColor(Color.LIGHT_GRAY);
-                    light.setColor(Color.LIGHT_GRAY.r, Color.LIGHT_GRAY.g, Color.LIGHT_GRAY.b, 1f);
-                    light.setDistance(1.5f);
-                    light.attachToBody(sprite.getObstacle().getBody());
-                    light.setActive(true);
-                    light.setSoft(true);
-                    light.setContactFilter(CATEGORY_LIGHT, (short) 0,
-                        (short) CATEGORY_ENVIRONMENT);
-                    lightInUse[lightIndex] = 2;
+                        lightAssignments.put(sprite.getObstacle().getBody(), light);
+                        //light.setColor(Color.LIGHT_GRAY);
+                        light.setColor(Color.LIGHT_GRAY.r, Color.LIGHT_GRAY.g, Color.LIGHT_GRAY.b, 1f);
+                        light.setDistance(1.5f);
+                        light.attachToBody(sprite.getObstacle().getBody());
+                        light.setActive(true);
+                        light.setSoft(true);
+                        light.setContactFilter(CATEGORY_LIGHT, (short) 0,
+                            (short) CATEGORY_ENVIRONMENT);
+                        lightInUse[lightIndex] = 2;
                     }
                 }
             }
-//        System.out.println("index"+lightIndex);
-//        System.out.println(lightInUse[lightIndex]);
+        System.out.println("index"+lightIndex);
+        System.out.println(lightInUse[lightIndex]);
             lightIndex = (lightIndex + 1) % maxLights;
         }
 
@@ -289,6 +289,7 @@ public class LightController {
             light.setActive(false);
             lightAssignments.remove(sprite.getObstacle().getBody());
         }
+        //Arrays.fill(lightInUse,0);
     }
 
     public void translate() {
