@@ -31,6 +31,7 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectSet;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -191,6 +192,7 @@ public class GameplayScene implements Screen {
      */
     private Joint activeLightJoint;
     private Joint activeFireJoint;
+    private Array<Joint> activeLightJoints = new Array();
     protected CollisionController contactListener;
     protected FireController fireController;
     protected EventHandler eventHandler;
@@ -514,6 +516,10 @@ public class GameplayScene implements Screen {
             world.destroyJoint(activeFireJoint);
             activeFireJoint = null;
         }
+        for(Joint lightJoint:activeLightJoints){
+            world.destroyJoint(lightJoint);
+        }
+        activeLightJoints.clear();
         //TODO: improve above
 
         if (fireController != null) {
@@ -570,7 +576,10 @@ public class GameplayScene implements Screen {
             world.destroyJoint(activeLightJoint);
             activeLightJoint = null;
         }
-
+        for (Joint lightJoint: activeLightJoints) {
+            world.destroyJoint(lightJoint);
+        }
+        activeLightJoints.clear();
         for (ObstacleSprite sprite : sprites) {
             Obstacle obj = sprite.getObstacle();
             sprite.getObstacle().deactivatePhysics(world);
@@ -1051,6 +1060,7 @@ public class GameplayScene implements Screen {
             addSprite(tracker);
             torchArc.add(tracker);
         }
+        fitViewport.setCamera(camera);
         lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds, units, cameraZoomLevel);
         lightController.attachTorchLight(torchFire);
         lightController.resetCamera(camera.position.x,camera.position.y);
@@ -1174,6 +1184,10 @@ public class GameplayScene implements Screen {
         fireController.update(weatherMachine);
         eventHandler.update();
         contactListener.sustainedContact();
+        Array<Lighting> fireLights =lightController.fireLights(fireController);
+        attachFireLightJoints(fireLights);
+        //TODO:Attach light joints
+        lightController.update(fireController);
 
         InputController input = InputController.getInstance();
 
@@ -1229,6 +1243,14 @@ public class GameplayScene implements Screen {
 //            }
 //        }
         updateCamera();
+    }
+    //TODO:finish this
+    private void attachFireLightJoints(Array<Lighting> fireLights) {
+        Set<Fire> fires = fireController.getLitFires();
+        for (Fire fire : fires) {
+
+        }
+
     }
 
 
@@ -1336,17 +1358,18 @@ public class GameplayScene implements Screen {
         camera.update();
 
         //debug code
-        shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(Color.RED);
-        shapeRenderer.rect(bounds.x * scale.x, bounds.y * scale.y,
-            bounds.width * scale.x, bounds.height * scale.y);
-        shapeRenderer.end();
+//        shapeRenderer.setProjectionMatrix(camera.combined);
+//        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+//        shapeRenderer.setColor(Color.RED);
+//        shapeRenderer.rect(bounds.x * scale.x, bounds.y * scale.y,
+//            bounds.width * scale.x, bounds.height * scale.y);
+//        shapeRenderer.end();
 
 
         float dx = camera.position.x-prevX;
         float dy = camera.position.y-prevY;
         lightController.updateCamera(dx,dy);
+        lightController.updateCamera(camera);
     }
 
     @SuppressWarnings("unchecked")
@@ -1816,7 +1839,6 @@ public class GameplayScene implements Screen {
         if (!torchFire.getObstacle().isRemoved()) {
             particleEngine.draw(batch,torchFire);
         }
-        //lightController.fireLights(fireController);
 
 
 
