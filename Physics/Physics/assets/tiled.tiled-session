@@ -1,13 +1,4 @@
 {
-    "Map/SizeTest": {
-        "height": 4300,
-        "width": 2
-    },
-    "activeFile": "test7.tmj",
-    "expandedProjectPaths": [
-        "."
-    ],
-    "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "": {
             "scaleInDock": 1
@@ -98,8 +89,8 @@
             "scale": 0.25,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 4748,
-                "y": 2650
+                "x": 4758,
+                "y": 2658
             }
         },
         "example_level.tmx": {
@@ -294,41 +285,12 @@
             }
         }
     },
-    "last.exportedFilePath": "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/assets",
-    "last.imagePath": "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/assets/environment",
-    "map.height": 18,
-    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
-    "map.lastUsedFormat": "json",
-    "map.tileHeight": 300,
-    "map.tileWidth": 300,
-    "map.width": 50,
-    "openFiles": [
-        "test_map.tmx",
-        "EnemyTiles.tsx",
-        "GameObjectTiles.tsx",
-        "PlayerTorchTiles.tsx",
-        "test2.tmx",
-        "PlatformTiles.tsx",
-        "example_level.tmj",
-        "test2.tmj",
-        "example_level2.tmj",
-        "sample.tmj",
-        "C:/Users/ericj/Downloads/level 3.tmj",
-        "example_level.tmx",
-        "example_level2.tmx",
-        "test6.tmj",
-        "test5.tmx",
-        "test7.tmj",
-        "BackgroundAssets.tsx"
-    ],
-    "project": "tiled.tiled-project",
-    "property.type": "string",
     "recentFiles": [
+        "example_level.tmj",
         "test5.tmx",
         "example_level2.tmj",
         "test2.tmj",
         "test6.tmj",
-        "example_level.tmj",
         "test_map.tmx",
         "EnemyTiles.tsx",
         "GameObjectTiles.tsx",
@@ -336,12 +298,5 @@
         "test2.tmx",
         "PlatformTiles.tsx",
         "sample.tmj"
-    ],
-    "tileset.embedInMap": true,
-    "tileset.lastUsedFormat": "tsx",
-    "tileset.tileSize": {
-        "height": 500,
-        "width": 300
-    },
-    "tileset.type": 1
+    ]
 }

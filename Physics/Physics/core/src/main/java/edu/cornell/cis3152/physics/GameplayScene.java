@@ -31,6 +31,7 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectSet;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -191,6 +192,7 @@ public class GameplayScene implements Screen {
      */
     private Joint activeLightJoint;
     private Joint activeFireJoint;
+    private Array<Joint> activeLightJoints = new Array();
     protected CollisionController contactListener;
     protected FireController fireController;
     protected EventHandler eventHandler;
@@ -514,6 +516,10 @@ public class GameplayScene implements Screen {
             world.destroyJoint(activeFireJoint);
             activeFireJoint = null;
         }
+        for(Joint lightJoint:activeLightJoints){
+            world.destroyJoint(lightJoint);
+        }
+        activeLightJoints.clear();
         //TODO: improve above
 
         if (fireController != null) {
@@ -570,7 +576,10 @@ public class GameplayScene implements Screen {
             world.destroyJoint(activeLightJoint);
             activeLightJoint = null;
         }
-
+        for (Joint lightJoint: activeLightJoints) {
+            world.destroyJoint(lightJoint);
+        }
+        activeLightJoints.clear();
         for (ObstacleSprite sprite : sprites) {
             Obstacle obj = sprite.getObstacle();
             sprite.getObstacle().deactivatePhysics(world);
@@ -632,6 +641,7 @@ public class GameplayScene implements Screen {
         // Create ground pieces
         Texture texture;
         enemies = new ArrayList<>();
+        List<Vector2> floatingLightPositions = new ArrayList<>();
 
         JsonValue layers = levelData.get("layers");
         for (JsonValue layer : layers) {
@@ -715,6 +725,8 @@ public class GameplayScene implements Screen {
                             torch.getObstacle().getPosition().cpy().add(0, torch.getHeight() / 4)));
                         activeLightJoint = world.createJoint(torch.attachObj(l));
                         activeFireJoint = world.createJoint(torch.attachObj(torchFire));
+                    } else if (objName.contains("env_light")) {
+                        floatingLightPositions.add(new Vector2(pos[0], pos[1]));
                     } else if (objName.contains("moth")) {
                         texture = directory.getEntry("platform-moth01", Texture.class);
                         Vector2 position = new Vector2(pos[0], pos[1]);
@@ -1052,6 +1064,7 @@ public class GameplayScene implements Screen {
             addSprite(tracker);
             torchArc.add(tracker);
         }
+        fitViewport.setCamera(camera);
         lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds, units, cameraZoomLevel);
         lightController.attachTorchLight(torchFire);
         lightController.resetCamera(camera.position.x,camera.position.y);
@@ -1072,6 +1085,19 @@ public class GameplayScene implements Screen {
             addSprite(floatingLights[i]);}
         for (FloatingLight floatingLight: floatingLights) {
             lightController.attachAmbientLight(floatingLight);
+        }
+
+        if (!floatingLightPositions.isEmpty()) {
+            floatingLights = new FloatingLight[floatingLightPositions.size()];
+
+            for (int i = 0; i < floatingLightPositions.size(); i++) {
+                Vector2 lightPos = floatingLightPositions.get(i);
+                FloatingLight floatingLight = new FloatingLight(units, lightPos, 1.0f, lightPos);
+                floatingLights[i] = floatingLight;
+
+                addSprite(floatingLight); // Add to rendering
+                lightController.attachAmbientLight(floatingLight); // Attach to LightController
+            }
         }
     }
     /**
@@ -1175,6 +1201,10 @@ public class GameplayScene implements Screen {
         fireController.update(weatherMachine);
         eventHandler.update();
         contactListener.sustainedContact();
+        Array<Lighting> fireLights =lightController.fireLights(fireController);
+        attachFireLightJoints(fireLights);
+        //TODO:Attach light joints
+        lightController.update(fireController);
 
         InputController input = InputController.getInstance();
 
@@ -1230,6 +1260,14 @@ public class GameplayScene implements Screen {
 //            }
 //        }
         updateCamera();
+    }
+    //TODO:finish this
+    private void attachFireLightJoints(Array<Lighting> fireLights) {
+        Set<Fire> fires = fireController.getLitFires();
+        for (Fire fire : fires) {
+
+        }
+
     }
 
 
@@ -1337,17 +1375,18 @@ public class GameplayScene implements Screen {
         camera.update();
 
         //debug code
-        shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(Color.RED);
-        shapeRenderer.rect(bounds.x * scale.x, bounds.y * scale.y,
-            bounds.width * scale.x, bounds.height * scale.y);
-        shapeRenderer.end();
+//        shapeRenderer.setProjectionMatrix(camera.combined);
+//        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+//        shapeRenderer.setColor(Color.RED);
+//        shapeRenderer.rect(bounds.x * scale.x, bounds.y * scale.y,
+//            bounds.width * scale.x, bounds.height * scale.y);
+//        shapeRenderer.end();
 
 
         float dx = camera.position.x-prevX;
         float dy = camera.position.y-prevY;
         lightController.updateCamera(dx,dy);
+        lightController.updateCamera(camera);
     }
 
     @SuppressWarnings("unchecked")
@@ -1817,7 +1856,6 @@ public class GameplayScene implements Screen {
         if (!torchFire.getObstacle().isRemoved()) {
             particleEngine.draw(batch,torchFire);
         }
-        //lightController.fireLights(fireController);
 
 
 

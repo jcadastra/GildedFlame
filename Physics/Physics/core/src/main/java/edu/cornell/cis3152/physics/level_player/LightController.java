@@ -1,5 +1,6 @@
 package edu.cornell.cis3152.physics.level_player;
 
+import box2dLight.Light;
 import box2dLight.PointLight;
 import box2dLight.PositionalLight;
 import box2dLight.RayHandler;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Fire;
 import edu.cornell.cis3152.physics.level_player.enviromentals.FloatingLight;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Lighting;
@@ -23,7 +25,9 @@ import edu.cornell.cis3152.physics.level_player.utils.FireFlag;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class LightController {
 
@@ -79,12 +83,14 @@ public class LightController {
     private int maxLights = 20;
     Map<Body, PointLight> lightAssignments = new HashMap<>();
 
+    private Map<Integer,PointLight> fireAssignments = new HashMap<>();
+
 
     public void initLights(RayHandler rayHandler) {
         lightPool = new Array<>();
 
         for (int i = 0; i < maxLights; i++) {
-            PointLight light = new PointLight(rayHandler, 64, Color.LIGHT_GRAY, 0.5f, 0, 0);
+            PointLight light = new PointLight(rayHandler, 20, Color.LIGHT_GRAY, 0.5f, 0, 0);
             light.setActive(false);  // Hide initially
             lightPool.add(light);
         }
@@ -118,7 +124,8 @@ public class LightController {
     public void setRadius(int radius) {
 
     }
-    public LightController(Vector2 points, World world, OrthographicCamera camera, Rectangle bounds, float physicsUnits, float cameraZoomLevel){
+    public LightController(Vector2 points, World world, OrthographicCamera camera,
+                           Rectangle bounds, float physicsUnits, float cameraZoomLevel) {
         this.BOX_TO_WORLD = physicsUnits;
         this.WORLD_TO_BOX = 1/physicsUnits;
         this.world = world;
@@ -127,6 +134,7 @@ public class LightController {
         // Create a separate camera for box2dlights
         this.camera = new OrthographicCamera(bounds.width, bounds.height);//Uses physic units
         this.camera.position.set(bounds.width / 2.0f, bounds.height / 2.0f, 0);
+        //cameraViewport
         //this.camera.setToOrtho(false, bounds.width, bounds.height);
         camera.zoom=cameraZoomLevel;
         this.camera.update();
@@ -208,10 +216,11 @@ public class LightController {
 
     public void attachAmbientLight(ObstacleSprite sprite) {
         PointLight light = lightPool.get(lightIndex);
-        if (lightAssignments.get(sprite.getObstacle().getBody()) == null) {//check if it's already attached
-            System.out.println("attaching new light");
-            lightAssignments.put(sprite.getObstacle().getBody(), light);
             if (sprite.getClass() == FloatingLight.class) {
+                if (lightAssignments.get(sprite.getObstacle().getBody())==null){
+               //check if it's already attached
+                    System.out.println("attaching new light");
+                    lightAssignments.put(sprite.getObstacle().getBody(), light);
                 //light.setColor(Color.LIGHT_GRAY);
                 light.setColor(Color.LIGHT_GRAY.r, Color.LIGHT_GRAY.g, Color.LIGHT_GRAY.b, 1f);
                 light.setDistance(1f);
@@ -219,11 +228,34 @@ public class LightController {
                 light.setActive(true);
                 light.setSoft(true);
                 light.setContactFilter(CATEGORY_LIGHT, (short) 0,
+                    (short) CATEGORY_ENVIRONMENT);}
+            }else if (sprite.getClass() == Fire.class) {
+                Fire fire = (Fire) sprite;
+                if (fireAssignments.get(fire.fireID)==null){//only adds fires when it's not already there
+                light.setColor(Color.YELLOW);
+                light.setDistance(3f);
+                light.attachToBody(sprite.getObstacle().getBody());
+                light.setActive(true);
+                light.setContactFilter(CATEGORY_LIGHT, (short) 0,
                     (short) CATEGORY_ENVIRONMENT);
+                light.setSoft(true);}
             }
             lightIndex = (lightIndex + 1) % maxLights;
         }
+
+
+    public Array<Lighting> fireLights(FireController fireController) {
+        Array<Lighting> fireLights = new Array<>();
+        for (Fire fire: fireController.getLitFires()){
+            Lighting lighting = new Lighting(2.2f,fire.getObstacle().getPosition());
+            fireLights.add(lighting);
+            if (fireAssignments.get(fire.fireID) == null) {
+                attachAmbientLight(fire);
+            }
+        }
+        return fireLights;
     }
+
 
     public void turnOffAmbientLight(ObstacleSprite sprite) {
         PointLight light = lightAssignments.get(sprite.getObstacle().getBody());
@@ -317,6 +349,14 @@ public class LightController {
         rayHandler.setCombinedMatrix(camera);
         rayHandler.update();
     }
+    public void updateCamera(OrthographicCamera mainCamera){
+        this.camera.viewportWidth = mainCamera.viewportWidth/BOX_TO_WORLD;
+        this.camera.viewportHeight = mainCamera.viewportHeight/BOX_TO_WORLD;
+        this.camera.zoom = mainCamera.zoom;
+        this.camera.update();
+        rayHandler.setCombinedMatrix(this.camera);
+        rayHandler.update();
+    }
 
 
 
@@ -324,6 +364,18 @@ public class LightController {
         rayHandler.dispose();
         if (camera != null) {
             camera = null;
+        }
+    }
+
+    public void update(FireController fireController) {
+        Set<Fire> deadFires = fireController.getAllFires();
+        deadFires.removeAll(fireController.getLitFires());
+        for (Fire fire : deadFires){
+            if (fireAssignments.get(fire.fireID) != null) {//a previous lit fire
+                PointLight light = lightAssignments.get(fire.fireID);
+                light.setActive(false);
+                fireAssignments.remove(fire.fireID);
+            }
         }
     }
 
