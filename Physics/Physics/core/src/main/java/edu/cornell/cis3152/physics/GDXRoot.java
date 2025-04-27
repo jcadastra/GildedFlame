@@ -11,7 +11,7 @@
  * Author:  Walker M. White
  * Version: 2/8/2025
  */
- package edu.cornell.cis3152.physics;
+package edu.cornell.cis3152.physics;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
@@ -149,15 +149,81 @@ public class GDXRoot extends Game implements ScreenListener {
     public void exitScreen(Screen screen, int exitCode) {
 
 
-            // Handle exit from the loading screen.
-            if (screen == loading) {
-                directory = loading.getAssets();
-                loading.dispose();
-                loading = null;
+        // Handle exit from the loading screen.
+        if (screen == loading) {
+            directory = loading.getAssets();
+            loading.dispose();
+            loading = null;
 
-                MainMenuScreen mainMenu = new MainMenuScreen();
-                mainMenu.setScreenListener(this);
-                setScreen(mainMenu);
+            MainMenuScreen mainMenu = new MainMenuScreen();
+            mainMenu.setScreenListener(this);
+            setScreen(mainMenu);
+            soundEngine.stopMusicLoop();
+            soundEngine.registerMusic("menu_music", directory.getEntry("menu_music", Music.class));
+            ArrayList<String> temp = new ArrayList<>();
+            temp.add("menu_music");
+            soundEngine.startMusicLoop(temp);
+            return;
+        }
+        // Handle exit from the main menu.
+        else if (screen instanceof MainMenuScreen) {
+            LevelSelectScene levelSelect = new LevelSelectScene();
+            levelSelect.setScreenListener(this);
+            setScreen(levelSelect);
+            return;
+        }
+        // Handle exit from the level selection screen.
+        else if (screen instanceof LevelSelectScene) {
+            int selectedLevel = ((LevelSelectScene) screen).getSelectedLevel();
+            soundEngine.stopMusicLoop();
+            // Register sound effects.
+            soundEngine.registerSoundEffect("jump", directory.getEntry("platform-jump", SoundEffect.class));
+            soundEngine.registerSoundEffect("pew", directory.getEntry("platform-pew", SoundEffect.class));
+            soundEngine.registerSoundEffect("plop", directory.getEntry("platform-plop", SoundEffect.class));
+            soundEngine.registerSoundEffect("dirtFootStep", directory.getEntry("dirtFootStep", SoundEffect.class));
+            soundEngine.registerSoundEffect("torchThrow", directory.getEntry("torchThrow", SoundEffect.class));
+
+            // Register music and start a loop.
+            //soundEngine.registerMusic("eerie1", directory.getEntry("eerie", Music.class));
+            //soundEngine.registerMusic("eerieCriminal", directory.getEntry("eerieCriminal", Music.class));
+            //soundEngine.registerMusic("tenseSoundscape", directory.getEntry("tenseSoundscape", Music.class));
+            soundEngine.registerMusic("in_game", directory.getEntry("in_game_music", Music.class));
+            ArrayList<String> temp = new ArrayList<>();
+            //temp.add("eerieCriminal");
+            //temp.add("eerie1");
+            temp.add("in_game");
+            soundEngine.startMusicLoop(temp);
+
+            // Initialize the gameplay scene and level data.
+            currentScene = new GameplayScene(directory, soundEngine, "platform");
+            levels = new String[]{"example_level", "example_level2", "test3", "example_level", "example_level"};
+            currentScene.loadLevel(levels[selectedLevel - 1], "rope_test");
+            currentScene.setScreenListener(this);
+            currentScene.setSpriteBatch(batch);
+            current = selectedLevel - 1;
+            setScreen(currentScene);
+
+            return;
+        }
+
+        // Handle exit codes from any GameplayScene.
+        if (screen instanceof GameplayScene) {
+            if (exitCode == GameplayScene.EXIT_NEXT) {
+                currentScene.clearLevel();
+                current = (current + 1) % levels.length;
+                currentScene.loadLevel(levels[current], "rope_test");
+                currentScene.reset();
+                setScreen(currentScene);
+            } else if (exitCode == GameplayScene.EXIT_PREV) {
+                currentScene.clearLevel();
+                current = (current - 1 + levels.length) % levels.length;
+                currentScene.loadLevel(levels[current], "rope_test");
+                currentScene.reset();
+                setScreen(currentScene);
+            } else if (exitCode == GameplayScene.EXIT_QUIT) {
+                LevelSelectScene levelSelect = new LevelSelectScene();
+                levelSelect.setScreenListener(this);
+                setScreen(levelSelect);
                 soundEngine.stopMusicLoop();
                 soundEngine.registerMusic("menu_music", directory.getEntry("menu_music", Music.class));
                 ArrayList<String> temp = new ArrayList<>();
@@ -228,3 +294,4 @@ public class GDXRoot extends Game implements ScreenListener {
             }
         }
     }
+}

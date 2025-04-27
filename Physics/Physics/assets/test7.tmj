@@ -1864,7 +1864,7 @@
          "name":"player",
          "objects":[
                 {
-                 "gid":62,
+                 "gid":63,
                  "height":600,
                  "id":7,
                  "name":"player",
@@ -1876,7 +1876,7 @@
                  "y":4436.36363636364
                 }, 
                 {
-                 "gid":61,
+                 "gid":62,
                  "height":300,
                  "id":8,
                  "name":"torch",
@@ -1886,6 +1886,54 @@
                  "width":150,
                  "x":3146.21212121212,
                  "y":4098.48484848485
+                }, 
+                {
+                 "gid":59,
+                 "height":57,
+                 "id":230,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":2164,
+                 "y":4125
+                }, 
+                {
+                 "gid":59,
+                 "height":57,
+                 "id":231,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":2548,
+                 "y":3869
+                }, 
+                {
+                 "gid":59,
+                 "height":57,
+                 "id":232,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":2836,
+                 "y":4397
+                }, 
+                {
+                 "gid":59,
+                 "height":57,
+                 "id":233,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":3628,
+                 "y":4365
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1899,7 +1947,7 @@
          "name":"entities",
          "objects":[
                 {
-                 "gid":65,
+                 "gid":66,
                  "height":500,
                  "id":12,
                  "name":"nonburnable",
@@ -1911,7 +1959,7 @@
                  "y":2400
                 }, 
                 {
-                 "gid":64,
+                 "gid":65,
                  "height":3236,
                  "id":18,
                  "name":"burnable",
@@ -1923,7 +1971,7 @@
                  "y":3978
                 }, 
                 {
-                 "gid":64,
+                 "gid":65,
                  "height":500,
                  "id":20,
                  "name":"burnable",
@@ -1935,7 +1983,7 @@
                  "y":2510
                 }, 
                 {
-                 "gid":64,
+                 "gid":65,
                  "height":500,
                  "id":21,
                  "name":"burnable",
@@ -1947,7 +1995,7 @@
                  "y":4422
                 }, 
                 {
-                 "gid":64,
+                 "gid":65,
                  "height":500,
                  "id":22,
                  "name":"burnable",
@@ -1959,7 +2007,7 @@
                  "y":4230
                 }, 
                 {
-                 "gid":64,
+                 "gid":65,
                  "height":500,
                  "id":23,
                  "name":"burnable",
@@ -1971,7 +2019,7 @@
                  "y":4326
                 }, 
                 {
-                 "gid":65,
+                 "gid":66,
                  "height":500,
                  "id":24,
                  "name":"nonburnable",
@@ -1983,7 +2031,7 @@
                  "y":4472.99386411504
                 }, 
                 {
-                 "gid":65,
+                 "gid":66,
                  "height":500,
                  "id":25,
                  "name":"nonburnable",
@@ -1995,7 +2043,7 @@
                  "y":3600
                 }, 
                 {
-                 "gid":65,
+                 "gid":66,
                  "height":500,
                  "id":26,
                  "name":"nonburnable",
@@ -2007,7 +2055,7 @@
                  "y":3070
                 }, 
                 {
-                 "gid":63,
+                 "gid":64,
                  "height":182,
                  "id":27,
                  "name":"1",
@@ -2019,7 +2067,7 @@
                  "y":1883
                 }, 
                 {
-                 "gid":63,
+                 "gid":64,
                  "height":934,
                  "id":28,
                  "name":"2",
@@ -2031,7 +2079,7 @@
                  "y":3827
                 }, 
                 {
-                 "gid":68,
+                 "gid":69,
                  "height":244.666666666667,
                  "id":29,
                  "name":"platformX",
@@ -2054,7 +2102,7 @@
          "name":"actionEntities",
          "objects":[
                 {
-                 "gid":92,
+                 "gid":78,
                  "height":120,
                  "id":226,
                  "name":"",
@@ -2072,7 +2120,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":230,
+ "nextobjectid":234,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
@@ -2087,15 +2135,11 @@
          "source":"BackgroundAssets.tsx"
         }, 
         {
-         "firstgid":59,
+         "firstgid":60,
          "source":"PlayerTorchTiles.tsx"
         }, 
         {
-         "firstgid":63,
-         "source":"GameObjectTiles.tsx"
-        }, 
-        {
-         "firstgid":78,
+         "firstgid":64,
          "source":"GameObjectTiles.tsx"
         }],
  "tilewidth":300,
