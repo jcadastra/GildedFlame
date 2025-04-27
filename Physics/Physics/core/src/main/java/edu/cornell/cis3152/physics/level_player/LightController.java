@@ -163,11 +163,11 @@ public class LightController {
         //rayHandler.useCustomViewport(viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
         rayHandler.useDiffuseLight(true);
         // Uncomment if you want no overlay dark hue  ⬇️
-        //rayHandler.useDiffuseLight(false);
+//        rayHandler.useDiffuseLight(false);
         // Background light color, original hue ⬇️
-        rayHandler.setAmbientLight(0.15f, 0.15f, 0.35f, 1f); // same hue, just darker
+//        rayHandler.setAmbientLight(0.15f, 0.15f, 0.35f, 1f); // same hue, just darker
         // Background black color ⬇️
-        //rayHandler.setAmbientLight(Color.BLACK);
+        rayHandler.setAmbientLight(Color.BLACK);
         //rayHandler.setBlur(true);
         debug = false;
         initLights(rayHandler);
@@ -231,10 +231,7 @@ public class LightController {
             Fire fire = (Fire) sprite;
             System.out.println(fireAssignments.get(fire.fireID)==null);
             if (fireAssignments.get(fire.fireID)!=light){//only adds fires when it's not already there
-                PointLight oldLight = fireAssignments.get(fire.fireID);
-                int oldIndex = lightPool.indexOf(oldLight);
-                lightInUse[oldIndex] = 0;
-                oldLight.setActive(false);//turn off old light
+//                System.out.println("add fire!");
                 light.setColor(Color.YELLOW);
                 light.setDistance(3f);
                 light.attachToBody(sprite.getObstacle().getBody());
@@ -246,25 +243,26 @@ public class LightController {
                 fireAssignments.put(fire.fireID,light);
             }
         }else if (sprite.getClass() == FloatingLight.class) {
-                if (lightAssignments.get(sprite.getObstacle().getBody())==null){
+//            System.out.println("is floating light");
+                if (lightAssignments.get(sprite.getObstacle().getBody())!=light){
                //check if it's already attached
-                    //System.out.println("attaching new light");
+                   // System.out.println("attaching new light");
                     if(lightInUse[lightIndex]!=1){//only when fire is not using it
-                    lightAssignments.put(sprite.getObstacle().getBody(), light);
-                    //light.setColor(Color.LIGHT_GRAY);
-                    light.setColor(Color.LIGHT_GRAY.r, Color.LIGHT_GRAY.g, Color.LIGHT_GRAY.b, 1f);
-                    light.setDistance(1.5f);
-                    light.attachToBody(sprite.getObstacle().getBody());
-                    light.setActive(true);
-                    light.setSoft(true);
-                    light.setContactFilter(CATEGORY_LIGHT, (short) 0,
-                        (short) CATEGORY_ENVIRONMENT);
-                    lightInUse[lightIndex] = 2;
+                        lightAssignments.put(sprite.getObstacle().getBody(), light);
+                        //light.setColor(Color.LIGHT_GRAY);
+                        light.setColor(Color.LIGHT_GRAY.r, Color.LIGHT_GRAY.g, Color.LIGHT_GRAY.b, 1f);
+                        light.setDistance(1.5f);
+                        light.attachToBody(sprite.getObstacle().getBody());
+                        light.setActive(true);
+                        light.setSoft(true);
+                        light.setContactFilter(CATEGORY_LIGHT, (short) 0,
+                            (short) CATEGORY_ENVIRONMENT);
+                        lightInUse[lightIndex] = 2;
                     }
                 }
             }
-        //System.out.println("index"+lightIndex);
-        //System.out.println(lightInUse[lightIndex]);
+        System.out.println("index"+lightIndex);
+        System.out.println(lightInUse[lightIndex]);
             lightIndex = (lightIndex + 1) % maxLights;
         }
 
@@ -291,7 +289,7 @@ public class LightController {
             light.setActive(false);
             lightAssignments.remove(sprite.getObstacle().getBody());
         }
-        Arrays.fill(lightInUse,0);
+        //Arrays.fill(lightInUse,0);
     }
 
     public void translate() {
