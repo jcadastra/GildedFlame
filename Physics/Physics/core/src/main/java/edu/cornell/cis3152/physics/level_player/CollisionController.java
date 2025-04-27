@@ -74,7 +74,6 @@ public class CollisionController implements ContactListener {
         if (sprite instanceof Totem) {
             return ((Totem) (sprite)).getState() != EnemyState.OUT_OF_LIGHT;
         }
-
         return sprite.getName().contains("floor") || sprite.getName().contains("platform") ||
                sprite.getName().contains("barrier") || sprite.getName().contains("spinner") ||
                sprite.getName().contains("button") || sprite.getName().contains("burnable");
