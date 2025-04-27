@@ -163,7 +163,7 @@ public class LightController {
         //rayHandler.useCustomViewport(viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
         rayHandler.useDiffuseLight(true);
         // Uncomment if you want no overlay dark hue  ⬇️
-        //rayHandler.useDiffuseLight(false);
+//        rayHandler.useDiffuseLight(false);
         // Background light color, original hue ⬇️
 //        rayHandler.setAmbientLight(0.15f, 0.15f, 0.35f, 1f); // same hue, just darker
         // Background black color ⬇️
@@ -231,7 +231,7 @@ public class LightController {
             Fire fire = (Fire) sprite;
             System.out.println(fireAssignments.get(fire.fireID)==null);
             if (fireAssignments.get(fire.fireID)!=light){//only adds fires when it's not already there
-                System.out.println("add fire!");
+//                System.out.println("add fire!");
                 light.setColor(Color.YELLOW);
                 light.setDistance(3f);
                 light.attachToBody(sprite.getObstacle().getBody());
@@ -243,21 +243,21 @@ public class LightController {
                 fireAssignments.put(fire.fireID,light);
             }
         }else if (sprite.getClass() == FloatingLight.class) {
-            System.out.println("is floating light");
+//            System.out.println("is floating light");
                 if (lightAssignments.get(sprite.getObstacle().getBody())!=light){
                //check if it's already attached
                    // System.out.println("attaching new light");
                     if(lightInUse[lightIndex]!=1){//only when fire is not using it
-                    lightAssignments.put(sprite.getObstacle().getBody(), light);
-                    //light.setColor(Color.LIGHT_GRAY);
-                    light.setColor(Color.LIGHT_GRAY.r, Color.LIGHT_GRAY.g, Color.LIGHT_GRAY.b, 1f);
-                    light.setDistance(1.5f);
-                    light.attachToBody(sprite.getObstacle().getBody());
-                    light.setActive(true);
-                    light.setSoft(true);
-                    light.setContactFilter(CATEGORY_LIGHT, (short) 0,
-                        (short) CATEGORY_ENVIRONMENT);
-                    lightInUse[lightIndex] = 2;
+                        lightAssignments.put(sprite.getObstacle().getBody(), light);
+                        //light.setColor(Color.LIGHT_GRAY);
+                        light.setColor(Color.LIGHT_GRAY.r, Color.LIGHT_GRAY.g, Color.LIGHT_GRAY.b, 1f);
+                        light.setDistance(1.5f);
+                        light.attachToBody(sprite.getObstacle().getBody());
+                        light.setActive(true);
+                        light.setSoft(true);
+                        light.setContactFilter(CATEGORY_LIGHT, (short) 0,
+                            (short) CATEGORY_ENVIRONMENT);
+                        lightInUse[lightIndex] = 2;
                     }
                 }
             }
@@ -274,7 +274,7 @@ public class LightController {
 //                    System.out.println(fire.fireID);
                     Lighting lighting = new Lighting(2.2f,fire.getObstacle().getPosition());
                     fireLights.add(lighting);
-                    System.out.print("fire id"+fire.fireID+" ");
+//                    System.out.print("fire id"+fire.fireID+" ");
                     attachAmbientLight(fire);
 
             }
@@ -289,6 +289,7 @@ public class LightController {
             light.setActive(false);
             lightAssignments.remove(sprite.getObstacle().getBody());
         }
+        //Arrays.fill(lightInUse,0);
     }
 
     public void translate() {
@@ -428,7 +429,7 @@ public class LightController {
            if (fire.fireID!=0){//not torch flamed
 //                    System.out.println(fire.fireID);
                Lighting lighting = new Lighting(2.2f,fire.getObstacle().getPosition());
-               System.out.print("fire id"+fire.fireID+" ");
+//               System.out.print("fire id"+fire.fireID+" ");
                attachAmbientLight(fire);
 
            }
@@ -453,7 +454,7 @@ public class LightController {
             }
         } else {
             if (torchLightState == Lighting.LightState.LIGHT_ON) {
-                System.out.println("reset light radius");
+//                System.out.println("reset light radius");
                 torchLighting.setDistance(lightRadius);
             }
         }

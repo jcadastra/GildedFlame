@@ -12,13 +12,14 @@ public class Rune extends ObstacleSprite {
     private float powerLevel = 0;
     private float prevPowerLevel = 0;
     private float r = 1.5f;
-    private float secondsToFullDissipation = 10;
+    private float secondsToFullDissipation = 15;
     private float dispersalRate = 1/(60f * secondsToFullDissipation);
 
     private int inLight = 0;
     private float currentLatchThreshold = 0;
     private float[] thresholds;
     private HashSet<EventAction<?>> eventActions;
+    public String setTargetName;
 
     public Rune (float x, float y, float units, float[] thresholds) {
         obstacle = new WheelObstacle(x,y, r);
