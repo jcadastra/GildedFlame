@@ -261,8 +261,8 @@ public class LightController {
                     }
                 }
             }
-        System.out.println("index"+lightIndex);
-        System.out.println(lightInUse[lightIndex]);
+//        System.out.println("index"+lightIndex);
+//        System.out.println(lightInUse[lightIndex]);
             lightIndex = (lightIndex + 1) % maxLights;
         }
 
