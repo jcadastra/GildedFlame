@@ -1085,7 +1085,6 @@ public class GameplayScene implements Screen {
                     float x = object.getFloat("x") / levelData.getInt("tilewidth");
                     float y = (18 * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
                     if (objName.contains("light")) {
-                        System.out.println("found light: " + objName);
                         FloatingLight light = new FloatingLight(units,new Vector2(x,y),1,goalPos);
                         light.getObstacle().setPosition(x,y);
                         floatingLights.add(light);
