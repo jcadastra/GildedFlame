@@ -279,10 +279,11 @@ public class LevelSelectScene implements Screen {
         if (inputController.isUsingController()) {
             XBoxController xbox = inputController.xbox;
             boolean start = xbox.getA();
+            DoorEntry currentEntry = doorEntries.get(currentIndex);
+            currentEntry.door.setDrawable(currentEntry.hoverDrawable);
             if (start && !prevButtonA) {
                 int selectionIndex = scrollIndex + currentIndex;
                 if (selectionIndex >= 0 && selectionIndex < doorEntries.size) {
-                    DoorEntry currentEntry = doorEntries.get(selectionIndex);
 
                     InputEvent downEvent = new InputEvent();
                     downEvent.setType(InputEvent.Type.touchDown);
@@ -295,20 +296,22 @@ public class LevelSelectScene implements Screen {
             prevButtonA = start;
 
             boolean moved = false;
-            float vertical = xbox.getLeftY();
+            float horizontal = xbox.getLeftX();
             if (joystickCooldown <= 0) {
-                if (vertical < -0.4f && !moved) {
-                    particleEngine.dispose();
+                if (horizontal < -0.4f && !moved) {
+//                    particleEngine.dispose();
+                    currentEntry.door.setDrawable(currentEntry.defaultDrawable);
                     currentIndex = Math.max(currentIndex - 1, 0);  // Prevent going negative
                     moved = true;
                     joystickCooldown = 0.25f;
-                } else if (vertical > 0.4f && !moved) {
+                } else if (horizontal > 0.4f && !moved) {
+                    currentEntry.door.setDrawable(currentEntry.defaultDrawable);
                     int maxVisible = Math.min(DOORS_VISIBLE, doorEntries.size - scrollIndex);
                     currentIndex = Math.min(currentIndex + 1, maxVisible - 1);  // Prevent going off right
                     moved = true;
                     joystickCooldown = 0.25f;
                 }
-                if (Math.abs(vertical) <= 0.01f) {
+                if (Math.abs(horizontal) <= 0.01f) {
                     moved = false;
                 }
             }
