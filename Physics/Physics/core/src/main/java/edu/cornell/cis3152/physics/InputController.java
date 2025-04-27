@@ -315,7 +315,7 @@ public class InputController {
 
         // Increase animation frame, but only if trying to move
         horizontal = xbox.getLeftX();
-        vertical   = xbox.getLeftY();
+        vertical   = -xbox.getLeftY();
         secondPressed = xbox.getRightTrigger() > 0.6f;
 
         // Move the crosshairs with the right stick.
