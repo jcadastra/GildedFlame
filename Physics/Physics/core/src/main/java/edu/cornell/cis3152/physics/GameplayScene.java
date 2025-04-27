@@ -780,7 +780,6 @@ public class GameplayScene implements Screen {
                         box.getObstacle().setBodyType(BodyType.DynamicBody);
                         box.getObstacle().setName(objName);
                         box.getObstacle().setPhysicsUnits(units);
-                        Texture tex;
                         if (objName.contains("non")) {
                             box.setMaterial(new ObstacleMaterial("stone", null));
                             box.setTexture(directory.getEntry("nonburnable", Texture.class));
@@ -1072,7 +1071,7 @@ public class GameplayScene implements Screen {
             addSprite(tracker);
             torchArc.add(tracker);
         }
-        fitViewport.setCamera(camera);
+//        fitViewport.setCamera(camera);
         lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds, units, cameraZoomLevel);
         lightController.attachTorchLight(torchFire);
         lightController.resetCamera(camera);
