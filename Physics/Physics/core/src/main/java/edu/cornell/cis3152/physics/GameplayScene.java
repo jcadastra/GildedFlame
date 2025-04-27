@@ -31,6 +31,7 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectSet;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -191,6 +192,7 @@ public class GameplayScene implements Screen {
      */
     private Joint activeLightJoint;
     private Joint activeFireJoint;
+    private Array<Joint> activeLightJoints = new Array();
     protected CollisionController contactListener;
     protected FireController fireController;
     protected EventHandler eventHandler;
@@ -514,6 +516,10 @@ public class GameplayScene implements Screen {
             world.destroyJoint(activeFireJoint);
             activeFireJoint = null;
         }
+        for(Joint lightJoint:activeLightJoints){
+            world.destroyJoint(lightJoint);
+        }
+        activeLightJoints.clear();
         //TODO: improve above
 
         if (fireController != null) {
@@ -570,7 +576,10 @@ public class GameplayScene implements Screen {
             world.destroyJoint(activeLightJoint);
             activeLightJoint = null;
         }
-
+        for (Joint lightJoint: activeLightJoints) {
+            world.destroyJoint(lightJoint);
+        }
+        activeLightJoints.clear();
         for (ObstacleSprite sprite : sprites) {
             Obstacle obj = sprite.getObstacle();
             sprite.getObstacle().deactivatePhysics(world);
@@ -674,7 +683,6 @@ public class GameplayScene implements Screen {
 //                    Texture textur = directory.getEntry("stoneTile"+(tileId), Texture.class);
                     tile.setTextureRegion(tileSetSplit[tileId / (tileSetSplit[0].length)][( tileId % tileSetSplit[0].length)]);
 
-
                     addSprite(tile);
                 }
             } else if (layerType.equals("objectgroup")) {
@@ -739,7 +747,7 @@ public class GameplayScene implements Screen {
                         totem.createSensor();
                         enemies.add(totem);
                     } else if (objName.contains("goaldoor")) {
-                        texture = directory.getEntry("shared-goal", Texture.class);
+                        texture = directory.getEntry("treasure", Texture.class);
                         System.out.println("goal door texture: " + texture);
                         float size = 1f;
 
@@ -752,24 +760,31 @@ public class GameplayScene implements Screen {
                         this.goalDoor = goalDoor;
                         addSprite(goalDoor);
                     } else if (objName.contains("platform")) {
+                        float width = object.getFloat("width") / levelData.getInt("tilewidth");
+                        float height = object.getFloat("height") / levelData.getInt("tileheight");
                         GameObject platform = new GameObject(x,y,width,height, units, true);
                         platform.getObstacle().setBodyType(BodyType.KinematicBody);
                         platform.getObstacle().setName(objName);
-//                        goalDoor.setTexture();
+                        platform.setTexture(directory.getEntry("platform", Texture.class));
                         platform.getObstacle().setPhysicsUnits(units);
                         platform.setMaterial(new ObstacleMaterial("platform", null));
                         addSprite(platform);
                     } else if (objName.contains("burnable")) {
+                        float width = object.getFloat("width") / levelData.getInt("tilewidth");
+                        float height = object.getFloat("height") / levelData.getInt("tileheight");
                         GameObject box = new GameObject(x,y,width,height, units, true);
                         box.getObstacle().setBodyType(BodyType.DynamicBody);
                         box.getObstacle().setName(objName);
-//                        goalDoor.setTexture();
                         box.getObstacle().setPhysicsUnits(units);
-                        if (!objName.contains("non")) {
-                            box.setMaterial(new ObstacleMaterial("wood", null));
-                        } else {
+                        Texture tex;
+                        if (objName.contains("non")) {
                             box.setMaterial(new ObstacleMaterial("stone", null));
+                            box.setTexture(directory.getEntry("nonburnable", Texture.class));
+                        } else {
+                            box.setMaterial(new ObstacleMaterial("wood", null));
+                            box.setTexture(directory.getEntry("burnable", Texture.class));
                         }
+                        System.out.println("sanity check" + (box instanceof EnhancedObstacleSprite));
                         addSprite(box);
                     } else if (objName.contains("rune")) {
                         boolean hasMoveEvent = false;
@@ -870,7 +885,7 @@ public class GameplayScene implements Screen {
                                 case "doublesided":
                                     doubleSided = Boolean.parseBoolean(value);
                                     break;
-                                case "rotationRadiance":
+                                case "rotation":
                                     rotationRad = Float.parseFloat(value);
                                     break;
                                 case "rotateEvent":
@@ -963,6 +978,17 @@ public class GameplayScene implements Screen {
                                     break;
                             }
                         }
+                    } else if (objName.contains("BackgroundBROKEN")) {
+                        Texture temp = directory.getEntry(objName, Texture.class);
+                        temp.setWrap(TextureWrap.Repeat,TextureWrap.Repeat);
+
+                        GameObject decoration = new GameObject(0,0, bounds.x, bounds.y, units, false);
+                        decoration.getObstacle().setSensor(true);  // set as sensor
+                        decoration.getObstacle().setBodyType(BodyType.StaticBody);
+                        decoration.setTexture(temp);
+                        decoration.getObstacle().setName(objName);
+
+                        addSprite(decoration);
                     } else {
                         if (objName.matches("\\d+")) {
                             ropeAnchors.put(objName, object);
@@ -1037,6 +1063,7 @@ public class GameplayScene implements Screen {
             addSprite(tracker);
             torchArc.add(tracker);
         }
+        fitViewport.setCamera(camera);
         lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds, units, cameraZoomLevel);
         lightController.attachTorchLight(torchFire);
         lightController.resetCamera(camera.position.x,camera.position.y);
@@ -1173,6 +1200,10 @@ public class GameplayScene implements Screen {
         fireController.update(weatherMachine);
         eventHandler.update();
         contactListener.sustainedContact();
+        Array<Lighting> fireLights =lightController.fireLights(fireController);
+        attachFireLightJoints(fireLights);
+        //TODO:Attach light joints
+        lightController.update(fireController);
 
         InputController input = InputController.getInstance();
 
@@ -1228,6 +1259,14 @@ public class GameplayScene implements Screen {
 //            }
 //        }
         updateCamera();
+    }
+    //TODO:finish this
+    private void attachFireLightJoints(Array<Lighting> fireLights) {
+        Set<Fire> fires = fireController.getLitFires();
+        for (Fire fire : fires) {
+
+        }
+
     }
 
 
@@ -1335,17 +1374,18 @@ public class GameplayScene implements Screen {
         camera.update();
 
         //debug code
-        shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(Color.RED);
-        shapeRenderer.rect(bounds.x * scale.x, bounds.y * scale.y,
-            bounds.width * scale.x, bounds.height * scale.y);
-        shapeRenderer.end();
+//        shapeRenderer.setProjectionMatrix(camera.combined);
+//        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+//        shapeRenderer.setColor(Color.RED);
+//        shapeRenderer.rect(bounds.x * scale.x, bounds.y * scale.y,
+//            bounds.width * scale.x, bounds.height * scale.y);
+//        shapeRenderer.end();
 
 
         float dx = camera.position.x-prevX;
         float dy = camera.position.y-prevY;
         lightController.updateCamera(dx,dy);
+        lightController.updateCamera(camera);
     }
 
     @SuppressWarnings("unchecked")
@@ -1815,7 +1855,6 @@ public class GameplayScene implements Screen {
         if (!torchFire.getObstacle().isRemoved()) {
             particleEngine.draw(batch,torchFire);
         }
-        //lightController.fireLights(fireController);
 
 
 

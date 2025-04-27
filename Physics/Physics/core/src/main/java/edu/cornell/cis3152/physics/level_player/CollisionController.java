@@ -167,7 +167,9 @@ public class CollisionController implements ContactListener {
             }
 
             if (isXandY(bd1, bd2, "wall", Enemy.class) == 1) {
+                System.out.println("WALLL");
                 Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
+                System.out.println(enemy.getObstacle().getName());
                 enemy.setJustCollided(false);
                 enemy.changeDirection();
             }
@@ -352,7 +354,7 @@ public class CollisionController implements ContactListener {
             }
 
 
-            if (isXandY(bd1, bd2, EnhancedObstacleSprite.class, Fire.class) == 1) {
+            if (isXandY(bd1, bd2, EnhancedObstacleSprite.class, Fire.class) == 1 ) {
                 Fire f = (Fire) idX(bd1, bd2, Fire.class);
                 EnhancedObstacleSprite b = (EnhancedObstacleSprite) idX(bd1, bd2, EnhancedObstacleSprite.class);
                 if (b.getMaterial().getFlammability() > 0 && !fireController.testIfFullyBurning(b)) {
@@ -431,7 +433,6 @@ public class CollisionController implements ContactListener {
                 Fire f = (Fire) idX(bd1, bd2, Fire.class);
                 EnhancedObstacleSprite b = (EnhancedObstacleSprite) idX(bd1, bd2, EnhancedObstacleSprite.class);
                 int contactTime = sustainedContacts.get(key);
-
 
                 Vector2 f_pos = f.getObstacle().getPosition().cpy();
                 Vector2 b_pos = b.getObstacle().getPosition().cpy();

@@ -5,10 +5,17 @@
       "wrapU": "repeated",
       "wrapV": "repeated"
     },
-    "shared-goal": "shared/goaldoor.png",
-    "window": "tiled_images/Window.png",
-    "brick": "tiled_images/brick.png",
-    "column": "tiled_images/column_background.png",
+    "treasure": "environment/treasure.png",
+    "burnable": "environment/barrel.png",
+    "nonburnable": "environment/statue.png",
+    "tablet": "environment/tablet.png",
+    "platform": "environment/platform.png",
+
+    "brickBackground": "backgroundAssets/brickBackground.png",
+    "colB": "backgroundAssets/colB.png",
+    "colM": "backgroundAssets/colM.png",
+    "colT": "backgroundAssets/colT.png",
+    "window": "backgroundAssets/window.png",
     "platform-totemLIGHTANIMATION": {
       "file": "platform/totemInLightAnimation.png",
       "mipmaps": true,
@@ -202,6 +209,7 @@
     "test3" : "test3.tmj",
     "test5" : "test5.tmj",
     "test6" : "test6.tmj",
+    "test7" : "test7.tmj",
     "example_level" : "example_level.tmj",
     "example_level2": "example_level2.tmj"
   },

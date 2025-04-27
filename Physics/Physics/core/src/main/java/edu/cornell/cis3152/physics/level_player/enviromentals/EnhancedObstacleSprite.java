@@ -32,7 +32,7 @@ public class EnhancedObstacleSprite extends ObstacleSprite {
         this.material = material;
     }
     public ObstacleMaterial getMaterial() {
-        return material;
+        return material == null ? new ObstacleMaterial("default", null) : material;
     }
     public void setClimbable(boolean value) {climbable = value;}
     public boolean getClimbable() {return climbable;}
