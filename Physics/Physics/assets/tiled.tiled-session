@@ -149,6 +149,14 @@
                 "y": 4796.666666666666
             }
         },
+        "level10.tmj": {
+            "scale": 0.180796875,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 4800.9679370840895,
+                "y": 2701.9272318727853
+            }
+        },
         "level2.tmj": {
             "scale": 0.180796875,
             "selectedLayer": 0,
@@ -167,18 +175,18 @@
         },
         "level4.tmj": {
             "scale": 0.180796875,
-            "selectedLayer": 0,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 4800.9679370840895,
-                "y": 2701.9272318727853
+                "x": 4789.9057989802095,
+                "y": 2696.396162820846
             }
         },
         "level5.tmj": {
             "scale": 0.180796875,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4800.9679370840895,
-                "y": 2701.9272318727853
+                "x": 4737.360642986778,
+                "y": 2641.0854723014436
             }
         },
         "level6.tmj": {
@@ -195,19 +203,19 @@
                 5,
                 4
             ],
-            "scale": 0.180796875,
+            "scale": 0.25,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 4164.894996110967,
-                "y": 2552.5883674704
+                "x": 4368,
+                "y": 3458
             }
         },
         "level8.tmj": {
             "scale": 0.25,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 2896,
-                "y": 2022
+                "x": 4758,
+                "y": 2658
             }
         },
         "level9.tmj": {
@@ -218,7 +226,7 @@
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 4732.824427480917,
-                "y": 2627.715795654727
+                "y": 2448.620082207868
             }
         },
         "sample.tmj": {
@@ -382,7 +390,7 @@
         }
     },
     "last.exportedFilePath": "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/assets",
-    "map.lastUsedExportFilter": "All Files (*)",
+    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "openFiles": [
         "test_map.tmx",
         "EnemyTiles.tsx",
@@ -406,6 +414,10 @@
     ],
     "project": "tiled.tiled-project",
     "recentFiles": [
+        "level7.tmj",
+        "level8.tmj",
+        "level4.tmj",
+        "level5.tmj",
         "level1.tmj",
         "level2.tmj",
         "level3.tmj",
@@ -413,10 +425,6 @@
         "EnemyTiles.tsx",
         "GameObjectTiles.tsx",
         "PlayerTorchTiles.tsx",
-        "test2.tmx",
-        "PlatformTiles.tsx",
-        "example_level.tmj",
-        "test2.tmj",
-        "example_level2.tmj"
+        "test2.tmx"
     ]
 }
