@@ -315,7 +315,9 @@ public class InputController {
 
         // Increase animation frame, but only if trying to move
         horizontal = xbox.getLeftX();
-        vertical   = xbox.getLeftY();
+        vertical = -xbox.getLeftY();
+        //System.out.println(vertical);
+
         secondPressed = xbox.getRightTrigger() > 0.6f;
 
         // Move the crosshairs with the right stick.
@@ -368,6 +370,7 @@ public class InputController {
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             vertical -= 1.0f;
         }
+        System.out.println(vertical);
 
         throwing = secondary && throwing;
         if (Gdx.input.isKeyPressed(Input.Keys.Q)) {

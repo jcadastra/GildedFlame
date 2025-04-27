@@ -78,7 +78,8 @@ public class LightController {
     private PositionalLight playerLight;
 
     /*Pool of lights for doing fire*/
-    private PooledList<PointLight> lightPool;
+    //private PooledList<PointLight> lightPool;
+    private Array<PointLight> lightPool = new Array<>();
     private int maxLights = 30;
     Map<Body, PointLight> lightAssignments = new HashMap<>();
 
@@ -88,7 +89,7 @@ public class LightController {
 
 
     public void initLights(RayHandler rayHandler) {
-        lightPool = new PooledList<>();
+        lightPool = new Array<>();
 
         for (int i = 0; i < maxLights; i++) {
             PointLight light = new PointLight(rayHandler, 20, Color.LIGHT_GRAY, 0.5f, 0, 0);
@@ -261,8 +262,8 @@ public class LightController {
                     }
                 }
             }
-        System.out.println("index"+lightIndex);
-        System.out.println(lightInUse[lightIndex]);
+//        System.out.println("index"+lightIndex);
+//        System.out.println(lightInUse[lightIndex]);
             lightIndex = (lightIndex + 1) % maxLights;
         }
 
