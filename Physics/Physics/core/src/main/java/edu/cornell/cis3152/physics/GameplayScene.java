@@ -904,7 +904,7 @@ public class GameplayScene implements Screen {
                                 case "doublesided":
                                     doubleSided = Boolean.parseBoolean(value);
                                     break;
-                                case "rotationRadiance":
+                                case "rotation":
                                     rotationRad = Float.parseFloat(value);
                                     break;
                                 case "rotateEvent":

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.10.2" name="GameObjects" tilewidth="934" tileheight="934" tilecount="6" columns="0">
+<tileset version="1.10" tiledversion="1.10.2" name="GameObjects" tilewidth="934" tileheight="934" tilecount="8" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <image width="934" height="934" source="environment/Rope/ropeEnd.png"/>
@@ -26,9 +26,37 @@
   <image width="346" height="235" source="environment/treasure.png"/>
  </tile>
  <tile id="5">
-  <properties>
-   <property name="name" value="platform____"/>
-  </properties>
   <image width="200" height="114" source="environment/platform.png"/>
+ </tile>
+ <tile id="12">
+  <properties>
+   <property name="doubleSided" type="bool" value="false"/>
+   <property name="endDegree" type="float" value="0"/>
+   <property name="endPos" value=""/>
+   <property name="interpolation">smoother
+linear
+swing</property>
+   <property name="latch" type="bool" value="false"/>
+   <property name="moveEvent" type="bool" value="false"/>
+   <property name="platformName" value=""/>
+   <property name="rotateEvent" type="bool" value="false"/>
+   <property name="startDegree" type="float" value="0"/>
+   <property name="startPos" value=""/>
+   <property name="time" type="float" value="0"/>
+  </properties>
+  <image width="86" height="49" source="environment/button.png"/>
+ </tile>
+ <tile id="13">
+  <properties>
+   <property name="endDegree" type="float" value="0"/>
+   <property name="endPos" value=""/>
+   <property name="moveEvent" type="bool" value="false"/>
+   <property name="platformName" value=""/>
+   <property name="rotateEvent" type="bool" value="false"/>
+   <property name="startDegree" type="float" value="0"/>
+   <property name="startPos" value=""/>
+   <property name="thresholds" value=""/>
+  </properties>
+  <image width="73" height="93" source="environment/rune.png"/>
  </tile>
 </tileset>

@@ -92,13 +92,14 @@
         },
         "example_level.tmj": {
             "expandedObjectLayers": [
+                6,
                 5
             ],
-            "scale": 0.12,
+            "scale": 0.25,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 5383.333333333334,
-                "y": 3770.833333333333
+                "x": 3108,
+                "y": 5706
             }
         },
         "example_level.tmx": {
@@ -237,11 +238,14 @@
             }
         },
         "test7.tmj": {
-            "scale": 0.125,
-            "selectedLayer": 3,
+            "expandedObjectLayers": [
+                4
+            ],
+            "scale": 0.75,
+            "selectedLayer": 4,
             "viewCenter": {
-                "x": 2000,
-                "y": 4540
+                "x": 2060,
+                "y": 3766
             }
         },
         "test_map.tmj": {

@@ -285,6 +285,18 @@
                  "width":934,
                  "x":-99,
                  "y":3827
+                }, 
+                {
+                 "gid":63,
+                 "height":244.666666666667,
+                 "id":29,
+                 "name":"platformX",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1241.33333333333,
+                 "x":1501.33333333333,
+                 "y":3386.33333333333
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -296,7 +308,50 @@
          "draworder":"topdown",
          "id":5,
          "name":"actionEntities",
-         "objects":[],
+         "objects":[
+                {
+                 "gid":70,
+                 "height":175.666666666667,
+                 "id":30,
+                 "name":"platformX",
+                 "properties":[
+                        {
+                         "name":"endDegree",
+                         "type":"float",
+                         "value":90
+                        }, 
+                        {
+                         "name":"interpolation",
+                         "type":"string",
+                         "value":"smoother"
+                        }, 
+                        {
+                         "name":"latch",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"moveEvent",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"rotateEvent",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"time",
+                         "type":"float",
+                         "value":2
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":472.666666666667,
+                 "x":2551.66666666667,
+                 "y":4278.33333333333
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -304,7 +359,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":29,
+ "nextobjectid":31,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
