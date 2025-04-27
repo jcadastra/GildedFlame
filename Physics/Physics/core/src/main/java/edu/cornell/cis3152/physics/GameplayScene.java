@@ -761,6 +761,7 @@ public class GameplayScene implements Screen {
                         this.goalDoor = goalDoor;
                         addSprite(goalDoor);
                     } else if (objName.contains("platform")) {
+                        System.out.println("makes rune");
                         float width = object.getFloat("width") / levelData.getInt("tilewidth");
                         float height = object.getFloat("height") / levelData.getInt("tileheight");
                         GameObject platform = new GameObject(x,y,width,height, units, true);
@@ -790,6 +791,7 @@ public class GameplayScene implements Screen {
                         System.out.println("sanity check" + (box instanceof EnhancedObstacleSprite));
                         addSprite(box);
                     } else if (objName.contains("rune")) {
+                        System.out.println("makes rune");
                         boolean hasMoveEvent = false;
                         boolean hasRotateEvent = false;
                         Vector2 platformStartPos = null;
@@ -844,15 +846,18 @@ public class GameplayScene implements Screen {
                         runeSet.add(rune);
 
                         if (hasMoveEvent) {
+                            System.out.println("move event detected");
                             if (platformStartPos == null) {
                                 platformStartPos = new Vector2(target.getObstacle().getPosition());
                             }
+                            assert (target!=null);
                             EventAction<Vector2> moveAction = new EventAction<>(target, "move",
                                 platformStartPos, platformEndPos);
                             rune.registerEventAction(moveAction);
                         }
 
                         if (hasRotateEvent) {
+                            System.out.println("rotatto event detected");
                             if (startDegree == Integer.MAX_VALUE) {
                                 startDegree = target.getObstacle().getAngle();
                             } else {

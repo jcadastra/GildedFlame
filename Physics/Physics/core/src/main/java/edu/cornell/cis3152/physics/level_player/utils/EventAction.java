@@ -65,6 +65,7 @@ public class EventAction<T> {
     public Function<Float, Float> getInterpolator() {
         return interpolator;
     }
+    public void forceUpdateTarget(ObstacleSprite target) {this.target = target;}
 
     /**
      * An event action with tween information contains the information to affect an object after the event is called

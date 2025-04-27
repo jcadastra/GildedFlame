@@ -243,7 +243,7 @@ public class LightController {
                 fireAssignments.put(fire.fireID,light);
             }
         }else if (sprite.getClass() == FloatingLight.class) {
-            System.out.println("is floating light");
+//            System.out.println("is floating light");
                 if (lightAssignments.get(sprite.getObstacle().getBody())!=light){
                //check if it's already attached
                    // System.out.println("attaching new light");
@@ -261,8 +261,8 @@ public class LightController {
                     }
                 }
             }
-        System.out.println("index"+lightIndex);
-        System.out.println(lightInUse[lightIndex]);
+//        System.out.println("index"+lightIndex);
+//        System.out.println(lightInUse[lightIndex]);
             lightIndex = (lightIndex + 1) % maxLights;
         }
 
