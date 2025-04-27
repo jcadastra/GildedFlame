@@ -14,6 +14,7 @@
         {
          "draworder":"topdown",
          "id":7,
+         "locked":true,
          "name":"BackgroundTiles",
          "objects":[
                 {
@@ -781,8 +782,8 @@
                  "type":"",
                  "visible":true,
                  "width":1000,
-                 "x":645.454545454545,
-                 "y":4915.15151515152
+                 "x":650.787878787878,
+                 "y":4980.48484848485
                 }],
          "offsetx":-12.1212121212122,
          "offsety":-15.151515151515,
@@ -955,7 +956,7 @@
  "nextobjectid":115,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.11.2",
+ "tiledversion":"1.10.2",
  "tileheight":300,
  "tilesets":[
         {
