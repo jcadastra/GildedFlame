@@ -152,16 +152,16 @@
                  "y":3174
                 }, 
                 {
-                 "gid":76,
+                 "gid":87,
                  "height":200,
-                 "id":84,
+                 "id":85,
                  "name":"env_light",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":200,
-                 "x":4524,
-                 "y":4269
+                 "x":4792,
+                 "y":4233
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -329,7 +329,7 @@
          "y":0
         }],
  "nextlayerid":7,
- "nextobjectid":85,
+ "nextobjectid":86,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
@@ -354,6 +354,10 @@
         {
          "firstgid":72,
          "source":"BackgroundStickers.tsx"
+        }, 
+        {
+         "firstgid":77,
+         "source":"BackgroundAssets.tsx"
         }],
  "tilewidth":300,
  "type":"map",
