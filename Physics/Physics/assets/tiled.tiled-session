@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "example_level2.tmj",
+    "activeFile": "test7.tmj",
     "expandedProjectPaths": [
         "."
     ],
@@ -225,7 +225,7 @@
             "scale": 0.180796875,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4734.595108460808,
+                "x": 4737.360642986778,
                 "y": 2641.0854723014436
             }
         },
@@ -244,11 +244,11 @@
                 3,
                 2
             ],
-            "scale": 0.75,
+            "scale": 0.125,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 2802.6666666666665,
-                "y": 4378
+                "x": 4856,
+                "y": 4652
             }
         },
         "test7.tmx": {
@@ -301,7 +301,7 @@
     "map.lastUsedFormat": "json",
     "map.tileHeight": 300,
     "map.tileWidth": 300,
-    "map.width": 32,
+    "map.width": 50,
     "openFiles": [
         "test_map.tmx",
         "EnemyTiles.tsx",
@@ -324,18 +324,18 @@
     "project": "tiled.tiled-project",
     "property.type": "string",
     "recentFiles": [
+        "test5.tmx",
+        "example_level2.tmj",
+        "test2.tmj",
+        "test6.tmj",
+        "example_level.tmj",
         "test_map.tmx",
         "EnemyTiles.tsx",
         "GameObjectTiles.tsx",
         "PlayerTorchTiles.tsx",
         "test2.tmx",
         "PlatformTiles.tsx",
-        "example_level.tmj",
-        "test2.tmj",
-        "example_level2.tmj",
-        "sample.tmj",
-        "C:/Users/ericj/Downloads/level 3.tmj",
-        "example_level.tmx"
+        "sample.tmj"
     ],
     "tileset.embedInMap": true,
     "tileset.lastUsedFormat": "tsx",

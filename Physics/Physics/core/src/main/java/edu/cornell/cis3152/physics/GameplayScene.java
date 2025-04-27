@@ -641,6 +641,7 @@ public class GameplayScene implements Screen {
             if (layerType.equals("tilelayer")) {
                 int width = layer.getInt("width");
                 int height = layer.getInt("height");
+                this.bounds = new Rectangle(0,0,width, height);
                 System.out.println(width + "x" + height);
                 JsonValue data = layer.get("data");
 
@@ -1863,9 +1864,9 @@ public class GameplayScene implements Screen {
             camera.zoom = cameraZoomLevel;
         }
         camera.setToOrtho( false, width, height );
-//        scale.x = width/bounds.width;
+        scale.x = width/bounds.width;
         scale.y = height/bounds.height;
-        scale.x = scale.y;
+//        scale.x = scale.y;
         // this works???? ^^^
 
         fitViewport.update(width, height, true);
