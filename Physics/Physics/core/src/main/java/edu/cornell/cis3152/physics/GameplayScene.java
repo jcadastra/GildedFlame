@@ -232,7 +232,7 @@ public class GameplayScene implements Screen {
      * 2. light for center of the room (doesn't move)
      * 3. light for the far end of the room (moves between the far end and this end)
      */
-    protected ArrayList<FloatingLight> floatingLights;
+    protected FloatingLight[] floatingLights = new FloatingLight[3];
 
     /**
      * Returns true if debug mode is active.
@@ -763,15 +763,13 @@ public class GameplayScene implements Screen {
                     } else if (objName.contains("platform")) {
                         float width = object.getFloat("width") / levelData.getInt("tilewidth");
                         float height = object.getFloat("height") / levelData.getInt("tileheight");
-                        GameObject platform = new GameObject(x, y, width, height, units, true);
+                        GameObject platform = new GameObject(x,y,width,height, units, true);
                         platform.getObstacle().setBodyType(BodyType.KinematicBody);
                         platform.getObstacle().setName(objName);
                         platform.setTexture(directory.getEntry("platform", Texture.class));
                         platform.getObstacle().setPhysicsUnits(units);
                         platform.setMaterial(new ObstacleMaterial("platform", null));
                         addSprite(platform);
-                    } else if (objName.contains("ambientLight")) {
-                        continue;
                     } else if (objName.contains("burnable")) {
                         float width = object.getFloat("width") / levelData.getInt("tilewidth");
                         float height = object.getFloat("height") / levelData.getInt("tileheight");
@@ -1072,31 +1070,34 @@ public class GameplayScene implements Screen {
         lightController.resetCamera(camera.position.x,camera.position.y);
         lightController.attachPlayerLight(avatar);
         //floating lights
-        floatingLights = new ArrayList<FloatingLight>();
+        floatingLights = new FloatingLight[3];
         Vector2 goalPos = goalDoor.getObstacle().getPosition();
         FloatingLight goalLight = new FloatingLight(units,goalPos,1,goalPos);
-        floatingLights.add(goalLight);
-
-        for (JsonValue layer : layers) {
-            String layerType = layer.getString("type");
-
-            if (layerType.equals("objectgroup")) {
-                for (JsonValue object : layer.get("objects")) {
-                    String objName = object.getString("name", "unnamed");
-                    float x = object.getFloat("x") / levelData.getInt("tilewidth");
-                    float y = (18 * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
-                    if (objName.contains("light")) {
-                        System.out.println("found light: " + objName);
-                        FloatingLight light = new FloatingLight(units,new Vector2(x,y),1,goalPos);
-                        light.getObstacle().setPosition(x,y);
-                        floatingLights.add(light);
-                        addSprite(light);
-                    }
-                }
-            }
+        floatingLights[0] = goalLight;
+        Vector2 centerPos = new Vector2(bounds.width/2,bounds.height/2);
+        FloatingLight centerLight = new FloatingLight(units,centerPos,1,centerPos);
+        floatingLights[1] = centerLight;
+        Vector2 edgePos1 = new Vector2(bounds.width-5,5);
+        Vector2 edgePos2 = new Vector2(5,5);
+        FloatingLight edgeLight = new FloatingLight(units,edgePos1,1,edgePos2);
+        floatingLights[2] = edgeLight;
+        for (int i = 0; i <floatingLights.length; i++){
+            addSprite(floatingLights[i]);}
+        for (FloatingLight floatingLight: floatingLights) {
+            lightController.attachAmbientLight(floatingLight);
         }
-        for (FloatingLight light : floatingLights) {
-            lightController.attachAmbientLight(light);
+
+        if (!floatingLightPositions.isEmpty()) {
+            floatingLights = new FloatingLight[floatingLightPositions.size()];
+
+            for (int i = 0; i < floatingLightPositions.size(); i++) {
+                Vector2 lightPos = floatingLightPositions.get(i);
+                FloatingLight floatingLight = new FloatingLight(units, lightPos, 1.0f, lightPos);
+                floatingLights[i] = floatingLight;
+
+                addSprite(floatingLight); // Add to rendering
+                lightController.attachAmbientLight(floatingLight); // Attach to LightController
+            }
         }
     }
     /**
