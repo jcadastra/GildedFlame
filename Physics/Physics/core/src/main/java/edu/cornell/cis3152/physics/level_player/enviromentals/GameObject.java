@@ -19,21 +19,24 @@ public class GameObject extends EnhancedObstacleSprite {
      * @param units  The physics unit scale.
      */
     public GameObject(float x, float y, float width, float height, float units, Boolean centerInBottomLeft) {
-        super();
+        super(new BoxObstacle(
+            centerInBottomLeft ? x + width / 2f : x,
+            centerInBottomLeft ? y + height / 2f : y,
+            width,
+            height
+        ));
 
-        if (centerInBottomLeft) {
-            x += width / 2;
-            y += height / 2;
-        }
-
-        BoxObstacle temp = new BoxObstacle(x,y,width,height);
-        obstacle = new ObstacleSprite(temp).getObstacle();
-        obstacle.setDensity(0.5f);
-        obstacle.setFriction(0.5f);
-        obstacle.setRestitution(.1f);
-        obstacle.setPhysicsUnits(units);
-        obstacle.setFixedRotation(true);
-        mesh.set(-(width * units)/2, -(height * units)/2, width * units, height * units);
+        getObstacle().setDensity(0.5f);
+        getObstacle().setFriction(0.5f);
+        getObstacle().setRestitution(0.1f);
+        getObstacle().setPhysicsUnits(units);
+        getObstacle().setFixedRotation(true);
+        mesh.set(
+            -(width  * units)/2f,
+            -(height * units)/2f,
+            width  * units,
+            height * units
+        );
     }
 
     public GameObject(float x, float y, float width, float height, float units, Boolean centerInBottomLeft, int tileId) {
@@ -55,22 +58,24 @@ public class GameObject extends EnhancedObstacleSprite {
         float physHeight = height * (name.equals("platform") ? 0.85f : 1f);
         float physCentreY = y + (physHeight - height) / 2f;
 
+        int direction = -1;
         float widthFactor = 1f;
         //shrink to 80%, centered
         if (tileId == 0 || tileId == 12) {
-            widthFactor = .8f;
+//            widthFactor = .8f;
         }
         // shrink to 90%, right justified
         else if (tileId == 1 || tileId == 4 || tileId == 13) {
-            widthFactor = .9f;
+//            widthFactor = .9f;
         }
         // shrink to 90%, left justified
         else if (tileId == 3 || tileId == 5 || tileId == 15) {
-            widthFactor = .9f;
+//            widthFactor = .9f;
+//            direction = 1;
         }
-        float physCentreX = x - (width - width * widthFactor) / 2f;
+        float physCentreX = x - (direction* (width - width * widthFactor)) / 2f;
 
-        BoxObstacle temp = new BoxObstacle(physCentreX,physCentreY,width  * widthFactor,physHeight);
+        BoxObstacle temp = new BoxObstacle(physCentreX,physCentreY,width * widthFactor,physHeight);
 
         obstacle = new ObstacleSprite(temp).getObstacle();
         obstacle.setDensity(0.5f);
@@ -80,6 +85,6 @@ public class GameObject extends EnhancedObstacleSprite {
         obstacle.setFixedRotation(true);
         obstacle.setName(name);
         //if platform ie walk on shrink height by .15 to walk on better
-        mesh.set(-(width * units)/2, -(height * (name.equals("platform") ? .85f : 1) * units)/2, width * units, (height ) * units);
+        mesh.set(-(width * units)/2, -(height * (name.equals("platform") ? .85f : 1) * units)/2, width * widthFactor * units, (height ) * units);
     }
 }

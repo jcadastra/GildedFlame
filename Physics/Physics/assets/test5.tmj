@@ -31,7 +31,7 @@
          "width":32,
          "x":0,
          "y":0
-        }, 
+        },
         {
          "draworder":"topdown",
          "id":2,
@@ -48,7 +48,7 @@
                  "width":300,
                  "x":1194,
                  "y":4796
-                }, 
+                },
                 {
                  "gid":51,
                  "height":300,
@@ -66,7 +66,7 @@
          "visible":true,
          "x":0,
          "y":0
-        }, 
+        },
         {
          "draworder":"topdown",
          "id":3,
@@ -82,12 +82,12 @@
                          "name":"depth",
                          "type":"string",
                          "value":"2"
-                        }, 
+                        },
                         {
                          "name":"piecelen",
                          "type":"string",
                          "value":"14"
-                        }, 
+                        },
                         {
                          "name":"thickness",
                          "type":"string",
@@ -99,7 +99,7 @@
                  "width":150,
                  "x":3002,
                  "y":2134
-                }, 
+                },
                 {
                  "gid":59,
                  "height":150,
@@ -111,7 +111,7 @@
                  "width":150,
                  "x":906,
                  "y":3006
-                }, 
+                },
                 {
                  "gid":59,
                  "height":150,
@@ -123,7 +123,7 @@
                  "width":150,
                  "x":3882,
                  "y":3022
-                }, 
+                },
                 {
                  "gid":59,
                  "height":150,
@@ -134,12 +134,12 @@
                          "name":"depth",
                          "type":"string",
                          "value":"2"
-                        }, 
+                        },
                         {
                          "name":"piecelen",
                          "type":"string",
                          "value":"14"
-                        }, 
+                        },
                         {
                          "name":"thickness",
                          "type":"string",
@@ -151,7 +151,7 @@
                  "width":150,
                  "x":4722,
                  "y":1446
-                }, 
+                },
                 {
                  "gid":59,
                  "height":150,
@@ -163,7 +163,7 @@
                  "width":150,
                  "x":5218,
                  "y":2622
-                }, 
+                },
                 {
                  "gid":59,
                  "height":150,
@@ -175,7 +175,7 @@
                  "width":150,
                  "x":5402,
                  "y":3534
-                }, 
+                },
                 {
                  "gid":56,
                  "height":300,
@@ -187,55 +187,7 @@
                  "width":300,
                  "x":8601.38,
                  "y":4498.16
-                }, 
-                {
-                 "gid":60,
-                 "height":300,
-                 "id":15,
-                 "name":"button",
-                 "properties":[
-                        {
-                         "name":"doublesided",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"endX",
-                         "type":"string",
-                         "value":"24"
-                        }, 
-                        {
-                         "name":"endY",
-                         "type":"string",
-                         "value":"5"
-                        }, 
-                        {
-                         "name":"latch",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"rotationRadiance",
-                         "type":"string",
-                         "value":"0"
-                        }, 
-                        {
-                         "name":"startX",
-                         "type":"string",
-                         "value":"4"
-                        }, 
-                        {
-                         "name":"startY",
-                         "type":"string",
-                         "value":"15"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":600,
-                 "x":6497.29,
-                 "y":2386.23
-                }, 
+                },
                 {
                  "gid":61,
                  "height":500,
@@ -258,21 +210,21 @@
  "nextobjectid":17,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.11.2",
+ "tiledversion":"1.10.2",
  "tileheight":300,
  "tilesets":[
         {
          "firstgid":1,
          "source":"PlatformTiles.tsx"
-        }, 
+        },
         {
          "firstgid":49,
          "source":"PlayerTorchTiles.tsx"
-        }, 
+        },
         {
          "firstgid":53,
          "source":"EnemyTiles.tsx"
-        }, 
+        },
         {
          "firstgid":57,
          "source":"GameObjectTiles.tsx"
