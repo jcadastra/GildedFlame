@@ -190,7 +190,7 @@ public class GDXRoot extends Game implements ScreenListener {
 
                 // Initialize the gameplay scene and level data.
                 currentScene = new GameplayScene(directory, soundEngine, "platform");
-                levels = new String[]{"example_level", "test7", "test8"};
+                levels = new String[]{"level1", "level7", "level8"};
                 currentScene.loadLevel(levels[selectedLevel - 1], "rope_test");
                 currentScene.setScreenListener(this);
                 currentScene.setSpriteBatch(batch);
