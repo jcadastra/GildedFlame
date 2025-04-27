@@ -29,6 +29,8 @@ public class MainMenuScreen implements Screen {
     private boolean startClicked = false;
     private ScreenListener listener;
     private Sound clickSound;
+    private InputController inputController = InputController.getInstance();
+    private boolean prevButtonA = false;;
 
     public void setScreenListener(ScreenListener listener) {
         this.listener = listener;
