@@ -149,8 +149,8 @@
             "scale": 0.180796875,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 5271.108806499006,
-                "y": 3786.0167660530637
+                "x": 4900.527180019013,
+                "y": 3763.892489845303
             }
         },
         "level8.tmj": {
@@ -356,6 +356,7 @@
     ],
     "project": "tiled.tiled-project",
     "recentFiles": [
+        "level7.tmj",
         "test_map.tmx",
         "EnemyTiles.tsx",
         "GameObjectTiles.tsx",
@@ -366,7 +367,6 @@
         "test2.tmj",
         "example_level2.tmj",
         "sample.tmj",
-        "C:/Users/ericj/Downloads/level 3.tmj",
-        "example_level.tmx"
+        "C:/Users/ericj/Downloads/level 3.tmj"
     ]
 }

@@ -788,6 +788,7 @@ public class GameplayScene implements Screen {
                             box.setMaterial(new ObstacleMaterial("wood", null));
                             box.setTexture(directory.getEntry("burnable", Texture.class));
                         }
+                        box.getObstacle().setDensity(3.5f);
                         addSprite(box);
                     } else if (objName.contains("rune")) {
                         System.out.println("makes rune");
