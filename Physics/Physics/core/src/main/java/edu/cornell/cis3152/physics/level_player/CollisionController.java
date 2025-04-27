@@ -3,6 +3,7 @@ package edu.cornell.cis3152.physics.level_player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import edu.cornell.cis3152.physics.level_player.enemies.*;
 import edu.cornell.cis3152.physics.level_player.enemies.Enemy.EnemyState;
@@ -73,10 +74,9 @@ public class CollisionController implements ContactListener {
         if (sprite instanceof Totem) {
             return ((Totem) (sprite)).getState() != EnemyState.OUT_OF_LIGHT;
         }
-
         return sprite.getName().contains("floor") || sprite.getName().contains("platform") ||
                sprite.getName().contains("barrier") || sprite.getName().contains("spinner") ||
-               sprite.getName().contains("button") || (sprite instanceof Surface);
+               sprite.getName().contains("button") || sprite.getName().contains("burnable");
     }
 
     public Stack<CollisionFlag> getCollisionFlags() {
@@ -129,12 +129,22 @@ public class CollisionController implements ContactListener {
             ObstacleSprite bd1 = (ObstacleSprite) body1.getUserData();
             ObstacleSprite bd2 = (ObstacleSprite) body2.getUserData();
 
-            if (isXandY(bd1, bd2, Fire.class, Fire.class) == 2) {
+            if (isX(bd1, bd2, Fire.class) == 2) {
+                return;
+            }
+            if (isX(bd1, bd2, Smoke.class) == 2) {
+                return;
+            }
+            if (isX(bd1, bd2, "rain") == 2) {
                 return;
             }
 
-            if (isXandY(bd1, bd2, Fire.class, RainBlock.class) == 1) {
-                ((Fire) idX(bd1, bd2, Fire.class)).setInRain(true);
+            if (isX(bd1, bd2, "rain") == 1) {
+                ObstacleSprite nonRain = bd1.getObstacle().getName().contains("rain") ? bd2 : bd1;
+                if ((nonRain.getObstacle().getBodyType() == BodyType.KinematicBody || nonRain.getObstacle().getBodyType() == BodyType.StaticBody)
+                    && !nonRain.getObstacle().isSensor()) {
+                    collisionFlags.add(new CollisionFlag("resetRain",idX(bd1, bd2, "rain") ));
+                }
             }
 
             if (isXandY(bd1,bd2, Fire.class, Moth.class) == 1){
@@ -258,12 +268,13 @@ public class CollisionController implements ContactListener {
                     moth.resetSmotherTimer();
                     moth.setState(EnemyState.SMOTHER);
                     beginSmother = true;
-                    beginSmother();
                 } else if (moth.getState() != EnemyState.DAZED && Avatar.getHasTorch()) {
                     moth.setState(EnemyState.CD);
                 } else {
-                    beginSmother = false;
                     // still stay in the smother state;
+                }
+                if (moth.getState()!=EnemyState.SMOTHER){
+                    beginSmother = false;
                 }
 
             }
@@ -323,6 +334,7 @@ public class CollisionController implements ContactListener {
                         if ((moth.getState() == EnemyState.SMOTHER) && playerPos.y > mothPos.y) {
                             moth.resetDazedTimer();
                             moth.setState(EnemyState.DAZED);
+                            //beginSmother = false;
                             Body playerBody = player.getObstacle().getBody();
                             float bounceImpulse = 0.15f * player.getUnits();
                             playerBody.applyLinearImpulse(
@@ -355,10 +367,12 @@ public class CollisionController implements ContactListener {
                 if (moth.getState() == EnemyState.SMOTHER) {
                     ContactKey key2 = new ContactKey(fix1, fix2);
                     sustainedContacts.put(key2, 300);
+                    beginSmother = true;
                 }
             }
 
             if (isX(bd1, bd2, Avatar.class) == 1 && isX(bd1,bd2,"goalDoor") == 1) {
+                System.out.println("detected collision");
                 ContactKey key = new ContactKey(fix1, fix2);
                 sustainedContacts.put(key, -1);
             }
@@ -378,7 +392,6 @@ public class CollisionController implements ContactListener {
             }
             if (isXandY(bd1, bd2, Avatar.class, Coin.class) == 1) {
                 Coin coin = (Coin) idX(bd1, bd2, Coin.class);
-                System.out.println("collided!");
                 collisionFlags.push(new CollisionFlag("collect_coin", coin));
             }
 
@@ -531,7 +544,7 @@ public class CollisionController implements ContactListener {
 
         if (isX(bd1, bd2, Avatar.class) == 1) {
             Avatar t = (Avatar) idX(bd1, bd2, Avatar.class);
-            if ((isGround(bd1) || isGround(bd2)) && ((t.getSensorName().equals(fd2) && t != bd1) || (t.getSensorName().equals(fd1) && t != bd2) && t.getGroundedState().equals(GroundState.GROUNDED))) {
+            if ((isGround(bd1) || isGround(bd2)) && (((t.getSensorName().equals(fd2) && t != bd1) || (t.getSensorName().equals(fd1) && t != bd2)) && t.getGroundedState().equals(GroundState.GROUNDED))) {
                 collisionFlags.push(new CollisionFlag("traciAirborne", bd1 instanceof Avatar ? fix2 : fix1));
             }
         }
@@ -552,11 +565,8 @@ public class CollisionController implements ContactListener {
 
         if (isXandY(bd1, bd2, Lighting.class, Totem.class) == 1) {
             Totem totem = (Totem) idX(bd1, bd2, Totem.class);
-
-            if (totem.getState() == EnemyState.IN_LIGHT) {
-                totem.resetFreeze();
                 totem.setState(Enemy.EnemyState.CD);
-            }
+            totem.resetFreeze();
         }
 
 
@@ -587,10 +597,6 @@ public class CollisionController implements ContactListener {
             ((Rune) idX(bd1,bd2,Rune.class)).subInLight();
             ContactKey key = new ContactKey(fix1, fix2);
             sustainedContacts.remove(key);
-        }
-
-        if (isXandY(bd1, bd2, Fire.class, RainBlock.class) == 1) {
-            ((Fire) idX(bd1, bd2, Fire.class)).setInRain(false);
         }
 
         /**

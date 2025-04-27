@@ -73,7 +73,7 @@ public class Button extends ObstacleGroup {
         //set texture
         baseOb.setBodyType(BodyType.StaticBody);
         baseOb.setAngle(rotatationRads);
-        baseOb.setName("button-base");
+        baseOb.setName("button-base-wall");
         baseOb.setPhysicsUnits(units);
         base = new ObstacleSprite(baseOb);
         sprites.add(base);

@@ -24,7 +24,6 @@
  */
 package edu.cornell.cis3152.physics;
 
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -33,11 +32,13 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.utils.ObjectSet;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import edu.cornell.cis3152.physics.level_player.CollisionController;
 import edu.cornell.cis3152.physics.level_player.EventHandler;
 import edu.cornell.cis3152.physics.level_player.FireController;
 import edu.cornell.cis3152.physics.level_player.LightController;
+import edu.cornell.cis3152.physics.level_player.MarthasWeatherMachine;
 import edu.cornell.cis3152.physics.level_player.enemies.Enemy;
 import edu.cornell.cis3152.physics.level_player.enemies.Moth;
 import edu.cornell.cis3152.physics.level_player.enemies.Totem;
@@ -50,6 +51,7 @@ import edu.cornell.cis3152.physics.level_player.utils.Event;
 import edu.cornell.cis3152.physics.level_player.utils.FireFlag;
 import edu.cornell.cis3152.physics.level_player.utils.ObstacleGroup;
 
+import edu.cornell.cis3152.physics.level_player.utils.RainFlag;
 import edu.cornell.cis3152.physics.level_player.utils.TweenElement;
 
 import java.util.*;
@@ -193,10 +195,11 @@ public class GameplayScene implements Screen {
     protected FireController fireController;
     protected EventHandler eventHandler;
     protected SoundEngine soundEngine;
+    protected MarthasWeatherMachine weatherMachine;
     protected HashSet<Rune> runeSet;
     protected PooledList<TweenElement<Float>> tweenedMovmentObjectsFloat;
     protected PooledList<TweenElement<Vector2>> tweenedMovmentObjectsVec2;
-    protected FitViewport fitViewport;
+    protected ExtendViewport fitViewport;
 
     protected LightController lightController;
     protected ShapeRenderer shapeRenderer;
@@ -355,13 +358,14 @@ public class GameplayScene implements Screen {
         contactListener = new CollisionController(directory, fireController);
         this.eventHandler = new EventHandler();
         this.soundEngine = soundEngine;
+        weatherMachine = new MarthasWeatherMachine();
         torchArc = new ArrayList<>();
         tweenedMovmentObjectsVec2 = new PooledList<>();
         tweenedMovmentObjectsFloat = new PooledList<>();
         this.shapeRenderer = new ShapeRenderer();
         runeSet = new HashSet<>();
 
-        this.fitViewport = new FitViewport(16, 9);
+        this.fitViewport = new ExtendViewport(1280, 720);
 
         // pull out sounds
         volume = constants.getFloat("volume", 1.0f);
@@ -373,7 +377,7 @@ public class GameplayScene implements Screen {
         bounds = new Rectangle(0,0,defaults.get("bounds").getFloat( 0 ), defaults.get("bounds").getFloat( 1 ));
         resize(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 
-        displayFont = directory.getEntry( "shared-retro" ,BitmapFont.class);
+        displayFont = directory.getEntry( "shared-unica" ,BitmapFont.class);
         goodMessage = new TextLayout();
         goodMessage.setFont( displayFont );
         goodMessage.setAlignment( TextAlign.middleCenter );
@@ -409,8 +413,6 @@ public class GameplayScene implements Screen {
     /**
      * Disposes of all (non-static) resources allocated to this mode.
      */
-
-
     public void dispose() {
         if (world != null) {
             for(ObstacleSprite sprite : sprites) {
@@ -524,6 +526,12 @@ public class GameplayScene implements Screen {
             fireController.resetStorage();
         }
 
+        if (weatherMachine != null) {
+            for (ObstacleSprite rainDrop : weatherMachine.rainDrops) {
+                rainDrop.getObstacle().markRemoved(true);
+            }
+        }
+
         if (eventHandler != null) {
             eventHandler.dispose();
         }
@@ -627,7 +635,6 @@ public class GameplayScene implements Screen {
 
         JsonValue layers = levelData.get("layers");
         for (JsonValue layer : layers) {
-            List<Vector2> floatingLightPositions = new ArrayList<>();
             String layerType = layer.getString("type");
             String layerName = layer.getString("name");
 
@@ -643,9 +650,14 @@ public class GameplayScene implements Screen {
                     tileData[i] = data.getInt(i);
                 }
 
+                Texture tileSet = directory.getEntry("platform-tiles", Texture.class);
+                TextureRegion[][] tileSetSplit = TextureRegion.split(tileSet,300,300);
+
                 List<float[]> polygons = extractSurfaces(tileData, width, height);
 
                 for (float[] points : polygons) {
+//                    System.out.println(Arrays.toString(points));
+                    // Determine bounds of the polygon in tile coordinates
                     int minX = (int) points[0];
                     int maxY = (int) points[1];
                     int maxX = (int) points[4];
@@ -653,73 +665,25 @@ public class GameplayScene implements Screen {
                     int x = minX;
                     int y = height - maxY;
                     int index = y * width + x;
-                    int tileId = tileData[index];
-                    String name;
-                    if (tileId == 2 || tileId == 3 || tileId == 4) {
-                        name = "platform";
-                    } else if (tileId == 8 || tileId == 9 || tileId == 10) {
-                        name = "platform";
-                    } else {
-                        name = "wall";
-                    }
+                    int tileId = tileData[index] - 1;
 
-                    Surface tile = new Surface(points, units, name, settings);
-                    Texture textur = directory.getEntry("stoneTile" + (tileId), Texture.class);
-                    textur.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+                    GameObject tile = new GameObject(minX, minY,1, 1,units,true,tileId);
+                    tile.getObstacle().setBodyType(BodyType.StaticBody);
 
-                    tile.setTexture(textur);
+//                    Texture textur = directory.getEntry("stoneTile"+(tileId), Texture.class);
+                    tile.setTextureRegion(tileSetSplit[tileId / (tileSetSplit[0].length)][( tileId % tileSetSplit[0].length)]);
 
 
                     addSprite(tile);
                 }
             } else if (layerType.equals("objectgroup")) {
                 Map<String, JsonValue> ropeAnchors = new HashMap<>();
-                Map<Integer, ObstacleSprite> indexedPlatforms = new HashMap<>();
-
-                for (JsonValue object : layer.get("objects")) {
-                    String objName = object.getString("name", "unnamed");
-
-                    if (objName.startsWith("platform")) {
-                        float x = object.getFloat("x") / levelData.getInt("tilewidth");
-                        float y = (18 * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
-
-                        float width = 1f;
-                        float height = 1f;
-                        JsonValue properties = object.get("properties");
-                        if (properties != null) {
-                            for (JsonValue prop : properties) {
-                                if (prop.getString("name").equals("width")) {
-                                    width = Float.parseFloat(prop.getString("value"));
-                                } else if (prop.getString("name").equals("height")) {
-                                    height = Float.parseFloat(prop.getString("value"));
-                                }
-                            }
-                        }
-
-                        ObstacleSprite platform = new ObstacleSprite();
-                        BoxObstacle temp = new BoxObstacle(x, y, width, height);
-                        temp.setPhysicsUnits(units);
-                        temp.setName("floor");
-                        temp.setBodyType(BodyType.KinematicBody);
-                        temp.setFriction(0.5f);
-
-                        platform = new ObstacleSprite(temp);
-                        platform.getObstacle().setBodyType(BodyType.KinematicBody);
-                        platform.getObstacle().setFriction(.5f);
-                        addSprite(platform);
-
-                        //indexedPlatforms.put(platformIndex, platform);
-                    }
-                }
-
                 for (JsonValue object : layer.get("objects")) {
                     String objName = object.getString("name", "unnamed");
                     float x = object.getFloat("x") / levelData.getInt("tilewidth");
                     float y = (18 * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
                     float[] pos = new float[]{x, y};
-
-                    switch (objName) {
-                        case "player":
+                    if (objName.contains("player")) {
                             Texture playerTexture = directory.getEntry("platform-player", Texture.class);
                             avatar = new Avatar(directory, units, levelInfo.get("traci"));
                             avatar.setTexture(playerTexture);
@@ -727,480 +691,337 @@ public class GameplayScene implements Screen {
                             //System.out.println("position" + pos[0] + " " + pos[1]);
                             addSprite(avatar);
                             avatar.createSensor();
-                            if (lightController != null) {
-                                lightController.attachPlayerLight(avatar);
-                            }
-                            break;
 
-                        case "torch":
-                            Lighting l = new Lighting(units, levelInfo.get("light"));
-                            addSprite(l);
-                            l.createSensor();
-                            torchFire = new Fire(units, new Vector2(10, 10));
-                            addSprite(torchFire);
-                            lightController = new LightController(torchFire.getObstacle().getPosition(), world, camera, bounds, units, cameraZoomLevel);
-                            lightController.attachTorchLight(torchFire);
-                            lightController.resetCamera(camera.position.x, camera.position.y);
-                            lightController.attachPlayerLight(avatar);
+                    } else if (objName.contains("torch")) {
+                        Lighting l = new Lighting(units, levelInfo.get("light"));
+                        addSprite(l);
+                        l.createSensor();
+                        torchFire = new Fire(units, new Vector2(10,10));
+                        addSprite(torchFire);
 
-                            particleEngine = new ParticleEngine(torchFire, units);
-                            particleEngine.newFires(fireController);
+                        particleEngine = new ParticleEngine(torchFire, units);
+                        particleEngine.newFires(fireController);
 
-                            texture = directory.getEntry("platform-torch", Texture.class);
-                            torch = new Torch(units, constants.get("torch"));
-                            torch.getObstacle().setPosition(pos[0], pos[1]);
-                            torch.setTexture(texture);
-                            torch.setMaterial(new ObstacleMaterial("torch", null));
-                            addSprite(torch);
-                            l.getObstacle().setPosition(torch.getObstacle().getPosition());
-                            torchFire.getObstacle().setPosition(new Vector2(torch.getObstacle().getPosition().cpy().add(0, torch.getHeight() / 5)));
-                            fireController.forceAddTorchFire(torchFire, torch, new Vector2(torch.getObstacle().getPosition().cpy().add(0, torch.getHeight() / 4)));
-                            activeLightJoint = world.createJoint(torch.attachObj(l));
-                            activeFireJoint = world.createJoint(torch.attachObj(torchFire));
+                        texture = directory.getEntry("platform-torch", Texture.class);
+                        torch = new Torch(units, constants.get("torch"));
+                        torch.getObstacle().setPosition(pos[0], pos[1]);
+                        torch.setTexture(texture);
+                        torch.setMaterial(new ObstacleMaterial("torch", null));
+                        addSprite(torch);
+                        l.getObstacle().setPosition(torch.getObstacle().getPosition());
+                        torchFire.getObstacle().setPosition(new Vector2(
+                            torch.getObstacle().getPosition().cpy().add(0, torch.getHeight() / 5)));
+                        fireController.forceAddTorchFire(torchFire, torch, new Vector2(
+                            torch.getObstacle().getPosition().cpy().add(0, torch.getHeight() / 4)));
+                        activeLightJoint = world.createJoint(torch.attachObj(l));
+                        activeFireJoint = world.createJoint(torch.attachObj(torchFire));
+                    } else if (objName.contains("moth")) {
+                        texture = directory.getEntry("platform-moth01", Texture.class);
+                        Vector2 position = new Vector2(pos[0], pos[1]);
+                        Moth moth = new Moth(1, units,
+                            levelInfo.get("enemies").get("moths").get("instances").get(0),
+                            directory, position);
+                        moth.setTexture(texture);
+                        addSprite(moth);
+                        moth.createSensor();
+                        enemies.add(moth);
+                    } else if (objName.contains("totem")) {
+                        texture = directory.getEntry("platform-totem01", Texture.class);
+                        Vector2 position = new Vector2(pos[0], pos[1]);
+                        Totem totem = new Totem(1, units,
+                            levelInfo.get("enemies").get("totems").get("instances").get(0),
+                            directory, position);
+                        totem.setTexture(texture);
+                        addSprite(totem);
+                        totem.createSensor();
+                        enemies.add(totem);
+                    } else if (objName.contains("goaldoor")) {
+                        texture = directory.getEntry("shared-goal", Texture.class);
+                        System.out.println("goal door texture: " + texture);
+                        float size = 1f;
 
-                            //floating lights
-                            floatingLights = new FloatingLight[3];
-                            Vector2 goalPos = goalDoor.getObstacle().getPosition();
-                            FloatingLight goalLight = new FloatingLight(units, goalPos, 1, goalPos);
-                            floatingLights[0] = goalLight;
-                            Vector2 centerPos = new Vector2(bounds.width / 2, bounds.height / 2);
-                            FloatingLight centerLight = new FloatingLight(units, centerPos, 1, centerPos);
-                            floatingLights[1] = centerLight;
-                            Vector2 edgePos1 = new Vector2(bounds.width - 5, 5);
-                            Vector2 edgePos2 = new Vector2(5, 5);
-                            FloatingLight edgeLight = new FloatingLight(units, edgePos1, 1, edgePos2);
-                            floatingLights[2] = edgeLight;
-                            for (int i = 0; i < floatingLights.length; i++) {
-                                addSprite(floatingLights[i]);
-                            }
-                            for (FloatingLight floatingLight : floatingLights) {
-                                lightController.attachAmbientLight(floatingLight);
-                            }
-                            break;
+                        GameObject goalDoor = new GameObject(x, y, size * 1.47f, size, units, true);
+                        goalDoor.getObstacle().setSensor(true);
+                        goalDoor.getObstacle().setBodyType(BodyType.StaticBody);
+                        goalDoor.getObstacle().setName("goalDoor");
+                        goalDoor.setTexture(texture);
+                        goalDoor.getObstacle().setPhysicsUnits(units);
+                        this.goalDoor = goalDoor;
+                        addSprite(goalDoor);
+                    } else if (objName.contains("platform")) {
+                        GameObject platform = new GameObject(x,y,width,height, units, true);
+                        platform.getObstacle().setBodyType(BodyType.KinematicBody);
+                        platform.getObstacle().setName(objName);
+//                        goalDoor.setTexture();
+                        platform.getObstacle().setPhysicsUnits(units);
+                        platform.setMaterial(new ObstacleMaterial("platform", null));
+                        addSprite(platform);
+                    } else if (objName.contains("burnable")) {
+                        GameObject box = new GameObject(x,y,width,height, units, true);
+                        box.getObstacle().setBodyType(BodyType.DynamicBody);
+                        box.getObstacle().setName(objName);
+//                        goalDoor.setTexture();
+                        box.getObstacle().setPhysicsUnits(units);
+                        if (!objName.contains("non")) {
+                            box.setMaterial(new ObstacleMaterial("wood", null));
+                        } else {
+                            box.setMaterial(new ObstacleMaterial("stone", null));
+                        }
+                        addSprite(box);
+                    } else if (objName.contains("rune")) {
+                        boolean hasMoveEvent = false;
+                        boolean hasRotateEvent = false;
+                        Vector2 platformStartPos = null;
+                        Vector2 platformEndPos = null;
+                        float startDegree = Integer.MAX_VALUE;
+                        float endDegree = 0f;
+                        String targetName = "";
+                        float[] thresholds = null;
+                        JsonValue runeProperties = object.get("properties");
+                        for (JsonValue prop : runeProperties) {
+                            String propName = prop.getString("name");
+                            String value = prop.getString("value");
+                            switch (propName) {
 
-                        case "env_light":
-                            floatingLightPositions.add(new Vector2(pos[0], pos[1]));
-                            break;
-
-                        case "moth":
-                            texture = directory.getEntry("platform-moth01", Texture.class);
-                            Vector2 position = new Vector2(pos[0], pos[1]);
-                            Moth moth = new Moth(1, units, levelInfo.get("enemies").get("moths").get("instances").get(0), directory, position);
-                            moth.setTexture(texture);
-                            addSprite(moth);
-                            moth.createSensor();
-                            moth.setTorchFire(this.torchFire);
-                            enemies.add(moth);
-                            break;
-
-                        case "totem":
-                            texture = directory.getEntry("platform-totem01", Texture.class);
-                            position = new Vector2(pos[0], pos[1]);
-                            Totem totem = new Totem(1, units, levelInfo.get("enemies").get("totems").get("instances").get(0), directory, position);
-                            totem.setTexture(texture);
-                            addSprite(totem);
-                            totem.createSensor();
-                            enemies.add(totem);
-                            break;
-
-                        case "goaldoor":
-                            texture = directory.getEntry("shared-goal", Texture.class);
-                            System.out.println("goal door texture: " + texture);
-                            float size = 1f;
-
-                            GameObject goalDoor = new GameObject(x, y, size * 1.47f, size, units, true);
-                            goalDoor.getObstacle().setSensor(true);
-                            goalDoor.getObstacle().setBodyType(BodyType.StaticBody);
-                            goalDoor.getObstacle().setName("goalDoor");
-                            goalDoor.setTexture(texture);
-                            goalDoor.getObstacle().setPhysicsUnits(units);
-                            this.goalDoor = goalDoor;
-                            addSprite(goalDoor);
-                            break;
-
-                        case "rune":
-                            float platWidth = 1f;
-                            float platHeight = 1f;
-                            List<Float> platformPos = new ArrayList<>();
-                            float[] thresholds = null;
-
-                            JsonValue runeProperties = object.get("properties");
-                            for (JsonValue prop : runeProperties) {
-                                String propName = prop.getString("name");
-                                String value = prop.getString("value");
-                                switch (propName) {
-                                    case "platformWidth":
-                                        platWidth = Float.parseFloat(value);
-                                        break;
-                                    case "platformHeight":
-                                        platHeight = Float.parseFloat(value);
-                                        break;
-                                    case "platformPosition":
-                                        for (String num : value.split(",")) {
-                                            platformPos.add(Float.parseFloat(num));
-                                        }
-                                        break;
-
-                                    case "thresholds":
-                                        String[] tokens = value.split(",");
-                                        thresholds = new float[tokens.length];
-                                        for (int i = 0; i < tokens.length; i++) {
-                                            thresholds[i] = Float.parseFloat(tokens[i].trim());
-                                        }
-                                        break;
-                                }
-                            }
-
-                            Rune runeTemp = new Rune(pos[0], pos[1], units, thresholds);
-                            BoxObstacle tmp = new BoxObstacle(platformPos.get(0), platformPos.get(1), platWidth, platHeight);
-                            tmp.setPhysicsUnits(units);
-                            tmp.setName("floor");
-                            tmp.setBodyType(BodyType.KinematicBody);
-                            tmp.setFriction(0.5f);
-
-                            ObstacleSprite plat = new ObstacleSprite(tmp);
-                            plat.getObstacle().setBodyType(BodyType.KinematicBody);
-                            plat.getObstacle().setFriction(.5f);
-                            addSprite(plat);
-//                            EventAction<Float> awef = new EventAction<Float>(plat, "rotate", plat.getObstacle().getAngle(), (float) Math.PI);
-                            EventAction<Vector2> mo = new EventAction<Vector2>(plat, "move", new Vector2(8, 10), new Vector2(16, 10));
-//                            runeTemp.registerEventAction(awef);
-                            runeTemp.registerEventAction(mo);
-                            runeSet.add(runeTemp);
-                            addSprite(runeTemp);
-                            break;
-
-                        case "button":
-                            float rotationRad = 0f;
-                            boolean latch = false;
-                            boolean doubleSided = false;
-                            boolean hasMoveEvent = false;
-                            boolean hasRotateEvent = false;
-                            float startX = 0f, startY = 0f;
-                            float endX = 0f, endY = 0f;
-                            float startDegree = 0f;
-                            float endDegree = 0f;
-                            float duration = 1f;
-                            int platformIndex = -1;
-                            float platformWidth = 1f;
-                            float platformHeight = 1f;
-                            String interpolation = "";
-
-                            JsonValue properties = object.get("properties");
-                            for (JsonValue prop : properties) {
-                                String propName = prop.getString("name");
-                                String value = prop.getString("value");
-                                switch (propName) {
-                                    case "latch":
-                                        latch = Boolean.parseBoolean(value);
-                                        break;
-                                    case "doublesided":
-                                        doubleSided = Boolean.parseBoolean(value);
-                                        break;
-                                    case "rotationRadians":
-                                        rotationRad = Float.parseFloat(value);
-                                        break;
-                                    case "rotateEvent":
-                                        hasRotateEvent = Boolean.parseBoolean(value);
-                                        break;
-                                    case "moveEvent":
-                                        hasMoveEvent = Boolean.parseBoolean(value);
-                                        break;
-                                    case "startX":
-                                        startX = Float.parseFloat(value);
-                                        break;
-                                    case "startY":
-                                        startY = Float.parseFloat(value);
-                                        break;
-                                    case "endX":
-                                        endX = Float.parseFloat(value);
-                                        break;
-                                    case "endY":
-                                        endY = Float.parseFloat(value);
-                                        break;
-                                    case "startDegree":
-                                        startDegree = Float.parseFloat(value);
-                                        break;
-                                    case "endDegree":
-                                        endDegree = Float.parseFloat(value);
-                                        break;
-                                    case "time":
-                                        duration = Float.parseFloat(value);
-                                        break;
-                                    case "platformIndex":
-                                        platformIndex = Integer.parseInt(value);
-                                        break;
-                                    case "platformWidth":
-                                        platformWidth = Float.parseFloat(value);
-                                        break;
-                                    case "platformHeight":
-                                        platformHeight = Float.parseFloat(value);
-                                        break;
-                                    case "interpolation":
-                                        interpolation = value.toLowerCase();
-                                        break;
-                                }
-                            }
-
-                            Vector2 buttonPosition = new Vector2(pos[0], pos[1]);
-                            Button button = new Button(buttonPosition, (float) Math.toRadians(rotationRad), doubleSided, latch, units);
-                            addSpriteGroup(button);
-
-                            ObstacleSprite platform = indexedPlatforms.get(platformIndex);
-                            if (platform == null && platformIndex != -1) {
-                                BoxObstacle temp = new BoxObstacle(startX, startY, platformWidth, platformHeight);
-                                temp.setPhysicsUnits(units);
-                                temp.setName("floor");
-                                temp.setBodyType(BodyType.KinematicBody);
-                                temp.setFriction(0.5f);
-
-                                platform = new ObstacleSprite(temp);
-                                platform.getObstacle().setBodyType(BodyType.KinematicBody);
-                                platform.getObstacle().setFriction(.5f);
-                                addSprite(platform);
-
-                                indexedPlatforms.put(platformIndex, platform);
-                            }
-
-                            Function<Float, Float> movementFunc = Interpolation.smoother::apply;
-                            switch (interpolation) {
-                                case "linear":
-                                    movementFunc = Interpolation.linear::apply;
+                                case "rotateEvent":
+                                    hasRotateEvent = Boolean.parseBoolean(value);
                                     break;
-                                case "smoother":
-                                    movementFunc = Interpolation.smoother::apply;
+                                case "moveEvent":
+                                    hasMoveEvent = Boolean.parseBoolean(value);
                                     break;
-                            }
-
-                            if (hasMoveEvent) {
-                                EventAction<Vector2> moveAction = new EventAction<>(platform, "move",
-                                    new Vector2(startX, startY), new Vector2(endX, endY), duration, movementFunc);
-
-                                Event<Integer, Vector2> moveEvent = new Event<>(button, button::getState,
-                                    state -> state == 1, moveAction);
-                                eventHandler.registerEvent(moveEvent);
-                            }
-
-                            if (hasRotateEvent) {
-                                float fromRad = (float) Math.toRadians(startDegree);
-                                float toRad = (float) Math.toRadians(endDegree);
-
-                                EventAction<Float> rotateAction = new EventAction<>(platform, "rotate",
-                                    fromRad, toRad, duration, movementFunc);
-
-                                Event<Integer, Float> rotateEvent = new Event<>(button, button::getState,
-                                    state -> state == 1, rotateAction);
-                                eventHandler.registerEvent(rotateEvent);
-                            }
-
-                        default:
-                            if (objName.matches("\\d+")) {
-                                ropeAnchors.put(objName, object);
-                            } else {
-                                Texture temp = directory.getEntry(objName, Texture.class);
-                                if (temp != null) {
-
-                                    float width = object.getFloat("width") / levelData.getInt("tilewidth");
-                                    float height = object.getFloat("height") / levelData.getInt("tileheight");
-
-                                    GameObject decoration = new GameObject(x, y, width, height, units, true);
-                                    decoration.getObstacle().setSensor(true);  // set as sensor
-                                    decoration.getObstacle().setBodyType(BodyType.StaticBody);
-                                    decoration.setTexture(temp);
-                                    decoration.getObstacle().setName(objName);
-
-                                    addSprite(decoration);
-                                } else {
-                                    System.out.println("Unknown object: " + objName);
-                                }
-                            }
-                            break;
-                    }
-                }
-
-                    int rcnt = ropeAnchors.size() / 2;
-                    for (int i = 0; i < rcnt; i++) {
-                        String startName = String.valueOf(2 * i + 1);
-                        String endName = String.valueOf(2 * i + 2);
-
-                        JsonValue start = ropeAnchors.get(startName);
-                        JsonValue end = ropeAnchors.get(endName);
-
-                        if (start != null && end != null) {
-                            float x1 = start.getFloat("x") / levelData.getInt("tilewidth");
-                            float y1 = (18 * 300 - start.getFloat("y")) / levelData.getInt("tileheight");
-                            float x2 = end.getFloat("x") / levelData.getInt("tilewidth");
-                            float y2 = (18 * 300 - end.getFloat("y")) / levelData.getInt("tileheight");
-
-                            int depth = 10, piecelen = 10, thickness = 5;
-                            JsonValue props = end.get("properties");
-                            if (props != null) {
-                                for (JsonValue prop : props) {
-                                    String pname = prop.getString("name");
-                                    String val = prop.getString("value");
-                                    switch (pname) {
-                                        case "depth":
-                                            depth = Integer.parseInt(val);
-                                            break;
-                                        case "piecelen":
-                                            piecelen = Integer.parseInt(val);
-                                            break;
-                                        case "thickness":
-                                            thickness = Integer.parseInt(val);
-                                            break;
+                                case "startPos":
+                                    platformStartPos = new Vector2(Float.parseFloat(value.split(",")[0]), Float.parseFloat(value.split(",")[1]));
+                                    break;
+                                case "endPos":
+                                    platformEndPos = new Vector2(Float.parseFloat(value.split(",")[0]), Float.parseFloat(value.split(",")[1]));
+                                    break;
+                                case "startDegree":
+                                    startDegree = Float.parseFloat(value);
+                                    break;
+                                case "endDegree":
+                                    endDegree = Float.parseFloat(value);
+                                    break;
+                                case "platformName":
+                                    targetName = value;
+                                    break;
+                                case "thresholds":
+                                    String[] tokens = value.split(",");
+                                    thresholds = new float[tokens.length];
+                                    for (int i = 0; i < tokens.length; i++) {
+                                        thresholds[i] = Float.parseFloat(tokens[i].trim());
                                     }
-                                }
+                                    break;
                             }
-                            texture = directory.getEntry("platform-rope-end", Texture.class);
-                            Texture middle_texture = directory.getEntry("platform-rope-mid", Texture.class);
-                            Rope rope = new Rope(new Vector2(x1, y1), new Vector2(x2, y2), depth, thickness, piecelen, units, levelInfo.get("ropes").get(0));
-                            rope.setTextures(texture, middle_texture);
-                            //temp = rope;
-                            addSpriteGroup(rope);
                         }
 
+                        String finalTargetName = targetName;
+                        ObstacleSprite target = sprites.stream().filter(sprite -> sprite.getName().equals(finalTargetName)).findFirst().orElse(null);
+
+                        Rune rune = new Rune(x,y, units, thresholds);
+                        addSprite(rune);
+                        runeSet.add(rune);
+
+                        if (hasMoveEvent) {
+                            if (platformStartPos == null) {
+                                platformStartPos = new Vector2(target.getObstacle().getPosition());
+                            }
+                            EventAction<Vector2> moveAction = new EventAction<>(target, "move",
+                                platformStartPos, platformEndPos);
+                            rune.registerEventAction(moveAction);
+                        }
+
+                        if (hasRotateEvent) {
+                            if (startDegree == Integer.MAX_VALUE) {
+                                startDegree = target.getObstacle().getAngle();
+                            } else {
+                                startDegree = (float) Math.toRadians(startDegree);
+                            }
+                            float toRad = (float) Math.toRadians(endDegree);
+
+                            EventAction<Float> rotateAction = new EventAction<>(target, "rotate",
+                                startDegree, toRad);
+                            rune.registerEventAction(rotateAction);
+                        }
+                    } else if (objName.contains("button")) {
+                        float rotationRad = 0f;
+                        boolean latch = false;
+                        boolean doubleSided = false;
+                        boolean hasMoveEvent = false;
+                        boolean hasRotateEvent = false;
+                        Vector2 platformStartPos = null;
+                        Vector2 platformEndPos = null;
+                        float startDegree = Integer.MAX_VALUE;
+                        float endDegree = 0f;
+                        float duration = 1f;
+                        String targetName = "";
+                        String interpolation = "";
+
+                        JsonValue properties = object.get("properties");
+                        for (JsonValue prop : properties) {
+                            String propName = prop.getString("name");
+                            String value = prop.getString("value");
+                            switch (propName) {
+                                case "latch":
+                                    latch = Boolean.parseBoolean(value);
+                                    break;
+                                case "doublesided":
+                                    doubleSided = Boolean.parseBoolean(value);
+                                    break;
+                                case "rotationRadiance":
+                                    rotationRad = Float.parseFloat(value);
+                                    break;
+                                case "rotateEvent":
+                                    hasRotateEvent = Boolean.parseBoolean(value);
+                                    break;
+                                case "moveEvent":
+                                    hasMoveEvent = Boolean.parseBoolean(value);
+                                    break;
+                                case "startPos":
+                                    platformStartPos = new Vector2(Float.parseFloat(value.split(",")[0]), Float.parseFloat(value.split(",")[1]));
+                                    break;
+                                case "endPos":
+                                    platformEndPos = new Vector2(Float.parseFloat(value.split(",")[0]), Float.parseFloat(value.split(",")[1]));
+                                    break;
+                                case "startDegree":
+                                    startDegree = Float.parseFloat(value);
+                                    break;
+                                case "endDegree":
+                                    endDegree = Float.parseFloat(value);
+                                    break;
+                                case "time":
+                                    duration = Float.parseFloat(value);
+                                    break;
+                                case "platformName":
+                                    targetName = value;
+                                    break;
+                                case "interpolation":
+                                    interpolation = value.toLowerCase();
+                                    break;
+                            }
+                        }
+
+                        String finalTargetName = targetName;
+                        ObstacleSprite target = sprites.stream().filter(sprite -> sprite.getName().equals(finalTargetName)).findFirst().orElse(null);
+
+                        Vector2 buttonPosition = new Vector2(x,y);
+                        Button button = new Button(buttonPosition,(float) Math.toRadians(rotationRad), doubleSided, latch, units);
+                        addSpriteGroup(button);
+
+                        Function<Float, Float> movementFunc = Interpolation.smoother::apply;
+                        switch (interpolation) {
+                            case "linear":
+                                movementFunc = Interpolation.linear::apply;
+                                break;
+                            case "swing":
+                                movementFunc = Interpolation.swing::apply;
+                                break;
+                        }
+
+                        if (hasMoveEvent) {
+                            if (platformStartPos == null) {
+                                platformStartPos = new Vector2(target.getObstacle().getPosition());
+                            }
+                            EventAction<Vector2> moveAction = new EventAction<>(target, "move",
+                                platformStartPos, platformEndPos, duration, movementFunc);
+
+                            Event<Integer, Vector2> moveEvent = new Event<>(button,button::getState,
+                                state -> state == 1, moveAction);
+                            eventHandler.registerEvent(moveEvent);
+                        }
+
+                        if (hasRotateEvent) {
+                            if (startDegree == Integer.MAX_VALUE) {
+                                startDegree = target.getObstacle().getAngle();
+                            } else {
+                                startDegree = (float) Math.toRadians(startDegree);
+                            }
+                            float toRad = (float) Math.toRadians(endDegree);
+
+                            EventAction<Float> rotateAction = new EventAction<>(target, "rotate",
+                                startDegree, toRad, duration, movementFunc);
+
+                            Event<Integer, Float> rotateEvent = new Event<>(button,
+                                button::getState,
+                                state -> state == 1, rotateAction);
+                            eventHandler.registerEvent(rotateEvent);
+                        }
+                    } else if (objName.contains("weather")) {
+                        for (JsonValue prop : object.get("properties")) {
+                            String propName = prop.getString("name");
+                            String value = prop.getString("value");
+                            switch (propName) {
+                                case "rain":
+                                    if (Integer.parseInt(value) != 0) {
+                                        weatherMachine.activateRain(phyiscsUnits, Integer.parseInt(value));
+                                    }
+                                    break;
+                                case "pass":
+//                                    doubleSided = Boolean.parseBoolean(value);
+                                    break;
+                            }
+                        }
+                    } else {
+                        if (objName.matches("\\d+")) {
+                            ropeAnchors.put(objName, object);
+                        } else {
+                            Texture temp = directory.getEntry(objName, Texture.class);
+                            if (temp != null) {
+
+                                float width = object.getFloat("width") / levelData.getInt("tilewidth");
+                                float height = object.getFloat("height") / levelData.getInt("tileheight");
+
+                                GameObject decoration = new GameObject(x,y,width,height, units, true);
+                                decoration.getObstacle().setSensor(true);  // set as sensor
+                                decoration.getObstacle().setBodyType(BodyType.StaticBody);
+                                decoration.setTexture(temp);
+                                decoration.getObstacle().setName(objName);
+
+                                addSprite(decoration);
+                            } else {
+                                System.out.println("Unknown object: " + objName);
+                            }
+                        }
                     }
-            }
-            if (!floatingLightPositions.isEmpty()) {
-                floatingLights = new FloatingLight[floatingLightPositions.size()];
+                }
 
-                for (int i = 0; i < floatingLightPositions.size(); i++) {
-                    Vector2 lightPos = floatingLightPositions.get(i);
-                    FloatingLight floatingLight = new FloatingLight(units, lightPos, 1.0f, lightPos);
-                    floatingLights[i] = floatingLight;
+                int rcnt = ropeAnchors.size()/2;
+                for (int i = 0; i < rcnt; i++) {
+                    String startName = String.valueOf(2 * i + 1);
+                    String endName = String.valueOf(2 * i + 2);
 
-                    addSprite(floatingLight); // Add to rendering
-                    lightController.attachAmbientLight(floatingLight); // Attach to LightController
+                    JsonValue start = ropeAnchors.get(startName);
+                    JsonValue end = ropeAnchors.get(endName);
+
+                    if (start != null && end != null) {
+                        float x1 = start.getFloat("x") / levelData.getInt("tilewidth");
+                        float y1 = (18 * 300 - start.getFloat("y")) / levelData.getInt("tileheight");
+                        float x2 = end.getFloat("x") / levelData.getInt("tilewidth");
+                        float y2 = (18 * 300 - end.getFloat("y")) / levelData.getInt("tileheight");
+
+                        int depth = 10, piecelen = 10, thickness = 14;
+                        JsonValue props = end.get("properties");
+                        if (props != null) {
+                            for (JsonValue prop : props) {
+                                String pname = prop.getString("name");
+                                String val = prop.getString("value");
+                                switch (pname) {
+                                    case "depth":
+                                        depth = Integer.parseInt(val);
+                                        break;
+                                }
+                            }
+                        }
+                        texture = directory.getEntry( "platform-rope-end", Texture.class );
+                        Texture middle_texture = directory.getEntry( "platform-rope-mid", Texture.class );
+                        Rope rope = new Rope(new Vector2(x1, y1), new Vector2(x2, y2), depth, thickness, piecelen, units, levelInfo.get("ropes").get(0));
+                        rope.setTextures(texture, middle_texture);
+                        addSpriteGroup(rope);
+                    }
+
                 }
             }
+
         }
-
-
-        /*Surface wall;
-        String wname = "wall";
-        JsonValue walls = levelData.get("walls");
-        JsonValue walljv = walls.get("positions");
-        for (int ii = 0; ii < walljv.size; ii++) {
-            wall = new Surface(walljv.get(ii).asFloatArray(), units, walls);
-            wall.getObstacle().setName(wname + ii);
-            wall.setTexture(texture);
-            addSprite(wall);
-        }
-
-        // Create walls and platforms
-        JsonValue platforms = levelData.get("platforms");
-        for (JsonValue platformJson : platforms) {
-            Surface platform = new Surface(platformJson.get("positions").asFloatArray(), units, platformJson);
-            platform.getObstacle().setName(platformJson.getString("name"));
-            platform.setTexture(texture);
-            addSprite(platform);
-        }
-
-        // Add level goal
-        texture = directory.getEntry( "shared-goal", Texture.class );
-
-        JsonValue goal = levelData.get("goal");
-        goalDoor = new Door(units, goal);
-        goalDoor.setTexture( texture );
-        goalDoor.getObstacle().setName("goal");
-        addSprite(goalDoor);
-
-        // Create rope bridges
-        texture = directory.getEntry( "platform-rope", Texture.class );
-        JsonValue bridges = levelData.get("bridges");
-        for (JsonValue bridgeJson : bridges) {
-            RopeBridge bridge = new RopeBridge(units, bridgeJson);
-            bridge.setTexture(texture);
-            addSpriteGroup(bridge);
-        }
-
-        // Create Ropes
-        texture = directory.getEntry( "platform-rope-end", Texture.class );
-        Texture middle_texture = directory.getEntry( "platform-rope-mid", Texture.class );
-        JsonValue ropes = levelData.get("ropes");
-        for (JsonValue ropeJson : ropes) {
-            Vector2 pin1 = new Vector2(ropeJson.get("pin1").getFloat(0), ropeJson.get("pin1").getFloat(1));
-            Vector2 pin2 = new Vector2(ropeJson.get("pin2").getFloat(0), ropeJson.get("pin2").getFloat(1));
-            float dep = ropeJson.getFloat("depth");
-            Rope rope = new Rope(pin1, pin2, dep, units, ropeJson);
-            rope.setTextures(texture, middle_texture);
-            addSpriteGroup(rope);
-            temp = rope;
-        }
-
-        // Create spinners
-        texture = directory.getEntry( "platform-barrier", Texture.class );
-        JsonValue spinners = levelData.get("spinners");
-        for (JsonValue spinnerJson : spinners) {
-            Spinner spinner = new Spinner(units, spinnerJson);
-            spinner.setTexture(texture);
-            addSpriteGroup(spinner);
-        }
-
-        // Create Traci
-        texture = directory.getEntry("platform-player", Texture.class);
-        avatar = new Avatar(directory, units, levelData.get("traci"));
-        avatar.setTexture(texture);
-        addSprite(avatar);
-        // Have to do after body is created
-        avatar.createSensor();
-
-        Lighting l = new Lighting(units, levelData.get("light"));
-        l.setTexture(texture);
-        addSprite(l);
-        l.createSensor();
-        torchFire = new Fire(units, new Vector2(10,10));
-        torchFire.setID(0);
-        addSprite(torchFire);
-        lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds);
-        lightController.attachTorchLight(torchFire);
-        lightController.resetCamera(camera.position.x,camera.position.y);
-//        lightController.fireLights(fireController);
-
-        particleEngine = new ParticleEngine(torchFire);
-        particleEngine.newFires(fireController);
-
-//
-        // Create Torch
-        texture = directory.getEntry("platform-torch", Texture.class);
-        torch = new Torch(units, constants.get("torch"));
-        torch.setTexture(texture);
-        torch.setMaterial(new ObstacleMaterial("torch", null));
-        addSprite(torch);
-        l.getObstacle().setPosition(torch.getObstacle().getPosition());
-        torchFire.getObstacle().setPosition(torch.getObstacle().getPosition().cpy().add(0,torch.getHeight() / 4));
-        activeLightJoint = world.createJoint(torch.attachObj(l));
-        activeFireJoint = world.createJoint(torch.attachObj(torchFire));
-        fireController.forceAddTorchFire(torchFire, torch, new Vector2(torch.getObstacle().getPosition().cpy().add(0,torch.getHeight() / 4)) );
-//        torchFire.setFixtureJoint(activeFireJoint);
-        // TODO: Optimize the above ^^
-
-        JsonValue enemiesJson = levelData.get("enemies");
-
-        // Create Totem
-        texture = directory.getEntry("platform-totem01", Texture.class);
-        JsonValue totemsJson = enemiesJson.get("totems").get("instances");
-        for (int i = 0; i < totemsJson.size; i++) {
-            Vector2 position = new Vector2(totemsJson.get(i).get("pos").getFloat(0), totemsJson.get(i).get("pos").getFloat(1));
-            Totem totem = new Totem(i, units, totemsJson.get(i), directory, position);
-            totem.setTexture(texture);
-            addSprite(totem);
-            totem.createSensor();
-            enemies.add(totem);
-        }
-
-        // Create Moth
-        texture = directory.getEntry("platform-moth01", Texture.class);
-        JsonValue mothsJson = enemiesJson.get("moths").get("instances");
-        for (int i = 0; i < mothsJson.size; i++) {
-            Vector2 position = new Vector2(mothsJson.get(i).get("pos").getFloat(0), mothsJson.get(i).get("pos").getFloat(1));
-            Moth moth = new Moth(i, units, mothsJson.get(i), directory, position);
-            moth.setTexture(texture);
-            addSprite(moth);
-            moth.createSensor();
-            enemies.add(moth);
-        }*/
-
         torchArc = new ArrayList<>();
         for (int i = 0; i < dotTorchArcCount / deltaTorchArc; i++) {
             WheelObstacle temp = new WheelObstacle(-1,-1, 0.4f/32f * units);
@@ -1213,39 +1034,27 @@ public class GameplayScene implements Screen {
             addSprite(tracker);
             torchArc.add(tracker);
         }
-
-//        RainBlock rainBlocktemp = new RainBlock(3,3,10,10,units, torchFire.getRadius());
-//        addSprite(rainBlocktemp);
-
-        /*if (levelName.equals("rope_test")) {
-            // SAMPLE BUTTON CODE BELOW::
-            Button button = new Button(new Vector2(24,2.75f), 0, true, true, units);
-            Button button2 = new Button(new Vector2(30.75f,7f), (float) Math.PI/2, false, false, units);
-            BoxObstacle temp = new BoxObstacle(5,5,5,.5f);
-            temp.setPhysicsUnits(units);
-            temp.setName("floor");
-            ObstacleSprite thing = new ObstacleSprite(temp);
-            thing.getObstacle().setBodyType(BodyType.KinematicBody);
-            thing.getObstacle().setFriction(.5f);
-            addSprite(thing);
-
-    //        Array<Object> actionArray = new Array<>(new Object[]{thing, "move", new Vector2(8, 10), new Vector2(10, 10)});
-            Function<Float, Float> movementFunc = Interpolation.swing::apply;
-            EventAction<Vector2> eventAction = new EventAction<Vector2>(thing, "move", new Vector2(8, 10), new Vector2(16, 5), 4f, movementFunc);
-    //        Object[] actionArray = new Object[]{thing, "rotate", 0f, (float) (Math.PI), 300, movementFunc};
-    //        Object[] actionArray = new Object[]{thing, "move", new Vector2(8, 10), new Vector2(16, 5), 100, movementFunc};
-
-            Event<Integer,Vector2> event = new Event<Integer,Vector2>(button, button::getState,
-                state -> state == 1,  eventAction);
-            eventHandler.registerEvent(event);*/
-
-
-
-//        }
-
-//        if (levelName.equals("moth_intro")) {
-//            temp.deactivateAnchor(1);
-//        }
+        lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds, units, cameraZoomLevel);
+        lightController.attachTorchLight(torchFire);
+        lightController.resetCamera(camera.position.x,camera.position.y);
+        lightController.attachPlayerLight(avatar);
+        //floating lights
+        floatingLights = new FloatingLight[3];
+        Vector2 goalPos = goalDoor.getObstacle().getPosition();
+        FloatingLight goalLight = new FloatingLight(units,goalPos,1,goalPos);
+        floatingLights[0] = goalLight;
+        Vector2 centerPos = new Vector2(bounds.width/2,bounds.height/2);
+        FloatingLight centerLight = new FloatingLight(units,centerPos,1,centerPos);
+        floatingLights[1] = centerLight;
+        Vector2 edgePos1 = new Vector2(bounds.width-5,5);
+        Vector2 edgePos2 = new Vector2(5,5);
+        FloatingLight edgeLight = new FloatingLight(units,edgePos1,1,edgePos2);
+        floatingLights[2] = edgeLight;
+        for (int i = 0; i <floatingLights.length; i++){
+            addSprite(floatingLights[i]);}
+        for (FloatingLight floatingLight: floatingLights) {
+            lightController.attachAmbientLight(floatingLight);
+        }
     }
     /**
      * Returns whether to process the update loop
@@ -1300,21 +1109,16 @@ public class GameplayScene implements Screen {
         }
 
         contactListener.processPendingMerges();
-        if (!failed && (avatar.getObstacle().getY() < -1 || activeFireJoint == null || queueFailure)) {
-            setFailure(true);
-            avatar.die();
-        }
 
-        if (failed) {
-            if (countdown > 0) {
-                countdown--;
-                return true;
-            } else {
-                reset();
-                return false;
-            }
+        if (!isFailure() && avatar.getObstacle().getY() < -1) {
+            setFailure(true);
+            return false;
         }
-        return true; // should never get here
+        if (activeFireJoint == null || queueFailure) {
+            setFailure(true);
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -1330,19 +1134,16 @@ public class GameplayScene implements Screen {
      */
     public void update(float dt) {
         soundEngine.tendToMusicLoop();
+
         updateRunes(dt);
         supplementaryCollisionActions();
         supplementaryFireActions();
         supplementaryEventActions(dt);
+        if (weatherMachine.isRainActive()) {
+            supplementaryRainActions();
+        }
         updateTweenedMovementObjectsVec2(dt);
         updateTweenedMovementObjectsFloat(dt);
-
-        if (temp != null) {
-//            for (EnhancedObstacleSprite eos : temp.getTopEntities()) {
-//                System.out.println(eos.getObstacle().getAngle());
-//            }
-        }
-//        System.out.println("-----------");
 
         if (enemies != null) {
             for (Enemy e : enemies) {
@@ -1351,10 +1152,11 @@ public class GameplayScene implements Screen {
         }
 
         torch.update();
-        fireController.update();
+        weatherMachine.activateWind(new Vector2(0f,0));
+        weatherMachine.update(world);
+        fireController.update(weatherMachine);
         eventHandler.update();
         contactListener.sustainedContact();
-        lightController.update(contactListener.beginSmother());
 
         InputController input = InputController.getInstance();
 
@@ -1364,19 +1166,19 @@ public class GameplayScene implements Screen {
         avatar.setJumping(input.didPrimary());
         avatar.setShooting(input.didSecondary());
 
-        if (!(avatar.getBodyTouchedClimbables().isEmpty()) && !Avatar.getHasTorch() && !avatar.getGroundedState().equals(GroundState.CLIMBING)
+        if (!(avatar.getBodyTouchedClimbables().isEmpty()) && !avatar.getHasTorch() && !avatar.getGroundedState().equals(GroundState.CLIMBING)
              && input.didVertical()) {
             avatar.setGroundedState(GroundState.CLIMBING);
             avatar.getObstacle().getBody().setLinearVelocity(Vector2.Zero);
             avatar.applyClimbingPhysics();
         }
 
-        if (avatar.getGroundedState().equals(GroundState.CLIMBING) && avatar.getBodyTouchedClimbables().isEmpty() ) {
+        if (avatar.getGroundedState().equals(GroundState.CLIMBING) && avatar.getBodyTouchedClimbables().isEmpty()) {
             avatar.setGroundedState(GroundState.AIRBORNE);
             avatar.removeClimbingPhysics();
         }
 
-        if (input.getThrowing() && Avatar.getHasTorch() && activeTorchJoint != null) {
+        if (input.getThrowing() && avatar.getHasTorch() && activeTorchJoint != null) {
             avatar.setHasTorch(false);
             world.destroyJoint(activeTorchJoint);
             activeTorchJoint = null;
@@ -1396,7 +1198,7 @@ public class GameplayScene implements Screen {
         if (avatar.isJumping()) {
             avatar.setGroundedState(GroundState.AIRBORNE);
             SoundEffectManager sounds = SoundEffectManager.getInstance();
-            soundEngine.jump();
+//            soundEngine.jump();
         }
 
         if ((queueAddTorch && activeTorchJoint == null) || (activeTorchJoint != null &&
@@ -1409,7 +1211,6 @@ public class GameplayScene implements Screen {
 //                sprite.getObstacle().getBody().applyForceToCenter(new Vector2(1f,0f), true);
 //            }
 //        }
-
         updateCamera();
     }
 
@@ -1441,8 +1242,8 @@ public class GameplayScene implements Screen {
         int generatedCount = 0;
         while (generatedCount < dotTorchArcCount) {
             float t = (dt) * (generatedCount + dtTorchArcOffset);
-            float x = start.x + vel.x * t;
-            float y = start.y + t * vel.y + 0.5f * (t * t + t) * gravity;
+            float x = start.x + vel.x * t + weatherMachine.getWind().x;
+            float y = start.y + t * vel.y + 0.5f * (t * t + t) * gravity + weatherMachine.getWind().y;
             Vector2 trajectoryPosition = new Vector2(x,y);
             if (generatedCount > 0) {
                 world.rayCast(raycastCallback, lastTP, trajectoryPosition);
@@ -1623,7 +1424,9 @@ public class GameplayScene implements Screen {
                     break;
                 case "queueFailure":
                     queueFailure = true;
-                    avatar.die();
+                    break;
+                case "resetRain":
+                    weatherMachine.resetRain(todo_action.getSubject());
                     break;
                 case "debugKillObj":
                     // not safe operation, for now will kill game on reload
@@ -1803,15 +1606,25 @@ public class GameplayScene implements Screen {
                         initialStateFloat, (Float) action.getFinalValue(), timeTill,action.getInterpolator(), supplierFloat, consumerFloat);
                     tweenedMovmentObjectsFloat.add(tweenElementFloat);
                     break;
-
-                case "demo":
-                    temp.deactivateAnchor(1);
-                    break;
             }
         }
 
         for (Button button : toggleButtons) {
             button.toggleButton(world);
+        }
+    }
+
+    private void supplementaryRainActions () {
+        Stack<RainFlag> todos = weatherMachine.getRainflags();
+        while (!todos.isEmpty()) {
+            RainFlag todo = todos.pop();
+            switch (todo.getName()) {
+                case "addRain":
+//                    todo.getSubject().setTexture(directory.getEntry("platform-torch", Texture.class));
+
+                    addSprite(todo.getSubject());
+                    break;
+            }
         }
     }
 
@@ -2012,6 +1825,7 @@ public class GameplayScene implements Screen {
                 lightController.attachAmbientLight(light);
             }
         }
+        lightController.update(contactListener.beginSmother());
         lightController.render();
     }
 

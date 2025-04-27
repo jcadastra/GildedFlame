@@ -7,14 +7,12 @@ import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Fire;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Lighting;
 import edu.cornell.cis3152.physics.level_player.player.Avatar;
-import edu.cornell.cis3152.physics.level_player.player.Torch;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.graphics.SpriteBatch;
 import edu.cornell.gdiac.graphics.SpriteSheet;
 import edu.cornell.gdiac.math.Path2;
 import edu.cornell.gdiac.math.PathFactory;
 import edu.cornell.gdiac.physics2.BoxObstacle;
-import edu.cornell.gdiac.physics2.Obstacle;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
 import edu.cornell.gdiac.physics2.PolygonObstacle;
 
@@ -27,6 +25,7 @@ public class Enemy extends ObstacleSprite {
     private final float width;
     private final float height;
     private final float size;
+    private final float friction;
     public SpriteBatch batch;
     public RaycastResult rr;
     /**
@@ -45,6 +44,7 @@ public class Enemy extends ObstacleSprite {
     private float y;
     private float speed;
     private final float units;
+    private final float hitboxScale;
 
     public Enemy(int id, float units, JsonValue data, AssetDirectory directory, Vector2 position) {
         Enemy.directory = directory;
@@ -55,6 +55,8 @@ public class Enemy extends ObstacleSprite {
         this.faceRight = true;
         this.speed = data.getFloat("speed");
         this.size = data.getFloat("size") * units;
+        this.friction = data.getFloat("friction");
+        this.hitboxScale = data.getFloat("size");
 
         this.width = data.get("dimension").getFloat(0);
         this.height = data.get("dimension").getFloat(1);
@@ -86,7 +88,6 @@ public class Enemy extends ObstacleSprite {
         obstacle.setFixedRotation(true);
         obstacle.setUserData(this);
         obstacle.setName("enemy");
-
 
         mesh.set(-size / 2.0f, -size / 2.0f, size, size);
     }
@@ -206,16 +207,16 @@ public class Enemy extends ObstacleSprite {
             case SMOTHER:
                 smother();
                 break;
-//            case FRUSTRATED:
-//                frustrated();
-//                break;
+            case FRUSTRATED:
+                frustrated();
+                break;
             default:
                 break;
         }
     }
 
     public void updateRayCast() {
-        if (getState() == EnemyState.JUMP || getState() == EnemyState.IN_LIGHT || getState() == EnemyState.CD || getState() == EnemyState.FRUSTRATED) {
+        if (getState() == EnemyState.JUMP || getState() == EnemyState.IN_LIGHT || getState() == EnemyState.CD) {
             rr = raycastInLight();
         } else {
             rr = raycast();
@@ -235,17 +236,14 @@ public class Enemy extends ObstacleSprite {
     }
     public boolean isAboutToFall() {
 //        if (!isGrounded()) return false;
-        if (this instanceof Moth && this.getState() == EnemyState.ATTACK){
-            return false; // override this so that the moth can drop platforms when dashing
-        }
 
         Body body = obstacle.getBody();
         if (body == null) return false;
 
         Vector2 position = body.getPosition();
         float rayLength = 1.0f;
-        float xOffset = isFacingRight() ? (width / 2) : (-width / 2);
-        Vector2 rayStart = new Vector2(position.x + xOffset, position.y - height / 2);
+        float xOffset = isFacingRight() ? (width * hitboxScale / 2) : (-width * hitboxScale / 2);
+        Vector2 rayStart = new Vector2(position.x + xOffset, position.y - (height * hitboxScale) / 2);
 
         Vector2 rayEnd = rayStart.cpy().add(0, -rayLength);
 
@@ -257,10 +255,10 @@ public class Enemy extends ObstacleSprite {
                 Object userData = fixture.getBody().getUserData();
                 if (userData instanceof ObstacleSprite) {
                     ObstacleSprite target = (ObstacleSprite) userData;
-                    if (target.getName().contains("platform") || target.getName().contains("enemy") || target.getName().contains("ground") || target.getName().contains("floor")) {
-
+                    if (target.getName().contains("platform") || target.getName().contains("enemy") ||
+                        target.getName().contains("ground") || target.getName().contains("floor")  ||
+                        target.getName().contains("burnable")) {
                         groundDetected[0] = true;
-                    } else {
                     }
                 }
                 return fraction;
@@ -334,7 +332,7 @@ public class Enemy extends ObstacleSprite {
         final Vector2[] closestPoint = {null};
         final float[] closestFraction = {Float.MAX_VALUE};
         RayCastCallback callback = (fixture, point, normal, fraction) -> {
-            if (fixture.isSensor() && !(fixture.getBody().getUserData() instanceof Torch)){
+            if (fixture.isSensor()){
                 return -1;
             } else {
                 Object detectedObject = fixture.getBody().getUserData();
@@ -366,8 +364,10 @@ public class Enemy extends ObstacleSprite {
         Body body = obstacle.getBody();
         float direction;
         obstacle.setBodyType(BodyDef.BodyType.DynamicBody);
-        if (isAboutToFall()) {
-            changeDirection();
+        if (!(this instanceof Moth && this.getState() == EnemyState.ATTACK)){
+            if (isAboutToFall() && !isGrounded()) {
+                changeDirection();
+            }
         }
         if (isFacingRight()) {
             direction = speed;
@@ -418,12 +418,9 @@ public class Enemy extends ObstacleSprite {
 
     }
     public void stop() {
-        Obstacle thisEnemy = Enemy.this.getObstacle();
-        float currY = thisEnemy.getLinearVelocity().y;
-        thisEnemy.setLinearVelocity(new Vector2(0, currY));
-        if (this instanceof Totem){
-            thisEnemy.setBodyType(BodyDef.BodyType.StaticBody);
-        }
+        float currY = obstacle.getLinearVelocity().y;
+        obstacle.getBody().setLinearVelocity(0, currY);
+        obstacle.setBodyType(BodyDef.BodyType.StaticBody);
     }
 
     @Override

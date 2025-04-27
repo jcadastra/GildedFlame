@@ -79,6 +79,10 @@ public class Torch extends EnhancedObstacleSprite {
 
         debug = ParserUtils.parseColor( debugInfo.get("avatar"),  Color.WHITE);
 
+        // Create a rectangular mesh for Traci. This is the same as for door,
+        // since Traci is a rectangular image. But note that the capsule is
+        // actually smaller than the image, making a tighter hitbox. You can
+        // see this when you enable debug mode.
         mesh.set(-size/2.0f,-size/2.0f,size,size);
     }
 

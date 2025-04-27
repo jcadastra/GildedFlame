@@ -55,9 +55,9 @@ public class LightController {
 
     private int numRays;
 
-    private float BOX_TO_WORLD = 32.0f;
+    private float BOX_TO_WORLD;
 
-    private float WORLD_TO_BOX = 1/32.0f;
+    private float WORLD_TO_BOX;
 
     private Fire fire;
 
@@ -66,7 +66,7 @@ public class LightController {
     private int flickerMax = 300;
     private int flickerCount = 300;
     private int lightIndex = 0;
-
+    private float lightRadius = 5f;
     private boolean debug;
     public static final short CATEGORY_AVATAR = 0x0002;  // 00000010
     public static final short CATEGORY_ENVIRONMENT = 0x0004;  // 00000100
@@ -93,81 +93,79 @@ public class LightController {
 
 
     /* Gives the filter catergory bits for the fixture*/
-    public short getFilter(String name){
-        if (name.equals("avatar")){
+    public short getFilter(String name) {
+        if (name.equals("avatar")) {
             return CATEGORY_AVATAR;
         } else if (name.contains("light")) {
             return CATEGORY_LIGHT;
 
-        }else{
+        } else {
             return CATEGORY_ENVIRONMENT;
         }
     }
+
     /*
      * Lighting_ON: the Lighting is on, has a radius, attached to a flame
      * Lighting_WAVER: the Lighting is being stamped on, it wavers
      * Lighting_OFF: the Lighting is off, radius = 0
      * */
-    public enum LightingState{
+    public enum LightingState {
         Lighting_ON,
         Lighting_WAVER,
         Lighting_OFF,
     }
 
-    public void setRadius(int radius){
+    public void setRadius(int radius) {
 
     }
     public LightController(Vector2 points, World world, OrthographicCamera camera, Rectangle bounds, float physicsUnits, float cameraZoomLevel){
         this.BOX_TO_WORLD = physicsUnits;
+        this.WORLD_TO_BOX = 1/physicsUnits;
         this.world = world;
         this.bounds = bounds;
         this.cameraZoomLevel = cameraZoomLevel;
-        //this.camera = camera;
         // Create a separate camera for box2dlights
         this.camera = new OrthographicCamera(bounds.width, bounds.height);//Uses physic units
-        this.camera.position.set(bounds.width/2.0f,bounds.height/2.0f,0);
+        this.camera.position.set(bounds.width / 2.0f, bounds.height / 2.0f, 0);
         //this.camera.setToOrtho(false, bounds.width, bounds.height);
         camera.zoom=cameraZoomLevel;
         this.camera.update();
-        //rayHandler = new RayHandler(world,(int)this.camera.viewportWidth,(int)this.camera.viewportHeight);
-        rayHandler = new RayHandler(world,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
-        //System.out.println("viewport"+this.camera.viewportWidth+","+camera.viewportHeight);
-        //System.out.println("graphics"+Gdx.graphics.getWidth()+","+Gdx.graphics.getHeight());
+        rayHandler = new RayHandler(world, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         rayHandler.setCombinedMatrix(this.camera);
 
         torchLight = new Lighting(2.2f, points);
 
         //Initializes torch light
         //PositionalLight testlight = new PointLight(rayHandler,10,Color.WHITE,100f,10,10);
-        Color lightCol = new Color(1f,0.92f,0.6f,1);
+        Color lightCol = new Color(1f, 0.92f, 0.6f, 1);
         torchLighting = new PointLight(rayHandler, 100, lightCol,
             5f, points.x, points.y);
         torchLighting.setSoft(false);
         torchLighting.setSoftnessLength(10f);
         torchLightState = torchLight.getState();
-        //torchLightState = Lighting.LightState.LIGHT_WAVER;
 
-        Color playerLightCol = new Color(Color.LIGHT_GRAY.r,Color.LIGHT_GRAY.g,Color.LIGHT_GRAY.b,0.1f);
-        playerLight = new PointLight(rayHandler,60,Color.LIGHT_GRAY,1.5f, points.x, points.y);
-        playerLight.setContactFilter(CATEGORY_LIGHT,(short)0,
-            (short)CATEGORY_ENVIRONMENT);
+        Color playerLightCol = new Color(Color.LIGHT_GRAY.r, Color.LIGHT_GRAY.g, Color.LIGHT_GRAY.b, 0.1f);
+        playerLight = new PointLight(rayHandler, 60, Color.LIGHT_GRAY, 1.5f, points.x, points.y);
+        playerLight.setContactFilter(CATEGORY_LIGHT, (short) 0,
+            (short) CATEGORY_ENVIRONMENT);
         playerLight.setSoft(true);
 
-        torchLighting.setContactFilter(CATEGORY_LIGHT, (short)0, (short) CATEGORY_ENVIRONMENT);
+        torchLighting.setContactFilter(CATEGORY_LIGHT, (short) 0, (short) CATEGORY_ENVIRONMENT);
         //rayHandler.useCustomViewport(viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
         rayHandler.useDiffuseLight(true);
-//        rayHandler.useDiffuseLight(false);
-        // Background light color⬇️, modify if needed
-        //rayHandler.setAmbientLight(0.15f, 0.15f, 0.35f, 1f); // same hue, just darker
-        rayHandler.setAmbientLight(Color.BLACK);
-        rayHandler.setShadows(true);
+        // Uncomment if you want no overlay dark hue  ⬇️
+        //rayHandler.useDiffuseLight(false);
+        // Background light color, original hue ⬇️
+        rayHandler.setAmbientLight(0.15f, 0.15f, 0.35f, 1f); // same hue, just darker
+        // Background black color ⬇️
+        //rayHandler.setAmbientLight(Color.BLACK);
         //rayHandler.setBlur(true);
         debug = false;
         initLights(rayHandler);
     }
 
 
-    public LightController(JsonValue data, World world, OrthographicCamera camera){
+    public LightController(JsonValue data, World world, OrthographicCamera camera) {
         this.world = world;
         this.camera = camera;
         this.rayHandler = new RayHandler(world);
@@ -175,7 +173,7 @@ public class LightController {
 
         //Positions the torch light
         JsonValue torchInfo = data.get("torch-light");
-        torchLight = new Lighting(1f,torchInfo);
+        torchLight = new Lighting(1f, torchInfo);
 
         //Initializes torch light
         torchLighting = new PointLight(rayHandler, 100, new Color(1.0f, 1.0f, 0.0f, 1.0f),
@@ -183,129 +181,105 @@ public class LightController {
         //torchLighting.setSoft(false);
         //rayHandler.setAmbientLight(0.5f);
         //rayHandler.setShadows(true);
-        //System.out.println(torchLighting==null);
 
     }
 
-    public void attachTorchLight (Fire fire){
+    public void attachTorchLight(Fire fire) {
         this.fire = fire;
-        //System.out.println("fire pos"+ fire.getObstacle().getX()+","+fire.getObstacle().getY());
         torchLighting.attachToBody(fire.getObstacle().getBody());
         torchLightState = torchLight.getState();
-        //torchLightState = Lighting.LightState.LIGHT_WAVER;
     }
 
-    public void attachPlayerLight (Avatar avatar){
+    public void attachPlayerLight(Avatar avatar) {
         playerLight.attachToBody(avatar.getObstacle().getBody());
     }
 
 
-    public void updateAttach(Fire fire)
-    {
+    public void updateAttach(Fire fire) {
         Vector2 bodyPosition = fire.getObstacle().getPosition();
 
         // Apply the offset (in meters) if needed, for example, position the light above the body
-        float lightPosX = bodyPosition.x + torchLighting.getX()*WORLD_TO_BOX;
-        float lightPosY = bodyPosition.y + torchLighting.getY()*WORLD_TO_BOX;
+        float lightPosX = bodyPosition.x + torchLighting.getX() * WORLD_TO_BOX;
+        float lightPosY = bodyPosition.y + torchLighting.getY() * WORLD_TO_BOX;
 
         // Update the light's position (in world coordinates)
         torchLighting.setPosition(lightPosX, lightPosY);
     }
 
-    public void attachAmbientLight (ObstacleSprite sprite){
+    public void attachAmbientLight(ObstacleSprite sprite) {
         PointLight light = lightPool.get(lightIndex);
-        if (lightAssignments.get(sprite.getObstacle().getBody())== null){//check if it's already attached
+        if (lightAssignments.get(sprite.getObstacle().getBody()) == null) {//check if it's already attached
             System.out.println("attaching new light");
             lightAssignments.put(sprite.getObstacle().getBody(), light);
-            if (sprite.getClass()== FloatingLight.class){
+            if (sprite.getClass() == FloatingLight.class) {
                 //light.setColor(Color.LIGHT_GRAY);
-                light.setColor(Color.LIGHT_GRAY.r,Color.LIGHT_GRAY.g,Color.LIGHT_GRAY.b,1f);
+                light.setColor(Color.LIGHT_GRAY.r, Color.LIGHT_GRAY.g, Color.LIGHT_GRAY.b, 1f);
                 light.setDistance(1f);
                 light.attachToBody(sprite.getObstacle().getBody());
                 light.setActive(true);
                 light.setSoft(true);
-                light.setContactFilter(CATEGORY_LIGHT,(short)0,
-                    (short)CATEGORY_ENVIRONMENT);
+                light.setContactFilter(CATEGORY_LIGHT, (short) 0,
+                    (short) CATEGORY_ENVIRONMENT);
             }
-            lightIndex = (lightIndex + 1)%maxLights;
-    }
+            lightIndex = (lightIndex + 1) % maxLights;
+        }
     }
 
-    public void turnOffAmbientLight(ObstacleSprite sprite){
+    public void turnOffAmbientLight(ObstacleSprite sprite) {
         PointLight light = lightAssignments.get(sprite.getObstacle().getBody());
-        if (light != null){
+        if (light != null) {
             light.setActive(false);
-            System.out.println("light turned off");
             lightAssignments.remove(sprite.getObstacle().getBody());
         }
     }
-    public void translate(){
+
+    public void translate() {
 
     }
 
 
     public void render() {
-        //System.out.println("Drawing light");
-//        System.out.println("light pos "+ torchLighting.getX()+","+torchLighting.getY());
-//        System.out.println("fire pos "+ fire.getObstacle().getX()+","+fire.getObstacle().getY());
-      // camera.zoom = 0.8f;
-        //camera.update();
+
         rayHandler.setCombinedMatrix(camera);
-        //updateCamera();
-        //rayHandler.setCombinedMatrix(camera.combined.scale(WORLD_TO_BOX,WORLD_TO_BOX,1));
-        //System.out.println("camera position"+camera.position.x+ ","+camera.position.y);
         if (fire != null){
             updateAttach(fire);
         }
-        if (torchLightState!=null){
-        switch (torchLightState){
-            case LIGHT_OFF:
-                torchLighting.setActive(false);
-                break;
-            case LIGHT_WAVER:
-                //flickerCount--;
-                //System.out.println(flickerCount);
-                float dis = torchLighting.getDistance()-1;
-                //System.out.println("new distance: " + dis*flickerCount/flickerMax);
-                torchLighting.setDistance(1+dis*flickerCount/flickerMax);
-                if (flickerCount <0){
-                torchLightState = Lighting.LightState.LIGHT_OFF;}
-                break;
-            case LIGHT_ON:
-                if (flickerCount < 0){flickerCount = 5;}//light out, renew
-                break;
-        }}
-        //System.out.println("camera matrix"+camera.combined.toString());
-//        rayHandler.setCombinedMatrix(camera.combined, camera.position.x, camera.position.y, camera.viewportWidth, camera.viewportHeight);
-        //System.out.println("Camera Position: " + camera.position.x*WORLD_TO_BOX+","+camera.position.y*WORLD_TO_BOX);
-        //rayHandler.update();
-        //rayHandler.setCombinedMatrix(camera.combined.scale(WORLD_TO_BOX,WORLD_TO_BOX,WORLD_TO_BOX));
-//            camera.position.x * WORLD_TO_BOX,
-//            camera.position.y*WORLD_TO_BOX,
-//            camera.viewportWidth * camera.zoom,
-//            camera.viewportHeight * camera.zoom);
+        if (torchLightState != null) {
+            switch (torchLightState) {
+                case LIGHT_OFF:
+                    torchLighting.setActive(false);
+                    break;
+                case LIGHT_WAVER:
+                    float dis = torchLighting.getDistance() - 1;
+                    torchLighting.setDistance(1 + dis * flickerCount / flickerMax);
+                    if (flickerCount < 0) {
+                        torchLightState = Lighting.LightState.LIGHT_OFF;
+                    }
+                    break;
+                case LIGHT_ON:
+                    if (flickerCount < 0) {
+                        flickerCount = flickerMax;
+                    }//light out, renew
+                    break;
+            }
+        }
+
         rayHandler.update();
         rayHandler.render();
         if (debug){
             ShapeRenderer shapeRenderer = new ShapeRenderer();
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
             shapeRenderer.setColor(Color.YELLOW);
-            shapeRenderer.circle(torchLighting.getX()*BOX_TO_WORLD, torchLighting.getY()*BOX_TO_WORLD,
-                torchLighting.getDistance()*BOX_TO_WORLD);
+            shapeRenderer.circle(torchLighting.getX() * BOX_TO_WORLD, torchLighting.getY() * BOX_TO_WORLD,
+                torchLighting.getDistance() * BOX_TO_WORLD);
             shapeRenderer.end();
 
         }
 
     }
 
-    public void resetCamera(float dx, float dy){
-        this.camera.position.set(dx/BOX_TO_WORLD,dy/BOX_TO_WORLD,0);
-        //rayHandler = new RayHandler(world,(int)this.camera.viewportWidth,(int)this.camera.viewportHeight);
-//        rayHandler = new RayHandler(world,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
-//        //System.out.println("viewport"+this.camera.viewportWidth+","+camera.viewportHeight);
-//        //System.out.println("graphics"+Gdx.graphics.getWidth()+","+Gdx.graphics.getHeight());
-//        rayHandler.setCombinedMatrix(this.camera);
-        //attachTorchLight(fire);
+    public void resetCamera(float dx, float dy) {
+        this.camera.position.set(dx / BOX_TO_WORLD, dy / BOX_TO_WORLD, 0);
         camera.zoom=cameraZoomLevel;
         inBounds();
         camera.zoom = cameraZoomLevel;
@@ -316,105 +290,61 @@ public class LightController {
 
     private void inBounds(){
 //        System.out.println(camera.viewportWidth+ ",  ***  , " + camera.viewportHeight);
-        //TODO: MAGIC NUMEBRS
-        int height = 18;
-        int width = 32;
-
         float visibleW =  camera.viewportWidth/2*camera.zoom; //half of world visible, zoomed
         float visibleH = camera.viewportHeight/2*camera.zoom;
 
         camera.position.x = MathUtils.clamp(camera.position.x,
-            bounds.x*WORLD_TO_BOX+visibleW*WORLD_TO_BOX,
-            (bounds.x+bounds.width)*BOX_TO_WORLD - visibleW);
-        //System.out.println("x reached bounds:"+(camera.position.x));
+            bounds.x * WORLD_TO_BOX + visibleW * WORLD_TO_BOX,
+            (bounds.x + bounds.width) * BOX_TO_WORLD - visibleW);
         camera.position.y = MathUtils.clamp(camera.position.y,
-            bounds.y*BOX_TO_WORLD+visibleH,
-            (bounds.y+bounds.height)*BOX_TO_WORLD - visibleH);
+            bounds.y * BOX_TO_WORLD + visibleH,
+            (bounds.y + bounds.height) * BOX_TO_WORLD - visibleH);
     }
 
-    public void updateCamera(float dx, float dy){
-//            // Get the player position in physics units (world units)
-//            Vector2 firePos = fire.getObstacle().getPosition();
-//
-//            // Convert the player position from physics units to pixel units
-//            float playerPixelX = firePos.x * BOX_TO_WORLD;  // Convert to pixel units
-//            float playerPixelY = firePos.y * BOX_TO_WORLD;
-//
-//            // --- SMOOTH CAMERA FOLLOW ---
-//            float lerp = 0.3f;  // Adjust for smoother or quicker movement
-//            camera.position.x += (firePos.x - camera.position.x) * lerp; // Follow player in physics units
-//            camera.position.y += (firePos.y - camera.position.y) * lerp;
-//
-//            // --- SMOOTH ZOOM USING VIEWPORT SIZE ---
-//            float targetWidth = 960;  // Base width in world units (change based on need)
-//            float targetHeight = 540;  // Base height in world units
-//
-//            float zoomFactor = 0.85f;  // Zoom factor: < 1 = zoom in, > 1 = zoom out
-//            float zoomLerp = 0.05f;    // Smooth zoom transition speed
-//
-//            // Smoothly interpolate to the target width and height (zoom effect)
-//            float newWidth = targetWidth * zoomFactor;
-//            float newHeight = targetHeight * zoomFactor;
-//
-//            // Apply the updated projection matrix for zooming effect
-//            camera.setToOrtho(false, newWidth, newHeight);
-//
-//            // --- CLAMP CAMERA TO STAY WITHIN WORLD BOUNDS ---
-//            float halfWidth = newWidth / 2f;
-//            float halfHeight = newHeight / 2f;
-//
-//            float minXPixel = bounds.x * BOX_TO_WORLD;
-//            float maxXPixel = (bounds.x + bounds.width) * BOX_TO_WORLD;
-//            float minYPixel = bounds.y * BOX_TO_WORLD;
-//            float maxYPixel = (bounds.y + bounds.height) * BOX_TO_WORLD;
-//
-//            // Ensure the camera stays within the world bounds
-//            camera.position.x = MathUtils.clamp(camera.position.x, minXPixel + halfWidth, maxXPixel - halfWidth);
-//            camera.position.y = MathUtils.clamp(camera.position.y, minYPixel + halfHeight, maxYPixel - halfHeight);
+    public void updateCamera(float dx, float dy) {
 
-            camera.position.x += dx/BOX_TO_WORLD;
-            camera.position.y += dy/BOX_TO_WORLD;
-            // --- UPDATE CAMERA MATRIX ---
-            camera.update();
-            // --- UPDATE RAYHANDLER ---
-            // Convert the camera's physics position to pixel units for the RayHandler
-            float cameraPixelX = camera.position.x;
-            float cameraPixelY = camera.position.y;
-            //System.out.println(cameraPixelX);
-            //System.out.println(cameraPixelY);
-            inBounds();
+        camera.position.x += dx / BOX_TO_WORLD;
+        camera.position.y += dy / BOX_TO_WORLD;
+        // --- UPDATE CAMERA MATRIX ---
+        camera.update();
+        // --- UPDATE RAYHANDLER ---
+        // Convert the camera's physics position to pixel units for the RayHandler
+        float cameraPixelX = camera.position.x;
+        float cameraPixelY = camera.position.y;
 
-            // Update RayHandler with the camera's position in pixel units
-            rayHandler.setCombinedMatrix(camera);
-            rayHandler.update();
-        }
+        inBounds();
+        // Update RayHandler with the camera's position in pixel units
+        rayHandler.setCombinedMatrix(camera);
+        rayHandler.update();
+    }
 
 
 
     public void dispose() {
         rayHandler.dispose();
-        if (camera!=null){
+        if (camera != null) {
             camera = null;
         }
     }
 
 
-    public void update(Boolean beginSmother){
-        if (beginSmother){
+    public void update(Boolean beginSmother) {
+        if (beginSmother) {
             //torchLight.waver(flickerCount);
-            //System.out.println("flickerCount"+flickerCount);
+//            System.out.println("flickerCount"+flickerCount);
             flickerCount--;
-            if (flickerCount%60==0&&flickerCount>0){
-                torchLightState=Lighting.LightState.LIGHT_WAVER;
-            }else{
-                torchLightState=Lighting.LightState.LIGHT_ON;
+            if (flickerCount % 60 == 0 && flickerCount > 0) {
+                torchLightState = Lighting.LightState.LIGHT_WAVER;
+            } else {
+                torchLightState = Lighting.LightState.LIGHT_ON;
             }
-            if(flickerCount<=0){
+            if (flickerCount <= 0) {
                 torchLightState = Lighting.LightState.LIGHT_OFF;
             }
-        }else{
-            if (torchLightState==Lighting.LightState.LIGHT_ON){
-                torchLighting.setDistance(5f);
+        } else {
+            if (torchLightState == Lighting.LightState.LIGHT_ON) {
+                System.out.println("reset light radius");
+                torchLighting.setDistance(lightRadius);
             }
         }
     }
@@ -422,4 +352,3 @@ public class LightController {
 
 
 
-//TODO: finish rayhandling, switch light states, and dispose when finished
