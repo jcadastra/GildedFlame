@@ -313,7 +313,7 @@
                  "gid":70,
                  "height":175.666666666667,
                  "id":30,
-                 "name":"platformX",
+                 "name":"button",
                  "properties":[
                         {
                          "name":"endDegree",
@@ -333,7 +333,12 @@
                         {
                          "name":"moveEvent",
                          "type":"bool",
-                         "value":true
+                         "value":false
+                        }, 
+                        {
+                         "name":"platformName",
+                         "type":"string",
+                         "value":"platformX"
                         }, 
                         {
                          "name":"rotateEvent",

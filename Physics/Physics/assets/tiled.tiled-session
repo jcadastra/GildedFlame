@@ -49,8 +49,8 @@
             "scale": 0.147546875,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 10627.131208302446,
-                "y": 2849.941755797946
+                "x": 4795.08630731759,
+                "y": 1589.3254262416606
             }
         },
         "C:/Users/ericj/Downloads/test5.tmx": {
@@ -92,27 +92,27 @@
         },
         "example_level.tmj": {
             "expandedObjectLayers": [
-                6,
-                5
+                5,
+                6
             ],
             "scale": 0.25,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 3108,
-                "y": 5706
+                "x": 4798,
+                "y": 2698
             }
         },
         "example_level.tmx": {
             "expandedObjectLayers": [
+                5,
                 2,
-                4,
-                5
+                4
             ],
             "scale": 0.125,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 11680,
-                "y": 5492
+                "x": 4796,
+                "y": 2700
             }
         },
         "example_level2.tmj": {
@@ -122,16 +122,16 @@
             "scale": 1,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 5660,
-                "y": 2884.5
+                "x": 4799.5,
+                "y": 2699.5
             }
         },
         "example_level2.tmx": {
             "scale": 0.092,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 14152.173913043478,
-                "y": 4722.826086956522
+                "x": 4798.913043478261,
+                "y": 2701.0869565217395
             }
         },
         "level 4 (1).tmj": {
@@ -144,15 +144,15 @@
         },
         "sample.tmj": {
             "expandedObjectLayers": [
+                5,
                 2,
-                6,
-                5
+                6
             ],
             "scale": 0.25,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 8240,
-                "y": 2782
+                "x": 4798,
+                "y": 2698
             }
         },
         "temp.tmj": {
@@ -178,8 +178,8 @@
             "scale": 0.125,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 11680,
-                "y": 4188
+                "x": 4796,
+                "y": 2700
             }
         },
         "test2.tmx": {
@@ -189,8 +189,8 @@
             "scale": 0.0625,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 18560,
-                "y": 5688
+                "x": 4792,
+                "y": 2712
             }
         },
         "test3.tmj": {
@@ -225,16 +225,16 @@
             "scale": 0.180796875,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 9557.687321752659,
-                "y": 3719.643937429782
+                "x": 4798.2024025581195,
+                "y": 2696.396162820845
             }
         },
         "test6.tmj": {
             "scale": 0.180796875,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 9557.687321752659,
-                "y": 3719.643937429782
+                "x": 4798.2024025581195,
+                "y": 2696.396162820845
             }
         },
         "test7.tmj": {
@@ -244,8 +244,8 @@
             "scale": 0.75,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 2060,
-                "y": 3766
+                "x": 2056,
+                "y": 3760.666666666666
             }
         },
         "test_map.tmj": {
@@ -259,8 +259,8 @@
         "test_map.tmx": {
             "expandedObjectLayers": [
                 2,
-                4,
-                3
+                3,
+                4
             ],
             "scale": 0.5,
             "selectedLayer": 2,

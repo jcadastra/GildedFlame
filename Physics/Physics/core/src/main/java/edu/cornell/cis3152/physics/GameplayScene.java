@@ -785,7 +785,7 @@ public class GameplayScene implements Screen {
                         GameObject platform = new GameObject(x,y,width,height, units, true);
                         platform.getObstacle().setBodyType(BodyType.KinematicBody);
                         platform.getObstacle().setName(objName);
-//                        goalDoor.setTexture();
+                        platform.setTexture(directory.getEntry("platform", Texture.class));
                         platform.getObstacle().setPhysicsUnits(units);
                         platform.setMaterial(new ObstacleMaterial("platform", null));
                         addSprite(platform);
@@ -795,12 +795,14 @@ public class GameplayScene implements Screen {
                         GameObject box = new GameObject(x,y,width,height, units, true);
                         box.getObstacle().setBodyType(BodyType.DynamicBody);
                         box.getObstacle().setName(objName);
-//                        goalDoor.setTexture();
                         box.getObstacle().setPhysicsUnits(units);
-                        if (!objName.contains("non")) {
-                            box.setMaterial(new ObstacleMaterial("wood", null));
-                        } else {
+                        Texture tex;
+                        if (objName.contains("non")) {
                             box.setMaterial(new ObstacleMaterial("stone", null));
+                            box.setTexture(directory.getEntry("nonburnable", Texture.class));
+                        } else {
+                            box.setMaterial(new ObstacleMaterial("wood", null));
+                            box.setTexture(directory.getEntry("burnable", Texture.class));
                         }
                         System.out.println("sanity check" + (box instanceof EnhancedObstacleSprite));
                         addSprite(box);
