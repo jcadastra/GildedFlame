@@ -999,13 +999,11 @@ public class GameplayScene implements Screen {
                                     break;
                             }
                         }
-                    } else if (objName.contains("background")) {
+                    } else if (objName.contains("BackgroundBROKEN")) {
                         Texture temp = directory.getEntry(objName, Texture.class);
-                        float width = object.getFloat("width") / levelData.getInt("tilewidth");
-                        float height = object.getFloat("height") / levelData.getInt("tileheight");
                         temp.setWrap(TextureWrap.Repeat,TextureWrap.Repeat);
 
-                        GameObject decoration = new GameObject(0,0,width,height, units, true);
+                        GameObject decoration = new GameObject(0,0, bounds.x, bounds.y, units, false);
                         decoration.getObstacle().setSensor(true);  // set as sensor
                         decoration.getObstacle().setBodyType(BodyType.StaticBody);
                         decoration.setTexture(temp);

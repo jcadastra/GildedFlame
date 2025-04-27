@@ -28,7 +28,20 @@
  <tile id="5">
   <image width="200" height="114" source="environment/platform.png"/>
  </tile>
- <tile id="12">
+ <tile id="13">
+  <properties>
+   <property name="endDegree" type="float" value="0"/>
+   <property name="endPos" value=""/>
+   <property name="moveEvent" type="bool" value="false"/>
+   <property name="platformName" value=""/>
+   <property name="rotateEvent" type="bool" value="false"/>
+   <property name="startDegree" type="float" value="0"/>
+   <property name="startPos" value=""/>
+   <property name="thresholds" value=""/>
+  </properties>
+  <image width="73" height="93" source="environment/rune.png"/>
+ </tile>
+ <tile id="14">
   <properties>
    <property name="doubleSided" type="bool" value="false"/>
    <property name="endDegree" type="float" value="0"/>
@@ -44,19 +57,6 @@ swing</property>
    <property name="startPos" value=""/>
    <property name="time" type="float" value="0"/>
   </properties>
-  <image width="86" height="49" source="environment/button.png"/>
- </tile>
- <tile id="13">
-  <properties>
-   <property name="endDegree" type="float" value="0"/>
-   <property name="endPos" value=""/>
-   <property name="moveEvent" type="bool" value="false"/>
-   <property name="platformName" value=""/>
-   <property name="rotateEvent" type="bool" value="false"/>
-   <property name="startDegree" type="float" value="0"/>
-   <property name="startPos" value=""/>
-   <property name="thresholds" value=""/>
-  </properties>
-  <image width="73" height="93" source="environment/rune.png"/>
+  <image width="211" height="120" source="environment/button.png"/>
  </tile>
 </tileset>

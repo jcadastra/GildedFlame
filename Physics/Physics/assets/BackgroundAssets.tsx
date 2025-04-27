@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.10.2" name="backgroundAssets" tilewidth="600" tileheight="600" tilecount="5" columns="0">
+<tileset version="1.10" tiledversion="1.10.2" name="backgroundAssets" tilewidth="1000" tileheight="1000" tilecount="10" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <properties>
@@ -30,5 +30,20 @@
    <property name="name" value="window"/>
   </properties>
   <image width="300" height="500" source="backgroundAssets/window.png"/>
+ </tile>
+ <tile id="5">
+  <image width="1000" height="1000" source="backgroundAssets/tClimb.png"/>
+ </tile>
+ <tile id="6">
+  <image width="1000" height="1000" source="backgroundAssets/tJump.png"/>
+ </tile>
+ <tile id="7">
+  <image width="1000" height="1000" source="backgroundAssets/tMove.png"/>
+ </tile>
+ <tile id="8">
+  <image width="1000" height="1000" source="backgroundAssets/tParabola.png"/>
+ </tile>
+ <tile id="9">
+  <image width="1000" height="1000" source="backgroundAssets/tThrow.png"/>
  </tile>
 </tileset>
