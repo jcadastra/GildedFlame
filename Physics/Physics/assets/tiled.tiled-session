@@ -1,5 +1,5 @@
 {
-    "activeFile": "GameObjectTiles.tsx",
+    "activeFile": "level9.tmj",
     "expandedProjectPaths": [
         "."
     ],
@@ -21,7 +21,7 @@
         "BackgroundAssets.tsx": {
             "dynamicWrapping": false,
             "scaleInDock": 0.25,
-            "scaleInEditor": 1
+            "scaleInEditor": 0.33
         },
         "BackgroundStickers.tsx": {
             "dynamicWrapping": true,
@@ -34,7 +34,7 @@
         },
         "C:/Users/ericj/Downloads/GameObjectTiles.tsx": {
             "dynamicWrapping": true,
-            "scaleInDock": 1
+            "scaleInDock": 1.9903
         },
         "C:/Users/ericj/Downloads/PlatformTiles.tsx": {
             "dynamicWrapping": true,
@@ -141,17 +141,28 @@
                 "y": 3080.3769988351164
             }
         },
+        "level9.tmj": {
+            "expandedObjectLayers": [
+                3
+            ],
+            "scale": 0.1703,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 3702.290076335878,
+                "y": 3015.267175572519
+            }
+        },
         "sample.tmj": {
             "expandedObjectLayers": [
                 2,
                 6,
                 5
             ],
-            "scale": 0.25,
+            "scale": 0.1414,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 4792,
-                "y": 2694
+                "x": 4200.848656294201,
+                "y": 3949.787835926449
             }
         },
         "temp.tmj": {
@@ -244,10 +255,10 @@
                 5
             ],
             "scale": 0.125,
-            "selectedLayer": 2,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": 3856,
-                "y": 3684
+                "x": 3840,
+                "y": 3676
             }
         },
         "test7.tmx": {
@@ -318,21 +329,22 @@
         "test6.tmj",
         "test5.tmx",
         "test7.tmj",
-        "BackgroundAssets.tsx"
+        "BackgroundAssets.tsx",
+        "level9.tmj"
     ],
     "project": "tiled.tiled-project",
     "recentFiles": [
-        "test2.tmx",
-        "example_level.tmj",
-        "test7.tmj",
-        "example_level2.tmj",
-        "test6.tmj",
-        "test2.tmj",
         "test_map.tmx",
         "EnemyTiles.tsx",
-        "BackgroundAssets.tsx",
-        "test5.tmx",
-        "example_level2.tmx",
+        "GameObjectTiles.tsx",
+        "PlayerTorchTiles.tsx",
+        "test2.tmx",
+        "PlatformTiles.tsx",
+        "example_level.tmj",
+        "test2.tmj",
+        "example_level2.tmj",
+        "sample.tmj",
+        "C:/Users/ericj/Downloads/level 3.tmj",
         "example_level.tmx"
     ]
 }
