@@ -788,7 +788,6 @@ public class GameplayScene implements Screen {
                             box.setMaterial(new ObstacleMaterial("wood", null));
                             box.setTexture(directory.getEntry("burnable", Texture.class));
                         }
-                        System.out.println("sanity check" + (box instanceof EnhancedObstacleSprite));
                         addSprite(box);
                     } else if (objName.contains("rune")) {
                         System.out.println("makes rune");
