@@ -1,3 +1,5 @@
+We had an assets error that took a while to find so we had to send an earlier JAR, that is unfinished in development. THIS ONE IS THE CURRENT VERSION
+
 Improved enemy AI
 Incorporated a lot of textures into the game
 Fixed bugs

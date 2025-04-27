@@ -148,7 +148,7 @@
       "magfilter": "linear mipmap linear"
     },
     "platform-mothTRANCEANIMATION": {
-      "file": "platform/mothTRANCEAnimation.png",
+      "file": "platform/mothTranceAnimation.png",
       "mipmaps": true,
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
