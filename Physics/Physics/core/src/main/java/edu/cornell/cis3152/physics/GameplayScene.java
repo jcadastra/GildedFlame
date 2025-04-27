@@ -764,7 +764,7 @@ public class GameplayScene implements Screen {
                         System.out.println("makes rune");
                         float width = object.getFloat("width") / levelData.getInt("tilewidth");
                         float height = object.getFloat("height") / levelData.getInt("tileheight");
-                        GameObject platform = new GameObject(x,y,width,height, units, true);
+                        GameObject platform = new GameObject(x,y,width,height, units, true,0);
                         platform.getObstacle().setBodyType(BodyType.KinematicBody);
                         platform.getObstacle().setName(objName);
                         platform.setTexture(directory.getEntry("platform", Texture.class));
@@ -780,7 +780,6 @@ public class GameplayScene implements Screen {
                         box.getObstacle().setBodyType(BodyType.DynamicBody);
                         box.getObstacle().setName(objName);
                         box.getObstacle().setPhysicsUnits(units);
-                        Texture tex;
                         if (objName.contains("non")) {
                             box.setMaterial(new ObstacleMaterial("stone", null));
                             box.setTexture(directory.getEntry("nonburnable", Texture.class));
@@ -788,6 +787,7 @@ public class GameplayScene implements Screen {
                             box.setMaterial(new ObstacleMaterial("wood", null));
                             box.setTexture(directory.getEntry("burnable", Texture.class));
                         }
+                        box.getObstacle().setDensity(3.5f);
                         addSprite(box);
                     } else if (objName.contains("rune")) {
                         System.out.println("makes rune");
@@ -1071,7 +1071,7 @@ public class GameplayScene implements Screen {
             addSprite(tracker);
             torchArc.add(tracker);
         }
-        fitViewport.setCamera(camera);
+//        fitViewport.setCamera(camera);
         lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds, units, cameraZoomLevel);
         lightController.attachTorchLight(torchFire);
         lightController.resetCamera(camera);
