@@ -5,6 +5,7 @@ import box2dLight.PointLight;
 import box2dLight.PositionalLight;
 import box2dLight.RayHandler;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -23,11 +24,9 @@ import edu.cornell.cis3152.physics.level_player.player.Avatar;
 //import edu.cornell.cis3152.physics.level_player.player.Traci;
 import edu.cornell.cis3152.physics.level_player.utils.FireFlag;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
+import edu.cornell.gdiac.util.PooledList;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class LightController {
 
@@ -79,15 +78,17 @@ public class LightController {
     private PositionalLight playerLight;
 
     /*Pool of lights for doing fire*/
-    private Array<PointLight> lightPool;
-    private int maxLights = 20;
+    private PooledList<PointLight> lightPool;
+    private int maxLights = 30;
     Map<Body, PointLight> lightAssignments = new HashMap<>();
 
     private Map<Integer,PointLight> fireAssignments = new HashMap<>();
 
+    private int[] lightInUse = new int[maxLights];
+
 
     public void initLights(RayHandler rayHandler) {
-        lightPool = new Array<>();
+        lightPool = new PooledList<>();
 
         for (int i = 0; i < maxLights; i++) {
             PointLight light = new PointLight(rayHandler, 20, Color.LIGHT_GRAY, 0.5f, 0, 0);
@@ -153,7 +154,7 @@ public class LightController {
         torchLightState = torchLight.getState();
 
         Color playerLightCol = new Color(Color.LIGHT_GRAY.r, Color.LIGHT_GRAY.g, Color.LIGHT_GRAY.b, 0.1f);
-        playerLight = new PointLight(rayHandler, 60, Color.LIGHT_GRAY, 1.5f, points.x, points.y);
+        playerLight = new PointLight(rayHandler, 60, Color.LIGHT_GRAY, 2.5f, points.x, points.y);
         playerLight.setContactFilter(CATEGORY_LIGHT, (short) 0,
             (short) CATEGORY_ENVIRONMENT);
         playerLight.setSoft(true);
@@ -170,6 +171,7 @@ public class LightController {
         //rayHandler.setBlur(true);
         debug = false;
         initLights(rayHandler);
+        Arrays.fill(lightInUse, 0);
     }
 
 
@@ -216,30 +218,51 @@ public class LightController {
 
     public void attachAmbientLight(ObstacleSprite sprite) {
         PointLight light = lightPool.get(lightIndex);
-            if (sprite.getClass() == FloatingLight.class) {
-                if (lightAssignments.get(sprite.getObstacle().getBody())==null){
-               //check if it's already attached
-                    System.out.println("attaching new light");
-                    lightAssignments.put(sprite.getObstacle().getBody(), light);
-                //light.setColor(Color.LIGHT_GRAY);
-                light.setColor(Color.LIGHT_GRAY.r, Color.LIGHT_GRAY.g, Color.LIGHT_GRAY.b, 1f);
-                light.setDistance(1f);
-                light.attachToBody(sprite.getObstacle().getBody());
-                light.setActive(true);
-                light.setSoft(true);
-                light.setContactFilter(CATEGORY_LIGHT, (short) 0,
-                    (short) CATEGORY_ENVIRONMENT);}
-            }else if (sprite.getClass() == Fire.class) {
-                Fire fire = (Fire) sprite;
-                if (fireAssignments.get(fire.fireID)==null){//only adds fires when it's not already there
+        if (sprite.getClass() == Fire.class) {
+            //System.out.println("is fire");
+            if (lightInUse[lightIndex]==2){
+                for (Map.Entry<Body,PointLight> entry : lightAssignments.entrySet()){
+                    entry.getValue().equals(light);
+                    entry.getValue().setActive(false);//turn off the ambient light
+                    lightInUse[lightIndex]=0;//not in use
+                }
+                lightAssignments.clear();
+            }
+            Fire fire = (Fire) sprite;
+            System.out.println(fireAssignments.get(fire.fireID)==null);
+            if (fireAssignments.get(fire.fireID)!=light){//only adds fires when it's not already there
+                System.out.println("add fire!");
                 light.setColor(Color.YELLOW);
                 light.setDistance(3f);
                 light.attachToBody(sprite.getObstacle().getBody());
                 light.setActive(true);
                 light.setContactFilter(CATEGORY_LIGHT, (short) 0,
                     (short) CATEGORY_ENVIRONMENT);
-                light.setSoft(true);}
+                light.setSoft(true);
+                lightInUse[lightIndex]=1;
+                fireAssignments.put(fire.fireID,light);
             }
+        }else if (sprite.getClass() == FloatingLight.class) {
+            System.out.println("is floating light");
+                if (lightAssignments.get(sprite.getObstacle().getBody())!=light){
+               //check if it's already attached
+                   // System.out.println("attaching new light");
+                    if(lightInUse[lightIndex]!=1){//only when fire is not using it
+                    lightAssignments.put(sprite.getObstacle().getBody(), light);
+                    //light.setColor(Color.LIGHT_GRAY);
+                    light.setColor(Color.LIGHT_GRAY.r, Color.LIGHT_GRAY.g, Color.LIGHT_GRAY.b, 1f);
+                    light.setDistance(1.5f);
+                    light.attachToBody(sprite.getObstacle().getBody());
+                    light.setActive(true);
+                    light.setSoft(true);
+                    light.setContactFilter(CATEGORY_LIGHT, (short) 0,
+                        (short) CATEGORY_ENVIRONMENT);
+                    lightInUse[lightIndex] = 2;
+                    }
+                }
+            }
+        System.out.println("index"+lightIndex);
+        System.out.println(lightInUse[lightIndex]);
             lightIndex = (lightIndex + 1) % maxLights;
         }
 
@@ -247,10 +270,13 @@ public class LightController {
     public Array<Lighting> fireLights(FireController fireController) {
         Array<Lighting> fireLights = new Array<>();
         for (Fire fire: fireController.getLitFires()){
-            Lighting lighting = new Lighting(2.2f,fire.getObstacle().getPosition());
-            fireLights.add(lighting);
-            if (fireAssignments.get(fire.fireID) == null) {
-                attachAmbientLight(fire);
+                if (fire.fireID!=0){//not torch flamed
+//                    System.out.println(fire.fireID);
+                    Lighting lighting = new Lighting(2.2f,fire.getObstacle().getPosition());
+                    fireLights.add(lighting);
+                    System.out.print("fire id"+fire.fireID+" ");
+                    attachAmbientLight(fire);
+
             }
         }
         return fireLights;
@@ -310,11 +336,14 @@ public class LightController {
 
     }
 
-    public void resetCamera(float dx, float dy) {
+    public void resetCamera(Camera mainCamera) {
+        float dx = mainCamera.position.x;
+        float dy = mainCamera.position.y;
         this.camera.position.set(dx / BOX_TO_WORLD, dy / BOX_TO_WORLD, 0);
         camera.zoom=cameraZoomLevel;
         inBounds();
-        camera.zoom = cameraZoomLevel;
+        this.camera.viewportWidth = mainCamera.viewportWidth/BOX_TO_WORLD;
+        this.camera.viewportHeight = mainCamera.viewportHeight/BOX_TO_WORLD;
         this.camera.update();
         rayHandler.setCombinedMatrix(camera);
         rayHandler.update();
@@ -352,7 +381,7 @@ public class LightController {
     public void updateCamera(OrthographicCamera mainCamera){
         this.camera.viewportWidth = mainCamera.viewportWidth/BOX_TO_WORLD;
         this.camera.viewportHeight = mainCamera.viewportHeight/BOX_TO_WORLD;
-        this.camera.zoom = mainCamera.zoom;
+        //this.camera.zoom = mainCamera.zoom;
         this.camera.update();
         rayHandler.setCombinedMatrix(this.camera);
         rayHandler.update();
@@ -365,19 +394,48 @@ public class LightController {
         if (camera != null) {
             camera = null;
         }
+        lightPool.clear();
+        lightAssignments.clear();
+        fireAssignments.clear();
     }
 
+//    public void update(FireController fireController) {
+//        Set<Fire> deadFires = fireController.getAllFires();
+//        deadFires.removeAll(fireController.getLitFires());
+//        for (Fire fire : deadFires){
+//            if (fireAssignments.get(fire.fireID) != null) {//a previous lit fire
+//                PointLight light = lightAssignments.get(fire.fireID);
+//                light.setActive(false);
+//                int index = lightPool.indexOf(light);
+//                lightInUse[index] = 0;
+//                fireAssignments.remove(fire.fireID);
+//            }
+//        }
+//    }
+
     public void update(FireController fireController) {
-        Set<Fire> deadFires = fireController.getAllFires();
-        deadFires.removeAll(fireController.getLitFires());
-        for (Fire fire : deadFires){
-            if (fireAssignments.get(fire.fireID) != null) {//a previous lit fire
-                PointLight light = lightAssignments.get(fire.fireID);
-                light.setActive(false);
-                fireAssignments.remove(fire.fireID);
-            }
-        }
+       Set<Fire> allFires = fireController.getAllFires();
+       Set<Fire> litFires = fireController.getLitFires();
+       for (Fire fire : allFires) {//turn off all fires
+           if (fireAssignments.containsKey(fire.fireID)) {
+               PointLight light = fireAssignments.get(fire.fireID);
+               light.setActive(false);
+           }
+           fireAssignments.clear();
+           Arrays.fill(lightInUse,0);
+       }
+       for (Fire fire : litFires) {
+           if (fire.fireID!=0){//not torch flamed
+//                    System.out.println(fire.fireID);
+               Lighting lighting = new Lighting(2.2f,fire.getObstacle().getPosition());
+               System.out.print("fire id"+fire.fireID+" ");
+               attachAmbientLight(fire);
+
+           }
+       }
     }
+
+
 
 
     public void update(Boolean beginSmother) {

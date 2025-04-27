@@ -1070,7 +1070,7 @@ public class GameplayScene implements Screen {
         fitViewport.setCamera(camera);
         lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds, units, cameraZoomLevel);
         lightController.attachTorchLight(torchFire);
-        lightController.resetCamera(camera.position.x,camera.position.y);
+        lightController.resetCamera(camera);
         lightController.attachPlayerLight(avatar);
         floatingLights = new ArrayList<FloatingLight>();
         Vector2 goalPos = goalDoor.getObstacle().getPosition();
@@ -1906,6 +1906,7 @@ public class GameplayScene implements Screen {
         // this works???? ^^^
 
         fitViewport.update(width, height, true);
+        fitViewport.setCamera(camera);
         reset();
     }
 
