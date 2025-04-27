@@ -710,6 +710,7 @@ public class Avatar extends ObstacleSprite {
                 setIsFalling(0);
             }
         }
+
         if (startSwitch) {
             prevPosition = getLocation();
             startSwitch = false;
@@ -786,12 +787,12 @@ public class Avatar extends ObstacleSprite {
         } else if (groundState == GroundState.CLIMBING) {
             if (movement.y > 0) {
                 cdFrameCount++;
-                frameIndex = (cdFrameCount / FRAME_DURATION) % TOTAL_FRAMES;
+                frameIndex = (cdFrameCount / CLIMB_FRAME_DURATION) % TOTAL_FRAMES;
                 srcIndex = frameIndex * FRAME_WIDTH;
                 animationTexture = animationTextureClimbUp;
             } else if (movement.y < 0) {
                 cdFrameCount++;
-                frameIndex = (cdFrameCount / FRAME_DURATION) % TOTAL_FRAMES;
+                frameIndex = (cdFrameCount / CLIMB_FRAME_DURATION) % TOTAL_FRAMES;
                 srcIndex = frameIndex * FRAME_WIDTH;
                 animationTexture = animationTextureClimbDown;
             } else {
