@@ -839,6 +839,7 @@ public class GameplayScene implements Screen {
                         ObstacleSprite target = sprites.stream().filter(sprite -> sprite.getName().equals(finalTargetName)).findFirst().orElse(null);
 
                         Rune rune = new Rune(x,y, units, thresholds);
+                        rune.setTexture(directory.getEntry("tablet", Texture.class));
                         addSprite(rune);
                         runeSet.add(rune);
 
