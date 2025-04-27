@@ -198,6 +198,8 @@
     },
     "platform-rope-end": "environment/Rope/ropeEnd.png",
     "platform-rope-mid": "environment/Rope/ropeBodyRec.png",
+    "runeBase": "environment/runeBase.png",
+    "runeCharged": "environment/runeCharged.png",
     "platform-torch": "platform/torch.png",
     "platform-rope": "platform/ropebridge.png",
     "platform-barrier": "platform/barrier.png",
