@@ -44,6 +44,7 @@ public class Enemy extends ObstacleSprite {
     private float y;
     private float speed;
     private final float units;
+    private final float hitboxScale;
 
     public Enemy(int id, float units, JsonValue data, AssetDirectory directory, Vector2 position) {
         Enemy.directory = directory;
@@ -55,6 +56,7 @@ public class Enemy extends ObstacleSprite {
         this.speed = data.getFloat("speed");
         this.size = data.getFloat("size") * units;
         this.friction = data.getFloat("friction");
+        this.hitboxScale = data.getFloat("size");
 
         this.width = data.get("dimension").getFloat(0);
         this.height = data.get("dimension").getFloat(1);
@@ -86,7 +88,6 @@ public class Enemy extends ObstacleSprite {
         obstacle.setFixedRotation(true);
         obstacle.setUserData(this);
         obstacle.setName("enemy");
-
 
         mesh.set(-size / 2.0f, -size / 2.0f, size, size);
     }
@@ -241,8 +242,8 @@ public class Enemy extends ObstacleSprite {
 
         Vector2 position = body.getPosition();
         float rayLength = 1.0f;
-        float xOffset = isFacingRight() ? (width / 2) : (-width / 2);
-        Vector2 rayStart = new Vector2(position.x + xOffset, position.y - height / 2);
+        float xOffset = isFacingRight() ? (width * hitboxScale / 2) : (-width * hitboxScale / 2);
+        Vector2 rayStart = new Vector2(position.x + xOffset, position.y - (height * hitboxScale) / 2);
 
         Vector2 rayEnd = rayStart.cpy().add(0, -rayLength);
 
@@ -254,10 +255,10 @@ public class Enemy extends ObstacleSprite {
                 Object userData = fixture.getBody().getUserData();
                 if (userData instanceof ObstacleSprite) {
                     ObstacleSprite target = (ObstacleSprite) userData;
-                    if (target.getName().contains("platform") || target.getName().contains("enemy") || target.getName().contains("ground") || target.getName().contains("floor")) {
-
+                    if (target.getName().contains("platform") || target.getName().contains("enemy") ||
+                        target.getName().contains("ground") || target.getName().contains("floor")  ||
+                        target.getName().contains("burnable")) {
                         groundDetected[0] = true;
-                    } else {
                     }
                 }
                 return fraction;
@@ -363,8 +364,10 @@ public class Enemy extends ObstacleSprite {
         Body body = obstacle.getBody();
         float direction;
         obstacle.setBodyType(BodyDef.BodyType.DynamicBody);
-        if (isAboutToFall() && !isGrounded()) {
-            changeDirection();
+        if (!(this instanceof Moth && this.getState() == EnemyState.ATTACK)){
+            if (isAboutToFall() && !isGrounded()) {
+                changeDirection();
+            }
         }
         if (isFacingRight()) {
             direction = speed;

@@ -77,7 +77,7 @@ public class CollisionController implements ContactListener {
 
         return sprite.getName().contains("floor") || sprite.getName().contains("platform") ||
                sprite.getName().contains("barrier") || sprite.getName().contains("spinner") ||
-               sprite.getName().contains("button");
+               sprite.getName().contains("button") || sprite.getName().contains("burnable");
     }
 
     public Stack<CollisionFlag> getCollisionFlags() {

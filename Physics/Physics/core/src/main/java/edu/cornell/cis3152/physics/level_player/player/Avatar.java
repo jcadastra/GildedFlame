@@ -729,11 +729,18 @@ public class Avatar extends ObstacleSprite {
         }
 
         if (!hasTorch && hadTorch) {
-            if (throwSwitch) {
+            if (groundState == GroundState.GROUNDED) {
+                if (throwSwitch) {
+                    throwSwitch = false;
+                    setHadTorch(getHasTorch());
+                }
+            } else {
+                setHadTorch(false);
                 throwSwitch = false;
-                setHadTorch((getHasTorch()));
             }
-        } else if (!hadTorch && hasTorch) {
+
+
+    } else if (!hadTorch && hasTorch) {
             setHadTorch(getHasTorch());
         }
 
@@ -793,21 +800,7 @@ public class Avatar extends ObstacleSprite {
                 animationTexture = animationTextureClimbUp;
             }
             batch.draw(animationTexture, drawX * units, drawY * units, units, units * 1.5f, srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, !faceRight, false);
-        } else if (getHadTorch() && !getHasTorch()) {
-            throwFrameIndex = throwCount / THROW_FRAME_DURATION;
-            throwCount++;
-            if (throwFrameIndex <= THROW_TOTAL_FRAMES) {
-                if (throwFrameIndex == THROW_TOTAL_FRAMES) {
-                    throwFrameIndex = 0;
-                    throwCount = 0;
-                    throwSwitch = true;
-                } else {
-                    srcIndex = throwFrameIndex * FRAME_WIDTH;
-                    animationTexture = animationTextureThrow;
-                    batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits() * 1.5f, srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, !isFacingRight(), false);
-                    throwFrameIndex++;
-                }
-            }
+
         } else if (getGroundedState() == GroundState.AIRBORNE) {
             switch (isFalling) {
                 case (-1):
@@ -838,12 +831,30 @@ public class Avatar extends ObstacleSprite {
                     animationTexture = hasTorch ? animationTextureJumpTorchUp : animationTextureJumpNoTorchUp;
                     batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits() * 1.5f, srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, !isFacingRight(), false);
             }
+
         } else if (getMovement() != null && !getMovement().epsilonEquals(0, 0)) {
             cdFrameCount++;
             frameIndex = (cdFrameCount / MOVEMENT_FRAME_DURATION) % TOTAL_FRAMES;
             srcIndex = frameIndex * FRAME_WIDTH;
             animationTexture = hasTorch ? animationTextureMovementTorch : animationTextureMovementNoTorch;
             batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits() * 1.5f, srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, !isFacingRight(), false);
+        }else if (getHadTorch() && !getHasTorch() && groundState == GroundState.GROUNDED) {
+                throwFrameIndex = throwCount / THROW_FRAME_DURATION;
+                throwCount++;
+                if (throwFrameIndex <= THROW_TOTAL_FRAMES) {
+                    if (throwFrameIndex == THROW_TOTAL_FRAMES) {
+                        throwFrameIndex = 0;
+                        throwCount = 0;
+                        throwSwitch = true;
+                    } else {
+                        srcIndex = throwFrameIndex * FRAME_WIDTH;
+                        animationTexture = animationTextureThrow;
+                        batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits() * 1.5f,
+                            srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, !isFacingRight(), false);
+                        throwFrameIndex++;
+                    }
+                }
+
         } else {
             cdFrameCount++;
             frameIndex = (cdFrameCount / FRAME_DURATION) % TOTAL_FRAMES;

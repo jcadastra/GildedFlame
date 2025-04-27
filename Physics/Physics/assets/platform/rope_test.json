@@ -128,7 +128,7 @@
           "pos": [20.0, 2.0],
           "dimension": [1, 1],
           "speed": 3,
-          "size": 1,
+          "size": 0.75,
           "density": 6,
           "friction": 0.5,
           "attackTimer": 75,

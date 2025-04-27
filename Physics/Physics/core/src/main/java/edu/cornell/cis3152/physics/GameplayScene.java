@@ -298,7 +298,7 @@ public class GameplayScene implements Screen {
      * @param value whether the level is failed.
      */
     public void setFailure(boolean value) {
-        if (value) {
+        if (value && !failed) {
             countdown = EXIT_COUNT;
         }
         failed = value;
