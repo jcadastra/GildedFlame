@@ -12,7 +12,7 @@ public class Rune extends ObstacleSprite {
     private float powerLevel = 0;
     private float prevPowerLevel = 0;
     private float r = 1.5f;
-    private float secondsToFullDissipation = 10;
+    private float secondsToFullDissipation = 15;
     private float dispersalRate = 1/(60f * secondsToFullDissipation);
 
     private int inLight = 0;

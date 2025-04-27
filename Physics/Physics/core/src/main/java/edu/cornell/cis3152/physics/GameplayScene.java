@@ -766,6 +766,7 @@ public class GameplayScene implements Screen {
                         this.goalDoor = goalDoor;
                         addSprite(goalDoor);
                     } else if (objName.contains("platform")) {
+                        float rotation = object.getInt("rotation");
                         float width = object.getFloat("width") / levelData.getInt("tilewidth");
                         float height = object.getFloat("height") / levelData.getInt("tileheight");
                         GameObject platform = new GameObject(x,y,width,height, units, true,0);
@@ -774,6 +775,7 @@ public class GameplayScene implements Screen {
                         platform.setTexture(directory.getEntry("platform", Texture.class));
                         platform.getObstacle().setPhysicsUnits(units);
                         platform.setMaterial(new ObstacleMaterial("platform", null));
+                        platform.getObstacle().setAngle((float) (rotation*Math.PI/180f));
                         addSprite(platform);
                     } else if (objName.contains("ambientLight")) {
                         continue;
