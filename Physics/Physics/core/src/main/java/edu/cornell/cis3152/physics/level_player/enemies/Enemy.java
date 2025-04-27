@@ -131,7 +131,7 @@ public class Enemy extends ObstacleSprite {
         this.isGrounded = grounded;
     }
 
-    public boolean hasJustCollided() {
+    public boolean getJustCollided() {
         return justCollided;
     }
 
@@ -241,12 +241,11 @@ public class Enemy extends ObstacleSprite {
         if (body == null) return false;
 
         Vector2 position = body.getPosition();
-        float rayLength = 1.0f;
+        float rayLength = 0.8f;
         float xOffset = isFacingRight() ? (width * hitboxScale / 2) : (-width * hitboxScale / 2);
         Vector2 rayStart = new Vector2(position.x + xOffset, position.y - (height * hitboxScale) / 2);
 
         Vector2 rayEnd = rayStart.cpy().add(0, -rayLength);
-
         final boolean[] groundDetected = {false};
 
         RayCastCallback callback = new RayCastCallback() {
@@ -264,7 +263,6 @@ public class Enemy extends ObstacleSprite {
                 return fraction;
             }
         };
-
         body.getWorld().rayCast(callback, rayStart, rayEnd);
         return !groundDetected[0];
     }

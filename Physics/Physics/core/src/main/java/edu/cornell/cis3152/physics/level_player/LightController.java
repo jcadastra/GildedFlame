@@ -219,6 +219,7 @@ public class LightController {
     public void attachAmbientLight(ObstacleSprite sprite) {
         PointLight light = lightPool.get(lightIndex);
         if (sprite.getClass() == Fire.class) {
+            //System.out.println("is fire");
             if (lightInUse[lightIndex]==2){
                 for (Map.Entry<Body,PointLight> entry : lightAssignments.entrySet()){
                     entry.getValue().equals(light);
@@ -228,6 +229,7 @@ public class LightController {
                 lightAssignments.clear();
             }
             Fire fire = (Fire) sprite;
+            System.out.println(fireAssignments.get(fire.fireID)==null);
             if (fireAssignments.get(fire.fireID)!=light){//only adds fires when it's not already there
                 PointLight oldLight = fireAssignments.get(fire.fireID);
                 int oldIndex = lightPool.indexOf(oldLight);
@@ -274,7 +276,7 @@ public class LightController {
 //                    System.out.println(fire.fireID);
                     Lighting lighting = new Lighting(2.2f,fire.getObstacle().getPosition());
                     fireLights.add(lighting);
-                    System.out.print("fire id"+fire.fireID+" ");
+//                    System.out.print("fire id"+fire.fireID+" ");
                     attachAmbientLight(fire);
 
             }
@@ -429,7 +431,7 @@ public class LightController {
            if (fire.fireID!=0){//not torch flamed
 //                    System.out.println(fire.fireID);
                Lighting lighting = new Lighting(2.2f,fire.getObstacle().getPosition());
-               System.out.print("fire id"+fire.fireID+" ");
+//               System.out.print("fire id"+fire.fireID+" ");
                attachAmbientLight(fire);
 
            }
@@ -454,7 +456,7 @@ public class LightController {
             }
         } else {
             if (torchLightState == Lighting.LightState.LIGHT_ON) {
-                System.out.println("reset light radius");
+//                System.out.println("reset light radius");
                 torchLighting.setDistance(lightRadius);
             }
         }

@@ -167,11 +167,9 @@ public class CollisionController implements ContactListener {
             }
 
             if (isXandY(bd1, bd2, "wall", Enemy.class) == 1) {
-                System.out.println("WALLL");
                 Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
-                System.out.println(enemy.getObstacle().getName());
-                enemy.setJustCollided(false);
                 enemy.changeDirection();
+                enemy.setJustCollided(true);
             }
 
             if (isXandY(bd1, bd2, Totem.class, Moth.class) == 1) {
@@ -615,12 +613,6 @@ public class CollisionController implements ContactListener {
             enemy.setJustCollided(false);
 
         }
-        if (isXandY(bd1, bd2, "wall", Enemy.class) == 1) {
-            Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
-            enemy.setJustCollided(false);
-
-        }
-
 
         /**
          * Moth and Torch collision

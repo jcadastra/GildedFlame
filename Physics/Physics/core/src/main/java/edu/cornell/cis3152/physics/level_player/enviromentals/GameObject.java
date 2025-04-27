@@ -10,6 +10,10 @@ import edu.cornell.gdiac.physics2.WheelObstacle;
 import javax.swing.Box;
 
 public class GameObject extends EnhancedObstacleSprite {
+    public int tileID = -1;
+    public int getTileID() {
+        return tileID;
+    }
 
     /**
      * Creates a GameObject with a hardcoded shape, generic object that is enhanced
@@ -41,7 +45,7 @@ public class GameObject extends EnhancedObstacleSprite {
 
     public GameObject(float x, float y, float width, float height, float units, Boolean centerInBottomLeft, int tileId) {
         super();
-
+        this.tileID = tileId;
         String name;
         if (tileId - 5 <= 0 || tileId == 7 || tileId == 12 || tileId == 13 ||
             tileId == 14 || tileId == 15 || tileId == 29 || tileId == 31) {
@@ -56,6 +60,7 @@ public class GameObject extends EnhancedObstacleSprite {
         }
 
         float physHeight = height * (name.equals("platform") ? 0.85f : 1f);
+//        float physHeight = height * (name.equals("platform") ? 1f : 1f);
         float physCentreY = y + (physHeight - height) / 2f;
 
         int direction = -1;
@@ -86,5 +91,6 @@ public class GameObject extends EnhancedObstacleSprite {
         obstacle.setName(name);
         //if platform ie walk on shrink height by .15 to walk on better
         mesh.set(-(width * units)/2, -(height * (name.equals("platform") ? .85f : 1) * units)/2, width * widthFactor * units, (height ) * units);
+//        mesh.set(-(width * units)/2, -(height * (name.equals("platform") ? 1f : 1f) * units)/2, width * widthFactor * units, (height ) * units);
     }
 }
