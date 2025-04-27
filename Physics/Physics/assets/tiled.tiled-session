@@ -1,13 +1,8 @@
 {
-    "Map/SizeTest": {
-        "height": 4300,
-        "width": 2
-    },
-    "activeFile": "example_level2.tmj",
+    "activeFile": "test2.tmx",
     "expandedProjectPaths": [
         "."
     ],
-    "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "": {
             "scaleInDock": 1
@@ -16,34 +11,11 @@
             "scaleInEditor": 1
         },
         "(old)example_level.tmj": {
-            "scale": 0.147546875,
+            "scale": 0.101234375,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4805.2525680398185,
-                "y": 2700.8365985386004
-            }
-        },
-        "C:/Users/ericj/Downloads/EnemyTiles.tsx": {
-            "scaleInDock": 1
-        },
-        "C:/Users/ericj/Downloads/GameObjectTiles.tsx": {
-            "dynamicWrapping": true,
-            "scaleInDock": 1
-        },
-        "C:/Users/ericj/Downloads/PlatformTiles.tsx": {
-            "dynamicWrapping": true,
-            "scaleInDock": 0.12
-        },
-        "C:/Users/ericj/Downloads/PlayerTorchTiles.tsx": {
-            "dynamicWrapping": true,
-            "scaleInDock": 0.12
-        },
-        "C:/Users/ericj/Downloads/level 3.tmj": {
-            "scale": 0.147546875,
-            "selectedLayer": 0,
-            "viewCenter": {
-                "x": 4795.08630731759,
-                "y": 1589.3254262416606
+                "x": -2607.8098471986423,
+                "y": 2701.651489427381
             }
         },
         "BackgroundStickers.tsx": {
@@ -61,7 +33,7 @@
         },
         "PlatformTiles.tsx": {
             "dynamicWrapping": false,
-            "scaleInDock": 0.12,
+            "scaleInDock": 0.25,
             "scaleInEditor": 0.5
         },
         "PlayerTorchTiles.tsx": {
@@ -75,47 +47,49 @@
             "scaleInEditor": 1
         },
         "example_level(og).tmj": {
-            "scale": 0.101234375,
-            "selectedLayer": 4,
+            "expandedObjectLayers": [
+                6
+            ],
+            "scale": 0.125,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 4800.740855070227,
-                "y": 2701.651489427381
+                "x": 3064,
+                "y": 3908
             }
         },
         "example_level.tmj": {
             "scale": 0.101234375,
             "selectedLayer": 0,
-            "expandedObjectLayers": [
-                5
-            ],
-            "scale": 0.125,
-            "selectedLayer": 1,
             "viewCenter": {
                 "x": 4800.740855070227,
                 "y": 2701.651489427381
-                "x": 4408,
-                "y": 3300
             }
         },
         "example_level.tmx": {
             "expandedObjectLayers": [
-                2,
-                4,
                 5
             ],
             "scale": 0.125,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 2960,
-                "y": 3420
+                "x": 56,
+                "y": 2884
+            }
+        },
+        "example_level2(og).tmj": {
+            "scale": 0.101234375,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 4800.740855070227,
+                "y": 2701.651489427381
             }
         },
         "example_level2.tmj": {
             "scale": 0.101234375,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 3248,
-                "y": 4452
+                "x": 4800.740855070227,
+                "y": 2701.651489427381
             }
         },
         "example_level2.tmx": {
@@ -178,16 +152,8 @@
             "scale": 0.0625,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 4792,
-                "y": 2712
-            }
-        },
-        "test3.tmj": {
-            "scale": 0.128546875,
-            "selectedLayer": 0,
-            "viewCenter": {
-                "x": 4799.805518414974,
-                "y": 2703.2940318463593
+                "x": 4768,
+                "y": 5112
             }
         },
         "test3.tmx": {
@@ -200,14 +166,6 @@
             "viewCenter": {
                 "x": 5112,
                 "y": 2620
-            }
-        },
-        "test6.tmj": {
-            "scale": 0.125,
-            "selectedLayer": 0,
-            "viewCenter": {
-                "x": 4312,
-                "y": 3052
             }
         },
         "test_map.tmj": {
@@ -228,12 +186,12 @@
             "selectedLayer": 2,
             "viewCenter": {
                 "x": 960,
-                "y": 311
+                "y": 335
             }
         },
         "tileset.tsx": {
             "dynamicWrapping": false,
-            "scaleInDock": 0.12,
+            "scaleInDock": 0.125,
             "scaleInEditor": 0.33
         },
         "untitled.tmj": {
@@ -245,50 +203,27 @@
             }
         }
     },
-    "last.exportedFilePath": "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/assets",
-    "last.imagePath": "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/assets/tiled_images",
-    "map.height": 18,
-    "map.lastUsedExportFilter": "Tiled map files (*.tmx *.xml)",
-    "map.lastUsedFormat": "json",
-    "map.tileHeight": 300,
-    "map.tileWidth": 300,
-    "map.width": 32,
     "openFiles": [
         "test_map.tmx",
         "EnemyTiles.tsx",
         "GameObjectTiles.tsx",
         "PlayerTorchTiles.tsx",
         "test2.tmx",
-        "PlatformTiles.tsx",
-        "example_level.tmj",
-        "test2.tmj",
-        "example_level2.tmj",
-        "sample.tmj",
-        "C:/Users/ericj/Downloads/level 3.tmj",
-        "example_level.tmx",
-        "example_level2.tmx",
-        "test6.tmj"
+        "PlatformTiles.tsx"
     ],
     "project": "tiled.tiled-project",
-    "property.type": "int",
     "recentFiles": [
-        "test6.tmj",
-        "example_level2.tmj",
-        "example_level.tmj",
-        "test_map.tmx",
         "EnemyTiles.tsx",
-        "GameObjectTiles.tsx",
-        "PlayerTorchTiles.tsx",
+        "example_level.tmx",
+        "level 4 (1).tmj",
+        "platform1Tiled.tsx",
+        "tileset.tsx",
+        "(old)example_level.tmj",
         "test2.tmx",
+        "PlayerTorchTiles.tsx",
+        "test3.tmx",
         "PlatformTiles.tsx",
         "level.tmj",
         "example_level2.tmj"
-    ],
-    "tileset.embedInMap": true,
-    "tileset.lastUsedFormat": "tsx",
-    "tileset.tileSize": {
-        "height": 300,
-        "width": 300
-    },
-    "tileset.type": 1
+    ]
 }

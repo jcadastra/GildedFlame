@@ -632,6 +632,7 @@ public class GameplayScene implements Screen {
         // Create ground pieces
         Texture texture;
         enemies = new ArrayList<>();
+        List<Vector2> floatingLightPositions = new ArrayList<>();
 
         JsonValue layers = levelData.get("layers");
         for (JsonValue layer : layers) {
@@ -715,6 +716,8 @@ public class GameplayScene implements Screen {
                             torch.getObstacle().getPosition().cpy().add(0, torch.getHeight() / 4)));
                         activeLightJoint = world.createJoint(torch.attachObj(l));
                         activeFireJoint = world.createJoint(torch.attachObj(torchFire));
+                    } else if (objName.contains("env_light")) {
+                        floatingLightPositions.add(new Vector2(pos[0], pos[1]));
                     } else if (objName.contains("moth")) {
                         texture = directory.getEntry("platform-moth01", Texture.class);
                         Vector2 position = new Vector2(pos[0], pos[1]);
@@ -1054,6 +1057,19 @@ public class GameplayScene implements Screen {
             addSprite(floatingLights[i]);}
         for (FloatingLight floatingLight: floatingLights) {
             lightController.attachAmbientLight(floatingLight);
+        }
+
+        if (!floatingLightPositions.isEmpty()) {
+            floatingLights = new FloatingLight[floatingLightPositions.size()];
+
+            for (int i = 0; i < floatingLightPositions.size(); i++) {
+                Vector2 lightPos = floatingLightPositions.get(i);
+                FloatingLight floatingLight = new FloatingLight(units, lightPos, 1.0f, lightPos);
+                floatingLights[i] = floatingLight;
+
+                addSprite(floatingLight); // Add to rendering
+                lightController.attachAmbientLight(floatingLight); // Attach to LightController
+            }
         }
     }
     /**
