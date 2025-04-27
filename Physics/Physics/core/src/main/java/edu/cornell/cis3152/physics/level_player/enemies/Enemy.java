@@ -115,6 +115,7 @@ public class Enemy extends ObstacleSprite {
 
     public void changeDirection() {
         if (!justCollided) {
+            System.out.println("inner change direction");
             faceRight = !isFacingRight();
         }
     }

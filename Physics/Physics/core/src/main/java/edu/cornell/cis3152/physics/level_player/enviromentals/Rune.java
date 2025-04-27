@@ -19,6 +19,7 @@ public class Rune extends ObstacleSprite {
     private float currentLatchThreshold = 0;
     private float[] thresholds;
     private HashSet<EventAction<?>> eventActions;
+    public String setTargetName;
 
     public Rune (float x, float y, float units, float[] thresholds) {
         obstacle = new WheelObstacle(x,y, r);
