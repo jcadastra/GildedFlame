@@ -168,7 +168,7 @@
             "scale": 0.1703,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 3681.7381092190253,
+                "x": 3675.86611861421,
                 "y": 2997.651203758074
             }
         },
@@ -356,7 +356,6 @@
     ],
     "project": "tiled.tiled-project",
     "recentFiles": [
-        "level9.tmj",
         "level7.tmj",
         "test_map.tmx",
         "EnemyTiles.tsx",
@@ -367,6 +366,7 @@
         "example_level.tmj",
         "test2.tmj",
         "example_level2.tmj",
-        "sample.tmj"
+        "sample.tmj",
+        "C:/Users/ericj/Downloads/level 3.tmj"
     ]
 }
