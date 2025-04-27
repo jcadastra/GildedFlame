@@ -773,16 +773,16 @@
                  "y":4561.33333333333
                 }, 
                 {
-                 "gid":77,
+                 "gid":79,
                  "height":1000,
-                 "id":113,
-                 "name":"tClimb",
+                 "id":114,
+                 "name":"tMove",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":1000,
-                 "x":639.393939393939,
-                 "y":4921.21212121212
+                 "x":645.454545454545,
+                 "y":4915.15151515152
                 }],
          "offsetx":-12.1212121212122,
          "offsety":-15.151515151515,
@@ -964,7 +964,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":114,
+ "nextobjectid":115,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

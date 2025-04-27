@@ -652,7 +652,7 @@ public class GameplayScene implements Screen {
                 int width = layer.getInt("width");
                 int height = layer.getInt("height");
                 this.bounds = new Rectangle(0,0,width, height);
-                System.out.println(width + "x" + height);
+//                System.out.println(width + "x" + height);
                 JsonValue data = layer.get("data");
 
                 JsonValue settings = levelInfo.get("walls");
