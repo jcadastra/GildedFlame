@@ -47,14 +47,11 @@
             "scaleInEditor": 1
         },
         "example_level(og).tmj": {
-            "expandedObjectLayers": [
-                6
-            ],
             "scale": 0.125,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 3064,
-                "y": 3908
+                "x": 5464,
+                "y": 2924
             }
         },
         "example_level.tmj": {
