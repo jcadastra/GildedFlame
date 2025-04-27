@@ -48,8 +48,8 @@
             "scale": 0.147546875,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4795.08630731759,
-                "y": 1589.3254262416606
+                "x": 4791.697553743515,
+                "y": 1582.5479190935089
             }
         },
         "C:/Users/ericj/Downloads/test5.tmx": {
@@ -110,8 +110,8 @@
             "scale": 0.125,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 4796,
-                "y": 2700
+                "x": 4784,
+                "y": 2692
             }
         },
         "example_level2.tmj": {
@@ -129,8 +129,8 @@
             "scale": 0.092,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4798.913043478261,
-                "y": 2701.0869565217395
+                "x": 4782.608695652174,
+                "y": 2690.217391304348
             }
         },
         "level 4 (1).tmj": {
@@ -168,8 +168,8 @@
             "scale": 0.1703,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 3675.86611861421,
-                "y": 2997.651203758074
+                "x": 4797.416324133881,
+                "y": 2698.1796829125074
             }
         },
         "sample.tmj": {
@@ -255,16 +255,16 @@
             "scale": 0.180796875,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4798.2024025581195,
-                "y": 2696.396162820845
+                "x": 4773.312591824389,
+                "y": 2690.8650937689054
             }
         },
         "test6.tmj": {
             "scale": 0.180796875,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 4798.2024025581195,
-                "y": 2696.396162820845
+                "x": 4784.3747299282695,
+                "y": 2690.8650937689054
             }
         },
         "test7.tmj": {
@@ -277,8 +277,8 @@
             "scale": 0.125,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 4796,
-                "y": 2700
+                "x": 4752,
+                "y": 2676
             }
         },
         "test7.tmx": {
@@ -356,6 +356,7 @@
     ],
     "project": "tiled.tiled-project",
     "recentFiles": [
+        "level9.tmj",
         "level7.tmj",
         "test_map.tmx",
         "EnemyTiles.tsx",
@@ -366,7 +367,6 @@
         "example_level.tmj",
         "test2.tmj",
         "example_level2.tmj",
-        "sample.tmj",
-        "C:/Users/ericj/Downloads/level 3.tmj"
+        "sample.tmj"
     ]
 }
