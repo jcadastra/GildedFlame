@@ -30,18 +30,6 @@
                  "width":1064,
                  "x":8102.73451233718,
                  "y":2354.55787355713
-                }, 
-                {
-                 "gid":54,
-                 "height":200,
-                 "id":70,
-                 "name":"env_light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":200,
-                 "x":3572.27535113443,
-                 "y":3968.95863559191
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -119,7 +107,7 @@
                  "y":1224.59239648417
                 }, 
                 {
-                 "gid":49,
+                 "gid":44,
                  "height":600,
                  "id":41,
                  "name":"player",
@@ -131,7 +119,7 @@
                  "y":4813.81976066928
                 }, 
                 {
-                 "gid":2147483696,
+                 "gid":2147483691,
                  "height":300,
                  "id":40,
                  "name":"torch",
@@ -201,29 +189,6 @@
                  "width":300,
                  "x":5394,
                  "y":4794
-                }, 
-                {
-                 "gid":45,
-                 "height":200,
-                 "id":68,
-                 "name":"platform1",
-                 "properties":[
-                        {
-                         "name":"height",
-                         "type":"string",
-                         "value":"0.8"
-                        }, 
-                        {
-                         "name":"width",
-                         "type":"string",
-                         "value":"6"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":800,
-                 "x":3265.17718783763,
-                 "y":3709.39728353141
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -232,10 +197,10 @@
          "y":0
         }],
  "nextlayerid":7,
- "nextobjectid":71,
+ "nextobjectid":68,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.11.2",
+ "tiledversion":"1.10.2",
  "tileheight":300,
  "tilesets":[
         {
@@ -251,12 +216,8 @@
          "source":"GameObjectTiles.tsx"
         }, 
         {
-         "firstgid":46,
+         "firstgid":41,
          "source":"PlayerTorchTiles.tsx"
-        }, 
-        {
-         "firstgid":50,
-         "source":"BackgroundStickers.tsx"
         }],
  "tilewidth":300,
  "type":"map",

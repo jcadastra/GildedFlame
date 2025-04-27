@@ -166,8 +166,8 @@ public class MainMenuScreen implements Screen {
 
 // Add the ImageButton to your stage
         stage.addActor(imageButton);
-        stage.addActor(contButt1);
-        stage.addActor(settingsButt1);
+      //  stage.addActor(contButt1);
+      //  stage.addActor(settingsButt1);
 
 
         Texture topRightTexture = new Texture(Gdx.files.internal("ui/textbutt.png"));

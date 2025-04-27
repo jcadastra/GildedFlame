@@ -1,59 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="32" height="18" tilewidth="300" tileheight="300" infinite="0" backgroundcolor="#2b4859" nextlayerid="4" nextobjectid="17">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="32" height="18" tilewidth="300" tileheight="300" infinite="0" backgroundcolor="#2b4859" nextlayerid="4" nextobjectid="17">
  <editorsettings>
-  <export target="test5.tmj" format="json"/>
+  <export target="test2.tmj" format="json"/>
  </editorsettings>
  <tileset firstgid="1" source="PlatformTiles.tsx"/>
- <tileset firstgid="49" source="PlayerTorchTiles.tsx"/>
- <tileset firstgid="53" source="EnemyTiles.tsx"/>
- <tileset firstgid="57" source="GameObjectTiles.tsx"/>
+ <tileset firstgid="25" source="PlayerTorchTiles.tsx"/>
+ <tileset firstgid="29" source="EnemyTiles.tsx"/>
+ <tileset firstgid="33" source="GameObjectTiles.tsx"/>
  <layer id="1" name="Tile Layer 1" width="32" height="18">
   <data encoding="csv">
-14,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,16,
-26,27,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,27,28,
-26,28,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,26,28,
-26,28,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,26,28,
-26,28,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,26,28,
-26,28,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,26,28,
-26,28,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,26,28,
-26,28,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,26,28,
-26,28,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,3,3,3,3,4,0,0,0,0,0,0,26,28,
-26,28,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,26,28,
-26,28,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,26,28,
-26,28,0,0,0,0,0,0,0,0,0,0,2,3,3,3,3,3,4,0,0,0,0,0,0,0,0,0,0,0,26,28,
-26,28,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,26,28,
-26,28,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,26,28,
-26,28,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,26,28,
-26,28,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,15,15,15,15,30,28,
-26,27,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,30,27,27,27,27,27,28,
-38,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,40
+8,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,10,
+14,15,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,15,16,
+14,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,16,
+14,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,16,
+14,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,16,
+14,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,16,
+14,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,16,
+14,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,16,
+14,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,3,3,3,3,4,0,0,0,0,0,0,14,16,
+14,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,16,
+14,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,16,
+14,16,0,0,0,0,0,0,0,0,0,0,2,3,3,3,3,3,4,0,0,0,0,0,0,0,0,0,0,0,14,16,
+14,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,16,
+14,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,16,
+14,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,9,9,9,9,15,16,
+14,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,15,15,15,15,15,16,
+14,15,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,15,15,15,15,15,15,16,
+20,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,22
 </data>
  </layer>
  <objectgroup id="2" name="Player">
-  <object id="1" name="player" gid="52" x="1194" y="4796" width="300" height="600"/>
-  <object id="2" name="torch" gid="51" x="2117" y="4798" width="150" height="300"/>
+  <object id="1" name="player" gid="28" x="1194" y="4796" width="300" height="600"/>
+  <object id="2" name="torch" gid="27" x="2117" y="4798" width="150" height="300"/>
  </objectgroup>
  <objectgroup id="3" name="Enemies">
-  <object id="7" name="2" gid="59" x="3002" y="2134" width="150" height="150">
+  <object id="7" name="2" gid="35" x="3002" y="2134" width="150" height="150">
    <properties>
     <property name="depth" value="2"/>
     <property name="piecelen" value="14"/>
     <property name="thickness" value="10"/>
    </properties>
   </object>
-  <object id="8" name="1" gid="59" x="906" y="3006" width="150" height="150"/>
-  <object id="9" name="3" gid="59" x="3882" y="3022" width="150" height="150"/>
-  <object id="10" name="4" gid="59" x="4722" y="1446" width="150" height="150">
+  <object id="8" name="1" gid="35" x="906" y="3006" width="150" height="150"/>
+  <object id="9" name="3" gid="35" x="3882" y="3022" width="150" height="150"/>
+  <object id="10" name="4" gid="35" x="4722" y="1446" width="150" height="150">
    <properties>
     <property name="depth" value="2"/>
     <property name="piecelen" value="14"/>
     <property name="thickness" value="10"/>
    </properties>
   </object>
-  <object id="11" name="5" gid="59" x="5218" y="2622" width="150" height="150"/>
-  <object id="12" name="6" gid="59" x="5402" y="3534" width="150" height="150"/>
-  <object id="13" name="moth" gid="56" x="8601.38" y="4498.16" width="300" height="300"/>
-  <object id="15" name="button" gid="60" x="6497.29" y="2386.23" width="600" height="300">
+  <object id="11" name="5" gid="35" x="5218" y="2622" width="150" height="150"/>
+  <object id="12" name="6" gid="35" x="5402" y="3534" width="150" height="150"/>
+  <object id="13" name="moth" gid="32" x="3554" y="4750" width="300" height="300"/>
+  <object id="15" name="button" gid="36" x="6581.24" y="4421.97" width="600" height="300">
    <properties>
     <property name="doublesided" type="bool" value="true"/>
     <property name="endX" value="24"/>
@@ -64,6 +64,6 @@
     <property name="startY" value="15"/>
    </properties>
   </object>
-  <object id="16" name="goaldoor" gid="61" x="1118" y="1866" width="500" height="500"/>
+  <object id="16" name="goaldoor" gid="37" x="1118" y="1866" width="500" height="500"/>
  </objectgroup>
 </map>
