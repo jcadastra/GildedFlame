@@ -165,9 +165,9 @@ public class LightController {
         // Uncomment if you want no overlay dark hue  ⬇️
         //rayHandler.useDiffuseLight(false);
         // Background light color, original hue ⬇️
-//        rayHandler.setAmbientLight(0.15f, 0.15f, 0.35f, 1f); // same hue, just darker
+        rayHandler.setAmbientLight(0.15f, 0.15f, 0.35f, 1f); // same hue, just darker
         // Background black color ⬇️
-        rayHandler.setAmbientLight(Color.BLACK);
+        //rayHandler.setAmbientLight(Color.BLACK);
         //rayHandler.setBlur(true);
         debug = false;
         initLights(rayHandler);
@@ -219,7 +219,6 @@ public class LightController {
     public void attachAmbientLight(ObstacleSprite sprite) {
         PointLight light = lightPool.get(lightIndex);
         if (sprite.getClass() == Fire.class) {
-            //System.out.println("is fire");
             if (lightInUse[lightIndex]==2){
                 for (Map.Entry<Body,PointLight> entry : lightAssignments.entrySet()){
                     entry.getValue().equals(light);
@@ -229,9 +228,11 @@ public class LightController {
                 lightAssignments.clear();
             }
             Fire fire = (Fire) sprite;
-            System.out.println(fireAssignments.get(fire.fireID)==null);
             if (fireAssignments.get(fire.fireID)!=light){//only adds fires when it's not already there
-                System.out.println("add fire!");
+                PointLight oldLight = fireAssignments.get(fire.fireID);
+                int oldIndex = lightPool.indexOf(oldLight);
+                lightInUse[oldIndex] = 0;
+                oldLight.setActive(false);//turn off old light
                 light.setColor(Color.YELLOW);
                 light.setDistance(3f);
                 light.attachToBody(sprite.getObstacle().getBody());
@@ -243,10 +244,9 @@ public class LightController {
                 fireAssignments.put(fire.fireID,light);
             }
         }else if (sprite.getClass() == FloatingLight.class) {
-            System.out.println("is floating light");
-                if (lightAssignments.get(sprite.getObstacle().getBody())!=light){
+                if (lightAssignments.get(sprite.getObstacle().getBody())==null){
                //check if it's already attached
-                   // System.out.println("attaching new light");
+                    //System.out.println("attaching new light");
                     if(lightInUse[lightIndex]!=1){//only when fire is not using it
                     lightAssignments.put(sprite.getObstacle().getBody(), light);
                     //light.setColor(Color.LIGHT_GRAY);
@@ -261,8 +261,8 @@ public class LightController {
                     }
                 }
             }
-        System.out.println("index"+lightIndex);
-        System.out.println(lightInUse[lightIndex]);
+        //System.out.println("index"+lightIndex);
+        //System.out.println(lightInUse[lightIndex]);
             lightIndex = (lightIndex + 1) % maxLights;
         }
 
@@ -289,6 +289,7 @@ public class LightController {
             light.setActive(false);
             lightAssignments.remove(sprite.getObstacle().getBody());
         }
+        Arrays.fill(lightInUse,0);
     }
 
     public void translate() {

@@ -26,6 +26,7 @@ public class FloatingLight extends ObstacleSprite {
         private final float travelThreshold = 0.1f;
         //WheelObstacle obstacle;
         private ShapeRenderer shapeRenderer = new ShapeRenderer();
+        private boolean debug = true;
 
         int circleCounter = 500;
         int offCounter = 500;
@@ -54,47 +55,54 @@ public class FloatingLight extends ObstacleSprite {
         }
 
         public void update(float deltaTime) {
-            switch (state) {
-                case CIRCULATING:
-                    circleCounter--;
-                    angle += speed * deltaTime;
-                    position.x = centerPoint.x + radius * (float)Math.cos(angle);
-                    position.y = centerPoint.y + radius * (float)Math.sin(angle);
-                    if (circleCounter<0){
-                        state = FloatingLightState.TRAVELING;
-                    }
-                    break;
+            if (debug) {
 
-                case TRAVELING:
-                    circleCounter = 1000;
-                    offCounter = 1000;
-                    Vector2 direction = destination.cpy().sub(position);
-                    float distance = direction.len();
-                    if (distance < travelThreshold) {
-                        position = new Vector2(obstacle.getX(), obstacle.getY());
-                        destination = start.cpy();
-                        start = position.cpy();
-                        state = FloatingLightState.OFF;
-                    } else {
-                        direction.nor().scl(speed * deltaTime);
-                        position.add(direction);
-                    }
+            } else {
+                switch (state) {
+                    case CIRCULATING:
+                        circleCounter--;
+                        angle += speed * deltaTime;
+                        position.x = centerPoint.x + radius * (float) Math.cos(angle);
+                        position.y = centerPoint.y + radius * (float) Math.sin(angle);
+                        if (circleCounter < 0) {
+                            state = FloatingLightState.TRAVELING;
+                        }
+                        break;
+
+                    case TRAVELING:
+                        circleCounter = 1000;
+                        offCounter = 1000;
+                        Vector2 direction = destination.cpy().sub(position);
+                        float distance = direction.len();
+                        if (distance < travelThreshold) {
+                            position = new Vector2(obstacle.getX(), obstacle.getY());
+                            destination = start.cpy();
+                            start = position.cpy();
+                            state = FloatingLightState.OFF;
+                        } else {
+                            direction.nor().scl(speed * deltaTime);
+                            position.add(direction);
+                        }
 //                    if (position.dst2(destination) < 0.01f) {//stop moving
 //                        position = obstacle.getPosition();
 //                        destination = start.cpy();
 //                        start = position.cpy();
 //                        state = FloatingLightState.OFF;
 //                    }
-                    break;
+                        break;
 
-                case OFF:
-                    // Do nothing or flicker/dim if desired
-                    offCounter--;
-                    if (offCounter < 0) {state = FloatingLightState.CIRCULATING;}
-                    break;
+                    case OFF:
+                        // Do nothing or flicker/dim if desired
+                        offCounter--;
+                        if (offCounter < 0) {
+                            state = FloatingLightState.CIRCULATING;
+                        }
+                        break;
+                }
+
+                obstacle.setPosition(position.x, position.y); // Update visual
+
             }
-
-            obstacle.setPosition(position.x, position.y); // Update visual
         }
 
         public void setTravelDestination(Vector2 dest) {
