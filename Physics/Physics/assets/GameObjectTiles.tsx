@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.11.2" name="GameObjectTiles" tilewidth="500" tileheight="819" tilecount="11" columns="0">
+<tileset version="1.10" tiledversion="1.11.2" name="GameObjectTiles" tilewidth="500" tileheight="819" tilecount="12" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="2">
   <image source="tiled_images/ropeEnd.png" width="300" height="300"/>
@@ -33,5 +33,8 @@
  </tile>
  <tile id="15">
   <image source="tiled_images/tablet.png" width="300" height="300"/>
+ </tile>
+ <tile id="16">
+  <image source="tiled_images/platform.png" width="247" height="30"/>
  </tile>
 </tileset>

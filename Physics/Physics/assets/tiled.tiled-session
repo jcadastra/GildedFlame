@@ -53,7 +53,7 @@
         },
         "example_level(og).tmj": {
             "scale": 0.101234375,
-            "selectedLayer": 0,
+            "selectedLayer": 4,
             "viewCenter": {
                 "x": 4800.740855070227,
                 "y": 2701.651489427381
@@ -74,7 +74,7 @@
             "scale": 0.125,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 2456,
+                "x": 56,
                 "y": 2884
             }
         },
