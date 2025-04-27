@@ -764,7 +764,7 @@ public class GameplayScene implements Screen {
                         System.out.println("makes rune");
                         float width = object.getFloat("width") / levelData.getInt("tilewidth");
                         float height = object.getFloat("height") / levelData.getInt("tileheight");
-                        GameObject platform = new GameObject(x,y,width,height, units, true);
+                        GameObject platform = new GameObject(x,y,width,height, units, true,0);
                         platform.getObstacle().setBodyType(BodyType.KinematicBody);
                         platform.getObstacle().setName(objName);
                         platform.setTexture(directory.getEntry("platform", Texture.class));
