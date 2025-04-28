@@ -150,6 +150,9 @@
             }
         },
         "level10.tmj": {
+            "expandedObjectLayers": [
+                4
+            ],
             "scale": 0.180796875,
             "selectedLayer": 1,
             "viewCenter": {
@@ -193,8 +196,8 @@
             "scale": 0.180796875,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4800.9679370840895,
-                "y": 2701.9272318727853
+                "x": 4737.360642986778,
+                "y": 2641.0854723014436
             }
         },
         "level7.tmj": {
@@ -206,8 +209,8 @@
             "scale": 0.25,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 2588,
-                "y": 2626
+                "x": 4758,
+                "y": 2658
             }
         },
         "level8.tmj": {
@@ -414,17 +417,17 @@
     ],
     "project": "tiled.tiled-project",
     "recentFiles": [
-        "level7.tmj",
-        "level8.tmj",
+        "level10.tmj",
         "level4.tmj",
+        "level7.tmj",
         "level5.tmj",
+        "level8.tmj",
         "level1.tmj",
         "level2.tmj",
         "level3.tmj",
         "test_map.tmx",
         "EnemyTiles.tsx",
         "GameObjectTiles.tsx",
-        "PlayerTorchTiles.tsx",
-        "test2.tmx"
+        "PlayerTorchTiles.tsx"
     ]
 }
