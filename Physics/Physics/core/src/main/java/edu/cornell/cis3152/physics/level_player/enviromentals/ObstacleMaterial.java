@@ -47,10 +47,10 @@ public class ObstacleMaterial {
                 break;
 
             case "rope":
-                this.flammability = 0.05f;
-                this.burnTimerLimit = 80f;
-                this.ignitionTimerLimit = 8f;
-                this.smokeTimerLimit = 10;
+                this.flammability = 1f;
+                this.burnTimerLimit = 24f;
+                this.ignitionTimerLimit = 22f;
+                this.smokeTimerLimit = 3;
                 break;
 
             case "driedGrass":

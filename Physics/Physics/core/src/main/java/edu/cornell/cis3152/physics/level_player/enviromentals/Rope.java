@@ -9,6 +9,8 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
+import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.JsonValue;
@@ -206,6 +208,8 @@ public class Rope extends ObstacleGroup {
         jointDef.dampingRatio = 0.5f;
         jointDef.collideConnected = false;
 
+        RevoluteJointDef anchorJoint = new RevoluteJointDef();
+
         // Connect each node to its following neighbor.
         for (int i = 0; i < nodes.size() - 1; i++) {
             Body current = nodes.get(i).getObstacle().getBody();
@@ -219,14 +223,14 @@ public class Rope extends ObstacleGroup {
         if (!nodes.isEmpty() && !anchors.isEmpty()) {
             Body leftAnchorBody = anchors.get(0).getObstacle().getBody();
             Body firstNode = nodes.get(0).getObstacle().getBody();
-            jointDef.initialize(leftAnchorBody, firstNode, leftAnchorBody.getPosition());
-            joints.add(world.createJoint(jointDef));
+            anchorJoint.initialize(leftAnchorBody,firstNode,leftAnchorBody.getPosition());
+            joints.add(world.createJoint(anchorJoint));
 
             // Attach right anchor to the last node.
             Body rightAnchorBody = anchors.get(1).getObstacle().getBody();
             Body lastNode = nodes.get(nodes.size() - 1).getObstacle().getBody();
-            jointDef.initialize(rightAnchorBody, lastNode, rightAnchorBody.getPosition());
-            joints.add(world.createJoint(jointDef));
+            anchorJoint.initialize(rightAnchorBody, lastNode, rightAnchorBody.getPosition());
+            joints.add(world.createJoint(anchorJoint));
         }
         return true;
     }
