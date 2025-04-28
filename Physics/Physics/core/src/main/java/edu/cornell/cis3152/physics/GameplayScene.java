@@ -1048,7 +1048,7 @@ public class GameplayScene implements Screen {
                         float x2 = end.getFloat("x") / levelData.getInt("tilewidth");
                         float y2 = (18 * 300 - end.getFloat("y")) / levelData.getInt("tileheight");
 
-                        int depth = 10, piecelen = 10, thickness = 14;
+                        int depth = 10, piecelen = 30, thickness = 14;
                         JsonValue props = end.get("properties");
                         if (props != null) {
                             for (JsonValue prop : props) {

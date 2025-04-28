@@ -165,9 +165,9 @@ public class LightController {
         // Uncomment if you want no overlay dark hue  ⬇️
 //        rayHandler.useDiffuseLight(false);
         // Background light color, original hue ⬇️
-//        rayHandler.setAmbientLight(0.15f, 0.15f, 0.35f, 1f); // same hue, just darker
+        rayHandler.setAmbientLight(0.15f, 0.15f, 0.35f, 1f); // same hue, just darker
         // Background black color ⬇️
-        rayHandler.setAmbientLight(Color.BLACK);
+//        rayHandler.setAmbientLight(Color.BLACK);
         //rayHandler.setBlur(true);
         debug = false;
         initLights(rayHandler);

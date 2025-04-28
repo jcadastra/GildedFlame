@@ -450,11 +450,11 @@ public class CollisionController implements ContactListener {
                     it.remove();
                 } else {
                     float modif;
-                    if (Objects.equals(b.getMaterial().getName(), "rope")) {
-                        modif = (float) (1 / (Math.PI * Math.pow(delta.len(), 4) * 4));
-                    } else {
+//                    if (Objects.equals(b.getMaterial().getName(), "rope")) {
+//                        modif = (float) (1 / (Math.PI * Math.pow(delta.len(), 4) * 4));
+//                    } else {
                         modif = 1;
-                    }
+//                    }
                     sustainedContacts.put(key, (int) (contactTime + modif));
                 }
             }
