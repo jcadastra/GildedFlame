@@ -230,7 +230,7 @@ public class LightController {
                 lightAssignments.clear();
             }
             Fire fire = (Fire) sprite;
-            System.out.println(fireAssignments.get(fire.fireID)==null);
+//            System.out.println(fireAssignments.get(fire.fireID)==null);
             if (fireAssignments.get(fire.fireID)!=light){//only adds fires when it's not already there
 //                System.out.println("add fire!");
                 light.setColor(Color.YELLOW);

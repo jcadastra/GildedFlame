@@ -27,8 +27,26 @@
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
     },
+    "platform-totemOUTLIGHTANIMATION": {
+      "file": "platform/totemOutLightAnimation.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
     "platform-totemIDLEANIMATION": {
       "file": "platform/totemIdleAnimation.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-totemFREEZELEFTANIMATION": {
+      "file": "platform/totemFreezeLeft.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-totemFREEZERIGHTANIMATION": {
+      "file": "platform/totemFreezeRight.png",
       "mipmaps": true,
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
@@ -129,6 +147,12 @@
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
     },
+    "platform-playerDEATH": {
+      "file": "platform/playerDeath.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
     "platform-mothINLIGHTANIMATION": {
       "file": "platform/mothInLightAnimation.png",
       "mipmaps": true,
@@ -148,7 +172,7 @@
       "magfilter": "linear mipmap linear"
     },
     "platform-mothTRANCEANIMATION": {
-      "file": "platform/mothTRANCEAnimation.png",
+      "file": "platform/mothTranceAnimation.png",
       "mipmaps": true,
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
@@ -198,6 +222,8 @@
     },
     "platform-rope-end": "environment/Rope/ropeEnd.png",
     "platform-rope-mid": "environment/Rope/ropeBodyRec.png",
+    "runeBase": "environment/runeBase.png",
+    "runeCharged": "environment/runeCharged.png",
     "platform-torch": "platform/torch.png",
     "platform-rope": "platform/ropebridge.png",
     "platform-barrier": "platform/barrier.png",
@@ -219,6 +245,7 @@
     "level7" : "level7.tmj",
     "level8" : "level8.tmj",
     "level9" : "level9.tmj",
+    "level10": "level10.tmj",
     "test2" : "test2.tmj",
     "test3" : "test3.tmj",
     "test5" : "test5.tmj",

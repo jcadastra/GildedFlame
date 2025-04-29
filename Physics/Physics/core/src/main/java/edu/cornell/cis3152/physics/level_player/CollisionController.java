@@ -233,8 +233,22 @@ public class CollisionController implements ContactListener {
              * While the totem is in light, it changes to the IN_LIGHT state.
              */
             if (isXandY(bd1, bd2, Lighting.class, Totem.class) == 1) {
+                Lighting light = (Lighting) idX(bd1, bd2, Lighting.class);
                 Totem totem = (Totem) idX(bd1, bd2, Totem.class);
-                totem.setState(EnemyState.IN_LIGHT);
+                totem.stopTimer();
+                totem.resetCooldownTimer();
+
+                    if (light.getObstacle().getX() < totem.getObstacle().getX()) {
+                        totem.setFreezeRight(true);
+                        totem.lockFreeze();
+                    } else {
+                        totem.setFreezeRight(false);
+                        totem.lockFreeze();
+                    }
+                    totem.resetFreeze();
+                    totem.setState(EnemyState.IN_LIGHT);
+
+
             }
 
             /**
@@ -343,10 +357,14 @@ public class CollisionController implements ContactListener {
                                 true
                             );
                         } else {
+                            player.die();
+
                             collisionFlags.push(new CollisionFlag("queueFailure"));
                         }
                     }else {
+                        player.die();
                         collisionFlags.push(new CollisionFlag("queueFailure"));
+
                     }
                 }
             }
@@ -544,17 +562,9 @@ public class CollisionController implements ContactListener {
         if (isX(bd1, bd2, Avatar.class) == 1) {
             Avatar t = (Avatar) idX(bd1, bd2, Avatar.class);
             if ((isGround(bd1) || isGround(bd2)) && (((t.getSensorName().equals(fd2) && t != bd1) || (t.getSensorName().equals(fd1) && t != bd2)) && t.getGroundedState().equals(GroundState.GROUNDED))) {
+                System.out.println("565");
                 collisionFlags.push(new CollisionFlag("traciAirborne", bd1 instanceof Avatar ? fix2 : fix1));
             }
-        }
-        if (isXandY (bd1,bd2, "platform", Enemy.class) == 1){
-            Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
-            enemy.setGrounded(false);
-        }
-
-        if (isXandY (bd1,bd2, "floor", Enemy.class) == 1){
-            Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
-            enemy.setGrounded(false );
         }
         /**
          * Totem and Light collision:
@@ -564,8 +574,7 @@ public class CollisionController implements ContactListener {
 
         if (isXandY(bd1, bd2, Lighting.class, Totem.class) == 1) {
             Totem totem = (Totem) idX(bd1, bd2, Totem.class);
-                totem.setState(Enemy.EnemyState.CD);
-            totem.resetFreeze();
+            totem.beginTimer();
         }
 
 
@@ -682,6 +691,18 @@ public class CollisionController implements ContactListener {
         ObstacleSprite bd1 = (ObstacleSprite) body1.getUserData();
         ObstacleSprite bd2 = (ObstacleSprite) body2.getUserData();
 
+
+        if (bd1 instanceof Avatar && ((Avatar) bd1).isDead() ||
+            bd2 instanceof Avatar && ((Avatar) bd2).isDead()) {
+            contact.setEnabled(false);
+        }
+
+        if (isXandY(bd1, bd2, Moth.class, Avatar.class) == 1) {
+            Avatar avatar = (Avatar) idX(bd1, bd2, Avatar.class);
+            if (avatar.isDead() || avatar.getGroundedState() == GroundState.DEAD){
+                contact.setEnabled(false);
+            }
+        }
 
         if (isXandY(bd1, bd2, Totem.class, Avatar.class) == 1) {
             Totem totem = (Totem) idX(bd1, bd2, Totem.class);

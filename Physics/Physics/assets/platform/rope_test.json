@@ -130,7 +130,7 @@
           "speed": 3,
           "size": 0.75,
           "density": 6,
-          "friction": 0.5,
+          "friction": 0.0,
           "attackTimer": 75,
           "attackAnimationTimer": 20,
           "smotherTimer": 300,

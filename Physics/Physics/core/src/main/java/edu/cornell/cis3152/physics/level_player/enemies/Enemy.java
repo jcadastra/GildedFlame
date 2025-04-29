@@ -178,6 +178,10 @@ public class Enemy extends ObstacleSprite {
 
 
     public void update() {
+//        if (this instanceof Totem){
+//            System.out.println(getState() + " | idle: " + ((Totem)this).getIdleFrameCount() + " | cd: "  +
+//                ((Totem)this).getCdFrameCount() + " | reverse: " + ((Totem)this).getReverseFrameCount());
+//        }
         updateRayCast();
         switch (state) {
             case OUT_OF_LIGHT:
