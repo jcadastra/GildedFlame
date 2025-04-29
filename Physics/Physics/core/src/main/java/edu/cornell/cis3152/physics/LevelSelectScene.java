@@ -78,9 +78,9 @@ public class LevelSelectScene implements Screen {
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
 
-        doorWidth = screenWidth * 0.15f;
-        doorHeight = screenHeight * 0.2f;
-        spacing = screenWidth * 0.03f;
+        doorWidth = screenWidth * 0.2f;
+        doorHeight = screenHeight * 0.4f;
+        spacing = screenWidth * 0.001f;
         Texture chamberLabelTexture = new Texture(Gdx.files.internal("ui/chamber_sel.png"));
         Image chamberLabel = new Image(chamberLabelTexture);
         chamberLabel.setSize(screenWidth * 0.5f, screenHeight * 0.1f);
@@ -165,7 +165,7 @@ public class LevelSelectScene implements Screen {
         Texture l_arrow_hov_text = new Texture(Gdx.files.internal("ui/l_arrow_click.png"));
         Image l_arrow = new Image(l_arrow_text);
         l_arrow.setSize(screenWidth * 0.05f, screenHeight * 0.05f);
-        l_arrow.setPosition(screenWidth * 0.01f, screenHeight * 0.25f);
+        l_arrow.setPosition(screenWidth * 0.01f, screenHeight * 0.8f);
         stage.addActor(l_arrow);
 
         // Right arrow textures and image
@@ -173,7 +173,7 @@ public class LevelSelectScene implements Screen {
         Texture r_arrow_hov_text = new Texture(Gdx.files.internal("ui/r_arrow_click.png"));
         Image r_arrow = new Image(r_arrow_text);
         r_arrow.setSize(screenWidth * 0.05f, screenHeight * 0.05f);
-        r_arrow.setPosition(screenWidth * 0.94f, screenHeight * 0.25f);
+        r_arrow.setPosition(screenWidth * 0.94f, screenHeight * 0.8f);
         stage.addActor(r_arrow);
 
         // Create drawables for hover effects

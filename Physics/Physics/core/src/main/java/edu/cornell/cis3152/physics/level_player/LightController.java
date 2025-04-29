@@ -147,7 +147,8 @@ public class LightController {
 
         //Initializes torch light
         //PositionalLight testlight = new PointLight(rayHandler,10,Color.WHITE,100f,10,10);
-        Color lightCol = new Color(1f, 0.92f, 0.6f, 1);
+        //Color lightCol = new Color(1f, 0.92f, 0.6f, 1);
+        Color lightCol = Color.WHITE;
         torchLighting = new PointLight(rayHandler, 100, lightCol,
             5f, points.x, points.y);
         torchLighting.setSoft(false);
