@@ -233,8 +233,22 @@ public class CollisionController implements ContactListener {
              * While the totem is in light, it changes to the IN_LIGHT state.
              */
             if (isXandY(bd1, bd2, Lighting.class, Totem.class) == 1) {
+                Lighting light = (Lighting) idX(bd1, bd2, Lighting.class);
                 Totem totem = (Totem) idX(bd1, bd2, Totem.class);
-                totem.setState(EnemyState.IN_LIGHT);
+                totem.stopTimer();
+                totem.resetCooldownTimer();
+
+                    if (light.getObstacle().getX() < totem.getObstacle().getX()) {
+                        totem.setFreezeRight(true);
+                        totem.lockFreeze();
+                    } else {
+                        totem.setFreezeRight(false);
+                        totem.lockFreeze();
+                    }
+                    totem.resetFreeze();
+                    totem.setState(EnemyState.IN_LIGHT);
+
+
             }
 
             /**
@@ -564,8 +578,7 @@ public class CollisionController implements ContactListener {
 
         if (isXandY(bd1, bd2, Lighting.class, Totem.class) == 1) {
             Totem totem = (Totem) idX(bd1, bd2, Totem.class);
-                totem.setState(Enemy.EnemyState.CD);
-            totem.resetFreeze();
+            totem.beginTimer();
         }
 
 

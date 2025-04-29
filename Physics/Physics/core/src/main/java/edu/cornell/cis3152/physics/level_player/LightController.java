@@ -161,9 +161,9 @@ public class LightController {
 
         torchLighting.setContactFilter(CATEGORY_LIGHT, (short) 0, (short) CATEGORY_ENVIRONMENT);
         //rayHandler.useCustomViewport(viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
-        rayHandler.useDiffuseLight(true);
+//        rayHandler.useDiffuseLight(true);
         // Uncomment if you want no overlay dark hue  ⬇️
-//        rayHandler.useDiffuseLight(false);
+        rayHandler.useDiffuseLight(false);
         // Background light color, original hue ⬇️
 //        rayHandler.setAmbientLight(0.15f, 0.15f, 0.35f, 1f); // same hue, just darker
         // Background black color ⬇️
@@ -229,7 +229,7 @@ public class LightController {
                 lightAssignments.clear();
             }
             Fire fire = (Fire) sprite;
-            System.out.println(fireAssignments.get(fire.fireID)==null);
+//            System.out.println(fireAssignments.get(fire.fireID)==null);
             if (fireAssignments.get(fire.fireID)!=light){//only adds fires when it's not already there
 //                System.out.println("add fire!");
                 light.setColor(Color.YELLOW);
@@ -261,8 +261,8 @@ public class LightController {
                     }
                 }
             }
-        System.out.println("index"+lightIndex);
-        System.out.println(lightInUse[lightIndex]);
+//        System.out.println("index"+lightIndex);
+//        System.out.println(lightInUse[lightIndex]);
             lightIndex = (lightIndex + 1) % maxLights;
         }
 

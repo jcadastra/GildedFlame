@@ -1104,7 +1104,7 @@ public class GameplayScene implements Screen {
                     float y = (18 * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
                     if (objName.contains("light")) {
                         FloatingLight light = new FloatingLight(units,new Vector2(x,y),1,goalPos);
-                        System.out.println("floating light: " + (int)x+","+ (int)y);
+//                        System.out.println("floating light: " + (int)x+","+ (int)y);
                         light.getObstacle().setPosition(x,y);
                         floatingLights.add(light);
                         addSprite(light);
@@ -1408,7 +1408,7 @@ public class GameplayScene implements Screen {
     @SuppressWarnings("unchecked")
     private void updateRunes(float dt) {
         for (Rune rune : runeSet) {
-            System.out.println(rune.getPowerLevel());
+//            System.out.println(rune.getPowerLevel());
             if (!rune.returnInLight()) {
                 rune.dissapatePowerLevel();
             }

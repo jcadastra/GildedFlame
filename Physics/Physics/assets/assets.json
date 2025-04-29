@@ -27,8 +27,26 @@
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
     },
+    "platform-totemOUTLIGHTANIMATION": {
+      "file": "platform/totemOutLightAnimation.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
     "platform-totemIDLEANIMATION": {
       "file": "platform/totemIdleAnimation.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-totemFREEZELEFTANIMATION": {
+      "file": "platform/totemFreezeLeft.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "platform-totemFREEZERIGHTANIMATION": {
+      "file": "platform/totemFreezeRight.png",
       "mipmaps": true,
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
