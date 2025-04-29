@@ -562,17 +562,9 @@ public class CollisionController implements ContactListener {
         if (isX(bd1, bd2, Avatar.class) == 1) {
             Avatar t = (Avatar) idX(bd1, bd2, Avatar.class);
             if ((isGround(bd1) || isGround(bd2)) && (((t.getSensorName().equals(fd2) && t != bd1) || (t.getSensorName().equals(fd1) && t != bd2)) && t.getGroundedState().equals(GroundState.GROUNDED))) {
+                System.out.println("565");
                 collisionFlags.push(new CollisionFlag("traciAirborne", bd1 instanceof Avatar ? fix2 : fix1));
             }
-        }
-        if (isXandY (bd1,bd2, "platform", Enemy.class) == 1){
-            Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
-            enemy.setGrounded(false);
-        }
-
-        if (isXandY (bd1,bd2, "floor", Enemy.class) == 1){
-            Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
-            enemy.setGrounded(false );
         }
         /**
          * Totem and Light collision:

@@ -1473,19 +1473,26 @@ public class GameplayScene implements Screen {
                     }
                     break;
                 case "traciGrounded":
+                    System.out.println("SET GROUNDED");
                     if (avatar.getGroundedState().equals(GroundState.CLIMBING)) {
                         avatar.removeClimbingPhysics();
                     }
                     avatar.setGroundedState(GroundState.GROUNDED);
                     sensorFixtures.add(todo_action.getFixture());
+                    avatar.resetFallTimer();
                     break;
                 case "traciAirborne":
                     sensorFixtures.remove(todo_action.getFixture());
+                    System.out.println("SET AIRBORNE");
+
                     if (sensorFixtures.size == 0) {
                         if (avatar.getGroundedState().equals(GroundState.CLIMBING)) {
                             avatar.removeClimbingPhysics();
                         }
-                        avatar.setGroundedState(GroundState.AIRBORNE);
+
+                    } else {
+                        avatar.resetFallTimer();
+                        avatar.startFallTimer();
                     }
                     break;
                 case "addClimbingJoint":

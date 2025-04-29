@@ -102,6 +102,8 @@ public class Avatar extends ObstacleSprite {
      * Whether the player has torch in hand
      */
     private static boolean hasTorch;
+
+    private int fallTimer = 10;
     /**
      * The initializing data (to avoid magic numbers)
      */
@@ -297,6 +299,25 @@ public class Avatar extends ObstacleSprite {
         fixtureDef.filter.maskBits = CATEGORY_ENVIRONMENT; // Which lights affect it
 
         this.bodyTouchedClimbables = new HashSet<>();
+    }
+
+    public int getFallTimer() {
+        return fallTimer;
+    }
+    public void decrementFallTimer(){
+        fallTimer--;
+    }
+    public void resetFallTimer(){
+        fallTimer = 10;
+    }
+    public void startFallTimer(){
+        if (getFallTimer() == 0){
+            setGroundedState(GroundState.AIRBORNE);
+            resetFallTimer();
+        } else {
+            decrementFallTimer();
+        }
+
     }
 
     /**
@@ -731,6 +752,7 @@ public class Avatar extends ObstacleSprite {
             } else {
                 setIsFalling(0);
             }
+//            System.out.println(getGroundedState() + ": " + getIsFalling());
         }
 
         if (startSwitch) {
@@ -779,6 +801,8 @@ public class Avatar extends ObstacleSprite {
         if (cdFrameCount >= FRAME_DURATION * TOTAL_FRAMES) {
             cdFrameCount = 0;
         }
+
+
         super.update(dt);
     }
 
@@ -853,8 +877,7 @@ public class Avatar extends ObstacleSprite {
                     animationTexture = hasTorch ? animationTextureJumpTorchUp : animationTextureJumpNoTorchUp;
                     batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits() * 1.5f, srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, !isFacingRight(), false);
             }
-
-        } else if (groundState == GroundState.GROUNDED && getMovement() != null && Math.abs(getMovement().x) > 0.001f) {
+        }else if (groundState == GroundState.GROUNDED && getMovement() != null && Math.abs(getMovement().x) > 0.001f) {
             cdFrameCount++;
             frameIndex = (cdFrameCount / MOVEMENT_FRAME_DURATION) % TOTAL_FRAMES;
             srcIndex = frameIndex * FRAME_WIDTH;
