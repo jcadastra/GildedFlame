@@ -147,6 +147,12 @@
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
     },
+    "platform-playerDEATH": {
+      "file": "platform/playerDeath.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
     "platform-mothINLIGHTANIMATION": {
       "file": "platform/mothInLightAnimation.png",
       "mipmaps": true,

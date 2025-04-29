@@ -1160,7 +1160,9 @@ public class GameplayScene implements Screen {
             countdown--;
         } else if (countdown == 0) {
             if (failed) {
-                reset();
+                pause();
+                listener.exitScreen(this, EXIT_QUIT);
+                return false;
             } else if (complete) {
                 pause();
                 listener.exitScreen(this, EXIT_NEXT);

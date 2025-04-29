@@ -161,9 +161,9 @@ public class LightController {
 
         torchLighting.setContactFilter(CATEGORY_LIGHT, (short) 0, (short) CATEGORY_ENVIRONMENT);
         //rayHandler.useCustomViewport(viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
-//        rayHandler.useDiffuseLight(true);
+        rayHandler.useDiffuseLight(true);
         // Uncomment if you want no overlay dark hue  ⬇️
-        rayHandler.useDiffuseLight(false);
+//        rayHandler.useDiffuseLight(false);
         // Background light color, original hue ⬇️
 //        rayHandler.setAmbientLight(0.15f, 0.15f, 0.35f, 1f); // same hue, just darker
         // Background black color ⬇️

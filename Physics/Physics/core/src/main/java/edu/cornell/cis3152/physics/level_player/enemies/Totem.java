@@ -240,12 +240,13 @@ public boolean locked = false;
         resetReverseFrames();
     }
 
+
+
     @Override
     public void draw(SpriteBatch batch) {
         float drawX = obstacle.getX() - getWidth() / 2f;
         float drawY = obstacle.getY() - getHeight() / 2f;
         int srcIndex;
-        System.out.println(getState() + ": ");
         switch (getState()) {
             case CD:
                 srcIndex = frameIndex * FRAME_SIZE;
@@ -258,7 +259,6 @@ public boolean locked = false;
                     srcIndex = reverseFrameIndex * FRAME_SIZE;
                     batch.draw(transitionAnimationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits(), srcIndex, 0, FRAME_SIZE, FRAME_SIZE, isFacingRight(), false);
                 } else {
-                    System.out.println(" 261 ");
                     srcIndex = Math.min(frameIndex, FREEZE_TOTAL_FRAMES - 1) * FRAME_SIZE;
                     if (freezeRight && isFacingRight()){
                         batch.draw(freezeLeftAnimationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits(), srcIndex, 0, FRAME_SIZE, FRAME_SIZE, false, false);
