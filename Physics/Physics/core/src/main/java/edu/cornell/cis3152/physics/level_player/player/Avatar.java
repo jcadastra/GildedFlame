@@ -854,7 +854,7 @@ public class Avatar extends ObstacleSprite {
                     batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits() * 1.5f, srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, !isFacingRight(), false);
             }
 
-        } else if (getMovement() != null && !getMovement().epsilonEquals(0, 0)) {
+        } else if (groundState == GroundState.GROUNDED && getMovement() != null && Math.abs(getMovement().x) > 0.001f) {
             cdFrameCount++;
             frameIndex = (cdFrameCount / MOVEMENT_FRAME_DURATION) % TOTAL_FRAMES;
             srcIndex = frameIndex * FRAME_WIDTH;
