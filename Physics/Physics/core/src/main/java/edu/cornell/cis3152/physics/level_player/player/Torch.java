@@ -91,7 +91,7 @@ public class Torch extends EnhancedObstacleSprite {
      *
      * This method should be called after the force attribute is set.
      */
-    public void applyThrowForce(int direc) {
+    public void applyThrowForce(int direc, float timeTillGround) {
         if (!obstacle.isActive()) {
             return;
         }
@@ -99,7 +99,14 @@ public class Torch extends EnhancedObstacleSprite {
         Body body = obstacle.getBody();
         Vector2 appliedForce = getThrowForce(direc);
         body.applyLinearImpulse(appliedForce,obstacle.getPosition(),true);
-        body.applyAngularImpulse(data.getFloat("angular_force") * direc,true);
+        body.applyAngularImpulse(data.getFloat("angular_force") * -direc,true);
+
+        float av = body.getAngularVelocity() * (float) (180/(Math.PI));
+        float tmp = (av * timeTillGround);
+        float x = (float) (180*(Math.round((tmp)/180)));
+        float spinNum = x % 90 == 0 ?  x : x-(45 * direc);
+        System.out.println(timeTillGround+","+ av +", " +tmp + ", " +x+ ", " + spinNum);
+        body.setAngularVelocity((spinNum) * (float) ((Math.PI)/180));
     }
 
     public Vector2 getThrowForce(int direc) {
