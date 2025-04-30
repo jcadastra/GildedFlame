@@ -101,12 +101,12 @@ public class Torch extends EnhancedObstacleSprite {
         body.applyLinearImpulse(appliedForce,obstacle.getPosition(),true);
         body.applyAngularImpulse(data.getFloat("angular_force") * -direc,true);
 
-        float av = body.getAngularVelocity() * 60/360;
-        float tmp = (av * timeTillGround + -direc) * .5f;
-        float x = (float) (.25*(Math.round((tmp)/.25)));
-        float spinNum = x % .5f == 0 ? x+(.25f * direc) : x;
-        System.out.println(av +", " +tmp + ", " +x+ ", " + spinNum);
-        body.setAngularVelocity(spinNum * 6);
+        float av = body.getAngularVelocity() * (float) (180/(Math.PI));
+        float tmp = (av * timeTillGround);
+        float x = (float) (180*(Math.round((tmp)/180)));
+        float spinNum = x % 90 == 0 ?  x : x-(45 * direc);
+        System.out.println(timeTillGround+","+ av +", " +tmp + ", " +x+ ", " + spinNum);
+        body.setAngularVelocity((spinNum) * (float) ((Math.PI)/180));
     }
 
     public Vector2 getThrowForce(int direc) {
