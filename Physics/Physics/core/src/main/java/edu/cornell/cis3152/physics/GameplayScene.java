@@ -25,6 +25,7 @@
 package edu.cornell.cis3152.physics;
 
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
@@ -34,7 +35,6 @@ import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectSet;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import edu.cornell.cis3152.physics.level_player.CollisionController;
 import edu.cornell.cis3152.physics.level_player.EventHandler;
 import edu.cornell.cis3152.physics.level_player.FireController;
@@ -55,6 +55,7 @@ import edu.cornell.cis3152.physics.level_player.utils.ObstacleGroup;
 import edu.cornell.cis3152.physics.level_player.utils.RainFlag;
 import edu.cornell.cis3152.physics.level_player.utils.TweenElement;
 
+import java.io.FileWriter;
 import java.util.*;
 
 import com.badlogic.gdx.*;
@@ -556,11 +557,13 @@ public class GameplayScene implements Screen {
             world.dispose();
         }
 
-        world = new World(gravity, false);
-        world.setContactListener(contactListener);
         contactListener.reset();
         setComplete(false);
         setFailure(false);
+        world = new World(gravity, false);
+//        world.step(1/60f, WORLD_VELOC, WORLD_POSIT);
+        world.setContactListener(contactListener);
+
         loadLevel(levelName, "rope_test");
     };
 
@@ -587,10 +590,12 @@ public class GameplayScene implements Screen {
         sprites.clear();
         addQueue.clear();
         if (world != null) {
+            world.clearForces();
             world.dispose();
         }
 
         world = new World(gravity, false);
+//        world.step(1/60f, WORLD_VELOC, WORLD_POSIT);
         world.setContactListener(contactListener);
         setComplete(false);
         setFailure(false);
@@ -721,7 +726,7 @@ public class GameplayScene implements Screen {
                         torch = new Torch(units, constants.get("torch"));
                         torch.getObstacle().setPosition(pos[0], pos[1]);
                         torch.setTexture(texture);
-                        torch.setMaterial(new ObstacleMaterial("torch", null));
+                        torch.setMaterial(new ObstacleMaterial("torch"));
                         addSprite(torch);
                         l.getObstacle().setPosition(torch.getObstacle().getPosition());
                         torchFire.getObstacle().setPosition(new Vector2(
@@ -774,7 +779,7 @@ public class GameplayScene implements Screen {
                         platform.getObstacle().setName(objName);
                         platform.setTexture(directory.getEntry("platform", Texture.class));
                         platform.getObstacle().setPhysicsUnits(units);
-                        platform.setMaterial(new ObstacleMaterial("platform", null));
+                        platform.setMaterial(new ObstacleMaterial("platform"));
                         platform.getObstacle().setAngle((float) (rotation*Math.PI/180f));
                         addSprite(platform);
                     } else if (objName.contains("ambientLight")) {
@@ -787,10 +792,10 @@ public class GameplayScene implements Screen {
                         box.getObstacle().setName(objName);
                         box.getObstacle().setPhysicsUnits(units);
                         if (objName.contains("non")) {
-                            box.setMaterial(new ObstacleMaterial("stone", null));
+                            box.setMaterial(new ObstacleMaterial("stone"));
                             box.setTexture(directory.getEntry("nonburnable", Texture.class));
                         } else {
-                            box.setMaterial(new ObstacleMaterial("wood", null));
+                            box.setMaterial(new ObstacleMaterial("wood"));
                             box.setTexture(directory.getEntry("burnable", Texture.class));
                         }
                         box.getObstacle().setDensity(1f );
@@ -810,17 +815,16 @@ public class GameplayScene implements Screen {
                                     break;
                             }
                         }
-                    } else if (objName.contains("BackgroundBROKEN")) {
-                        Texture temp = directory.getEntry(objName, Texture.class);
-                        temp.setWrap(TextureWrap.Repeat,TextureWrap.Repeat);
-
-                        GameObject decoration = new GameObject(0,0, bounds.x, bounds.y, units, false);
-                        decoration.getObstacle().setSensor(true);  // set as sensor
-                        decoration.getObstacle().setBodyType(BodyType.StaticBody);
-                        decoration.setTexture(temp);
-                        decoration.getObstacle().setName(objName);
-
-                        addSprite(decoration);
+                    } else if (objName.contains("Background")) {
+                        GameObject background = new GameObject(0, 0, width, height, units, true);
+                        background.getObstacle().setSensor(true);
+                        background.getObstacle().setBodyType(BodyDef.BodyType.StaticBody);
+                        background.getObstacle().setName(objName);
+                        Texture backGroundTexture = directory.getEntry(objName, Texture.class);
+                        TextureRegion region = new TextureRegion(backGroundTexture);
+                        region.setRegion(0, 0, backGroundTexture.getWidth() *  (int)(width / 2), backGroundTexture.getHeight() * (int)(height / 2));
+                        background.setTextureRegion(region);
+                        addSprite(background);
                     } else {
                         if (objName.matches("\\d+")) {
                             ropeAnchors.put(objName, object);
@@ -1048,7 +1052,7 @@ public class GameplayScene implements Screen {
                         float x2 = end.getFloat("x") / levelData.getInt("tilewidth");
                         float y2 = (18 * 300 - end.getFloat("y")) / levelData.getInt("tileheight");
 
-                        int depth = 10, piecelen = 20, thickness = 14;
+                        int depth = 10, piecelen = 25, thickness = 14;
                         JsonValue props = end.get("properties");
                         if (props != null) {
                             for (JsonValue prop : props) {
@@ -1064,7 +1068,7 @@ public class GameplayScene implements Screen {
                         texture = directory.getEntry( "platform-rope-end", Texture.class );
                         Texture middle_texture = directory.getEntry( "platform-rope-mid", Texture.class );
                         Rope rope = new Rope(new Vector2(x1, y1), new Vector2(x2, y2), depth, thickness, piecelen, units, levelInfo.get("ropes").get(0));
-                        rope.setTextures(texture, middle_texture);
+                        rope.blanketSetTextures(texture, middle_texture);
                         addSpriteGroup(rope);
                     }
 
@@ -1115,6 +1119,7 @@ public class GameplayScene implements Screen {
         for (FloatingLight light : floatingLights) {
             lightController.attachAmbientLight(light);
         }
+        debugPrintOut();
     }
     /**
      * Returns whether to process the update loop
@@ -1408,7 +1413,7 @@ public class GameplayScene implements Screen {
     @SuppressWarnings("unchecked")
     private void updateRunes(float dt) {
         for (Rune rune : runeSet) {
-            System.out.println(rune.getPowerLevel());
+//            System.out.println(rune.getPowerLevel());
             if (!rune.returnInLight()) {
                 rune.dissapatePowerLevel();
             }
@@ -1992,6 +1997,56 @@ public class GameplayScene implements Screen {
      */
     public void setScreenListener(ScreenListener listener) {
         this.listener = listener;
+    }
+
+    int counter = 0;
+    public void debugPrintOut() {
+        try {
+            FileWriter myWriter = new FileWriter("debugOut" + counter + ".txt");
+
+            myWriter.write(world.getGravity() + ", ");
+            myWriter.write(world.getFixtureCount() + ", ");
+            myWriter.write(world.getBodyCount() + ", ");
+            myWriter.write(world.getContactCount() + ", ");
+            myWriter.write("\n");
+
+            for (ObstacleSprite sprite : sprites) {
+                myWriter.write(sprite.getName() + ", ");
+                myWriter.write(sprite.getObstacle().getPosition().toString() + ", ");
+                myWriter.write(sprite.getObstacle().getLinearVelocity().toString() + ", ");
+                myWriter.write((sprite.getObstacle().getAngle()) + ", ");
+                myWriter.write((sprite.getObstacle().getAngularVelocity()) + ", ");
+                myWriter.write(sprite.getObstacle().getBody().isAwake() + ", ");
+                myWriter.write(sprite.getObstacle().getBody().isActive() + ", ");
+                myWriter.write(sprite.getObstacle().getBody().getMass() + ", ");
+                myWriter.write(sprite.getObstacle().getBody().getInertia() + ", ");
+                myWriter.write(sprite.getObstacle().getBody().getType().toString() + ", ");
+                for (Fixture fixture : sprite.getObstacle().getBody().getFixtureList()) {
+                    myWriter.write(fixture.getDensity() + ", ");
+                    myWriter.write(fixture.getFriction() + ", ");
+                    myWriter.write(fixture.getRestitution() + ", ");
+                    myWriter.write(fixture.isSensor() + ", ");
+                }
+                myWriter.write("\n");
+//                myWriter.write(sprite.getObstacle().getBody().getMassData().toString() + "\n");
+//                myWriter.write(sprite.getObstacle().getBody().getUserData().toString() + "\n");
+            }
+
+            Array<Joint> temp = new Array<>();
+            world.getJoints(temp);
+            for (Joint joint : temp) {
+                myWriter.write(((ObstacleSprite) (joint.getBodyA().getUserData())).getName() + ", ");
+                myWriter.write(((ObstacleSprite) (joint.getBodyB().getUserData())).getName() + ", ");
+                myWriter.write(joint.getAnchorA() + ", ");
+                myWriter.write(joint.getAnchorB() + ", ");
+                myWriter.write(joint.getCollideConnected() + ", ");
+                myWriter.write(joint.getType().toString() + ", ");
+                myWriter.write("\n");
+            }
+
+            counter++;
+            myWriter.close();
+        } catch (Exception e) {System.out.println("failed pritnout " + counter +", " + e.getMessage());}
     }
 
 }

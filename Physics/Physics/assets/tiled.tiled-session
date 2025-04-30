@@ -48,8 +48,8 @@
             "scale": 0.147546875,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4791.697553743515,
-                "y": 1582.5479190935089
+                "x": 4795.08630731759,
+                "y": 1589.3254262416606
             }
         },
         "C:/Users/ericj/Downloads/test5.tmx": {
@@ -91,8 +91,8 @@
         },
         "example_level.tmj": {
             "expandedObjectLayers": [
-                5,
-                6
+                6,
+                5
             ],
             "scale": 0.25,
             "selectedLayer": 4,
@@ -103,9 +103,9 @@
         },
         "example_level.tmx": {
             "expandedObjectLayers": [
-                4,
                 2,
-                5
+                5,
+                4
             ],
             "scale": 0.125,
             "selectedLayer": 1,
@@ -142,11 +142,14 @@
             }
         },
         "level1.tmj": {
-            "scale": 0.1616,
-            "selectedLayer": 2,
+            "expandedObjectLayers": [
+                7
+            ],
+            "scale": 0.3208,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 3211.633663366337,
-                "y": 5040.222772277229
+                "x": 4074.1895261845393,
+                "y": 4886.2219451371575
             }
         },
         "level10.tmj": {
@@ -178,10 +181,10 @@
         },
         "level4.tmj": {
             "scale": 0.180796875,
-            "selectedLayer": 4,
+            "selectedLayer": 0,
             "viewCenter": {
                 "x": 4734.595108460808,
-                "y": 3548.1807968196354
+                "y": 3542.649727767696
             }
         },
         "level5.tmj": {
@@ -202,15 +205,15 @@
         },
         "level7.tmj": {
             "expandedObjectLayers": [
-                4,
+                6,
                 5,
-                6
+                4
             ],
-            "scale": 0.25,
+            "scale": 0.1445,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 4792,
-                "y": 2694
+                "x": 3128.0276816609,
+                "y": 3802.7681660899657
             }
         },
         "level8.tmj": {
@@ -234,9 +237,9 @@
         },
         "sample.tmj": {
             "expandedObjectLayers": [
+                6,
                 2,
-                5,
-                6
+                5
             ],
             "scale": 0.1414,
             "selectedLayer": 4,
@@ -329,10 +332,10 @@
         },
         "test7.tmj": {
             "expandedObjectLayers": [
-                4,
                 2,
                 5,
-                3
+                3,
+                4
             ],
             "scale": 0.125,
             "selectedLayer": 3,
@@ -367,9 +370,9 @@
         },
         "test_map.tmx": {
             "expandedObjectLayers": [
-                4,
                 2,
-                3
+                3,
+                4
             ],
             "scale": 0.5,
             "selectedLayer": 2,

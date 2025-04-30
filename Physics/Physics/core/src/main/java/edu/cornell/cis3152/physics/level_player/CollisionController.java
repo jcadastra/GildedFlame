@@ -455,7 +455,6 @@ public class CollisionController implements ContactListener {
                     } else {
                         modif = 1;
                     }
-                    System.out.println(contactTime + modif);
                     sustainedContacts.put(key, (int) (contactTime + modif));
                 }
             }
