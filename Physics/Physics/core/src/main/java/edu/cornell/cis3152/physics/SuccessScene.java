@@ -25,7 +25,8 @@ public class SuccessScene implements Screen {
     private Stage stage;
     private Skin skin;
     private Texture bgTexture;
-    private boolean visible = false;;
+    private boolean visible = false;
+    private boolean startClicked = false;
     private ScreenListener listener;
     private Sound clickSound;
     private InputController inputController = InputController.getInstance();
@@ -65,8 +66,8 @@ public class SuccessScene implements Screen {
         TextureRegionDrawable chambersButtOver = new TextureRegionDrawable(new TextureRegion(chambersClickText));
 
         ImageButton.ImageButtonStyle chambersButt = new ImageButton.ImageButtonStyle();
-        chambersButt.up = replayButtUp;
-        chambersButt.over = replayButtOver;
+        chambersButt.up = chambersButtUp;
+        chambersButt.over = chambersButtOver;
 
         ImageButton replayButton = new ImageButton(replayButt);
         ImageButton contButton = new ImageButton(contButt);
@@ -74,21 +75,61 @@ public class SuccessScene implements Screen {
 
         contButton.setSize(screenWidth * 0.2f, screenHeight * 0.06f);
         contButton.setPosition(
-                screenWidth * 0.50f,
-                screenHeight * 0.5f
+                screenWidth * 0.40f,
+                screenHeight * 0.4f
         );
 
         replayButton.setSize(screenWidth * 0.2f, screenHeight * 0.06f);
         replayButton.setPosition(
-                screenWidth * 0.50f,
-                screenHeight * 0.4f
+                screenWidth * 0.40f,
+                screenHeight * 0.3f
         );
 
         chambersButton.setSize(screenWidth * 0.2f, screenHeight * 0.06f);
         chambersButton.setPosition(
-                screenWidth * 0.50f,
-                screenHeight * 0.3f
+                screenWidth * 0.40f,
+                screenHeight * 0.2f
         );
+
+        contButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+            @Override
+            public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
+                                     float x, float y, int pointer, int button) {
+                System.out.println("ImageButton pressed");
+                clickSound.play();
+                startClicked = true;
+                if (listener != null) {
+                    listener.exitScreen(SuccessScene.this, 1);
+                }
+                return true;
+            }
+        });
+        replayButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+            @Override
+            public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
+                                     float x, float y, int pointer, int button) {
+                clickSound.play();
+                System.out.println("ImageButton pressed");
+                startClicked = true;
+                if (listener != null) {
+                    listener.exitScreen(SuccessScene.this, 1);
+                }
+                return true;
+            }
+        });
+        chambersButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+            @Override
+            public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
+                                     float x, float y, int pointer, int button) {
+                clickSound.play();
+                System.out.println("ImageButton pressed");
+                startClicked = true;
+                if (listener != null) {
+                    listener.exitScreen(SuccessScene.this, 1);
+                }
+                return true;
+            }
+        });
 
         stage.addActor(contButton);
         stage.addActor(replayButton);
@@ -97,15 +138,28 @@ public class SuccessScene implements Screen {
         Texture topTexture = new Texture(Gdx.files.internal("ui/chamber_explored.png"));
         Image topImage = new Image(topTexture);
 
-        topImage.setSize(screenWidth * 0.3f, screenHeight * 0.2f);
+        topImage.setSize(screenWidth * 0.66f, screenHeight * 0.1f);
 
         topImage.setPosition(
-                screenWidth * 0.50f,
+                screenWidth * 0.17f,
                 screenHeight * 0.65f
         );
 
         // Add the image actor to the stage
         stage.addActor(topImage);
+
+        Texture treasureTexture = new Texture(Gdx.files.internal("ui/treasureGlow.gif"));
+        Image treasureImage = new Image(treasureTexture);
+
+        treasureImage.setSize(screenWidth * 0.08f, screenHeight * 0.1f);
+
+        treasureImage.setPosition(
+                screenWidth * 0.46f,
+                screenHeight * 0.5f
+        );
+
+        // Add the image actor to the stage
+        stage.addActor(treasureImage);
     }
 
     @Override

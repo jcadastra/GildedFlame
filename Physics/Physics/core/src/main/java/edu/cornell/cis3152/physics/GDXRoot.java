@@ -184,13 +184,9 @@ public class GDXRoot extends Game implements ScreenListener {
             soundEngine.registerSoundEffect("torchThrow", directory.getEntry("torchThrow", SoundEffect.class));
 
             // Register music and start a loop.
-            //soundEngine.registerMusic("eerie1", directory.getEntry("eerie", Music.class));
-            //soundEngine.registerMusic("eerieCriminal", directory.getEntry("eerieCriminal", Music.class));
             //soundEngine.registerMusic("tenseSoundscape", directory.getEntry("tenseSoundscape", Music.class));
             soundEngine.registerMusic("in_game", directory.getEntry("in_game_music", Music.class));
             ArrayList<String> temp = new ArrayList<>();
-            //temp.add("eerieCriminal");
-            //temp.add("eerie1");
             temp.add("in_game");
             soundEngine.startMusicLoop(temp);
 
@@ -230,6 +226,10 @@ public class GDXRoot extends Game implements ScreenListener {
                 temp.add("menu_music");
                 soundEngine.startMusicLoop(temp);
                 return;
+            } else if (exitCode == GameplayScene.EXIT_SUCCESS) {
+                SuccessScene success = new SuccessScene();
+                success.setScreenListener(this);
+                setScreen(success);
             }
             // Handle exit from the main menu.
             else if (screen instanceof MainMenuScreen) {
