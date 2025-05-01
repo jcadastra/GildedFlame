@@ -761,9 +761,8 @@ public class GameplayScene implements Screen {
                     } else if (objName.contains("goaldoor")) {
                         texture = directory.getEntry("treasure", Texture.class);
                         System.out.println("goal door texture: " + texture);
-                        float size = 1f;
 
-                        GameObject goalDoor = new GameObject(x, y, size * 1.47f, size, units, true);
+                        GameObject goalDoor = new GameObject(x, y, 1.47f, 1, units, true);
                         goalDoor.getObstacle().setSensor(true);
                         goalDoor.getObstacle().setBodyType(BodyType.StaticBody);
                         goalDoor.getObstacle().setName("goalDoor");
@@ -862,7 +861,6 @@ public class GameplayScene implements Screen {
                     String objName = object.getString("name", "unnamed");
                     float x = object.getFloat("x") / levelData.getInt("tilewidth");
                     float y = (18 * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
-                    float[] pos = new float[]{x, y};
                      if (objName.contains("rune")) {
                         boolean hasMoveEvent = false;
                         boolean hasRotateEvent = false;
@@ -911,14 +909,15 @@ public class GameplayScene implements Screen {
 
                         String finalTargetName = targetName;
                         ObstacleSprite target = sprites.stream().filter(sprite -> sprite.getName().equals(finalTargetName)).findFirst().orElse(null);
-
-                        Rune rune = new Rune(x,y, units, thresholds);
-                        rune.setTexture(directory.getEntry("tablet", Texture.class));
+                        Texture textureRune = directory.getEntry("runeBase", Texture.class);
+                        float rotation = object.getFloat("rotation");
+                        Rune rune = new Rune(x,y, textureRune.getWidth() / 300f, textureRune.getHeight() / 300f, 0, units, thresholds, directory.getEntry("runeCharged", Texture.class));
+//                        rune.getObstacle().setPhysicsUnits(units);
+                        rune.setTexture(textureRune);
                         addSprite(rune);
                         runeSet.add(rune);
 
                         if (hasMoveEvent) {
-                            System.out.println("move event detected");
                             if (platformStartPos == null) {
                                 platformStartPos = new Vector2(target.getObstacle().getPosition());
                             }
@@ -929,7 +928,6 @@ public class GameplayScene implements Screen {
                         }
 
                         if (hasRotateEvent) {
-                            System.out.println("rotatto event detected");
                             if (startDegree == Integer.MAX_VALUE) {
                                 startDegree = target.getObstacle().getAngle();
                             } else {
@@ -1087,7 +1085,7 @@ public class GameplayScene implements Screen {
         }
         torchArc = new ArrayList<>();
         for (int i = 0; i < dotTorchArcCount / deltaTorchArc; i++) {
-            WheelObstacle temp = new WheelObstacle(-1,-1, 0.4f/32f * units);
+            WheelObstacle temp = new WheelObstacle(-1,-1, 0.35f/32f * units);
             temp.setBodyType(BodyType.StaticBody);
             ObstacleSprite tracker = new ObstacleSprite(temp);
             tracker.getObstacle().setPhysicsUnits(phyiscsUnits);
@@ -1128,7 +1126,7 @@ public class GameplayScene implements Screen {
         for (FloatingLight light : floatingLights) {
             lightController.attachAmbientLight(light);
         }
-        debugPrintOut();
+//        debugPrintOut();
     }
     /**
      * Returns whether to process the update loop
@@ -1208,7 +1206,7 @@ public class GameplayScene implements Screen {
      */
     public void update(float dt) {
         soundEngine.tendToMusicLoop();
-        System.out.println(Gdx.graphics.getFramesPerSecond());
+//        System.out.println(Gdx.graphics.getFramesPerSecond());
 
         updateRunes(dt);
         supplementaryCollisionActions();

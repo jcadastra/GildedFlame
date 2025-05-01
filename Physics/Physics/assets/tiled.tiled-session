@@ -1,5 +1,5 @@
 {
-    "activeFile": "level10.tmj",
+    "activeFile": "sample.tmj",
     "expandedProjectPaths": [
         "."
     ],
@@ -80,6 +80,14 @@
             "scaleInDock": 0.12,
             "scaleInEditor": 1
         },
+        "aaa.tmj": {
+            "scale": 0.180796875,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 4798.2024025581195,
+                "y": 2696.396162820845
+            }
+        },
         "earthtile.tsx": {
             "dynamicWrapping": false,
             "scaleInDock": 1,
@@ -91,8 +99,8 @@
         },
         "example_level.tmj": {
             "expandedObjectLayers": [
-                6,
-                5
+                5,
+                6
             ],
             "scale": 0.25,
             "selectedLayer": 4,
@@ -167,8 +175,8 @@
             "scale": 0.180796875,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 298.6777288047706,
-                "y": 2696.396162820846
+                "x": 4798.2024025581195,
+                "y": 2696.396162820845
             }
         },
         "level2.tmj": {
@@ -213,15 +221,15 @@
         },
         "level7.tmj": {
             "expandedObjectLayers": [
+                5,
                 6,
-                4,
-                5
+                4
             ],
             "scale": 0.1445,
-            "selectedLayer": 0,
+            "selectedLayer": 6,
             "viewCenter": {
-                "x": 9280.276816608997,
-                "y": 2986.1591695501734
+                "x": 4799.307958477509,
+                "y": 2702.42214532872
             }
         },
         "level8.tmj": {
@@ -240,15 +248,15 @@
             "scale": 0.1703,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 293.59953024075094,
-                "y": 2692.307692307692
+                "x": 4794.480328831473,
+                "y": 2704.051673517322
             }
         },
         "sample.tmj": {
             "expandedObjectLayers": [
-                6,
+                5,
                 2,
-                5
+                6
             ],
             "scale": 0.1414,
             "selectedLayer": 4,
@@ -291,8 +299,8 @@
             "scale": 0.0625,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 4784,
-                "y": 2696
+                "x": 4792,
+                "y": 2712
             }
         },
         "test3.tmj": {
@@ -418,7 +426,9 @@
         "example_level2.tmj",
         "sample.tmj",
         "level9.tmj",
-        "level10.tmj"
+        "level10.tmj",
+        "level7.tmj",
+        "aaa.tmj"
     ],
     "project": "tiled.tiled-project",
     "recentFiles": [
@@ -431,8 +441,8 @@
         "example_level.tmj",
         "test2.tmj",
         "example_level2.tmj",
-        "sample.tmj",
-        "level9.tmj",
+        "aaa.tmj",
+        "level7.tmj",
         "level10.tmj"
     ]
 }

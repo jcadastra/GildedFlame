@@ -405,7 +405,6 @@ public class FireController {
 
         Smoke smoke = new Smoke(fire.getObstacle().getPosition().x, fire.getObstacle().getPosition().y + fire.getRadius()/1.5f,
             fire.getObstacle().getPhysicsUnits(), new Vector2((rand.nextFloat()-.5f) * 2,1f));
-        smoke.getObstacle().setName("smoke");
         smoke.setSource(fire);
         ObstacleSprite smokeObj = new ObstacleSprite(smoke.getObstacle());
         smokeObj.getObstacle().setUserData(smokeObj);
