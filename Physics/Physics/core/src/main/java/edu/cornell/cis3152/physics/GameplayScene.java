@@ -1258,12 +1258,8 @@ public class GameplayScene implements Screen {
         }
 
         if (input.getThrowing() && avatar.getHasTorch() && activeTorchJoint != null) {
-            avatar.setHasTorch(false);
-            world.destroyJoint(activeTorchJoint);
-            activeTorchJoint = null;
+            dropTorchHelper();
             torch.applyThrowForce(avatar.isFacingRight() ? 1 : -1, expectedDTForTorchToHitGround);
-            torch.resetPickUp();
-            torch.getObstacle().setSensor(false);
             soundEngine.throwTorch();
         }
 
@@ -1296,6 +1292,14 @@ public class GameplayScene implements Screen {
 
         }
 
+    }
+
+    public void dropTorchHelper() {
+        avatar.setHasTorch(false);
+        world.destroyJoint(activeTorchJoint);
+        activeTorchJoint = null;
+        torch.resetPickUp();
+        torch.getObstacle().setSensor(false);
     }
 
 
@@ -1490,11 +1494,7 @@ public class GameplayScene implements Screen {
                     break;
                 case "forceDropTorch":
                     if (activeTorchJoint != null) {
-                        avatar.setHasTorch(false);
-                        world.destroyJoint(activeTorchJoint);
-                        activeTorchJoint = null;
-                        torch.resetPickUp();
-                        torch.getObstacle().setSensor(false);
+                        dropTorchHelper();
                         torch.getObstacle().setLinearVelocity(Vector2.Zero);
                     }
                     break;
