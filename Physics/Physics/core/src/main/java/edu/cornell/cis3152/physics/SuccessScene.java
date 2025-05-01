@@ -34,7 +34,65 @@ public class SuccessScene implements Screen {
     public SuccessScene() {
         stage = new Stage(new ScreenViewport());
         skin = new Skin();
+        createBasicUI();
+    }
 
+    private void createBasicUI() {
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
+
+        Texture contText = new Texture(Gdx.files.internal("ui/contbutt.png"));
+        Texture contClickText = new Texture(Gdx.files.internal("ui/contButtClick.png"));
+        TextureRegionDrawable contButtUp = new TextureRegionDrawable(new TextureRegion(contText));
+        TextureRegionDrawable contButtOver = new TextureRegionDrawable(new TextureRegion(contClickText));
+
+        ImageButton.ImageButtonStyle contButt = new ImageButton.ImageButtonStyle();
+        contButt.up = contButtUp;
+        contButt.over = contButtOver;
+
+        Texture replayText = new Texture(Gdx.files.internal("ui/replayButt.png"));
+        Texture replayClickText = new Texture(Gdx.files.internal("ui/replayButtClick.png"));
+        TextureRegionDrawable replayButtUp = new TextureRegionDrawable(new TextureRegion(replayText));
+        TextureRegionDrawable replayButtOver = new TextureRegionDrawable(new TextureRegion(replayClickText));
+
+        ImageButton.ImageButtonStyle replayButt = new ImageButton.ImageButtonStyle();
+        replayButt.up = replayButtUp;
+        replayButt.over = replayButtOver;
+
+        Texture chambersText = new Texture(Gdx.files.internal("ui/chambersButt.png"));
+        Texture chambersClickText = new Texture(Gdx.files.internal("ui/chambersButtClick.png"));
+        TextureRegionDrawable chambersButtUp = new TextureRegionDrawable(new TextureRegion(chambersText));
+        TextureRegionDrawable chambersButtOver = new TextureRegionDrawable(new TextureRegion(chambersClickText));
+
+        ImageButton.ImageButtonStyle chambersButt = new ImageButton.ImageButtonStyle();
+        chambersButt.up = replayButtUp;
+        chambersButt.over = replayButtOver;
+
+        ImageButton replayButton = new ImageButton(replayButt);
+        ImageButton contButton = new ImageButton(contButt);
+        ImageButton chambersButton = new ImageButton(chambersButt);
+
+        contButton.setSize(screenWidth * 0.2f, screenHeight * 0.06f);
+        contButton.setPosition(
+                screenWidth * 0.50f,
+                screenHeight * 0.5f
+        );
+
+        replayButton.setSize(screenWidth * 0.2f, screenHeight * 0.06f);
+        replayButton.setPosition(
+                screenWidth * 0.50f,
+                screenHeight * 0.4f
+        );
+
+        chambersButton.setSize(screenWidth * 0.2f, screenHeight * 0.06f);
+        chambersButton.setPosition(
+                screenWidth * 0.50f,
+                screenHeight * 0.3f
+        );
+
+        stage.addActor(contButton);
+        stage.addActor(replayButton);
+        stage.addActor(chambersButton);
     }
 
     @Override
