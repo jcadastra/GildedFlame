@@ -93,6 +93,33 @@ public class SuccessScene implements Screen {
         stage.addActor(contButton);
         stage.addActor(replayButton);
         stage.addActor(chambersButton);
+
+        Texture topTexture = new Texture(Gdx.files.internal("ui/chamber_explored.png"));
+        Image topImage = new Image(topTexture);
+
+        topImage.setSize(screenWidth * 0.3f, screenHeight * 0.2f);
+
+        topImage.setPosition(
+                screenWidth * 0.50f,
+                screenHeight * 0.65f
+        );
+
+        // Add the image actor to the stage
+        stage.addActor(topImage);
+    }
+
+    @Override
+    public void render(float delta) {
+        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        stage.act(delta);
+        stage.draw();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        stage.getViewport().update(width, height, true);
     }
 
     @Override
