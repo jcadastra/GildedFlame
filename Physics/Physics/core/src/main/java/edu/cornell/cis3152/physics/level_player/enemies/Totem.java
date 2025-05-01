@@ -1,13 +1,11 @@
 package edu.cornell.cis3152.physics.level_player.enemies;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.graphics.SpriteBatch;
-import edu.cornell.gdiac.graphics.SpriteSheet;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -21,32 +19,113 @@ public class Totem extends Enemy {
 
     public static final int FRAME_SIZE = 500;
     public static final int TRANSITION_TOTAL_FRAMES = 9;
-    public static final int IDLE_TOTAL_FRAMES = 12;
-    public static final int LIGHT_FRAME = 0;
+    public static final int IDLE_TOTAL_FRAMES = 7;
+    public static final int FREEZE_TOTAL_FRAMES = 9;
     private static final int TRANSITION_FRAME_DURATION = 12;
-    private static final int IDLE_FRAME_DURATION = 9;
+    private static final int REVERSE_FRAME_DURATION = 12;
+    private static final int IDLE_FRAME_DURATION = 12;
+    private static final int FREEZE_FRAME_DURATION = 3;
     private final Texture transitionAnimationTexture = directory.getEntry("platform-totemLIGHTANIMATION", Texture.class);
+    private final Texture reverseTransitionTexture = directory.getEntry("platform-totemOUTLIGHTANIMATION", Texture.class);
     private final Texture idleAnimationTexture = directory.getEntry("platform-totemIDLEANIMATION", Texture.class);
+    private final Texture freezeLeftAnimationTexture = directory.getEntry("platform-totemFREEZELEFTANIMATION", Texture.class);
+    private final Texture freezeRightAnimationTexture = directory.getEntry("platform-totemFREEZERIGHTANIMATION", Texture.class);
+    private final boolean visited;
+    private final List<Totem> linkedTotems = new ArrayList<>();
+    protected EnemyState previousState = EnemyState.OUT_OF_LIGHT;
     private int cdFrameCount = 0;
     private int frameIndex = 0;
-
     private int idleFrameCount = 0;
     private int idleFrameIndex = 0;
-    private final boolean visited;
-
-    public List<Totem> getLinkedTotems() {
-        return linkedTotems;
-    }
     /**
      * Time it takes for a totem to transition from a CD state to a OUT_OF_LIGHT state.
      */
     private int freezeTimer;
-    private final List<Totem> linkedTotems = new ArrayList<>();
+    private boolean freezeRight = false;
+    private int reverseFrameCount = 0;
+    private int reverseFrameIndex = 0;
+    private int cooldownTimer = 30;
+    private boolean timerStart = false;
+    public void resetCooldownTimer() {
+        cooldownTimer = 30;
+    }
+    public int getCooldownTimer() {
+        return cooldownTimer;
+    }
+    public void decrementCooldownTimer() {
+        if (getTimerStart()){
+            cooldownTimer--;
+        }
+        if (cooldownTimer == 0){
+            resetFrames();
+            setState(EnemyState.CD);
+            resetCooldownTimer();
+            stopTimer();
+        }
+    }
 
+    public boolean getTimerStart(){
+        return timerStart;
+    }
+
+    public void beginTimer(){
+        timerStart = true;
+    }
+
+    public void stopTimer(){
+        timerStart = false;
+    }
     public Totem(int id, float units, JsonValue value, AssetDirectory directory, Vector2 position) {
         super(id, units, value, directory, position);
         visited = false;
         setJustCollided(false);
+    }
+
+    @Override
+    public void update() {
+        decrementCooldownTimer();
+        super.update();
+    }
+
+    public int getCdFrameCount() {
+        return cdFrameCount;
+    }
+
+    public int getIdleFrameCount() {
+        return idleFrameCount;
+    }
+
+    public int getReverseFrameCount() {
+        return reverseFrameCount;
+    }
+
+    public EnemyState getPreviousState() {
+        return previousState;
+    }
+
+    @Override
+    public void setState(EnemyState newState) {
+        if (this.getState() != EnemyState.IN_LIGHT){
+            previousState = this.getState();
+        }
+        super.setState(newState);
+    }
+public boolean locked = false;
+    public void lockFreeze(){
+        locked = true;
+    }
+
+    public void unlockFreeze(){
+        locked = false;
+    }
+    public void setFreezeRight(boolean freezeRight) {
+        if (!locked){
+            this.freezeRight = freezeRight;
+        }
+    }
+
+    public List<Totem> getLinkedTotems() {
+        return linkedTotems;
     }
 
     public int getFreezeTimer() {
@@ -64,6 +143,10 @@ public class Totem extends Enemy {
     private void resetFrames() {
         cdFrameCount = 0;
         frameIndex = 0;
+    }
+
+    private void resetReverseFrames() {
+        reverseFrameCount = 0;
     }
 
     private void resetIdleFrames() {
@@ -122,12 +205,29 @@ public class Totem extends Enemy {
     @Override
     public void in_light() {
         stop();
-        resetIdleFrames();
-        resetFrames();
+        if (getPreviousState() == EnemyState.CD) {
+            if (reverseFrameIndex > 0) {
+                reverseFrameCount++;
+                if (reverseFrameCount > REVERSE_FRAME_DURATION){
+                    reverseFrameCount = 0;
+                    reverseFrameIndex--;
+                }
+                frameIndex = reverseFrameIndex;
+            } else {
+                previousState = EnemyState.IN_LIGHT;
+            }
+        } else {
+            cdFrameCount++;
+            frameIndex = (cdFrameCount / FREEZE_FRAME_DURATION);
+            if (frameIndex >= FREEZE_TOTAL_FRAMES) {
+                frameIndex = FREEZE_TOTAL_FRAMES - 1;
+            }
+        }
     }
 
     @Override
     public void out_of_light() {
+        unlockFreeze();
         propagateDirection(this.faceRight, new HashSet<>());
         obstacle.setBodyType(BodyDef.BodyType.DynamicBody);
         move();
@@ -137,7 +237,10 @@ public class Totem extends Enemy {
             idleFrameCount = 0;
         }
         resetFrames();
+        resetReverseFrames();
     }
+
+
 
     @Override
     public void draw(SpriteBatch batch) {
@@ -147,12 +250,29 @@ public class Totem extends Enemy {
         switch (getState()) {
             case CD:
                 srcIndex = frameIndex * FRAME_SIZE;
-                batch.draw(transitionAnimationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits(), srcIndex, 0, FRAME_SIZE, FRAME_SIZE, !isFacingRight(), false);
+                batch.draw(transitionAnimationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits(), srcIndex, 0, FRAME_SIZE, FRAME_SIZE, isFacingRight(), false);
                 break;
+
             case IN_LIGHT:
-                srcIndex = LIGHT_FRAME * FRAME_SIZE;
-                batch.draw(transitionAnimationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits(), srcIndex, 0, FRAME_SIZE, FRAME_SIZE, !isFacingRight(), false);
+                if (getPreviousState() == EnemyState.CD) {
+
+                    srcIndex = reverseFrameIndex * FRAME_SIZE;
+                    batch.draw(transitionAnimationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits(), srcIndex, 0, FRAME_SIZE, FRAME_SIZE, isFacingRight(), false);
+                } else {
+                    srcIndex = Math.min(frameIndex, FREEZE_TOTAL_FRAMES - 1) * FRAME_SIZE;
+                    if (freezeRight && isFacingRight()){
+                        batch.draw(freezeLeftAnimationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits(), srcIndex, 0, FRAME_SIZE, FRAME_SIZE, false, false);
+                    } else if (freezeRight && !isFacingRight()){
+                        batch.draw(freezeRightAnimationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits(), srcIndex, 0, FRAME_SIZE, FRAME_SIZE, true, false);
+                    } else if (!freezeRight && isFacingRight()){
+                        batch.draw(freezeRightAnimationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits(), srcIndex, 0, FRAME_SIZE, FRAME_SIZE, false, false);
+                    } else {
+                        batch.draw(freezeLeftAnimationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits(), srcIndex, 0, FRAME_SIZE, FRAME_SIZE, true, false);
+
+                    }
+                }
                 break;
+
             case OUT_OF_LIGHT:
                 srcIndex = idleFrameIndex * FRAME_SIZE;
                 batch.draw(idleAnimationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits(), srcIndex, 0, FRAME_SIZE, FRAME_SIZE, !isFacingRight(), false);
@@ -160,14 +280,17 @@ public class Totem extends Enemy {
         }
     }
 
+
     @Override
     public void cd() {
+        unlockFreeze();
         resetIdleFrames();
-
+        resetReverseFrames();
         cdFrameCount++;
         frameIndex = (cdFrameCount / TRANSITION_FRAME_DURATION) % TRANSITION_TOTAL_FRAMES;
+        reverseFrameIndex = frameIndex; // frame that the thing ends with - so total frames
         if (cdFrameCount >= TRANSITION_FRAME_DURATION * TRANSITION_TOTAL_FRAMES) {
-            cdFrameCount = 0;
+            cdFrameCount = 0; // this resets the cdFrame count
         }
         decrementFreezeTimer();
         if (getFreezeTimer() <= 0) {

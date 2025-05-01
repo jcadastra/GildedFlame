@@ -1115,7 +1115,7 @@ public class GameplayScene implements Screen {
                     float y = (18 * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
                     if (objName.contains("light")) {
                         FloatingLight light = new FloatingLight(units,new Vector2(x,y),1,goalPos);
-                        System.out.println("floating light: " + (int)x+","+ (int)y);
+//                        System.out.println("floating light: " + (int)x+","+ (int)y);
                         light.getObstacle().setPosition(x,y);
                         floatingLights.add(light);
                         addSprite(light);
@@ -1172,7 +1172,9 @@ public class GameplayScene implements Screen {
             countdown--;
         } else if (countdown == 0) {
             if (failed) {
-                reset();
+                pause();
+                listener.exitScreen(this, EXIT_QUIT);
+                return false;
             } else if (complete) {
                 pause();
                 listener.exitScreen(this, EXIT_NEXT);
@@ -1497,19 +1499,26 @@ public class GameplayScene implements Screen {
                     }
                     break;
                 case "traciGrounded":
+                    System.out.println("SET GROUNDED");
                     if (avatar.getGroundedState().equals(GroundState.CLIMBING)) {
                         avatar.removeClimbingPhysics();
                     }
                     avatar.setGroundedState(GroundState.GROUNDED);
                     sensorFixtures.add(todo_action.getFixture());
+                    avatar.resetFallTimer();
                     break;
                 case "traciAirborne":
                     sensorFixtures.remove(todo_action.getFixture());
+                    System.out.println("SET AIRBORNE");
+
                     if (sensorFixtures.size == 0) {
                         if (avatar.getGroundedState().equals(GroundState.CLIMBING)) {
                             avatar.removeClimbingPhysics();
                         }
-                        avatar.setGroundedState(GroundState.AIRBORNE);
+
+                    } else {
+                        avatar.resetFallTimer();
+                        avatar.startFallTimer();
                     }
                     break;
                 case "addClimbingJoint":

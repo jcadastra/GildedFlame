@@ -221,8 +221,6 @@ public class Moth extends Enemy {
         updateFrame(IN_LIGHT_FRAME_DURATION, TOTAL_IN_LIGHT_FRAMES);
         resetAttackTimer();
         if (rr != null) {
-            System.out.println("rr.targetObject: " + ((ObstacleSprite) rr.targetObject).getObstacle().getName());
-            System.out.println(((ObstacleSprite) rr.targetObject).getObstacle().isSensor());
             if (rr.targetObject instanceof Torch && !Avatar.getHasTorch()){
                 setState(EnemyState.TRANCE);
                 resetTranceTimer();
@@ -234,7 +232,7 @@ public class Moth extends Enemy {
                 setState(EnemyState.FRUSTRATED);
             }
         } else {
-            System.out.println("rr is null");
+//            System.out.println("rr is null");
             stop();
         }
     }
@@ -244,7 +242,6 @@ public class Moth extends Enemy {
         if (rr == null || !(rr.targetObject instanceof Avatar)) {
             setState(EnemyState.OUT_OF_LIGHT);
         } else {
-            System.out.println(rr.targetObject);
             if (isAttackTimerZero()) {
                 setState(EnemyState.ATTACK);
             } else { // loops through cd state
