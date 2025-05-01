@@ -43,6 +43,27 @@ public class GameObject extends EnhancedObstacleSprite {
         );
     }
 
+    public GameObject(float[] points, float x, float y, float width, float height,  float units) {
+        super();
+
+        // Construct a Poly2 object, breaking it into triangles
+        Poly2 poly = new Poly2();
+        PolyTriangulator triangulator = new PolyTriangulator();
+        triangulator.set(points);
+        triangulator.calculate();
+        triangulator.getPolygon(poly);
+
+        obstacle = new PolygonObstacle(points,x,y);
+        obstacle.setDensity(0.5f);
+        obstacle.setFriction(0.5f);
+        obstacle.setRestitution(0.1f);
+        obstacle.setPhysicsUnits(units);
+        obstacle.setFixedRotation(true);
+        obstacle.setUserData(this);
+
+        mesh.set(-(width * units)/2, -(height * units)/2, width * units, height * units);
+    }
+
     public GameObject(float x, float y, float width, float height, float units, Boolean centerInBottomLeft, int tileId) {
         super();
         this.tileID = tileId;

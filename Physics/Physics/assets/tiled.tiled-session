@@ -1,5 +1,5 @@
 {
-    "activeFile": "level4.tmj",
+    "activeFile": "level10.tmj",
     "expandedProjectPaths": [
         "."
     ],
@@ -48,8 +48,8 @@
             "scale": 0.147546875,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4795.08630731759,
-                "y": 1589.3254262416606
+                "x": 4784.920046595363,
+                "y": 1582.5479190935089
             }
         },
         "C:/Users/ericj/Downloads/test5.tmx": {
@@ -104,14 +104,14 @@
         "example_level.tmx": {
             "expandedObjectLayers": [
                 2,
-                5,
-                4
+                4,
+                5
             ],
             "scale": 0.125,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 4796,
-                "y": 2700
+                "x": 4792,
+                "y": 2692
             }
         },
         "example_level2.tmj": {
@@ -129,8 +129,8 @@
             "scale": 0.092,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4798.913043478261,
-                "y": 2701.0869565217395
+                "x": 4793.478260869565,
+                "y": 2690.217391304348
             }
         },
         "level 4 (1).tmj": {
@@ -141,6 +141,14 @@
                 "y": 3080.3769988351164
             }
         },
+        "level.tmj": {
+            "scale": 0.180796875,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 4800.9679370840895,
+                "y": 2701.9272318727853
+            }
+        },
         "level1.tmj": {
             "expandedObjectLayers": [
                 7
@@ -148,8 +156,8 @@
             "scale": 0.3208,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4074.1895261845393,
-                "y": 4886.2219451371575
+                "x": 4071.0723192019955,
+                "y": 4883.104738154614
             }
         },
         "level10.tmj": {
@@ -157,82 +165,83 @@
                 4
             ],
             "scale": 0.180796875,
-            "selectedLayer": 1,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 4800.9679370840895,
-                "y": 2701.9272318727853
+                "x": 298.6777288047706,
+                "y": 2696.396162820846
             }
         },
         "level2.tmj": {
             "scale": 0.180796875,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4800.9679370840895,
-                "y": 2701.9272318727853
+                "x": 298.6777288047706,
+                "y": 5390.026791115721
             }
         },
         "level3.tmj": {
             "scale": 0.5,
-            "selectedLayer": 1,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 2100,
-                "y": 4309
+                "x": 9298,
+                "y": 2997
             }
         },
         "level4.tmj": {
             "scale": 0.180796875,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4734.595108460808,
-                "y": 3542.649727767696
+                "x": 4789.9057989802095,
+                "y": 2690.8650937689054
             }
         },
         "level5.tmj": {
             "scale": 0.180796875,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4737.360642986778,
-                "y": 2641.0854723014436
+                "x": 298.6777288047706,
+                "y": 2995.0738916256164
             }
         },
         "level6.tmj": {
             "scale": 0.180796875,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4737.360642986778,
-                "y": 2641.0854723014436
+                "x": 298.6777288047706,
+                "y": 2696.396162820846
             }
         },
         "level7.tmj": {
             "expandedObjectLayers": [
                 6,
-                5,
-                4
+                4,
+                5
             ],
             "scale": 0.1445,
-            "selectedLayer": 3,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 3128.0276816609,
-                "y": 3802.7681660899657
+                "x": 9280.276816608997,
+                "y": 2986.1591695501734
             }
         },
         "level8.tmj": {
             "scale": 0.25,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4758,
-                "y": 2658
+                "x": 296,
+                "y": 2994
             }
         },
         "level9.tmj": {
             "expandedObjectLayers": [
+                7,
                 3
             ],
             "scale": 0.1703,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4794.480328831473,
-                "y": 2704.051673517322
+                "x": 293.59953024075094,
+                "y": 2692.307692307692
             }
         },
         "sample.tmj": {
@@ -282,8 +291,8 @@
             "scale": 0.0625,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 4792,
-                "y": 2712
+                "x": 4784,
+                "y": 2696
             }
         },
         "test3.tmj": {
@@ -318,30 +327,30 @@
             "scale": 0.180796875,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4798.2024025581195,
-                "y": 2696.396162820845
+                "x": 4795.4368680321495,
+                "y": 2690.8650937689054
             }
         },
         "test6.tmj": {
             "scale": 0.180796875,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 4798.2024025581195,
-                "y": 2696.396162820845
+                "x": 4795.4368680321495,
+                "y": 2690.8650937689054
             }
         },
         "test7.tmj": {
             "expandedObjectLayers": [
                 2,
-                5,
+                4,
                 3,
-                4
+                5
             ],
             "scale": 0.125,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 4796,
-                "y": 2700
+                "x": 4792,
+                "y": 2692
             }
         },
         "test7.tmx": {
@@ -371,8 +380,8 @@
         "test_map.tmx": {
             "expandedObjectLayers": [
                 2,
-                3,
-                4
+                4,
+                3
             ],
             "scale": 0.5,
             "selectedLayer": 2,
@@ -408,16 +417,8 @@
         "test2.tmj",
         "example_level2.tmj",
         "sample.tmj",
-        "C:/Users/ericj/Downloads/level 3.tmj",
-        "example_level.tmx",
-        "example_level2.tmx",
-        "test6.tmj",
-        "test5.tmx",
-        "test7.tmj",
-        "BackgroundAssets.tsx",
         "level9.tmj",
-        "level7.tmj",
-        "level4.tmj"
+        "level10.tmj"
     ],
     "project": "tiled.tiled-project",
     "recentFiles": [
@@ -431,7 +432,7 @@
         "test2.tmj",
         "example_level2.tmj",
         "sample.tmj",
-        "C:/Users/ericj/Downloads/level 3.tmj",
-        "example_level.tmx"
+        "level9.tmj",
+        "level10.tmj"
     ]
 }

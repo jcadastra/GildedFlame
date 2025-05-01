@@ -228,5 +228,5 @@ trajectoryPoint, (-1.0,-1.0), (0.0,0.0), 0.0, 0.0, true, true, 0.0, 0.0, StaticB
 trajectoryPoint, (-1.0,-1.0), (0.0,0.0), 0.0, 0.0, true, true, 0.0, 0.0, StaticBody, 0.0, 0.2, 0.0, true, 
 trajectoryPoint, (-1.0,-1.0), (0.0,0.0), 0.0, 0.0, true, true, 0.0, 0.0, StaticBody, 0.0, 0.2, 0.0, true, 
 floatingLight, (15.973333,3.89), (0.0,0.0), 0.0, 0.0, true, true, 3.1415926E-4, 1.5707963E-4, DynamicBody, 1.0E-4, 0.2, 0.0, true, 
-torch, fire, (9.119604,1.9672835), (9.119604,1.9672835), false, WeldJoint, 
 torch, light, (9.119604,1.9672835), (9.119604,1.9672835), false, WeldJoint, 
+torch, fire, (9.119604,1.9672835), (9.119604,1.9672835), false, WeldJoint, 

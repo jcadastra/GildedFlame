@@ -788,17 +788,25 @@ public class GameplayScene implements Screen {
                     }else if (objName.contains("burnable")) {
                         float width = object.getFloat("width") / levelData.getInt("tilewidth");
                         float height = object.getFloat("height") / levelData.getInt("tileheight");
-                        GameObject box = new GameObject(x,y,width,height, units, true);
-                        box.getObstacle().setBodyType(BodyType.DynamicBody);
-                        box.getObstacle().setName(objName);
-                        box.getObstacle().setPhysicsUnits(units);
+                        GameObject box;
                         if (objName.contains("non")) {
+                            box = new GameObject(new float[]{
+                                -(width)/2, -(height)/2,
+                                (width)/2, -(height)/2,
+                                (width)/4, (height)/2,
+                                -(width)/4, (height)/2
+                            }, x,y, width, height, units);
                             box.setMaterial(new ObstacleMaterial("stone"));
                             box.setTexture(directory.getEntry("nonburnable", Texture.class));
+                            box.getObstacle().setPhysicsUnits(units);
                         } else {
+                            box = new GameObject(x,y,width,height, units, true);
                             box.setMaterial(new ObstacleMaterial("wood"));
                             box.setTexture(directory.getEntry("burnable", Texture.class));
                         }
+                        box.getObstacle().setBodyType(BodyType.DynamicBody);
+                        box.getObstacle().setName(objName);
+                        box.getObstacle().setPhysicsUnits(units);
                         box.getObstacle().setDensity(1f );
                         addSprite(box);
                     } else if (objName.contains("weather")) {
@@ -1200,6 +1208,7 @@ public class GameplayScene implements Screen {
      */
     public void update(float dt) {
         soundEngine.tendToMusicLoop();
+        System.out.println(Gdx.graphics.getFramesPerSecond());
 
         updateRunes(dt);
         supplementaryCollisionActions();
