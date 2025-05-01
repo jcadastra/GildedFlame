@@ -1486,6 +1486,16 @@ public class GameplayScene implements Screen {
                         queueAddTorch = true;
                     }
                     break;
+                case "forceDropTorch":
+                    if (activeTorchJoint != null) {
+                        avatar.setHasTorch(false);
+                        world.destroyJoint(activeTorchJoint);
+                        activeTorchJoint = null;
+                        torch.resetPickUp();
+                        torch.getObstacle().setSensor(false);
+                        torch.getObstacle().setLinearVelocity(Vector2.Zero);
+                    }
+                    break;
                 case "traciGrounded":
                     if (avatar.getGroundedState().equals(GroundState.CLIMBING)) {
                         avatar.removeClimbingPhysics();
@@ -1574,6 +1584,27 @@ public class GameplayScene implements Screen {
                     }
                     fireController.cleanFire(f);
                     f.dispose();
+                    break;
+                case "killFires":
+                    ArrayList<Fire> fires = fireFlag.getFires();
+                    EnhancedObstacleSprite eos = fireFlag.getSubject();
+                    for (Fire killFires_fire : fires) {
+                        if (killFires_fire.getFixtureJoint() != null) {
+                            if (!world.isLocked()) {
+                                world.destroyJoint(killFires_fire.getFixtureJoint());
+                            }
+                            killFires_fire.setFixtureJoint(null);
+                        }
+                        if (torchFire != null && killFires_fire.fireID == torchFire.fireID) {
+                            if (activeTorchJoint != null && !world.isLocked()) {
+                                world.destroyJoint(activeTorchJoint);
+                                activeTorchJoint = null;
+                            }
+                        }
+                        fireController.cleanFire(killFires_fire, eos);
+                        killFires_fire.dispose();
+                    }
+                    fireController.cleanObj(eos);
                     break;
             }
         }
