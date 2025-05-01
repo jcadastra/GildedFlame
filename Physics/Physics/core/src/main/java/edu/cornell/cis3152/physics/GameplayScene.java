@@ -338,6 +338,10 @@ public class GameplayScene implements Screen {
     private int deltaTorchArc = 4;
     private float animationOffsetTorchArc = .18f;
 
+    private boolean playerDied = false;
+    private float deathTimer = 0.0f;
+    private static final float DEATH_DELAY = 2.0f;
+
 
     /**
      * Creates a new game world from the given asset directory
@@ -1195,6 +1199,7 @@ public class GameplayScene implements Screen {
      * @param dt    Number of seconds since last animation frame
      */
     public void update(float dt) {
+
         soundEngine.tendToMusicLoop();
 
         updateRunes(dt);
@@ -1489,7 +1494,6 @@ public class GameplayScene implements Screen {
                         if (avatar.getGroundedState().equals(GroundState.CLIMBING)) {
                             avatar.removeClimbingPhysics();
                         }
-
                     } else {
                         avatar.resetFallTimer();
                         avatar.startFallTimer();

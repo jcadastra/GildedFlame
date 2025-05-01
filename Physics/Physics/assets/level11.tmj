@@ -1,13 +1,5 @@
 { "backgroundcolor":"#2b4859",
  "compressionlevel":-1,
- "editorsettings":
-    {
-     "export":
-        {
-         "format":"json",
-         "target":"level11.tmj"
-        }
-    },
  "height":18,
  "infinite":false,
  "layers":[
@@ -2188,8 +2180,8 @@
                  "type":"",
                  "visible":true,
                  "width":57,
-                 "x":3202.30303030303,
-                 "y":2144.15151515152
+                 "x":2828.87225291162,
+                 "y":3999.98931794518
                 }, 
                 {
                  "gid":82,

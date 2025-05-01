@@ -102,8 +102,6 @@ public class Avatar extends ObstacleSprite {
      * Whether the player has torch in hand
      */
     private static boolean hasTorch;
-
-    private int fallTimer = 10;
     /**
      * The initializing data (to avoid magic numbers)
      */
@@ -156,6 +154,7 @@ public class Avatar extends ObstacleSprite {
     private final Color sensorColor;
     private final float x;
     private final float y;
+    private int fallTimer = 10;
     private GroundState groundState;
 
     /**
@@ -301,25 +300,6 @@ public class Avatar extends ObstacleSprite {
         this.bodyTouchedClimbables = new HashSet<>();
     }
 
-    public int getFallTimer() {
-        return fallTimer;
-    }
-    public void decrementFallTimer(){
-        fallTimer--;
-    }
-    public void resetFallTimer(){
-        fallTimer = 10;
-    }
-    public void startFallTimer(){
-        if (getFallTimer() == 0){
-            setGroundedState(GroundState.AIRBORNE);
-            resetFallTimer();
-        } else {
-            decrementFallTimer();
-        }
-
-    }
-
     /**
      * Returns true if Traci has torch.
      */
@@ -332,6 +312,28 @@ public class Avatar extends ObstacleSprite {
      */
     public void setHasTorch(boolean value) {
         hasTorch = value;
+    }
+
+    public int getFallTimer() {
+        return fallTimer;
+    }
+
+    public void decrementFallTimer() {
+        fallTimer--;
+    }
+
+    public void resetFallTimer() {
+        fallTimer = 10;
+    }
+
+    public void startFallTimer() {
+        if (getFallTimer() == 0) {
+            setGroundedState(GroundState.AIRBORNE);
+            resetFallTimer();
+        } else {
+            decrementFallTimer();
+        }
+
     }
 
     public Vector2 getPrevPosition() {
@@ -732,7 +734,7 @@ public class Avatar extends ObstacleSprite {
 
         if (groundState == GroundState.DEAD) {
             cdFrameCount++;
-            frameIndex = Math.min((cdFrameCount / DEATH_FRAME_DURATION), DEATH_TOTAL_FRAMES-1);
+            frameIndex = Math.min((cdFrameCount / DEATH_FRAME_DURATION), DEATH_TOTAL_FRAMES - 1);
             deathOpacity += FADE_SPEED;
             if (deathOpacity > 1f) {
                 deathOpacity = 1f;
@@ -761,7 +763,6 @@ public class Avatar extends ObstacleSprite {
         } else {
             prevPosition = getLocation();
         }
-
 
         if (justLanded && doOnce) {
             resetJumpFrames();
@@ -877,7 +878,7 @@ public class Avatar extends ObstacleSprite {
                     animationTexture = hasTorch ? animationTextureJumpTorchUp : animationTextureJumpNoTorchUp;
                     batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits() * 1.5f, srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, !isFacingRight(), false);
             }
-        }else if (groundState == GroundState.GROUNDED && getMovement() != null && Math.abs(getMovement().x) > 0.001f) {
+        } else if (groundState == GroundState.GROUNDED && getMovement() != null && Math.abs(getMovement().x) > 0.001f) {
             cdFrameCount++;
             frameIndex = (cdFrameCount / MOVEMENT_FRAME_DURATION) % TOTAL_FRAMES;
             srcIndex = frameIndex * FRAME_WIDTH;
