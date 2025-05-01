@@ -1494,9 +1494,7 @@ public class GameplayScene implements Screen {
                         if (avatar.getGroundedState().equals(GroundState.CLIMBING)) {
                             avatar.removeClimbingPhysics();
                         }
-                    } else {
-                        avatar.resetFallTimer();
-                        avatar.startFallTimer();
+                        avatar.setGroundedState(GroundState.AIRBORNE);
                     }
                     break;
                 case "addClimbingJoint":
