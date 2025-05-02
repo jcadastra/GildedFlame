@@ -792,14 +792,26 @@ public class GameplayScene implements Screen {
                             box = new GameObject(new float[]{
                                 -(width)/2, -(height)/2,
                                 (width)/2, -(height)/2,
-                                (width)/4, (height)/2,
-                                -(width)/4, (height)/2
+                                (width)/3, (height)/2 * .8f,
+                                -(width)/3, (height)/2 * .8f
                             }, x,y, width, height, units);
                             box.setMaterial(new ObstacleMaterial("stone"));
                             box.setTexture(directory.getEntry("nonburnable", Texture.class));
                             box.getObstacle().setPhysicsUnits(units);
                         } else {
-                            box = new GameObject(x,y,width,height, units, true);
+                            box = new GameObject(new float[]{
+                                -(width) * (3f/10f), -(height)/2,
+                                (width) * (3f/10f), -(height)/2,
+
+                                width/2, -(height) * (3f/10),
+                                width/2, (height) * (3f/10),
+
+                                (width) * (3f/10f), (height)/2 * .80f,
+                                -(width) * (3f/10f), (height)/2 * .80f,
+
+                               -width/2, (height) * (3f/10),
+                                -width/2, -(height) * (3f/10)
+                            }, x,y, width, height, units);
                             box.setMaterial(new ObstacleMaterial("wood"));
                             box.setTexture(directory.getEntry("burnable", Texture.class));
                         }
@@ -1061,6 +1073,7 @@ public class GameplayScene implements Screen {
 
                         int depth = 10, piecelen = 25, thickness = 14;
                         JsonValue props = end.get("properties");
+                        String pin1 = null, pin2 = null;
                         if (props != null) {
                             for (JsonValue prop : props) {
                                 String pname = prop.getString("name");
@@ -1069,6 +1082,12 @@ public class GameplayScene implements Screen {
                                     case "depth":
                                         depth = Integer.parseInt(val);
                                         break;
+                                    case "pin1":
+                                        pin1 = val;
+                                        break;
+                                    case "pin2":
+                                        pin2 = val;
+                                        break;
                                 }
                             }
                         }
@@ -1076,6 +1095,10 @@ public class GameplayScene implements Screen {
                         Texture middle_texture = directory.getEntry( "platform-rope-mid", Texture.class );
                         Rope rope = new Rope(new Vector2(x1, y1), new Vector2(x2, y2), depth, thickness, piecelen, units, levelInfo.get("ropes").get(0));
                         rope.blanketSetTextures(texture, middle_texture);
+//                        WeldJointDef
+                        if (pin1 != null) {
+//                            rope
+                        }
                         addSpriteGroup(rope);
                     }
 
@@ -1126,7 +1149,7 @@ public class GameplayScene implements Screen {
         for (FloatingLight light : floatingLights) {
             lightController.attachAmbientLight(light);
         }
-//        debugPrintOut();
+        debugPrintOut();
     }
     /**
      * Returns whether to process the update loop
@@ -2063,10 +2086,10 @@ public class GameplayScene implements Screen {
 
             for (ObstacleSprite sprite : sprites) {
                 myWriter.write(sprite.getName() + ", ");
-                myWriter.write(sprite.getObstacle().getPosition().toString() + ", ");
-                myWriter.write(sprite.getObstacle().getLinearVelocity().toString() + ", ");
-                myWriter.write((sprite.getObstacle().getAngle()) + ", ");
-                myWriter.write((sprite.getObstacle().getAngularVelocity()) + ", ");
+                myWriter.write(sprite.getObstacle().getBody().getPosition().toString() + ", ");
+                myWriter.write(sprite.getObstacle().getBody().getLinearVelocity().toString() + ", ");
+                myWriter.write((sprite.getObstacle().getBody().getAngle()) + ", ");
+                myWriter.write((sprite.getObstacle().getBody().getAngularVelocity()) + ", ");
                 myWriter.write(sprite.getObstacle().getBody().isAwake() + ", ");
                 myWriter.write(sprite.getObstacle().getBody().isActive() + ", ");
                 myWriter.write(sprite.getObstacle().getBody().getMass() + ", ");

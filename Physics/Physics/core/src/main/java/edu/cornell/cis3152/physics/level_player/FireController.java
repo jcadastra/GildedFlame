@@ -373,9 +373,9 @@ public class FireController {
             firePointsList.add(fireY);
         }
 
-//        for (Float v : releventVertecies.toArray()) {
-//            firePointsList.add(v);
-//        }
+        for (Float v : releventVertecies.toArray()) {
+            firePointsList.add(v);
+        }
 
         Array<Vector2> returnArray = new Array<Vector2>();
         int totalVerticesToCount = firePointsList.size();
