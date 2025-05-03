@@ -285,6 +285,10 @@ public class GDXRoot extends Game implements ScreenListener {
                 SuccessScene success = new SuccessScene();
                 success.setScreenListener(this);
                 setScreen(success);
+            } else if (exitCode == GameplayScene.EXIT_FAILURE) {
+                FailureScene failure = new FailureScene();
+                failure.setScreenListener(this);
+                setScreen(failure);
             }
             // Handle exit from the main menu.
             else if (screen instanceof MainMenuScreen) {
