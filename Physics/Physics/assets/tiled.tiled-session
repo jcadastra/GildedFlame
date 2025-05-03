@@ -1,4 +1,8 @@
 {
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
     "activeFile": "test8.tmj",
     "expandedProjectPaths": [
         "."
@@ -208,8 +212,8 @@
             "scale": 0.1914,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 4798.850574712644,
-                "y": 2698.5370950888196
+                "x": 4791.013584117033,
+                "y": 2693.3124346917452
             }
         },
         "level5.tmj": {
@@ -366,8 +370,8 @@
             "scale": 0.0625,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 4792,
-                "y": 88
+                "x": 752,
+                "y": 6536
             }
         },
         "test7.tmx": {
@@ -379,11 +383,11 @@
             }
         },
         "test8.tmj": {
-            "scale": 0.125,
+            "scale": 0.0802,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 7500,
-                "y": 2700
+                "x": 9912.71820448878,
+                "y": 3110.9725685785543
             }
         },
         "test_map.tmj": {
@@ -423,7 +427,12 @@
     },
     "last.exportedFilePath": "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/assets",
     "last.imagePath": "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/assets/environment",
+    "map.height": 50,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
+    "map.lastUsedFormat": "json",
+    "map.tileHeight": 300,
+    "map.tileWidth": 300,
+    "map.width": 32,
     "openFiles": [
         "test_map.tmx",
         "EnemyTiles.tsx",
@@ -447,6 +456,7 @@
     "project": "tiled.tiled-project",
     "property.type": "int",
     "recentFiles": [
+        "test8.tmj",
         "test_map.tmx",
         "EnemyTiles.tsx",
         "GameObjectTiles.tsx",
@@ -457,7 +467,6 @@
         "test2.tmj",
         "example_level2.tmj",
         "sample.tmj",
-        "level10.tmj",
-        "aaa.tmj"
+        "level10.tmj"
     ]
 }
