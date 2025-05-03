@@ -377,6 +377,7 @@ public class GameplayScene implements Screen {
         scale = new Vector2();
         //TODO: Value needs to be imported from level vvvv
         bounds = new Rectangle(0,0,defaults.get("bounds").getFloat( 0 ), defaults.get("bounds").getFloat( 1 ));
+//        bounds = new Rectangle(0,0,50,18);
         resize(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 
         displayFont = directory.getEntry( "shared-unica" ,BitmapFont.class);
@@ -1276,13 +1277,11 @@ public class GameplayScene implements Screen {
      *
      * @param dt    Number of seconds since last animation frame
      */
-    int ocunt = 0;
     public void update(float dt) {
         soundEngine.tendToMusicLoop();
 //        System.out.println(Gdx.graphics.getFramesPerSecond());
-        SavedDataHandler temp = new SavedDataHandler();
-        temp.saveMiscData("test" + ocunt, 0);
-        ocunt++;
+//        SavedDataHandler temp = new SavedDataHandler();
+//        temp.setDataVal("test" + Gdx.graphics.getFrameId(), Gdx.graphics.getFramesPerSecond());
 
         updateRunes(dt);
         supplementaryCollisionActions();
@@ -1471,16 +1470,25 @@ public class GameplayScene implements Screen {
 
 
 
-        camera.position.x = MathUtils.clamp(camera.position.x,
-            bounds.x*scale.x+visibleW,
-            (bounds.x+bounds.width)*scale.x - visibleW);
+//        camera.position.x = MathUtils.clamp(camera.position.x,
+//            bounds.x*scale.x+visibleW,
+//            (bounds.x+bounds.width)*scale.x - visibleW);
 //        System.out.println(camera.position.x +", " + bounds.x + " , " + bounds.width + " , " + bounds.height+ " , " + scale);
 //        System.out.println("min: "+ (bounds.x*scale.x+visibleW )+ "max: "+ ((bounds.x+bounds.width)*scale.x - visibleW));
         //System.out.println("x reached bounds:"+(camera.position.x==bounds.x*scale.x+visibleW));
-        camera.position.y = MathUtils.clamp(camera.position.y,
-            bounds.y*scale.y+visibleH,
-            (bounds.y+bounds.height)*scale.y - visibleH);
+//        camera.position.y = MathUtils.clamp(camera.position.y,
+//            bounds.y*scale.y+visibleH,
+//            (bounds.y+bounds.height)*scale.y - visibleH);
 
+        float idealX = playerPos.x * phyiscsUnits;
+        float idealY = playerPos.y * phyiscsUnits;
+        System.out.println(camera.viewportWidth +",pp " + camera.viewportHeight);
+        System.out.println(visibleW +",ppp " + visibleH);
+        System.out.println(((visibleW)/2) +",ppasdp " +( (bounds.width/phyiscsUnits)-(visibleW)/2));
+        System.out.println(((visibleW)/2) +",ppasdp " +( (bounds.width)));
+        System.out.println(((visibleW)/2) +",ppasdp " +( (bounds.width * phyiscsUnits)));
+        camera.position.x = MathUtils.clamp(idealX, (visibleW), (bounds.width * phyiscsUnits)-(visibleW));
+        camera.position.y = MathUtils.clamp(idealY, (visibleH), (bounds.height * phyiscsUnits)-(visibleH));
         camera.update();
 
         //debug code

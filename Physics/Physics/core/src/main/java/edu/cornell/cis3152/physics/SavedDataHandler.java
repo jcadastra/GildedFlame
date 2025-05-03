@@ -77,7 +77,7 @@ public class SavedDataHandler {
         return DATA_HOME+"/"+applicationName ;
     }
 
-    public <T> void saveMiscData (String dataName, T value) {
+    public <T> void setDataVal (String dataName, T value) {
         File file = new File(getUserDataDirectory() + "/" + "savedData.json");
         FileHandle fileHandle = new FileHandle(file);
 
@@ -86,14 +86,15 @@ public class SavedDataHandler {
 
         try {
             fileHandle.writeString(fileCrafter(), false);
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+            System.err.println( "FAILED TO SAVE FILE\n" + e);
+        }
     }
 
-    public JsonValue loadInSaveData (String name) {
-        FileHandle fileLocation = new FileHandle(getUserDataDirectory());
-//        JsonValue data = reader.parse(fileLocation);
-//        return data.get(name);
-        return null;
+    public String getDataVal (String name) {
+        File file = new File(getUserDataDirectory() + "/" + "savedData.json");
+        fileParser(file);
+        return savedData.get(name);
     }
 
     private void fileParser (File file) {
