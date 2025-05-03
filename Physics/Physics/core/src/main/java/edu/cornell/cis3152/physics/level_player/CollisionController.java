@@ -167,19 +167,19 @@ public class CollisionController implements ContactListener {
                 enemy.setJustCollided(true);
             }
 
-            if (isXandY(bd1, bd2, "ground", Enemy.class) == 1) {
-                Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
-                enemy.changeDirection();
-                enemy.setJustCollided(true);
-            }
+//            if (isXandY(bd1, bd2, "ground", Enemy.class) == 1) {
+//                Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
+//                enemy.changeDirection();
+//                enemy.setJustCollided(true);
+//            }
 
 
-            if (isX(bd1,bd2, Enemy.class) == 1) {
-                Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
-                if (isGround(bd1) || isGround(bd2)) {
-                    enemy.setGrounded(true);
-                }
-            }
+//            if (isX(bd1,bd2, Enemy.class) == 1) {
+//                Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
+//                if (isGround(bd1) || isGround(bd2)) {
+//                    enemy.setGrounded(true);
+//                }
+//            }
 
             if (isXandY(bd1, bd2, Totem.class, Moth.class) == 1) {
                 Totem totem = (Totem) idX(bd1, bd2, Totem.class);
