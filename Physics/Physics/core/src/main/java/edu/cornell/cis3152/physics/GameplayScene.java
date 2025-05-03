@@ -24,8 +24,6 @@
  */
 package edu.cornell.cis3152.physics;
 
-import com.badlogic.gdx.graphics.Texture.TextureWrap;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
@@ -378,7 +376,8 @@ public class GameplayScene implements Screen {
 
         scale = new Vector2();
         //TODO: Value needs to be imported from level vvvv
-        bounds = new Rectangle(0,0,defaults.get("bounds").getFloat( 0 ), defaults.get("bounds").getFloat( 1 ));
+//        bounds = new Rectangle(0,0,defaults.get("bounds").getFloat( 0 ), defaults.get("bounds").getFloat( 1 ));
+        bounds = new Rectangle(0,0,50,18);
         resize(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 
         displayFont = directory.getEntry( "shared-unica" ,BitmapFont.class);
@@ -538,6 +537,7 @@ public class GameplayScene implements Screen {
             for (ObstacleSprite rainDrop : weatherMachine.rainDrops) {
                 rainDrop.getObstacle().markRemoved(true);
             }
+            weatherMachine.updateWorld(null);
         }
 
         if (eventHandler != null) {
@@ -564,6 +564,7 @@ public class GameplayScene implements Screen {
         world = new World(gravity, false);
 //        world.step(1/60f, WORLD_VELOC, WORLD_POSIT);
         world.setContactListener(contactListener);
+        weatherMachine.update(world);
 
         loadLevel(levelName, "rope_test");
     };
@@ -702,7 +703,7 @@ public class GameplayScene implements Screen {
                         continue;
                     }
                     float x = object.getFloat("x") / levelData.getInt("tilewidth");
-                    float y = (18 * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
+                    float y = (bounds.height * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
                     float[] pos = new float[]{x, y};
                     if (objName.contains("player")) {
                             Texture playerTexture = directory.getEntry("platform-player", Texture.class);
@@ -771,35 +772,67 @@ public class GameplayScene implements Screen {
                         this.goalDoor = goalDoor;
                         addSprite(goalDoor);
                     } else if (objName.contains("platform")) {
-                        float rotation = object.getInt("rotation");
+                        float rotation = -(float)Math.toRadians(object.getInt("rotation"));
                         float width = object.getFloat("width") / levelData.getInt("tilewidth");
                         float height = object.getFloat("height") / levelData.getInt("tileheight");
-                        GameObject platform = new GameObject(x,y,width,height, units, true,0);
+                        GameObject platform = new GameObject(x,y,width,height, units, false,0);
+
+                        Vector2 oldPos = platform.getObstacle().getPosition();
+                        platform.getObstacle().setPosition(oldPos.add(width/2, height/2));
+
                         platform.getObstacle().setBodyType(BodyType.KinematicBody);
                         platform.getObstacle().setName(objName);
                         platform.setTexture(directory.getEntry("platform", Texture.class));
                         platform.getObstacle().setPhysicsUnits(units);
                         platform.setMaterial(new ObstacleMaterial("platform"));
-                        platform.getObstacle().setAngle((float) (rotation*Math.PI/180f));
+                        platform.getObstacle().setAngle(rotation);
+
                         addSprite(platform);
                     } else if (objName.contains("ambientLight")) {
                         continue;
-                    }else if (objName.contains("burnable")) {
+                    } else if (objName.contains("grate")) {
+                        float width = object.getFloat("width") / levelData.getInt("tilewidth");
+                        float height = object.getFloat("height") / levelData.getInt("tileheight");
+                        GameObject grate = new GameObject(x,y,width,height,units,true);
+                        grate.getObstacle().setBodyType(BodyType.StaticBody);
+                        grate.getObstacle().setName("grateplatform");
+                        grate.setTexture(directory.getEntry("grate", Texture.class));
+                        grate.getObstacle().setPhysicsUnits(units);
+                        addSprite(grate);
+                    } else if (objName.contains("burnable")) {
                         float width = object.getFloat("width") / levelData.getInt("tilewidth");
                         float height = object.getFloat("height") / levelData.getInt("tileheight");
                         GameObject box;
                         if (objName.contains("non")) {
                             box = new GameObject(new float[]{
-                                -(width)/2, -(height)/2,
-                                (width)/2, -(height)/2,
-                                (width)/4, (height)/2,
-                                -(width)/4, (height)/2
+                                -(width)/2, -(height)/2.1f,
+
+                                0,-(height)/2,
+
+                                (width)/2, -(height)/2.1f,
+                                (width)/3, (height)/2 * .8f,
+                                -(width)/3, (height)/2 * .8f
                             }, x,y, width, height, units);
                             box.setMaterial(new ObstacleMaterial("stone"));
                             box.setTexture(directory.getEntry("nonburnable", Texture.class));
                             box.getObstacle().setPhysicsUnits(units);
                         } else {
-                            box = new GameObject(x,y,width,height, units, true);
+                            box = new GameObject(new float[]{
+                                -(width) * (3f/10f), -(height)/2.1f,
+
+                                0,-(height)/2,
+
+                                (width) * (3f/10f), -(height)/2.1f,
+
+                                width/2, -(height) * (3f/10),
+                                width/2, (height) * (3f/10),
+
+                                (width) * (3f/10f), (height)/2 * .80f,
+                                -(width) * (3f/10f), (height)/2 * .80f,
+
+                               -width/2, (height) * (3f/10),
+                                -width/2, -(height) * (3f/10)
+                            }, x,y, width, height, units);
                             box.setMaterial(new ObstacleMaterial("wood"));
                             box.setTexture(directory.getEntry("burnable", Texture.class));
                         }
@@ -808,18 +841,13 @@ public class GameplayScene implements Screen {
                         box.getObstacle().setPhysicsUnits(units);
                         box.getObstacle().setDensity(1f );
                         addSprite(box);
-                    } else if (objName.contains("weather")) {
+                    } else if (objName.contains("rain")) {
                         for (JsonValue prop : object.get("properties")) {
                             String propName = prop.getString("name");
                             String value = prop.getString("value");
                             switch (propName) {
                                 case "rain":
-                                    if (Integer.parseInt(value) != 0) {
-                                        weatherMachine.activateRain(phyiscsUnits, Integer.parseInt(value));
-                                    }
-                                    break;
-                                case "pass":
-//                                    doubleSided = Boolean.parseBoolean(value);
+                                    weatherMachine.activateRain(phyiscsUnits, Integer.parseInt(value));
                                     break;
                             }
                         }
@@ -860,7 +888,8 @@ public class GameplayScene implements Screen {
                 for (JsonValue object : runeButtonReorganizing) {
                     String objName = object.getString("name", "unnamed");
                     float x = object.getFloat("x") / levelData.getInt("tilewidth");
-                    float y = (18 * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
+                    float y = (bounds.height * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
+                    float rotation = object.getFloat("rotation");
                      if (objName.contains("rune")) {
                         boolean hasMoveEvent = false;
                         boolean hasRotateEvent = false;
@@ -910,9 +939,10 @@ public class GameplayScene implements Screen {
                         String finalTargetName = targetName;
                         ObstacleSprite target = sprites.stream().filter(sprite -> sprite.getName().equals(finalTargetName)).findFirst().orElse(null);
                         Texture textureRune = directory.getEntry("runeBase", Texture.class);
-                        float rotation = object.getFloat("rotation");
-                        Rune rune = new Rune(x,y, textureRune.getWidth() / 300f, textureRune.getHeight() / 300f, 0, units, thresholds, directory.getEntry("runeCharged", Texture.class));
-//                        rune.getObstacle().setPhysicsUnits(units);
+                        float width = textureRune.getWidth() / 300f;
+                        float height = textureRune.getHeight() / 300f;
+                        Rune rune = new Rune(x + width/2, y + height/2, width, height, (float) (-rotation), units, thresholds, directory.getEntry("runeCharged", Texture.class));
+                        rune.getObstacle().setY(rune.getObstacle().getY() +  (.23f));
                         rune.setTexture(textureRune);
                         addSprite(rune);
                         runeSet.add(rune);
@@ -1055,12 +1085,13 @@ public class GameplayScene implements Screen {
 
                     if (start != null && end != null) {
                         float x1 = start.getFloat("x") / levelData.getInt("tilewidth");
-                        float y1 = (18 * 300 - start.getFloat("y")) / levelData.getInt("tileheight");
+                        float y1 = (bounds.height * 300 - start.getFloat("y")) / levelData.getInt("tileheight");
                         float x2 = end.getFloat("x") / levelData.getInt("tilewidth");
-                        float y2 = (18 * 300 - end.getFloat("y")) / levelData.getInt("tileheight");
+                        float y2 = (bounds.height * 300 - end.getFloat("y")) / levelData.getInt("tileheight");
 
                         int depth = 10, piecelen = 25, thickness = 14;
                         JsonValue props = end.get("properties");
+                        String pin1 = null, pin2 = null, pin1Material = "rope", pin2Material = "rope", middleMaterial = "rope";
                         if (props != null) {
                             for (JsonValue prop : props) {
                                 String pname = prop.getString("name");
@@ -1069,14 +1100,54 @@ public class GameplayScene implements Screen {
                                     case "depth":
                                         depth = Integer.parseInt(val);
                                         break;
+                                    case "pin1":
+                                        pin1 = val;
+                                        break;
+                                    case "pin2":
+                                        pin2 = val;
+                                        break;
+                                    case "end1Material":
+                                        pin1Material = val;
+                                        break;
+                                    case "end2Material":
+                                        pin2Material = val;
+                                        break;
+                                    case "middleMaterial":
+                                        middleMaterial = val;
+                                        break;
                                 }
                             }
                         }
-                        texture = directory.getEntry( "platform-rope-end", Texture.class );
-                        Texture middle_texture = directory.getEntry( "platform-rope-mid", Texture.class );
+                        System.out.println(pin1Material + " " + pin2Material + " " + middleMaterial);
                         Rope rope = new Rope(new Vector2(x1, y1), new Vector2(x2, y2), depth, thickness, piecelen, units, levelInfo.get("ropes").get(0));
-                        rope.blanketSetTextures(texture, middle_texture);
+                        rope.customRopeDesignation(pin1Material.equals("iron") ? directory.getEntry( "chain-end", Texture.class ) : directory.getEntry( "rope-end", Texture.class ),
+                            middleMaterial.equals("iron") ? directory.getEntry( "chain-mid", Texture.class ) : directory.getEntry( "rope-mid", Texture.class ),
+                            pin2Material.equals("iron") ? directory.getEntry( "chain-end", Texture.class ) : directory.getEntry( "rope-end", Texture.class ),
+                            pin1Material, middleMaterial, pin2Material);
                         addSpriteGroup(rope);
+                        WeldJointDef pinJoint = new WeldJointDef();
+                        pinJoint.frequencyHz = 0f;
+                        pinJoint.dampingRatio = 0f;
+                        pinJoint.collideConnected = false;
+                        System.out.println("pin1: " + pin1 + ";; pin 2 " + pin2);
+                        if (pin1 != null && !pin1.isEmpty()) {
+                            rope.deactivateAnchor(0);
+                            String finalPin1 = pin1;
+                            ObstacleSprite target = sprites.stream().filter(os -> os.getName().equals(finalPin1)).findFirst().orElse(null);
+                            if (target == null) {System.err.println("Target is null for pin 1, check target pin name"); }
+                            pinJoint.initialize(rope.getAnchors().get(0).getObstacle().getBody(), target.getObstacle().getBody(), (rope.getAnchors().get(0).getObstacle().getBody()
+                                .getWorldCenter()));
+                            world.createJoint(pinJoint);
+                        }
+                        if (pin2 != null && !pin2.isEmpty()) {
+                            rope.deactivateAnchor(1);
+                            String finalPin2 = pin2;
+                            ObstacleSprite target = sprites.stream().filter(os -> os.getName().equals(finalPin2)).findFirst().orElse(null);
+                            if (target == null) {System.err.println("Target is null for pin 2, check target pin name"); }
+                            pinJoint.initialize(rope.getAnchors().get(1).getObstacle().getBody(), target.getObstacle().getBody(), (rope.getAnchors().get(1).getObstacle().getBody()
+                                .getWorldCenter()));
+                            world.createJoint(pinJoint);
+                        }
                     }
 
                 }
@@ -1112,7 +1183,7 @@ public class GameplayScene implements Screen {
                 for (JsonValue object : layer.get("objects")) {
                     String objName = object.getString("name", "unnamed");
                     float x = object.getFloat("x") / levelData.getInt("tilewidth");
-                    float y = (18 * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
+                    float y = (bounds.height * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
                     if (objName.contains("light")) {
                         FloatingLight light = new FloatingLight(units,new Vector2(x,y),1,goalPos);
 //                        System.out.println("floating light: " + (int)x+","+ (int)y);
@@ -1189,6 +1260,8 @@ public class GameplayScene implements Screen {
             return false;
         }
         if (activeFireJoint == null || torch.getObstacle().getY() < 0|| queueFailure) {
+            System.out.println((activeFireJoint == null) +", "+ (torch.getObstacle().getY() < 0)+ ", " +queueFailure);
+            System.out.println(torch.getObstacle().getPosition());
             setFailure(true);
             return false;
         }
@@ -1209,11 +1282,14 @@ public class GameplayScene implements Screen {
     public void update(float dt) {
         soundEngine.tendToMusicLoop();
 //        System.out.println(Gdx.graphics.getFramesPerSecond());
+//        SavedDataHandler temp = new SavedDataHandler();
+//        temp.setDataVal("test" + Gdx.graphics.getFrameId(), Gdx.graphics.getFramesPerSecond());
 
         updateRunes(dt);
         supplementaryCollisionActions();
         supplementaryFireActions();
         supplementaryEventActions(dt);
+        weatherMachine.updateWorld(world);
         if (weatherMachine.isRainActive()) {
             supplementaryRainActions();
         }
@@ -1227,7 +1303,7 @@ public class GameplayScene implements Screen {
         }
 
         torch.update();
-        weatherMachine.activateWind(new Vector2(0f,0));
+//        weatherMachine.activateWind(new Vector2(0f,0));
         weatherMachine.update(world);
         fireController.update(weatherMachine);
         eventHandler.update();
@@ -1384,12 +1460,10 @@ public class GameplayScene implements Screen {
         float prevY = camera.position.y;
 
         Vector2 playerPos = avatar.getObstacle().getPosition();
-        float playerX = playerPos.x*scale.x;
-        float playerY = playerPos.y*scale.y;
 
-        float lerp = 0.3f;
-        camera.position.x += (playerX - camera.position.x) * lerp;
-        camera.position.y += (playerY - camera.position.y) * lerp;
+//        float lerp = 0.3f;
+//        camera.position.x += (playerX - camera.position.x) * lerp;
+//        camera.position.y += (playerY - camera.position.y) * lerp;
 
 //        float visibleW =  (bounds.x + bounds.width) * scale.x/2*0.8f; //half of world visible
 //        float visibleH = (bounds.y + bounds.height) * scale.y/2*0.8f;
@@ -1400,16 +1474,30 @@ public class GameplayScene implements Screen {
 
 
 
-        camera.position.x = MathUtils.clamp(camera.position.x,
-            bounds.x*scale.x+visibleW,
-            (bounds.x+bounds.width)*scale.x - visibleW);
+//        camera.position.x = MathUtils.clamp(camera.position.x,
+//            bounds.x*scale.x+visibleW,
+//            (bounds.x+bounds.width)*scale.x - visibleW);
 //        System.out.println(camera.position.x +", " + bounds.x + " , " + bounds.width + " , " + bounds.height+ " , " + scale);
 //        System.out.println("min: "+ (bounds.x*scale.x+visibleW )+ "max: "+ ((bounds.x+bounds.width)*scale.x - visibleW));
         //System.out.println("x reached bounds:"+(camera.position.x==bounds.x*scale.x+visibleW));
-        camera.position.y = MathUtils.clamp(camera.position.y,
-            bounds.y*scale.y+visibleH,
-            (bounds.y+bounds.height)*scale.y - visibleH);
+//        camera.position.y = MathUtils.clamp(camera.position.y,
+//            bounds.y*scale.y+visibleH,
+//            (bounds.y+bounds.height)*scale.y - visibleH);
 
+        float idealX = playerPos.x * phyiscsUnits;
+        float idealY = playerPos.y * phyiscsUnits;
+//        System.out.println(camera.viewportWidth +",pp " + camera.viewportHeight);
+//        System.out.println(visibleW +",ppp " + visibleH);
+//        System.out.println(((visibleW)/2) +",ppasdp " +( (bounds.width* phyiscsUnits)-(visibleW)/2));
+//        System.out.println(((visibleW)/2) +",ppasdp " +( (bounds.width)));
+//        System.out.println(((visibleW)/2) +",ppasdp " +( (bounds.width * phyiscsUnits)));
+//        System.out.println("------");
+//        System.out.println(((visibleH)/2) +",hh " +( (bounds.height* phyiscsUnits)-(visibleH)/2));
+//        System.out.println(((visibleH)/2) +",hhh " +( (bounds.height)));
+//        System.out.println(((visibleH)/2) +",hhh " +( (bounds.height * phyiscsUnits)));
+//        System.out.println(scale +",awef " +phyiscsUnits);
+        camera.position.x = MathUtils.clamp(idealX, (visibleW), (bounds.width * phyiscsUnits)-(visibleW));
+        camera.position.y = MathUtils.clamp(idealY, (visibleH), (bounds.height * phyiscsUnits)-(visibleH));
         camera.update();
 
         //debug code
@@ -1610,7 +1698,6 @@ public class GameplayScene implements Screen {
                                 activeTorchJoint = null;
                             }
                         }
-                        fireController.cleanFire(killFires_fire, eos);
                         killFires_fire.dispose();
                     }
                     fireController.cleanObj(eos);
@@ -1978,6 +2065,7 @@ public class GameplayScene implements Screen {
         scale.y = height/bounds.height;
 //        scale.x = scale.y;
         // this works???? ^^^
+        System.out.println(width + "x" + height);
 
         fitViewport.update(width, height, true);
         fitViewport.setCamera(camera);
@@ -2063,10 +2151,10 @@ public class GameplayScene implements Screen {
 
             for (ObstacleSprite sprite : sprites) {
                 myWriter.write(sprite.getName() + ", ");
-                myWriter.write(sprite.getObstacle().getPosition().toString() + ", ");
-                myWriter.write(sprite.getObstacle().getLinearVelocity().toString() + ", ");
-                myWriter.write((sprite.getObstacle().getAngle()) + ", ");
-                myWriter.write((sprite.getObstacle().getAngularVelocity()) + ", ");
+                myWriter.write(sprite.getObstacle().getBody().getPosition().toString() + ", ");
+                myWriter.write(sprite.getObstacle().getBody().getLinearVelocity().toString() + ", ");
+                myWriter.write((sprite.getObstacle().getBody().getAngle()) + ", ");
+                myWriter.write((sprite.getObstacle().getBody().getAngularVelocity()) + ", ");
                 myWriter.write(sprite.getObstacle().getBody().isAwake() + ", ");
                 myWriter.write(sprite.getObstacle().getBody().isActive() + ", ");
                 myWriter.write(sprite.getObstacle().getBody().getMass() + ", ");

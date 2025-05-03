@@ -9,7 +9,7 @@
          "name":"BackgroundTiles",
          "objects":[
                 {
-                 "gid":72,
+                 "gid":75,
                  "height":600,
                  "id":115,
                  "name":"brickBackground",
@@ -32,7 +32,7 @@
          "name":"Background",
          "objects":[
                 {
-                 "gid":77,
+                 "gid":80,
                  "height":1000,
                  "id":364,
                  "name":"tClimb",
@@ -44,7 +44,7 @@
                  "y":4947.63636363636
                 }, 
                 {
-                 "gid":73,
+                 "gid":76,
                  "height":500,
                  "id":365,
                  "name":"colB",
@@ -56,7 +56,7 @@
                  "y":3918
                 }, 
                 {
-                 "gid":74,
+                 "gid":77,
                  "height":500,
                  "id":366,
                  "name":"colM",
@@ -68,7 +68,7 @@
                  "y":3532
                 }, 
                 {
-                 "gid":74,
+                 "gid":77,
                  "height":500,
                  "id":367,
                  "name":"colM",
@@ -80,7 +80,7 @@
                  "y":3046
                 }, 
                 {
-                 "gid":74,
+                 "gid":77,
                  "height":500,
                  "id":368,
                  "name":"colM",
@@ -92,7 +92,7 @@
                  "y":2550
                 }, 
                 {
-                 "gid":75,
+                 "gid":78,
                  "height":500,
                  "id":369,
                  "name":"colT",
@@ -104,7 +104,7 @@
                  "y":2274
                 }, 
                 {
-                 "gid":73,
+                 "gid":76,
                  "height":500,
                  "id":370,
                  "name":"colB",
@@ -116,7 +116,7 @@
                  "y":3620
                 }, 
                 {
-                 "gid":74,
+                 "gid":77,
                  "height":500,
                  "id":372,
                  "name":"colM",
@@ -128,7 +128,7 @@
                  "y":3036
                 }, 
                 {
-                 "gid":74,
+                 "gid":77,
                  "height":500,
                  "id":373,
                  "name":"colM",
@@ -140,7 +140,7 @@
                  "y":2540
                 }, 
                 {
-                 "gid":75,
+                 "gid":78,
                  "height":500,
                  "id":374,
                  "name":"colT",
@@ -152,7 +152,7 @@
                  "y":2264
                 }, 
                 {
-                 "gid":74,
+                 "gid":77,
                  "height":500,
                  "id":375,
                  "name":"colM",
@@ -164,7 +164,7 @@
                  "y":3140.66666666667
                 }, 
                 {
-                 "gid":74,
+                 "gid":77,
                  "height":500,
                  "id":377,
                  "name":"colM",
@@ -176,7 +176,7 @@
                  "y":2491.05893939394
                 }, 
                 {
-                 "gid":75,
+                 "gid":78,
                  "height":500,
                  "id":378,
                  "name":"colT",
@@ -188,7 +188,7 @@
                  "y":2215.05893939394
                 }, 
                 {
-                 "gid":73,
+                 "gid":76,
                  "height":500,
                  "id":380,
                  "name":"colB",
@@ -200,7 +200,7 @@
                  "y":2742
                 }, 
                 {
-                 "gid":74,
+                 "gid":77,
                  "height":500,
                  "id":381,
                  "name":"colM",
@@ -212,7 +212,7 @@
                  "y":2506.53
                 }, 
                 {
-                 "gid":75,
+                 "gid":78,
                  "height":500,
                  "id":382,
                  "name":"colT",
@@ -224,7 +224,7 @@
                  "y":2230.53
                 }, 
                 {
-                 "gid":73,
+                 "gid":76,
                  "height":500,
                  "id":383,
                  "name":"colB",
@@ -236,7 +236,7 @@
                  "y":2757.47
                 }, 
                 {
-                 "gid":76,
+                 "gid":79,
                  "height":972,
                  "id":384,
                  "name":"window",
@@ -248,7 +248,7 @@
                  "y":3058
                 }, 
                 {
-                 "gid":76,
+                 "gid":79,
                  "height":972,
                  "id":385,
                  "name":"window",
@@ -260,7 +260,7 @@
                  "y":3068
                 }, 
                 {
-                 "gid":76,
+                 "gid":79,
                  "height":972,
                  "id":386,
                  "name":"window",
@@ -272,7 +272,7 @@
                  "y":3070
                 }, 
                 {
-                 "gid":73,
+                 "gid":76,
                  "height":500,
                  "id":387,
                  "name":"colB",
@@ -284,7 +284,7 @@
                  "y":4840.36363636364
                 }, 
                 {
-                 "gid":74,
+                 "gid":77,
                  "height":500,
                  "id":388,
                  "name":"colM",
@@ -296,7 +296,7 @@
                  "y":3530
                 }, 
                 {
-                 "gid":74,
+                 "gid":77,
                  "height":500,
                  "id":389,
                  "name":"colM",
@@ -308,7 +308,7 @@
                  "y":3044
                 }, 
                 {
-                 "gid":74,
+                 "gid":77,
                  "height":500,
                  "id":390,
                  "name":"colM",
@@ -320,7 +320,7 @@
                  "y":2548
                 }, 
                 {
-                 "gid":75,
+                 "gid":78,
                  "height":500,
                  "id":391,
                  "name":"colT",
@@ -332,7 +332,7 @@
                  "y":2272
                 }, 
                 {
-                 "gid":74,
+                 "gid":77,
                  "height":500,
                  "id":392,
                  "name":"colM",
@@ -344,7 +344,7 @@
                  "y":4018
                 }, 
                 {
-                 "gid":74,
+                 "gid":77,
                  "height":500,
                  "id":393,
                  "name":"colM",
@@ -356,7 +356,7 @@
                  "y":4339.09090909091
                 }, 
                 {
-                 "gid":76,
+                 "gid":79,
                  "height":972,
                  "id":397,
                  "name":"window",
@@ -415,221 +415,6 @@
         }, 
         {
          "draworder":"topdown",
-         "id":5,
-         "name":"Entities",
-         "objects":[
-                {
-                 "gid":61,
-                 "height":235,
-                 "id":114,
-                 "name":"goaldoor",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":346,
-                 "x":351,
-                 "y":2730
-                }, 
-                {
-                 "gid":57,
-                 "height":230,
-                 "id":347,
-                 "name":"1",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":241.999999999999,
-                 "x":8702.33333333333,
-                 "y":2957.78787878788
-                }, 
-                {
-                 "gid":57,
-                 "height":222,
-                 "id":348,
-                 "name":"2",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":218,
-                 "x":8737,
-                 "y":4775
-                }, 
-                {
-                 "gid":57,
-                 "height":230,
-                 "id":349,
-                 "name":"3",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":242,
-                 "x":1225.665,
-                 "y":2988.395
-                }, 
-                {
-                 "gid":57,
-                 "height":222,
-                 "id":350,
-                 "name":"4",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":218,
-                 "x":1224.335,
-                 "y":4809.605
-                }, 
-                {
-                 "gid":57,
-                 "height":230,
-                 "id":351,
-                 "name":"5",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":242,
-                 "x":3349.67,
-                 "y":3870.395
-                }, 
-                {
-                 "gid":57,
-                 "height":222,
-                 "id":352,
-                 "name":"6",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":218,
-                 "x":3340.33,
-                 "y":4819.605
-                }, 
-                {
-                 "gid":82,
-                 "height":57,
-                 "id":398,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":1911.39393939394,
-                 "y":2356.27272727273
-                }, 
-                {
-                 "gid":82,
-                 "height":57,
-                 "id":399,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":1929.57575757576,
-                 "y":2847.18181818182
-                }, 
-                {
-                 "gid":82,
-                 "height":57,
-                 "id":400,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":3878.06060606061,
-                 "y":2356.27272727273
-                }, 
-                {
-                 "gid":82,
-                 "height":57,
-                 "id":401,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":3872,
-                 "y":2856.27272727273
-                }, 
-                {
-                 "gid":82,
-                 "height":57,
-                 "id":402,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":5996.24242424242,
-                 "y":2850.21212121212
-                }, 
-                {
-                 "gid":82,
-                 "height":57,
-                 "id":403,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":5990.18181818182,
-                 "y":2353.24242424242
-                }, 
-                {
-                 "gid":82,
-                 "height":57,
-                 "id":404,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":8078.06060606061,
-                 "y":2359.30303030303
-                }, 
-                {
-                 "gid":82,
-                 "height":57,
-                 "id":405,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":8078.06060606061,
-                 "y":2871.42424242424
-                }, 
-                {
-                 "gid":57,
-                 "height":150,
-                 "id":406,
-                 "name":"7",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":150,
-                 "x":5500.31760435572,
-                 "y":3172.39866908651
-                }, 
-                {
-                 "gid":57,
-                 "height":150,
-                 "id":407,
-                 "name":"8",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":150,
-                 "x":7607.65491314493,
-                 "y":4682.38052026618
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
          "id":2,
          "name":"Player",
          "objects":[
@@ -665,6 +450,245 @@
         }, 
         {
          "draworder":"topdown",
+         "id":5,
+         "name":"Entities",
+         "objects":[
+                {
+                 "gid":61,
+                 "height":235,
+                 "id":114,
+                 "name":"goaldoor",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":346,
+                 "x":351,
+                 "y":2730
+                }, 
+                {
+                 "gid":57,
+                 "height":230,
+                 "id":347,
+                 "name":"1",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":241.999999999999,
+                 "x":8702.33333333333,
+                 "y":2957.78787878788
+                }, 
+                {
+                 "gid":57,
+                 "height":222,
+                 "id":348,
+                 "name":"2",
+                 "properties":[
+                        {
+                         "name":"end1Material",
+                         "type":"string",
+                         "value":"iron"
+                        }, 
+                        {
+                         "name":"end2Material",
+                         "type":"string",
+                         "value":"rope"
+                        }, 
+                        {
+                         "name":"middleMaterial",
+                         "type":"string",
+                         "value":"rope"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":218,
+                 "x":8737,
+                 "y":4775
+                }, 
+                {
+                 "gid":57,
+                 "height":230,
+                 "id":349,
+                 "name":"3",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":242,
+                 "x":1225.665,
+                 "y":2988.395
+                }, 
+                {
+                 "gid":57,
+                 "height":222,
+                 "id":350,
+                 "name":"4",
+                 "properties":[
+                        {
+                         "name":"end1Material",
+                         "type":"string",
+                         "value":"rope"
+                        }, 
+                        {
+                         "name":"end2Material",
+                         "type":"string",
+                         "value":"rope"
+                        }, 
+                        {
+                         "name":"middleMaterial",
+                         "type":"string",
+                         "value":"rope"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":218,
+                 "x":1224.335,
+                 "y":4809.605
+                }, 
+                {
+                 "gid":57,
+                 "height":230,
+                 "id":351,
+                 "name":"5",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":242,
+                 "x":3349.67,
+                 "y":3870.395
+                }, 
+                {
+                 "gid":57,
+                 "height":222,
+                 "id":352,
+                 "name":"6",
+                 "properties":[
+                        {
+                         "name":"end1Material",
+                         "type":"string",
+                         "value":"rope"
+                        }, 
+                        {
+                         "name":"end2Material",
+                         "type":"string",
+                         "value":"rope"
+                        }, 
+                        {
+                         "name":"middleMaterial",
+                         "type":"string",
+                         "value":"rope"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":218,
+                 "x":3340.33,
+                 "y":4819.605
+                }, 
+                {
+                 "gid":85,
+                 "height":57,
+                 "id":398,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":1911.39393939394,
+                 "y":2356.27272727273
+                }, 
+                {
+                 "gid":85,
+                 "height":57,
+                 "id":399,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":1929.57575757576,
+                 "y":2847.18181818182
+                }, 
+                {
+                 "gid":85,
+                 "height":57,
+                 "id":400,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":3878.06060606061,
+                 "y":2356.27272727273
+                }, 
+                {
+                 "gid":85,
+                 "height":57,
+                 "id":401,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":3872,
+                 "y":2856.27272727273
+                }, 
+                {
+                 "gid":85,
+                 "height":57,
+                 "id":402,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":5996.24242424242,
+                 "y":2850.21212121212
+                }, 
+                {
+                 "gid":85,
+                 "height":57,
+                 "id":403,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":5990.18181818182,
+                 "y":2353.24242424242
+                }, 
+                {
+                 "gid":85,
+                 "height":57,
+                 "id":404,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":8078.06060606061,
+                 "y":2359.30303030303
+                }, 
+                {
+                 "gid":85,
+                 "height":57,
+                 "id":405,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":8078.06060606061,
+                 "y":2871.42424242424
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
          "id":6,
          "name":"Action Entities",
          "objects":[],
@@ -675,7 +699,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":410,
+ "nextobjectid":420,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
@@ -698,7 +722,7 @@
          "source":"GameObjectTiles.tsx"
         }, 
         {
-         "firstgid":72,
+         "firstgid":75,
          "source":"BackgroundAssets.tsx"
         }],
  "tilewidth":300,
