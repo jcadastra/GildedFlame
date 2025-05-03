@@ -102,6 +102,10 @@ public class GameplayScene implements Screen {
     public static final int EXIT_SUCCESS = 3;
     /** Exit code for replaying the current level */
     public static final int EXIT_REPLAY = 4;
+    /** Exit code for returning to the main menu */
+    public static final int EXIT_MAINMENU = 5;
+    /** Exit code for going to the failure screen */
+    public static final int EXIT_FAILURE = 6;
     /** How many frames after winning/losing do we continue? */
     public static final int EXIT_COUNT = 180;
     private boolean queueFailure;
@@ -1900,7 +1904,8 @@ public class GameplayScene implements Screen {
             //batch.drawText(goodMessage, width/2, height/2);
             listener.exitScreen(this, EXIT_SUCCESS);
         } else if (failed) {
-            batch.drawText(badMessage, width/2, height/2);
+            //batch.drawText(badMessage, width/2, height/2);
+            listener.exitScreen(this, EXIT_FAILURE);
         }
 
         batch.end();

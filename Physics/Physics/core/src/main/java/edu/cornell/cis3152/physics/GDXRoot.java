@@ -225,6 +225,37 @@ public class GDXRoot extends Game implements ScreenListener {
             setScreen(currentScene);
             return;
         }
+        else if (screen instanceof FailureScene) {
+            if (exitCode == GameplayScene.EXIT_MAINMENU) {
+                MainMenuScreen mainMenu = new MainMenuScreen();
+                mainMenu.setScreenListener(this);
+                setScreen(mainMenu);
+                soundEngine.stopMusicLoop();
+                soundEngine.registerMusic("menu_music", directory.getEntry("menu_music", Music.class));
+                ArrayList<String> temp = new ArrayList<>();
+                temp.add("menu_music");
+                soundEngine.startMusicLoop(temp);
+                return;
+            } else if (exitCode == GameplayScene.EXIT_REPLAY) {
+                current = current;
+                currentScene = new GameplayScene(directory, soundEngine, "platform");
+                currentScene.loadLevel(levels[current], "rope_test");
+                currentScene.setScreenListener(this);
+                currentScene.setSpriteBatch(batch);
+                setScreen(currentScene);
+                return;
+            } else if (exitCode == GameplayScene.EXIT_QUIT) {
+                LevelSelectScene levelSelect = new LevelSelectScene();
+                levelSelect.setScreenListener(this);
+                setScreen(levelSelect);
+                soundEngine.stopMusicLoop();
+                soundEngine.registerMusic("menu_music", directory.getEntry("menu_music", Music.class));
+                ArrayList<String> temp = new ArrayList<>();
+                temp.add("menu_music");
+                soundEngine.startMusicLoop(temp);
+                return;
+            }
+        }
 
         // Handle exit codes from any GameplayScene.
         if (screen instanceof GameplayScene) {
