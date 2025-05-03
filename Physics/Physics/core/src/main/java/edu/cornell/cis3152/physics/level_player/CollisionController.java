@@ -155,12 +155,7 @@ public class CollisionController implements ContactListener {
             }
 
 
-//            if (isX(bd1, bd2, Avatar.class) == 1) {
-//                Avatar t = (Avatar) idX(bd1, bd2, Avatar.class);
-//                if ((t.getSensorName().equals(fd2) && t != bd1 && isGround(bd1)) || (t.getSensorName().equals(fd1) && t != bd2 && isGround(bd2))) {
-//                    collisionFlags.push(new CollisionFlag("traciGrounded", bd1 instanceof Avatar ? fix2 : fix1));
-//                }
-//            }
+
 
             if (isXandY(bd1, bd2, Avatar.class, Torch.class )== 1) {
                 collisionFlags.push(new CollisionFlag("addTorch", idX(bd1, bd2, Avatar.class)));
@@ -170,6 +165,20 @@ public class CollisionController implements ContactListener {
                 Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
                 enemy.changeDirection();
                 enemy.setJustCollided(true);
+            }
+
+            if (isXandY(bd1, bd2, "ground", Enemy.class) == 1) {
+                Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
+                enemy.changeDirection();
+                enemy.setJustCollided(true);
+            }
+
+
+            if (isX(bd1,bd2, Enemy.class) == 1) {
+                Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
+                if (isGround(bd1) || isGround(bd2)) {
+                    enemy.setGrounded(true);
+                }
             }
 
             if (isXandY(bd1, bd2, Totem.class, Moth.class) == 1) {
@@ -569,6 +578,14 @@ public class CollisionController implements ContactListener {
 //        }
 //
 
+        if (isX(bd1,bd2, Enemy.class) == 1) {
+            Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
+            if (isGround(bd1) || isGround(bd2)) {
+                System.out.println("GET OUTTTT");
+                enemy.setGrounded(false);
+            }
+        }
+
 
         /**
          * Totem and Light collision:
@@ -643,7 +660,6 @@ public class CollisionController implements ContactListener {
                         (torchX > mothX && !moth.isFacingRight())) {
                         moth.changeDirection();
                     }
-                moth.setState(EnemyState.IN_LIGHT);
                 moth.setState(EnemyState.OUT_OF_LIGHT);
             }else {
                 beginSmother = false;

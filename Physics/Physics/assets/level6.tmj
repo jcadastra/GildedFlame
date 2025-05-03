@@ -1982,18 +1982,6 @@
                  "width":300,
                  "x":3882,
                  "y":4206
-                }, 
-                {
-                 "gid":56,
-                 "height":300,
-                 "id":230,
-                 "name":"moth",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":300,
-                 "x":7218,
-                 "y":3650
                 }],
          "opacity":1,
          "type":"objectgroup",
