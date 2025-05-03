@@ -454,13 +454,12 @@
         "level4.tmj",
         "BackgroundAssets.tsx",
         "level7.tmj",
-        "level9.tmj"
+        "level9.tmj",
+        "test8.tmj"
     ],
     "project": "tiled.tiled-project",
     "property.type": "int",
     "recentFiles": [
-        "test8.tmj",
-        "level8.tmj",
         "test_map.tmx",
         "EnemyTiles.tsx",
         "GameObjectTiles.tsx",
@@ -470,6 +469,8 @@
         "example_level.tmj",
         "test2.tmj",
         "example_level2.tmj",
-        "sample.tmj"
+        "sample.tmj",
+        "level10.tmj",
+        "aaa.tmj"
     ]
 }
