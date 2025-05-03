@@ -703,7 +703,7 @@ public class GameplayScene implements Screen {
                         continue;
                     }
                     float x = object.getFloat("x") / levelData.getInt("tilewidth");
-                    float y = (18 * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
+                    float y = (bounds.height * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
                     float[] pos = new float[]{x, y};
                     if (objName.contains("player")) {
                             Texture playerTexture = directory.getEntry("platform-player", Texture.class);
@@ -888,7 +888,7 @@ public class GameplayScene implements Screen {
                 for (JsonValue object : runeButtonReorganizing) {
                     String objName = object.getString("name", "unnamed");
                     float x = object.getFloat("x") / levelData.getInt("tilewidth");
-                    float y = (18 * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
+                    float y = (bounds.height * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
                     float rotation = object.getFloat("rotation");
                      if (objName.contains("rune")) {
                         boolean hasMoveEvent = false;
@@ -1085,9 +1085,9 @@ public class GameplayScene implements Screen {
 
                     if (start != null && end != null) {
                         float x1 = start.getFloat("x") / levelData.getInt("tilewidth");
-                        float y1 = (18 * 300 - start.getFloat("y")) / levelData.getInt("tileheight");
+                        float y1 = (bounds.height * 300 - start.getFloat("y")) / levelData.getInt("tileheight");
                         float x2 = end.getFloat("x") / levelData.getInt("tilewidth");
-                        float y2 = (18 * 300 - end.getFloat("y")) / levelData.getInt("tileheight");
+                        float y2 = (bounds.height * 300 - end.getFloat("y")) / levelData.getInt("tileheight");
 
                         int depth = 10, piecelen = 25, thickness = 14;
                         JsonValue props = end.get("properties");
@@ -1183,7 +1183,7 @@ public class GameplayScene implements Screen {
                 for (JsonValue object : layer.get("objects")) {
                     String objName = object.getString("name", "unnamed");
                     float x = object.getFloat("x") / levelData.getInt("tilewidth");
-                    float y = (18 * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
+                    float y = (bounds.height * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
                     if (objName.contains("light")) {
                         FloatingLight light = new FloatingLight(units,new Vector2(x,y),1,goalPos);
 //                        System.out.println("floating light: " + (int)x+","+ (int)y);
@@ -1260,6 +1260,8 @@ public class GameplayScene implements Screen {
             return false;
         }
         if (activeFireJoint == null || torch.getObstacle().getY() < 0|| queueFailure) {
+            System.out.println((activeFireJoint == null) +", "+ (torch.getObstacle().getY() < 0)+ ", " +queueFailure);
+            System.out.println(torch.getObstacle().getPosition());
             setFailure(true);
             return false;
         }
@@ -1454,12 +1456,10 @@ public class GameplayScene implements Screen {
         float prevY = camera.position.y;
 
         Vector2 playerPos = avatar.getObstacle().getPosition();
-        float playerX = playerPos.x*scale.x;
-        float playerY = playerPos.y*scale.y;
 
-        float lerp = 0.3f;
-        camera.position.x += (playerX - camera.position.x) * lerp;
-        camera.position.y += (playerY - camera.position.y) * lerp;
+//        float lerp = 0.3f;
+//        camera.position.x += (playerX - camera.position.x) * lerp;
+//        camera.position.y += (playerY - camera.position.y) * lerp;
 
 //        float visibleW =  (bounds.x + bounds.width) * scale.x/2*0.8f; //half of world visible
 //        float visibleH = (bounds.y + bounds.height) * scale.y/2*0.8f;
@@ -1482,11 +1482,16 @@ public class GameplayScene implements Screen {
 
         float idealX = playerPos.x * phyiscsUnits;
         float idealY = playerPos.y * phyiscsUnits;
-//        System.out.println(camera.viewportWidth +",pp " + camera.viewportHeight);
-//        System.out.println(visibleW +",ppp " + visibleH);
-//        System.out.println(((visibleW)/2) +",ppasdp " +( (bounds.width/phyiscsUnits)-(visibleW)/2));
-//        System.out.println(((visibleW)/2) +",ppasdp " +( (bounds.width)));
-//        System.out.println(((visibleW)/2) +",ppasdp " +( (bounds.width * phyiscsUnits)));
+        System.out.println(camera.viewportWidth +",pp " + camera.viewportHeight);
+        System.out.println(visibleW +",ppp " + visibleH);
+        System.out.println(((visibleW)/2) +",ppasdp " +( (bounds.width* phyiscsUnits)-(visibleW)/2));
+        System.out.println(((visibleW)/2) +",ppasdp " +( (bounds.width)));
+        System.out.println(((visibleW)/2) +",ppasdp " +( (bounds.width * phyiscsUnits)));
+        System.out.println("------");
+        System.out.println(((visibleH)/2) +",hh " +( (bounds.height* phyiscsUnits)-(visibleH)/2));
+        System.out.println(((visibleH)/2) +",hhh " +( (bounds.height)));
+        System.out.println(((visibleH)/2) +",hhh " +( (bounds.height * phyiscsUnits)));
+        System.out.println(scale +",awef " +phyiscsUnits);
         camera.position.x = MathUtils.clamp(idealX, (visibleW), (bounds.width * phyiscsUnits)-(visibleW));
         camera.position.y = MathUtils.clamp(idealY, (visibleH), (bounds.height * phyiscsUnits)-(visibleH));
         camera.update();
@@ -2060,6 +2065,7 @@ public class GameplayScene implements Screen {
         scale.y = height/bounds.height;
 //        scale.x = scale.y;
         // this works???? ^^^
+        System.out.println(width + "x" + height);
 
         fitViewport.update(width, height, true);
         fitViewport.setCamera(camera);
