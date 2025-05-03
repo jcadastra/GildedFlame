@@ -1,52 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.11.2" name="backgroundAssets" tilewidth="1000" tileheight="1000" tilecount="11" columns="0">
+<tileset version="1.10" tiledversion="1.10.2" name="backgroundAssets" tilewidth="1000" tileheight="1000" tilecount="15" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <properties>
    <property name="name" value="brickBackground"/>
   </properties>
-  <image source="backgroundAssets/brickBackground.png" width="600" height="600"/>
+  <image width="600" height="600" source="backgroundAssets/brickBackground.png"/>
  </tile>
  <tile id="1">
   <properties>
    <property name="name" value="colB"/>
   </properties>
-  <image source="backgroundAssets/colB.png" width="300" height="500"/>
+  <image width="300" height="500" source="backgroundAssets/colB.png"/>
  </tile>
  <tile id="2">
   <properties>
    <property name="name" value="colM"/>
   </properties>
-  <image source="backgroundAssets/colM.png" width="300" height="500"/>
+  <image width="300" height="500" source="backgroundAssets/colM.png"/>
  </tile>
  <tile id="3">
   <properties>
    <property name="name" value="colT"/>
   </properties>
-  <image source="backgroundAssets/colT.png" width="300" height="500"/>
+  <image width="300" height="500" source="backgroundAssets/colT.png"/>
  </tile>
  <tile id="4">
   <properties>
    <property name="name" value="window"/>
   </properties>
-  <image source="backgroundAssets/window.png" width="300" height="500"/>
+  <image width="300" height="500" source="backgroundAssets/window.png"/>
  </tile>
  <tile id="5">
-  <image source="backgroundAssets/tClimb.png" width="1000" height="1000"/>
+  <image width="1000" height="1000" source="backgroundAssets/tClimb.png"/>
  </tile>
  <tile id="6">
-  <image source="backgroundAssets/tJump.png" width="1000" height="1000"/>
+  <image width="1000" height="1000" source="backgroundAssets/tJump.png"/>
  </tile>
  <tile id="7">
-  <image source="backgroundAssets/tMove.png" width="1000" height="1000"/>
+  <image width="1000" height="1000" source="backgroundAssets/tMove.png"/>
  </tile>
  <tile id="8">
-  <image source="backgroundAssets/tParabola.png" width="1000" height="1000"/>
+  <image width="1000" height="1000" source="backgroundAssets/tParabola.png"/>
  </tile>
  <tile id="9">
-  <image source="backgroundAssets/tThrow.png" width="1000" height="1000"/>
+  <image width="1000" height="1000" source="backgroundAssets/tThrow.png"/>
  </tile>
  <tile id="10">
-  <image source="tiled_images/light.png" width="57" height="57"/>
+  <image width="57" height="57" source="tiled_images/light.png"/>
+ </tile>
+ <tile id="11">
+  <image width="1000" height="1000" source="backgroundAssets/tMoreJump.png"/>
+ </tile>
+ <tile id="12">
+  <image width="500" height="900" source="backgroundAssets/bookshelf.png"/>
+ </tile>
+ <tile id="13">
+  <image width="150" height="210" source="backgroundAssets/torchHandle.png"/>
+ </tile>
+ <tile id="14">
+  <image width="220" height="300" source="backgroundAssets/chandelier.png"/>
  </tile>
 </tileset>

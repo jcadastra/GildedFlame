@@ -78,6 +78,7 @@ public class ObstacleMaterial {
     public boolean isExpiredBurnTimer() {
         return burnTimer > burnTimerLimit && burnTimerLimit > 0;
     }
+    public void resetBurnTimer() {burnTimer = 0f;}
     public boolean surpassIgnitionTimer(Integer v) {
         return v > ignitionTimerLimit;
     }

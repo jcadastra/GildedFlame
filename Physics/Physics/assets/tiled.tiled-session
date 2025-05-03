@@ -1,8 +1,9 @@
 {
-    "activeFile": "level1.tmj",
+    "activeFile": "BackgroundAssets.tsx",
     "expandedProjectPaths": [
         "."
     ],
+    "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "": {
             "scaleInDock": 1
@@ -25,7 +26,8 @@
         },
         "BackgroundStickers.tsx": {
             "dynamicWrapping": true,
-            "scaleInDock": 1
+            "scaleInDock": 1,
+            "scaleInEditor": 1
         },
         "C:/Users/ericj/Downloads/EnemyTiles.tsx": {
             "dynamicWrapping": true,
@@ -68,7 +70,7 @@
         "GameObjectTiles.tsx": {
             "dynamicWrapping": true,
             "scaleInDock": 0.25,
-            "scaleInEditor": 0.33
+            "scaleInEditor": 0.5
         },
         "PlatformTiles.tsx": {
             "dynamicWrapping": false,
@@ -84,8 +86,8 @@
             "scale": 0.180796875,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4798.2024025581195,
-                "y": 2696.396162820845
+                "x": 4784.3747299282695,
+                "y": 2690.8650937689054
             }
         },
         "earthtile.tsx": {
@@ -99,14 +101,14 @@
         },
         "example_level.tmj": {
             "expandedObjectLayers": [
-                6,
-                5
+                5,
+                6
             ],
             "scale": 0.25,
             "selectedLayer": 4,
             "viewCenter": {
                 "x": 4798,
-                "y": 2698
+                "y": 2042
             }
         },
         "example_level.tmx": {
@@ -126,11 +128,11 @@
             "expandedObjectLayers": [
                 3
             ],
-            "scale": 1,
+            "scale": 0.25,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 4799.5,
-                "y": 2699.5
+                "x": 4798,
+                "y": 2698
             }
         },
         "example_level2.tmx": {
@@ -161,22 +163,25 @@
             "expandedObjectLayers": [
                 7
             ],
-            "scale": 0.125,
+            "scale": 0.2789,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 5720,
-                "y": 5268
+                "x": 5353.173180351381,
+                "y": 4849.408390103979
             }
         },
         "level10.tmj": {
             "expandedObjectLayers": [
-                4
+                4,
+                5,
+                2,
+                6
             ],
-            "scale": 0.180796875,
-            "selectedLayer": 0,
+            "scale": 1.5,
+            "selectedLayer": 6,
             "viewCenter": {
-                "x": 4798.2024025581195,
-                "y": 2696.396162820845
+                "x": 4799.666666666666,
+                "y": 2590.333333333333
             }
         },
         "level2.tmj": {
@@ -196,11 +201,15 @@
             }
         },
         "level4.tmj": {
-            "scale": 0.180796875,
-            "selectedLayer": 0,
+            "expandedObjectLayers": [
+                7,
+                5
+            ],
+            "scale": 0.1914,
+            "selectedLayer": 5,
             "viewCenter": {
-                "x": 4789.9057989802095,
-                "y": 2690.8650937689054
+                "x": 6201.671891327064,
+                "y": 2092.476489028213
             }
         },
         "level5.tmj": {
@@ -222,14 +231,14 @@
         "level7.tmj": {
             "expandedObjectLayers": [
                 4,
-                6,
-                5
+                5,
+                6
             ],
-            "scale": 0.1445,
+            "scale": 1.5,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 4799.307958477509,
-                "y": 2702.42214532872
+                "x": 2448.6666666666665,
+                "y": 3025
             }
         },
         "level8.tmj": {
@@ -242,21 +251,21 @@
         },
         "level9.tmj": {
             "expandedObjectLayers": [
-                3,
-                7
+                7,
+                3
             ],
             "scale": 0.1703,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4794.480328831473,
-                "y": 2704.051673517322
+                "x": 4785.672342924252,
+                "y": 2686.4357017028774
             }
         },
         "sample.tmj": {
             "expandedObjectLayers": [
-                6,
                 5,
-                2
+                2,
+                6
             ],
             "scale": 0.1414,
             "selectedLayer": 4,
@@ -350,15 +359,15 @@
         "test7.tmj": {
             "expandedObjectLayers": [
                 4,
+                3,
                 5,
-                2,
-                3
+                2
             ],
-            "scale": 0.125,
+            "scale": 0.33,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 4796,
-                "y": 2700
+                "x": 3218.181818181818,
+                "y": 2989.3939393939395
             }
         },
         "test7.tmx": {
@@ -373,8 +382,8 @@
             "scale": 0.125,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 7500,
-                "y": 2700
+                "x": 7424,
+                "y": 2660
             }
         },
         "test_map.tmj": {
@@ -413,6 +422,7 @@
         }
     },
     "last.exportedFilePath": "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/assets",
+    "last.imagePath": "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/assets/environment",
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "openFiles": [
         "test_map.tmx",
@@ -425,15 +435,17 @@
         "test2.tmj",
         "example_level2.tmj",
         "sample.tmj",
-        "level9.tmj",
         "level10.tmj",
-        "level7.tmj",
         "aaa.tmj",
         "test8.tmj",
         "test7.tmj",
-        "level1.tmj"
+        "level4.tmj",
+        "BackgroundAssets.tsx",
+        "level7.tmj",
+        "level9.tmj"
     ],
     "project": "tiled.tiled-project",
+    "property.type": "int",
     "recentFiles": [
         "test_map.tmx",
         "EnemyTiles.tsx",
@@ -445,7 +457,7 @@
         "test2.tmj",
         "example_level2.tmj",
         "sample.tmj",
-        "level9.tmj",
-        "level10.tmj"
+        "level10.tmj",
+        "aaa.tmj"
     ]
 }

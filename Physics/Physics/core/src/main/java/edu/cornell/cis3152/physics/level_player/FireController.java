@@ -117,7 +117,8 @@ public class FireController {
                         }
 
                         if (fire.getStrength() <= .01) {
-                            fireFlags.add(new FireFlag("killFire", fire));
+                            fireFlags.add(new FireFlag("killFires", object, firesOnShape.get(object)));
+                            break;
                         }
                     }
             }
@@ -260,6 +261,7 @@ public class FireController {
         if (!nFireDiagrams.containsKey(s)) {
             return false;
         }
+//        System.out.println("rhs: " + nFireDiagrams.get(s).length + ", " + getPointsOnFire(s).size());
         return getPointsOnFire(s).size() == nFireDiagrams.get(s).length;
     }
 
@@ -307,6 +309,7 @@ public class FireController {
      * @param ignitionPoint the Vertex of contact to ensure that it keeps burning
      */
     private void genFirePinPoints(EnhancedObstacleSprite b, Vector2 ignitionPoint) {
+//        if (b.getName().contains("rope")) {nFireDiagrams.put(b, (new Vector2[]{ignitionPoint})); return;}
         float meshScale = 1f;
         SpriteMesh mesh = b.getMesh();
         mesh.scl(meshScale);
@@ -429,6 +432,7 @@ public class FireController {
     public void cleanObj (EnhancedObstacleSprite s) {
         nFireDiagrams.remove(s);
         firesOnShape.remove(s);
+        s.getMaterial().resetBurnTimer();
     }
     public void cleanFire (Fire fire) {
         firesOnShape.forEach((enhancedObstacleSprite, fires) -> fires.remove(fire));

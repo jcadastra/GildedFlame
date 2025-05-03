@@ -162,7 +162,7 @@ public class Rope extends ObstacleGroup {
         WheelObstacle leftAnchorObs = new WheelObstacle(pin1.x / units, pin1.y / units, ropeThickness / units);
         leftAnchorObs.setBodyType(BodyType.StaticBody);
         leftAnchorObs.setMass(0.1f);
-        leftAnchorObs.setDensity(1f);
+        leftAnchorObs.setDensity(0.01f);
         leftAnchorObs.setFixedRotation(false);
         leftAnchorObs.setPhysicsUnits(units);
         leftAnchorObs.setSensor(true);
@@ -175,8 +175,8 @@ public class Rope extends ObstacleGroup {
         // Create right (end) anchor.
         WheelObstacle rightAnchorObs = new WheelObstacle(pin2.x / units, pin2.y / units, ropeThickness / units);
         rightAnchorObs.setBodyType(BodyType.StaticBody);
-        rightAnchorObs.setMass(0.000000001f);
-        rightAnchorObs.setDensity(0.0000001f);
+        rightAnchorObs.setMass(0.1f);
+        rightAnchorObs.setDensity(0.01f);
         rightAnchorObs.setFixedRotation(false);
         rightAnchorObs.setPhysicsUnits(units);
         rightAnchorObs.setSensor(true);
@@ -263,27 +263,11 @@ public class Rope extends ObstacleGroup {
      *
      * @return an ArrayList of EnhancedObstacleSprite nodes.
      */
-    public ArrayList<EnhancedObstacleSprite> getNodes() {
+    public ArrayList<EnhancedObstacleSprite> getPeices() {
         return nodes;
     }
 
-    /**
-     * Attaches a specified rope node to an external object.
-     *
-     * @param obj       the external object to attach to.
-     * @param nodeIndex the index of the node in the rope.
-     * @param world     the Box2D world.
-     * @return the created joint.
-     */
-    public Joint attachNodeToObj(ObstacleSprite obj, int nodeIndex, World world) {
-        EnhancedObstacleSprite node = nodes.get(nodeIndex);
-        node.getObstacle().setBodyType(BodyType.DynamicBody);
-        WeldJointDef weldJointDef = new WeldJointDef();
-        weldJointDef.initialize(node.getObstacle().getBody(), obj.getObstacle().getBody(), node.getObstacle().getPosition());
-        Joint joint = world.createJoint(weldJointDef);
-        joints.add(joint);
-        return joint;
-    }
+    public ArrayList<EnhancedObstacleSprite> getAnchors() {return anchors;}
 
     public void deactivateAnchor (int anchorNum) {
         anchors.get(anchorNum).getObstacle().setBodyType(BodyType.DynamicBody);
