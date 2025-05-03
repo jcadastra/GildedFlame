@@ -2,13 +2,12 @@ package edu.cornell.cis3152.physics.level_player.enviromentals;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.JsonValue;
@@ -143,7 +142,6 @@ public class Rope extends ObstacleGroup {
             ropeNode.setSensor(true);
             ropeNode.setName("ropeNode");
             EnhancedObstacleSprite sprite = new EnhancedObstacleSprite(ropeNode);
-            sprite.setMaterial(new ObstacleMaterial("rope", data.get(1)));
             sprite.setDebugColor(Color.PURPLE);
             sprite.setClimbable(true);
             nodes.add(sprite);
@@ -170,7 +168,6 @@ public class Rope extends ObstacleGroup {
         leftAnchorObs.setSensor(true);
         leftAnchorObs.setName("ropeAnchorLeft");
         EnhancedObstacleSprite leftAnchor = new EnhancedObstacleSprite(leftAnchorObs);
-        leftAnchor.setMaterial(new ObstacleMaterial("rope", data.get(1)));
         leftAnchor.setDebugColor(Color.GREEN);
         sprites.add(leftAnchor);
         anchorList.add(leftAnchor);
@@ -185,7 +182,6 @@ public class Rope extends ObstacleGroup {
         rightAnchorObs.setSensor(true);
         rightAnchorObs.setName("ropeAnchorRight");
         EnhancedObstacleSprite rightAnchor = new EnhancedObstacleSprite(rightAnchorObs);
-        rightAnchor.setMaterial(new ObstacleMaterial("rope", data.get(1)));
         rightAnchor.setDebugColor(Color.GREEN);
         sprites.add(rightAnchor);
         anchorList.add(rightAnchor);
@@ -206,6 +202,8 @@ public class Rope extends ObstacleGroup {
         jointDef.dampingRatio = 0.5f;
         jointDef.collideConnected = false;
 
+        RevoluteJointDef anchorJoint = new RevoluteJointDef();
+
         // Connect each node to its following neighbor.
         for (int i = 0; i < nodes.size() - 1; i++) {
             Body current = nodes.get(i).getObstacle().getBody();
@@ -219,14 +217,14 @@ public class Rope extends ObstacleGroup {
         if (!nodes.isEmpty() && !anchors.isEmpty()) {
             Body leftAnchorBody = anchors.get(0).getObstacle().getBody();
             Body firstNode = nodes.get(0).getObstacle().getBody();
-            jointDef.initialize(leftAnchorBody, firstNode, leftAnchorBody.getPosition());
-            joints.add(world.createJoint(jointDef));
+            anchorJoint.initialize(leftAnchorBody,firstNode,leftAnchorBody.getPosition());
+            joints.add(world.createJoint(anchorJoint));
 
             // Attach right anchor to the last node.
             Body rightAnchorBody = anchors.get(1).getObstacle().getBody();
             Body lastNode = nodes.get(nodes.size() - 1).getObstacle().getBody();
-            jointDef.initialize(rightAnchorBody, lastNode, rightAnchorBody.getPosition());
-            joints.add(world.createJoint(jointDef));
+            anchorJoint.initialize(rightAnchorBody, lastNode, rightAnchorBody.getPosition());
+            joints.add(world.createJoint(anchorJoint));
         }
         return true;
     }
@@ -236,13 +234,28 @@ public class Rope extends ObstacleGroup {
      *
      * @param ropeTexture the texture to apply.
      */
-    public void setTextures(Texture endTexture, Texture ropeTexture) {
+    public void blanketSetTextures(Texture endTexture, Texture ropeTexture) {
         for (EnhancedObstacleSprite sprite : nodes) {
             sprite.setTexture(ropeTexture);
+            sprite.setMaterial(new ObstacleMaterial("rope"));
         }
         for (EnhancedObstacleSprite anchor : anchors) {
             anchor.setTexture(endTexture);
+            anchor.setMaterial(new ObstacleMaterial("rope"));
         }
+    }
+
+    public void customRopeDesignation(Texture end1Texture, Texture ropeCoreTexture, Texture end2Texture, String end1Material, String ropeCoreMaterial, String end2Material) {
+        anchors.get(0).setMaterial(new ObstacleMaterial(end1Material));
+        anchors.get(1).setTexture(end1Texture);
+
+        for (EnhancedObstacleSprite sprite : nodes) {
+            sprite.setTexture(ropeCoreTexture);
+            sprite.setMaterial(new ObstacleMaterial(ropeCoreMaterial));
+        }
+
+        anchors.get(1).setMaterial(new ObstacleMaterial(end2Material));
+        anchors.get(1).setTexture(end2Texture);
     }
 
     /**

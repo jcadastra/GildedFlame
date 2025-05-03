@@ -25,6 +25,7 @@
 package edu.cornell.cis3152.physics;
 
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
@@ -34,7 +35,6 @@ import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectSet;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import edu.cornell.cis3152.physics.level_player.CollisionController;
 import edu.cornell.cis3152.physics.level_player.EventHandler;
 import edu.cornell.cis3152.physics.level_player.FireController;
@@ -55,6 +55,7 @@ import edu.cornell.cis3152.physics.level_player.utils.ObstacleGroup;
 import edu.cornell.cis3152.physics.level_player.utils.RainFlag;
 import edu.cornell.cis3152.physics.level_player.utils.TweenElement;
 
+import java.io.FileWriter;
 import java.util.*;
 
 import com.badlogic.gdx.*;
@@ -345,6 +346,7 @@ public class GameplayScene implements Screen {
     private int dotTorchArcCount = 120;
     private int deltaTorchArc = 4;
     private float animationOffsetTorchArc = .18f;
+    private float expectedDTForTorchToHitGround = 0;
 
 
     /**
@@ -564,11 +566,13 @@ public class GameplayScene implements Screen {
             world.dispose();
         }
 
-        world = new World(gravity, false);
-        world.setContactListener(contactListener);
         contactListener.reset();
         setComplete(false);
         setFailure(false);
+        world = new World(gravity, false);
+//        world.step(1/60f, WORLD_VELOC, WORLD_POSIT);
+        world.setContactListener(contactListener);
+
         loadLevel(levelName, "rope_test");
     };
 
@@ -595,10 +599,12 @@ public class GameplayScene implements Screen {
         sprites.clear();
         addQueue.clear();
         if (world != null) {
+            world.clearForces();
             world.dispose();
         }
 
         world = new World(gravity, false);
+//        world.step(1/60f, WORLD_VELOC, WORLD_POSIT);
         world.setContactListener(contactListener);
         setComplete(false);
         setFailure(false);
@@ -729,7 +735,7 @@ public class GameplayScene implements Screen {
                         torch = new Torch(units, constants.get("torch"));
                         torch.getObstacle().setPosition(pos[0], pos[1]);
                         torch.setTexture(texture);
-                        torch.setMaterial(new ObstacleMaterial("torch", null));
+                        torch.setMaterial(new ObstacleMaterial("torch"));
                         addSprite(torch);
                         l.getObstacle().setPosition(torch.getObstacle().getPosition());
                         torchFire.getObstacle().setPosition(new Vector2(
@@ -763,9 +769,8 @@ public class GameplayScene implements Screen {
                     } else if (objName.contains("goaldoor")) {
                         texture = directory.getEntry("treasure", Texture.class);
                         System.out.println("goal door texture: " + texture);
-                        float size = 1f;
 
-                        GameObject goalDoor = new GameObject(x, y, size * 1.47f, size, units, true);
+                        GameObject goalDoor = new GameObject(x, y, 1.47f, 1, units, true);
                         goalDoor.getObstacle().setSensor(true);
                         goalDoor.getObstacle().setBodyType(BodyType.StaticBody);
                         goalDoor.getObstacle().setName("goalDoor");
@@ -782,7 +787,7 @@ public class GameplayScene implements Screen {
                         platform.getObstacle().setName(objName);
                         platform.setTexture(directory.getEntry("platform", Texture.class));
                         platform.getObstacle().setPhysicsUnits(units);
-                        platform.setMaterial(new ObstacleMaterial("platform", null));
+                        platform.setMaterial(new ObstacleMaterial("platform"));
                         platform.getObstacle().setAngle((float) (rotation*Math.PI/180f));
                         addSprite(platform);
                     } else if (objName.contains("ambientLight")) {
@@ -790,17 +795,25 @@ public class GameplayScene implements Screen {
                     }else if (objName.contains("burnable")) {
                         float width = object.getFloat("width") / levelData.getInt("tilewidth");
                         float height = object.getFloat("height") / levelData.getInt("tileheight");
-                        GameObject box = new GameObject(x,y,width,height, units, true);
+                        GameObject box;
+                        if (objName.contains("non")) {
+                            box = new GameObject(new float[]{
+                                -(width)/2, -(height)/2,
+                                (width)/2, -(height)/2,
+                                (width)/4, (height)/2,
+                                -(width)/4, (height)/2
+                            }, x,y, width, height, units);
+                            box.setMaterial(new ObstacleMaterial("stone"));
+                            box.setTexture(directory.getEntry("nonburnable", Texture.class));
+                            box.getObstacle().setPhysicsUnits(units);
+                        } else {
+                            box = new GameObject(x,y,width,height, units, true);
+                            box.setMaterial(new ObstacleMaterial("wood"));
+                            box.setTexture(directory.getEntry("burnable", Texture.class));
+                        }
                         box.getObstacle().setBodyType(BodyType.DynamicBody);
                         box.getObstacle().setName(objName);
                         box.getObstacle().setPhysicsUnits(units);
-                        if (objName.contains("non")) {
-                            box.setMaterial(new ObstacleMaterial("stone", null));
-                            box.setTexture(directory.getEntry("nonburnable", Texture.class));
-                        } else {
-                            box.setMaterial(new ObstacleMaterial("wood", null));
-                            box.setTexture(directory.getEntry("burnable", Texture.class));
-                        }
                         box.getObstacle().setDensity(1f );
                         addSprite(box);
                     } else if (objName.contains("weather")) {
@@ -818,17 +831,16 @@ public class GameplayScene implements Screen {
                                     break;
                             }
                         }
-                    } else if (objName.contains("BackgroundBROKEN")) {
-                        Texture temp = directory.getEntry(objName, Texture.class);
-                        temp.setWrap(TextureWrap.Repeat,TextureWrap.Repeat);
-
-                        GameObject decoration = new GameObject(0,0, bounds.x, bounds.y, units, false);
-                        decoration.getObstacle().setSensor(true);  // set as sensor
-                        decoration.getObstacle().setBodyType(BodyType.StaticBody);
-                        decoration.setTexture(temp);
-                        decoration.getObstacle().setName(objName);
-
-                        addSprite(decoration);
+                    } else if (objName.contains("Background")) {
+                        GameObject background = new GameObject(0, 0, width, height, units, true);
+                        background.getObstacle().setSensor(true);
+                        background.getObstacle().setBodyType(BodyDef.BodyType.StaticBody);
+                        background.getObstacle().setName(objName);
+                        Texture backGroundTexture = directory.getEntry(objName, Texture.class);
+                        TextureRegion region = new TextureRegion(backGroundTexture);
+                        region.setRegion(0, 0, backGroundTexture.getWidth() *  (int)(width / 2), backGroundTexture.getHeight() * (int)(height / 2));
+                        background.setTextureRegion(region);
+                        addSprite(background);
                     } else {
                         if (objName.matches("\\d+")) {
                             ropeAnchors.put(objName, object);
@@ -857,7 +869,6 @@ public class GameplayScene implements Screen {
                     String objName = object.getString("name", "unnamed");
                     float x = object.getFloat("x") / levelData.getInt("tilewidth");
                     float y = (18 * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
-                    float[] pos = new float[]{x, y};
                      if (objName.contains("rune")) {
                         boolean hasMoveEvent = false;
                         boolean hasRotateEvent = false;
@@ -906,14 +917,15 @@ public class GameplayScene implements Screen {
 
                         String finalTargetName = targetName;
                         ObstacleSprite target = sprites.stream().filter(sprite -> sprite.getName().equals(finalTargetName)).findFirst().orElse(null);
-
-                        Rune rune = new Rune(x,y, units, thresholds);
-                        rune.setTexture(directory.getEntry("tablet", Texture.class));
+                        Texture textureRune = directory.getEntry("runeBase", Texture.class);
+                        float rotation = object.getFloat("rotation");
+                        Rune rune = new Rune(x,y, textureRune.getWidth() / 300f, textureRune.getHeight() / 300f, 0, units, thresholds, directory.getEntry("runeCharged", Texture.class));
+//                        rune.getObstacle().setPhysicsUnits(units);
+                        rune.setTexture(textureRune);
                         addSprite(rune);
                         runeSet.add(rune);
 
                         if (hasMoveEvent) {
-                            System.out.println("move event detected");
                             if (platformStartPos == null) {
                                 platformStartPos = new Vector2(target.getObstacle().getPosition());
                             }
@@ -924,7 +936,6 @@ public class GameplayScene implements Screen {
                         }
 
                         if (hasRotateEvent) {
-                            System.out.println("rotatto event detected");
                             if (startDegree == Integer.MAX_VALUE) {
                                 startDegree = target.getObstacle().getAngle();
                             } else {
@@ -1056,7 +1067,7 @@ public class GameplayScene implements Screen {
                         float x2 = end.getFloat("x") / levelData.getInt("tilewidth");
                         float y2 = (18 * 300 - end.getFloat("y")) / levelData.getInt("tileheight");
 
-                        int depth = 10, piecelen = 10, thickness = 14;
+                        int depth = 10, piecelen = 25, thickness = 14;
                         JsonValue props = end.get("properties");
                         if (props != null) {
                             for (JsonValue prop : props) {
@@ -1072,7 +1083,7 @@ public class GameplayScene implements Screen {
                         texture = directory.getEntry( "platform-rope-end", Texture.class );
                         Texture middle_texture = directory.getEntry( "platform-rope-mid", Texture.class );
                         Rope rope = new Rope(new Vector2(x1, y1), new Vector2(x2, y2), depth, thickness, piecelen, units, levelInfo.get("ropes").get(0));
-                        rope.setTextures(texture, middle_texture);
+                        rope.blanketSetTextures(texture, middle_texture);
                         addSpriteGroup(rope);
                     }
 
@@ -1082,7 +1093,7 @@ public class GameplayScene implements Screen {
         }
         torchArc = new ArrayList<>();
         for (int i = 0; i < dotTorchArcCount / deltaTorchArc; i++) {
-            WheelObstacle temp = new WheelObstacle(-1,-1, 0.4f/32f * units);
+            WheelObstacle temp = new WheelObstacle(-1,-1, 0.35f/32f * units);
             temp.setBodyType(BodyType.StaticBody);
             ObstacleSprite tracker = new ObstacleSprite(temp);
             tracker.getObstacle().setPhysicsUnits(phyiscsUnits);
@@ -1123,6 +1134,7 @@ public class GameplayScene implements Screen {
         for (FloatingLight light : floatingLights) {
             lightController.attachAmbientLight(light);
         }
+//        debugPrintOut();
     }
     /**
      * Returns whether to process the update loop
@@ -1204,6 +1216,7 @@ public class GameplayScene implements Screen {
      */
     public void update(float dt) {
         soundEngine.tendToMusicLoop();
+//        System.out.println(Gdx.graphics.getFramesPerSecond());
 
         updateRunes(dt);
         supplementaryCollisionActions();
@@ -1253,19 +1266,12 @@ public class GameplayScene implements Screen {
         }
 
         if (input.getThrowing() && avatar.getHasTorch() && activeTorchJoint != null) {
-            avatar.setHasTorch(false);
-            world.destroyJoint(activeTorchJoint);
-            activeTorchJoint = null;
-            torch.applyThrowForce(avatar.isFacingRight() ? 1 : -1);
-            torch.resetPickUp();
-            torch.getObstacle().setSensor(false);
+            dropTorchHelper();
+            torch.applyThrowForce(avatar.isFacingRight() ? 1 : -1, expectedDTForTorchToHitGround);
             soundEngine.throwTorch();
         }
-        if (input.assistParabola()) {
-            generateTorchArc();
-        } else {
-            hideArc();
-        }
+
+        generateTorchArc(input.assistParabola());
 
         avatar.applyForce();
 
@@ -1296,8 +1302,16 @@ public class GameplayScene implements Screen {
 
     }
 
+    public void dropTorchHelper() {
+        avatar.setHasTorch(false);
+        world.destroyJoint(activeTorchJoint);
+        activeTorchJoint = null;
+        torch.resetPickUp();
+        torch.getObstacle().setSensor(false);
+    }
 
-    private void generateTorchArc() {
+
+    private void generateTorchArc(boolean viewParabola) {
         dtTorchArcOffset %= deltaTorchArc;
 
         if (!avatar.getHasTorch()) {
@@ -1308,7 +1322,7 @@ public class GameplayScene implements Screen {
         float dt = 1/60f;
         Vector2 start = new Vector2(torch.getObstacle().getPosition());
         // magic numbers but idk why they work
-        Vector2 vel = new Vector2(torch.getIntialThrowVelocity()).scl(1.05f * (avatar.isFacingRight() ? 1 : -1),2.1f);
+        Vector2 vel = new Vector2(torch.getIntialThrowVelocity()).scl((avatar.isFacingRight() ? 1 : -1),2.13f);
         float gravity = world.getGravity().y;
         final Fixture[] hit = { null };
         final Vector2[] hitpoint = {new Vector2()};
@@ -1331,6 +1345,7 @@ public class GameplayScene implements Screen {
                 world.rayCast(raycastCallback, lastTP, trajectoryPosition);
                 if (hit[0] != null && !hit[0].isSensor()) {
                     arcPoints.add(hitpoint[0]);
+                    expectedDTForTorchToHitGround = t;
                     break;
                 }
             }
@@ -1340,6 +1355,11 @@ public class GameplayScene implements Screen {
                 arcPoints.add(new Vector2(x, y));
             }
             generatedCount++;
+        }
+
+        if (!viewParabola) {
+            hideArc();
+            return;
         }
 
         for (int i = 0; i < dotTorchArcCount / deltaTorchArc; i++) {
@@ -1355,9 +1375,9 @@ public class GameplayScene implements Screen {
     }
 
     private void hideArc() {
-        if (torchArc.get(0).getObstacle().getPosition().x == -1 && torchArc.get(0).getObstacle().getPosition().y == -1) {
-            return;
-        }
+//        if (torchArc.get(0).getObstacle().getPosition().x == -1 && torchArc.get(0).getObstacle().getPosition().y == -1) {
+//            return;
+//        }
         for (ObstacleSprite i : torchArc) {
             i.getObstacle().setPosition(-1,-1);
         }
@@ -1480,6 +1500,12 @@ public class GameplayScene implements Screen {
                         queueAddTorch = true;
                     }
                     break;
+                case "forceDropTorch":
+                    if (activeTorchJoint != null) {
+                        dropTorchHelper();
+                        torch.getObstacle().setLinearVelocity(Vector2.Zero);
+                    }
+                    break;
                 case "traciGrounded":
                     System.out.println("SET GROUNDED");
                     if (avatar.getGroundedState().equals(GroundState.CLIMBING)) {
@@ -1575,6 +1601,27 @@ public class GameplayScene implements Screen {
                     }
                     fireController.cleanFire(f);
                     f.dispose();
+                    break;
+                case "killFires":
+                    ArrayList<Fire> fires = fireFlag.getFires();
+                    EnhancedObstacleSprite eos = fireFlag.getSubject();
+                    for (Fire killFires_fire : fires) {
+                        if (killFires_fire.getFixtureJoint() != null) {
+                            if (!world.isLocked()) {
+                                world.destroyJoint(killFires_fire.getFixtureJoint());
+                            }
+                            killFires_fire.setFixtureJoint(null);
+                        }
+                        if (torchFire != null && killFires_fire.fireID == torchFire.fireID) {
+                            if (activeTorchJoint != null && !world.isLocked()) {
+                                world.destroyJoint(activeTorchJoint);
+                                activeTorchJoint = null;
+                            }
+                        }
+                        fireController.cleanFire(killFires_fire, eos);
+                        killFires_fire.dispose();
+                    }
+                    fireController.cleanObj(eos);
                     break;
             }
         }
@@ -2011,6 +2058,56 @@ public class GameplayScene implements Screen {
      */
     public void setScreenListener(ScreenListener listener) {
         this.listener = listener;
+    }
+
+    int counter = 0;
+    public void debugPrintOut() {
+        try {
+            FileWriter myWriter = new FileWriter("debugOut" + counter + ".txt");
+
+            myWriter.write(world.getGravity() + ", ");
+            myWriter.write(world.getFixtureCount() + ", ");
+            myWriter.write(world.getBodyCount() + ", ");
+            myWriter.write(world.getContactCount() + ", ");
+            myWriter.write("\n");
+
+            for (ObstacleSprite sprite : sprites) {
+                myWriter.write(sprite.getName() + ", ");
+                myWriter.write(sprite.getObstacle().getPosition().toString() + ", ");
+                myWriter.write(sprite.getObstacle().getLinearVelocity().toString() + ", ");
+                myWriter.write((sprite.getObstacle().getAngle()) + ", ");
+                myWriter.write((sprite.getObstacle().getAngularVelocity()) + ", ");
+                myWriter.write(sprite.getObstacle().getBody().isAwake() + ", ");
+                myWriter.write(sprite.getObstacle().getBody().isActive() + ", ");
+                myWriter.write(sprite.getObstacle().getBody().getMass() + ", ");
+                myWriter.write(sprite.getObstacle().getBody().getInertia() + ", ");
+                myWriter.write(sprite.getObstacle().getBody().getType().toString() + ", ");
+                for (Fixture fixture : sprite.getObstacle().getBody().getFixtureList()) {
+                    myWriter.write(fixture.getDensity() + ", ");
+                    myWriter.write(fixture.getFriction() + ", ");
+                    myWriter.write(fixture.getRestitution() + ", ");
+                    myWriter.write(fixture.isSensor() + ", ");
+                }
+                myWriter.write("\n");
+//                myWriter.write(sprite.getObstacle().getBody().getMassData().toString() + "\n");
+//                myWriter.write(sprite.getObstacle().getBody().getUserData().toString() + "\n");
+            }
+
+            Array<Joint> temp = new Array<>();
+            world.getJoints(temp);
+            for (Joint joint : temp) {
+                myWriter.write(((ObstacleSprite) (joint.getBodyA().getUserData())).getName() + ", ");
+                myWriter.write(((ObstacleSprite) (joint.getBodyB().getUserData())).getName() + ", ");
+                myWriter.write(joint.getAnchorA() + ", ");
+                myWriter.write(joint.getAnchorB() + ", ");
+                myWriter.write(joint.getCollideConnected() + ", ");
+                myWriter.write(joint.getType().toString() + ", ");
+                myWriter.write("\n");
+            }
+
+            counter++;
+            myWriter.close();
+        } catch (Exception e) {System.out.println("failed pritnout " + counter +", " + e.getMessage());}
     }
 
 }

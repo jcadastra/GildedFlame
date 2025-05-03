@@ -307,7 +307,9 @@ public class FireController {
      * @param ignitionPoint the Vertex of contact to ensure that it keeps burning
      */
     private void genFirePinPoints(EnhancedObstacleSprite b, Vector2 ignitionPoint) {
+        float meshScale = 1f;
         SpriteMesh mesh = b.getMesh();
+        mesh.scl(meshScale);
         FloatArray releventVertecies = new FloatArray();
         for (int i = 0; i < mesh.vertexCount(); i++) {
             releventVertecies.add(mesh.getPositionX(i));
@@ -371,9 +373,9 @@ public class FireController {
             firePointsList.add(fireY);
         }
 
-        for (Float v : releventVertecies.toArray()) {
-            firePointsList.add(v);
-        }
+//        for (Float v : releventVertecies.toArray()) {
+//            firePointsList.add(v);
+//        }
 
         Array<Vector2> returnArray = new Array<Vector2>();
         int totalVerticesToCount = firePointsList.size();
@@ -386,9 +388,7 @@ public class FireController {
             v.scl((float) Math.pow(b.getObstacle().getPhysicsUnits(), -1));
         }
         nFireDiagrams.put(b, (returnArray).toArray(Vector2.class));
-
-        for (Vector2 f : returnArray.toArray(Vector2.class)) {
-        }
+        mesh.scl(1/meshScale);
     }
 
     public void spawnSmoke(Fire fire) {
@@ -405,7 +405,6 @@ public class FireController {
 
         Smoke smoke = new Smoke(fire.getObstacle().getPosition().x, fire.getObstacle().getPosition().y + fire.getRadius()/1.5f,
             fire.getObstacle().getPhysicsUnits(), new Vector2((rand.nextFloat()-.5f) * 2,1f));
-        smoke.getObstacle().setName("smoke");
         smoke.setSource(fire);
         ObstacleSprite smokeObj = new ObstacleSprite(smoke.getObstacle());
         smokeObj.getObstacle().setUserData(smokeObj);
@@ -413,6 +412,14 @@ public class FireController {
         fireFlags.push(new FireFlag("spawnSmoke", fire, smokeObj));
         allSmoke.add(smoke);
         smoke.getObstacle().setAngle((float) (rand.nextFloat() * 2 * Math.PI));
+    }
+
+    public void extinguishFireSingle(Fire fire) {
+        fireFlags.add(new FireFlag("killFire", fire));
+    }
+
+    public void extinguishFireObject(EnhancedObstacleSprite eos) {
+        fireFlags.add(new FireFlag("killFires", eos, firesOnShape.get(eos)));
     }
 
     /**
@@ -423,7 +430,10 @@ public class FireController {
         nFireDiagrams.remove(s);
         firesOnShape.remove(s);
     }
-     public void cleanFire (Fire fire) {
+    public void cleanFire (Fire fire) {
         firesOnShape.forEach((enhancedObstacleSprite, fires) -> fires.remove(fire));
-     }
+    }
+    public void cleanFire (Fire fire, EnhancedObstacleSprite eos) {
+        firesOnShape.get(eos).remove(fire);
+    }
 }

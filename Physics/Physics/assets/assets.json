@@ -11,7 +11,11 @@
     "tablet": "environment/tablet.png",
     "platform": "environment/platform.png",
 
-    "brickBackground": "backgroundAssets/brickBackground.png",
+    "brickBackground": {
+      "file": "backgroundAssets/brickBackground.png",
+      "wrapU": "repeated",
+      "wrapV": "repeated"
+    },
     "colB": "backgroundAssets/colB.png",
     "colM": "backgroundAssets/colM.png",
     "colT": "backgroundAssets/colT.png",
