@@ -203,11 +203,9 @@ public class GDXRoot extends Game implements ScreenListener {
         }
         else if (screen instanceof SuccessScene) {
             if (exitCode == GameplayScene.EXIT_NEXT) {
-                currentScene.clearLevel();
                 current = (current + 1) % levels.length;
-                currentScene.loadLevel(levels[current], "rope_test");
-                currentScene.reset();
-                setScreen(currentScene);
+            } else if (exitCode == GameplayScene.EXIT_REPLAY) {
+                current = current;
             } else if (exitCode == GameplayScene.EXIT_QUIT) {
                 LevelSelectScene levelSelect = new LevelSelectScene();
                 levelSelect.setScreenListener(this);
@@ -218,12 +216,13 @@ public class GDXRoot extends Game implements ScreenListener {
                 temp.add("menu_music");
                 soundEngine.startMusicLoop(temp);
                 return;
-            } else if (exitCode == GameplayScene.EXIT_REPLAY) {
-                currentScene.clearLevel();
-                currentScene.loadLevel(levels[current], "rope_test");
-                currentScene.reset();
-                setScreen(currentScene);
             }
+
+            currentScene = new GameplayScene(directory, soundEngine, "platform");
+            currentScene.loadLevel(levels[current], "rope_test");
+            currentScene.setScreenListener(this);
+            currentScene.setSpriteBatch(batch);
+            setScreen(currentScene);
             return;
         }
 
