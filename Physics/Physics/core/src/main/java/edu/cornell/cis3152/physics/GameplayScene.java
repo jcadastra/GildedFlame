@@ -100,6 +100,8 @@ public class GameplayScene implements Screen {
     public static final int EXIT_PREV = 2;
     /** Exit code for going to the success screen */
     public static final int EXIT_SUCCESS = 3;
+    /** Exit code for replaying the current level */
+    public static final int EXIT_REPLAY = 4;
     /** How many frames after winning/losing do we continue? */
     public static final int EXIT_COUNT = 180;
     private boolean queueFailure;

@@ -35,6 +35,7 @@ public class SuccessScene implements Screen {
     public SuccessScene() {
         stage = new Stage(new ScreenViewport());
         skin = new Skin();
+        clickSound = Gdx.audio.newSound(Gdx.files.internal("soundEffects/clickSound.mp3"));
         createBasicUI();
     }
 
@@ -112,7 +113,7 @@ public class SuccessScene implements Screen {
                 System.out.println("ImageButton pressed");
                 startClicked = true;
                 if (listener != null) {
-                    listener.exitScreen(SuccessScene.this, 1);
+                    listener.exitScreen(SuccessScene.this, 4);
                 }
                 return true;
             }
@@ -125,7 +126,7 @@ public class SuccessScene implements Screen {
                 System.out.println("ImageButton pressed");
                 startClicked = true;
                 if (listener != null) {
-                    listener.exitScreen(SuccessScene.this, 1);
+                    listener.exitScreen(SuccessScene.this, 0);
                 }
                 return true;
             }
