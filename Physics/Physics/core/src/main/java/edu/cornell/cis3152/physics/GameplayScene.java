@@ -32,9 +32,12 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectSet;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import edu.cornell.cis3152.physics.level_player.CollisionController;
 import edu.cornell.cis3152.physics.level_player.EventHandler;
 import edu.cornell.cis3152.physics.level_player.FireController;
@@ -69,6 +72,9 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.audio.SoundEffect;
 import edu.cornell.gdiac.audio.SoundEffectManager;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import edu.cornell.gdiac.util.*;
 import edu.cornell.gdiac.graphics.*;
 import edu.cornell.gdiac.physics2.*;
@@ -159,6 +165,8 @@ public class GameplayScene implements Screen {
     protected boolean failed;
     /** Whether debug mode is active */
     protected boolean debug;
+    /** Whether the game is paused */
+    protected boolean paused;
     /** Countdown active for winning or losing */
     protected int countdown;
 
@@ -190,6 +198,9 @@ public class GameplayScene implements Screen {
      * The default sound volume
      */
     private float volume;
+
+    private Stage pauseStage;
+    private Skin skin;
 
     /**
      * Active joint for avatar holding torch
@@ -622,6 +633,41 @@ public class GameplayScene implements Screen {
 
     private void populateLevel() {}
     private Rope temp;
+
+    private void initPauseUI() {
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
+        pauseStage = new Stage(new ScreenViewport());
+        skin = new Skin();
+        Texture resumeText = directory.getEntry("contButt", Texture.class);
+        Texture resumeClickText = directory.getEntry("contButtClick", Texture.class);
+        TextureRegionDrawable resumeButtUp = new TextureRegionDrawable(new TextureRegion(resumeText));
+        TextureRegionDrawable resumeButtOver = new TextureRegionDrawable(new TextureRegion(resumeClickText));
+
+        ImageButton.ImageButtonStyle resumeButt = new ImageButton.ImageButtonStyle();
+        resumeButt.up = resumeButtUp;
+        resumeButt.over = resumeButtOver;
+
+        ImageButton resumeButton = new ImageButton(resumeButt);
+
+        resumeButton.setSize(screenWidth * 0.2f, screenHeight * 0.06f);
+        resumeButton.setPosition(
+            screenWidth * 0.40f,
+            screenHeight * 0.5f
+        );
+
+        resumeButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+            @Override
+            public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
+                                     float x, float y, int pointer, int button) {
+                paused = false;
+                //Gdx.input.setInputProcessor(gameInput);
+                return true;
+            }
+        });
+
+        pauseStage.addActor(resumeButton);
+    }
 
     private List<float[]> extractSurfaces(int[] data, int cols, int rows) {
         List<float[]> surfaces = new ArrayList<>();

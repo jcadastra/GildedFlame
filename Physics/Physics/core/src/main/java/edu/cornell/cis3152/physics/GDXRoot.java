@@ -282,11 +282,11 @@ public class GDXRoot extends Game implements ScreenListener {
                 soundEngine.startMusicLoop(temp);
                 return;
             } else if (exitCode == GameplayScene.EXIT_SUCCESS) {
-                SuccessScene success = new SuccessScene();
+                SuccessScene success = new SuccessScene(directory);
                 success.setScreenListener(this);
                 setScreen(success);
             } else if (exitCode == GameplayScene.EXIT_FAILURE) {
-                FailureScene failure = new FailureScene();
+                FailureScene failure = new FailureScene(directory);
                 failure.setScreenListener(this);
                 setScreen(failure);
             }

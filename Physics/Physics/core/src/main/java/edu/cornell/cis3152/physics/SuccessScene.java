@@ -18,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.ScreenUtils;
+import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.util.ScreenListener;
 import com.badlogic.gdx.audio.Sound;
 
@@ -31,8 +32,11 @@ public class SuccessScene implements Screen {
     private Sound clickSound;
     private InputController inputController = InputController.getInstance();
     private boolean prevButtonA = false;
+    /** The asset directory for retrieving textures, atlases */
+    protected AssetDirectory directory;
 
-    public SuccessScene() {
+    public SuccessScene(AssetDirectory directory) {
+        this.directory = directory;
         stage = new Stage(new ScreenViewport());
         skin = new Skin();
         clickSound = Gdx.audio.newSound(Gdx.files.internal("soundEffects/clickSound.mp3"));
@@ -43,8 +47,8 @@ public class SuccessScene implements Screen {
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
 
-        Texture contText = new Texture(Gdx.files.internal("ui/contbutt.png"));
-        Texture contClickText = new Texture(Gdx.files.internal("ui/contButtClick.png"));
+        Texture contText = directory.getEntry("contButt", Texture.class);
+        Texture contClickText = directory.getEntry("contButtClick", Texture.class);
         TextureRegionDrawable contButtUp = new TextureRegionDrawable(new TextureRegion(contText));
         TextureRegionDrawable contButtOver = new TextureRegionDrawable(new TextureRegion(contClickText));
 
@@ -52,8 +56,8 @@ public class SuccessScene implements Screen {
         contButt.up = contButtUp;
         contButt.over = contButtOver;
 
-        Texture replayText = new Texture(Gdx.files.internal("ui/replayButt.png"));
-        Texture replayClickText = new Texture(Gdx.files.internal("ui/replayButtClick.png"));
+        Texture replayText = directory.getEntry("replayButt", Texture.class);
+        Texture replayClickText = directory.getEntry("replayButtClick", Texture.class);
         TextureRegionDrawable replayButtUp = new TextureRegionDrawable(new TextureRegion(replayText));
         TextureRegionDrawable replayButtOver = new TextureRegionDrawable(new TextureRegion(replayClickText));
 
@@ -61,8 +65,8 @@ public class SuccessScene implements Screen {
         replayButt.up = replayButtUp;
         replayButt.over = replayButtOver;
 
-        Texture chambersText = new Texture(Gdx.files.internal("ui/chambersButt.png"));
-        Texture chambersClickText = new Texture(Gdx.files.internal("ui/chambersButtClick.png"));
+        Texture chambersText = directory.getEntry("chambersButt", Texture.class);
+        Texture chambersClickText = directory.getEntry("chambersButtClick", Texture.class);
         TextureRegionDrawable chambersButtUp = new TextureRegionDrawable(new TextureRegion(chambersText));
         TextureRegionDrawable chambersButtOver = new TextureRegionDrawable(new TextureRegion(chambersClickText));
 
@@ -136,7 +140,7 @@ public class SuccessScene implements Screen {
         stage.addActor(replayButton);
         stage.addActor(chambersButton);
 
-        Texture topTexture = new Texture(Gdx.files.internal("ui/chamber_explored.png"));
+        Texture topTexture = directory.getEntry("chamber_explored", Texture.class);
         Image topImage = new Image(topTexture);
 
         topImage.setSize(screenWidth * 0.66f, screenHeight * 0.1f);
@@ -149,7 +153,7 @@ public class SuccessScene implements Screen {
         // Add the image actor to the stage
         stage.addActor(topImage);
 
-        Texture treasureTexture = new Texture(Gdx.files.internal("ui/treasureGlow.gif"));
+        Texture treasureTexture = directory.getEntry("treasureGlow", Texture.class);
         Image treasureImage = new Image(treasureTexture);
 
         treasureImage.setSize(screenWidth * 0.08f, screenHeight * 0.1f);

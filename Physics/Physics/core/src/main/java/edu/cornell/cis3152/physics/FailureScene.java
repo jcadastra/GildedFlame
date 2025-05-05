@@ -18,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.ScreenUtils;
+import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.util.ScreenListener;
 import com.badlogic.gdx.audio.Sound;
 
@@ -31,8 +32,10 @@ public class FailureScene implements Screen {
     private Sound clickSound;
     private InputController inputController = InputController.getInstance();
     private boolean prevButtonA = false;
+    /** The asset directory for retrieving textures, atlases */
+    protected AssetDirectory directory;
 
-    public FailureScene() {
+    public FailureScene(AssetDirectory directory) {
         stage = new Stage(new ScreenViewport());
         skin = new Skin();
         clickSound = Gdx.audio.newSound(Gdx.files.internal("soundEffects/clickSound.mp3"));
@@ -43,8 +46,8 @@ public class FailureScene implements Screen {
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
 
-        Texture retryText = new Texture(Gdx.files.internal("ui/retryButt.png"));
-        Texture retryClickText = new Texture(Gdx.files.internal("ui/retryButtClick.png"));
+        Texture retryText = directory.getEntry("retryButt", Texture.class);
+        Texture retryClickText = directory.getEntry("retryButtClick", Texture.class);
         TextureRegionDrawable retryButtUp = new TextureRegionDrawable(new TextureRegion(retryText));
         TextureRegionDrawable retryButtOver = new TextureRegionDrawable(new TextureRegion(retryClickText));
 
@@ -52,8 +55,8 @@ public class FailureScene implements Screen {
         retryButt.up = retryButtUp;
         retryButt.over = retryButtOver;
 
-        Texture mainMenuText = new Texture(Gdx.files.internal("ui/mainMenuButt.png"));
-        Texture mainMenuClickText = new Texture(Gdx.files.internal("ui/mainMenuButtClick.png"));
+        Texture mainMenuText = directory.getEntry("mainMenuButt", Texture.class);
+        Texture mainMenuClickText = directory.getEntry("mainMenuButtClick", Texture.class);
         TextureRegionDrawable mainMenuButtUp = new TextureRegionDrawable(new TextureRegion(mainMenuText));
         TextureRegionDrawable mainMenuButtOver = new TextureRegionDrawable(new TextureRegion(mainMenuClickText));
 
@@ -61,8 +64,8 @@ public class FailureScene implements Screen {
         mainMenuButt.up = mainMenuButtUp;
         mainMenuButt.over = mainMenuButtOver;
 
-        Texture chambersText = new Texture(Gdx.files.internal("ui/chambersButt.png"));
-        Texture chambersClickText = new Texture(Gdx.files.internal("ui/chambersButtClick.png"));
+        Texture chambersText = directory.getEntry("chambersButt", Texture.class);
+        Texture chambersClickText = directory.getEntry("chambersButtClick", Texture.class);
         TextureRegionDrawable chambersButtUp = new TextureRegionDrawable(new TextureRegion(chambersText));
         TextureRegionDrawable chambersButtOver = new TextureRegionDrawable(new TextureRegion(chambersClickText));
 
@@ -136,7 +139,7 @@ public class FailureScene implements Screen {
         stage.addActor(mainMenuButton);
         stage.addActor(chambersButton);
 
-        Texture topTexture = new Texture(Gdx.files.internal("ui/failed_text.png"));
+        Texture topTexture = directory.getEntry("failed_text", Texture.class);
         Image topImage = new Image(topTexture);
 
         topImage.setSize(screenWidth * 0.66f, screenHeight * 0.1f);
@@ -149,7 +152,7 @@ public class FailureScene implements Screen {
         // Add the image actor to the stage
         stage.addActor(topImage);
 
-        Texture treasureTexture = new Texture(Gdx.files.internal("ui/torchOff.gif"));
+        Texture treasureTexture = directory.getEntry("torchOff", Texture.class);
         Image treasureImage = new Image(treasureTexture);
 
         treasureImage.setSize(screenWidth * 0.08f, screenHeight * 0.1f);
