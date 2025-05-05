@@ -167,6 +167,12 @@ public class CollisionController implements ContactListener {
                 enemy.setJustCollided(true);
             }
 
+            if (isXandY(bd1, bd2, "burnable", Enemy.class) == 1) {
+                Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
+                enemy.changeDirection();
+                enemy.setJustCollided(true);
+            }
+
 //            if (isXandY(bd1, bd2, "ground", Enemy.class) == 1) {
 //                Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
 //                enemy.changeDirection();
@@ -592,7 +598,6 @@ public class CollisionController implements ContactListener {
         if (isX(bd1,bd2, Enemy.class) == 1) {
             Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
             if (isGround(bd1) || isGround(bd2)) {
-                System.out.println("GET OUTTTT");
                 enemy.setGrounded(false);
             }
         }
@@ -653,6 +658,11 @@ public class CollisionController implements ContactListener {
             Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
             enemy.setJustCollided(false);
 
+        }
+
+        if (isXandY(bd1, bd2, "burnable", Enemy.class) == 1) {
+            Enemy enemy = (Enemy) idX(bd1, bd2, Enemy.class);
+            enemy.setJustCollided(false);
         }
 
         /**

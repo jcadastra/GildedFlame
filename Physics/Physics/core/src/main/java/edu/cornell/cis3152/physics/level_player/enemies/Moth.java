@@ -340,7 +340,6 @@ public class Moth extends Enemy {
 
     @Override
     public void update(){
-        System.out.println("Moth state: " + getState() + " and is Grounded: " + isGrounded());
         super.update();
     }
 

@@ -883,7 +883,7 @@ public class GameplayScene implements Screen {
 
                                 addSprite(decoration);
                             } else {
-                                System.out.println("Unknown object: " + objName);
+//                                System.out.println("Unknown object: " + objName);
                             }
                         }
                     }
