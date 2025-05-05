@@ -34,7 +34,7 @@ public class DesktopLauncher {
      * This method simply exists to start a new GDXApp. For desktop games,
      * LibGDX is built on top of LWJGL (this is not the case for Android).
      *
-     * @param args Command line arguments
+     * @param arg Command line arguments
      */
     public static void main(String[] args) {
         // This handles macOS support and helps on Windows.
@@ -56,9 +56,9 @@ public class DesktopLauncher {
         config.title = "The Gilded Flame";
 
         // Use windowed mode
-        config.fullscreen = true;
+//        config.fullscreen = true;
         config.fullscreen = false;
-        config.resizable = true;
+        config.resizable = false;
         config.width = 1280;
         config.height = 720;
         config.rawHDPI = false;
