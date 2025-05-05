@@ -142,7 +142,7 @@ public class CollisionController implements ContactListener {
             if (isX(bd1, bd2, "rain") == 1) {
                 ObstacleSprite nonRain = bd1.getObstacle().getName().contains("rain") ? bd2 : bd1;
                 if ((nonRain.getObstacle().getBodyType() == BodyType.KinematicBody || nonRain.getObstacle().getBodyType() == BodyType.StaticBody)
-                    && !nonRain.getObstacle().isSensor()) {
+                    && !nonRain.getObstacle().isSensor() && !nonRain.getName().contains("grate")) {
                     collisionFlags.add(new CollisionFlag("resetRain",idX(bd1, bd2, "rain") ));
                 }
             }
@@ -434,6 +434,17 @@ public class CollisionController implements ContactListener {
                 sustainedContacts.put(key, -1);
             }
 
+            if (isX(bd1, bd2, Torch.class) == 1) {
+                ObstacleSprite nonTorch = bd1 instanceof Torch ? bd2 : bd1;
+                ObstacleSprite torch = idX(bd1, bd2, Torch.class);
+                if (isGround(nonTorch)) {
+                    float av = torch.getObstacle().getAngularVelocity();
+//                    System.out.println("detected BONKKK w/ " + nonTorch.getName());
+                    torch.getObstacle().setAngularVelocity(Math.signum(av) * .8f);
+                    torch.getObstacle().setLinearVelocity(Vector2.Zero);
+                }
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -478,7 +489,7 @@ public class CollisionController implements ContactListener {
                 } else {
                     float modif;
                     if (Objects.equals(b.getMaterial().getName(), "rope")) {
-                        modif = (float) (1 / (Math.PI * Math.pow(delta.len(), 4) * 4));
+                        modif = (float) (1 / (Math.pow(delta.len(),1)));
                     } else {
                         modif = 1;
                     }

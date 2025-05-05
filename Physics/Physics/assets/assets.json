@@ -11,7 +11,11 @@
     "tablet": "environment/tablet.png",
     "platform": "environment/platform.png",
 
-    "brickBackground": "backgroundAssets/brickBackground.png",
+    "brickBackground": {
+      "file": "backgroundAssets/brickBackground.png",
+      "wrapU": "repeated",
+      "wrapV": "repeated"
+    },
     "colB": "backgroundAssets/colB.png",
     "colM": "backgroundAssets/colM.png",
     "colT": "backgroundAssets/colT.png",
@@ -21,6 +25,10 @@
     "tMove" : "backgroundAssets/tMove.png",
     "tThrow" : "backgroundAssets/tThrow.png",
     "window": "backgroundAssets/window.png",
+    "bookshelf" : "backgroundAssets/bookshelf.png",
+    "holder" : "backgroundAssets/holder.png",
+    "chandelier" : "backgroundAssets/chandelier.png",
+    "grate" : "environment/grate.png",
     "platform-totemLIGHTANIMATION": {
       "file": "platform/totemInLightAnimation.png",
       "mipmaps": true,
@@ -220,8 +228,10 @@
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
     },
-    "platform-rope-end": "environment/Rope/ropeEnd.png",
-    "platform-rope-mid": "environment/Rope/ropeBodyRec.png",
+    "rope-end": "environment/Rope/ropeEnd.png",
+    "chain-end": "environment/Rope/ropeEnd.png",
+    "rope-mid": "environment/Rope/ropeBody.png",
+    "chain-mid": "environment/Rope/chainBody.png",
     "runeBase": "environment/runeBase.png",
     "runeCharged": "environment/runeCharged.png",
     "platform-torch": "platform/torch.png",

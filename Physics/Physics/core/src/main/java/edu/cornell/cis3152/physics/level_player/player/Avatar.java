@@ -33,6 +33,7 @@ import edu.cornell.gdiac.math.Path2;
 import edu.cornell.gdiac.math.PathFactory;
 import edu.cornell.gdiac.physics2.*;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -630,7 +631,6 @@ public class Avatar extends ObstacleSprite {
             float avgAngle = 0;
 
             /*Avg pos used and calculated as a way to prevent player from hopping of the top of a rope accidentally*/
-            Vector2 avgPos = new Vector2();
 //            Vector2 avgPos = Vector2.Zero;
             for (EnhancedObstacleSprite eos : bodyTouchedClimbables) {
                 Vector2 eosVel = eos.getObstacle().getLinearVelocity();
@@ -639,11 +639,12 @@ public class Avatar extends ObstacleSprite {
                 }
                 avgVel.add(eosVel);
                 avgAngle += eos.getObstacle().getAngle();
-                avgPos.add(eos.getObstacle().getPosition().cpy());
             }
             avgVel.scl(1f / count);
-            avgPos.scl(1f / count);
             avgAngle /= (count);
+            Vector2 closestPos = bodyTouchedClimbables.stream().min(
+                    Comparator.comparingDouble(x -> x.getObstacle().getPosition().dst(obstacle.getPosition())))
+                    .map(x -> x.getObstacle().getPosition()).orElse(obstacle.getPosition());
             obstacle.setAngle((float) ((Math.PI / 2) - Math.abs(avgAngle)));
 
             Vector2 ropeDir = new Vector2((float) Math.cos(avgAngle), (float) Math.sin(avgAngle));
@@ -651,20 +652,20 @@ public class Avatar extends ObstacleSprite {
 
             Predicate<EnhancedObstacleSprite> testLadder = (item) -> item instanceof Ladder;
             int topProtector = 1;
-            if (!bodyTouchedClimbables.stream().allMatch(testLadder) && avgPos.y < (pos.y - height / 4) && getMovement().y > 0) {
+            if (!bodyTouchedClimbables.stream().allMatch(testLadder) && closestPos.y < (pos.y - height / 4) && getMovement().y > 0) {
                 topProtector = 0;
             }
-            if (avgPos.y > pos.y) {
-                maxVel.scl(Math.signum(avgPos.x - pos.x), Math.signum(avgPos.y - pos.x));
+            if (closestPos.y > pos.y) {
+                maxVel.scl(Math.signum(closestPos.x - pos.x), Math.signum(closestPos.y - pos.x));
             }
             if (topProtector == 0) {
-                pos.y = avgPos.y;
+                pos.y = closestPos.y;
             }
 
             Vector2 playerMovement = new Vector2(ropeDir).scl(-getMovement().y * (1f / 7 * topProtector)).add(new Vector2(perpDir).scl(getMovement().x * (1f / 10)));
 
             if (playerMovement.len() == 0 && bodyTouchedClimbables.size() > 1) {
-                playerMovement = avgPos.cpy().sub(getObstacle().getPosition());
+                playerMovement = closestPos.cpy().sub(getObstacle().getPosition());
             }
             obstacle.setLinearVelocity(avgVel.add(playerMovement));
 

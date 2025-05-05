@@ -1,8 +1,5 @@
 package edu.cornell.cis3152.physics.level_player.enviromentals;
 
-import com.badlogic.gdx.utils.JsonValue;
-import java.util.Objects;
-
 /**
  * ObstacleMaterial is a material that is associated with a given obstacle
  * holds some general values and used in conjunction with ENhancedObstacleSPrite to hold
@@ -30,7 +27,7 @@ public class ObstacleMaterial {
     private int smokeTimerLimit;
 
 
-    public ObstacleMaterial (String name, JsonValue data) {
+    public ObstacleMaterial (String name) {
         this.name = name;
         switch (name) {
             case "torch":
@@ -47,10 +44,10 @@ public class ObstacleMaterial {
                 break;
 
             case "rope":
-                this.flammability = 0.05f;
-                this.burnTimerLimit = 80f;
-                this.ignitionTimerLimit = 8f;
-                this.smokeTimerLimit = 10;
+                this.flammability = 1f;
+                this.burnTimerLimit = 24f;
+                this.ignitionTimerLimit = 22f;
+                this.smokeTimerLimit = 3;
                 break;
 
             case "driedGrass":
@@ -59,7 +56,8 @@ public class ObstacleMaterial {
                 this.ignitionTimerLimit = 1f;
                 this.smokeTimerLimit = 20;
                 break;
-
+            case "stone":
+            case "iron":
             default:
                 this.flammability = 0f;
                 this.burnTimerLimit = 0f;
@@ -80,6 +78,7 @@ public class ObstacleMaterial {
     public boolean isExpiredBurnTimer() {
         return burnTimer > burnTimerLimit && burnTimerLimit > 0;
     }
+    public void resetBurnTimer() {burnTimer = 0f;}
     public boolean surpassIgnitionTimer(Integer v) {
         return v > ignitionTimerLimit;
     }
