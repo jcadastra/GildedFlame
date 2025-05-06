@@ -267,7 +267,7 @@ public class LightController {
 
     public void attachAmbientLight(ObstacleSprite sprite,Boolean check){
         String name = assignName(sprite);
-        System.out.println(name);
+//        System.out.println(name);
         if(name.contains("Fire")){// Fire, highest priority
             if(lightingAssignments.get(name)==null){//no light assigned tao this fire
 //                if(reverseLightingAssignments.get(light)!=null){//detach previous lights
@@ -344,7 +344,7 @@ public class LightController {
             }
 
         }
-        System.out.println("lightindex"+lightIndex);
+//        System.out.println("lightindex"+lightIndex);
     }
 
 

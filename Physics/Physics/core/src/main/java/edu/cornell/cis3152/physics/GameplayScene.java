@@ -1398,8 +1398,8 @@ public class GameplayScene implements Screen {
 
         soundEngine.tendToMusicLoop();
 //        System.out.println(Gdx.graphics.getFramesPerSecond());
-        SavedDataHandler temp = new SavedDataHandler();
-        temp.setDataVal("test" + Gdx.graphics.getFrameId(), Gdx.graphics.getFramesPerSecond());
+//        SavedDataHandler temp = new SavedDataHandler();
+//        temp.setDataVal("test" + Gdx.graphics.getFrameId(), Gdx.graphics.getFramesPerSecond());
 
         updateRunes(dt);
         supplementaryCollisionActions();
@@ -1639,16 +1639,16 @@ public class GameplayScene implements Screen {
 
         float idealX = playerPos.x * phyiscsUnits;
         float idealY = playerPos.y * phyiscsUnits;
-        System.out.println(camera.viewportWidth +",pp " + camera.viewportHeight);
-        System.out.println(visibleW +",ppp " + visibleH);
-        System.out.println(((visibleW)/2) +",ppasdp " +( (bounds.width* phyiscsUnits)-(visibleW)/2));
-        System.out.println(((visibleW)/2) +",ppasdp " +( (bounds.width)));
-        System.out.println(((visibleW)/2) +",ppasdp " +( (bounds.width * phyiscsUnits)));
-        System.out.println("------");
-        System.out.println(((visibleH)/2) +",hh " +( (bounds.height* phyiscsUnits)-(visibleH)/2));
-        System.out.println(((visibleH)/2) +",hhh " +( (bounds.height)));
-        System.out.println(((visibleH)/2) +",hhh " +( (bounds.height * phyiscsUnits)));
-        System.out.println(scale +",awef " +phyiscsUnits);
+//        System.out.println(camera.viewportWidth +",pp " + camera.viewportHeight);
+//        System.out.println(visibleW +",ppp " + visibleH);
+//        System.out.println(((visibleW)/2) +",ppasdp " +( (bounds.width* phyiscsUnits)-(visibleW)/2));
+//        System.out.println(((visibleW)/2) +",ppasdp " +( (bounds.width)));
+//        System.out.println(((visibleW)/2) +",ppasdp " +( (bounds.width * phyiscsUnits)));
+//        System.out.println("------");
+//        System.out.println(((visibleH)/2) +",hh " +( (bounds.height* phyiscsUnits)-(visibleH)/2));
+//        System.out.println(((visibleH)/2) +",hhh " +( (bounds.height)));
+//        System.out.println(((visibleH)/2) +",hhh " +( (bounds.height * phyiscsUnits)));
+//        System.out.println(scale +",awef " +phyiscsUnits);
         camera.position.x = MathUtils.clamp(idealX, (visibleW), (bounds.width * phyiscsUnits)-(visibleW));
         camera.position.y = MathUtils.clamp(idealY, (visibleH), (bounds.height * phyiscsUnits)-(visibleH));
         camera.update();
