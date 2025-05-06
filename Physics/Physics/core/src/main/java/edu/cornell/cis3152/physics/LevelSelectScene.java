@@ -24,7 +24,7 @@ public class LevelSelectScene implements Screen {
     private Texture bgTexture;
 
     private Array<DoorEntry> doorEntries;
-    private Texture[] baseDoorTextures;
+    private Texture baseDoorTexture;
 
     private float doorWidth, doorHeight, spacing;
     private int scrollIndex = 0;
@@ -68,9 +68,9 @@ public class LevelSelectScene implements Screen {
     private void createBasicUI() {
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
-        doorWidth = screenWidth * 0.15f;
-        doorHeight = screenHeight * 0.2f;
-        spacing = screenWidth * 0.03f;
+        doorWidth = screenWidth * 0.2f;
+        doorHeight = screenHeight * 0.35f;
+        spacing = screenWidth * 0.001f;
 
         Texture chamberLabelTexture = new Texture(Gdx.files.internal("ui/chamber_sel.png"));
         Image chamberLabel = new Image(chamberLabelTexture);
@@ -88,21 +88,15 @@ public class LevelSelectScene implements Screen {
             chamberLabel.getY() - screenHeight * 0.05f - verticalSpacing);
         stage.addActor(chapLabel);
 
-        baseDoorTextures = new Texture[]{
-            new Texture(Gdx.files.internal("ui/doors/door1.png")),
-            new Texture(Gdx.files.internal("ui/doors/door2.png")),
-            new Texture(Gdx.files.internal("ui/doors/door3.png")),
-            new Texture(Gdx.files.internal("ui/doors/door4.png")),
-            new Texture(Gdx.files.internal("ui/doors/door5.png"))
-        };
+        baseDoorTexture = new Texture(Gdx.files.internal("ui/doors/incompleteDoor.png"));
+        Texture hoverTexture = new Texture(Gdx.files.internal("ui/doors/incompleteDoorHover.png"));
 
         // Only create TOTAL_LEVELS doors
         doorEntries = new Array<>(TOTAL_LEVELS);
         for (int i = 0; i < TOTAL_LEVELS; i++) {
-            int baseIndex = i % baseDoorTextures.length;
-            Texture defaultTexture = baseDoorTextures[baseIndex];
-            Texture hoverTexture  = new Texture(Gdx.files.internal(
-                "ui/doors/door" + (baseIndex+1) + "_click.png"));
+            Texture defaultTexture = baseDoorTexture;
+//            Texture hoverTexture  = new Texture(Gdx.files.internal(
+//                "ui/doors/door" + (baseIndex+1) + "_click.png"));
 
             Image door = new Image(defaultTexture);
             door.setSize(doorWidth, doorHeight);
@@ -154,7 +148,7 @@ public class LevelSelectScene implements Screen {
         Texture l_arrow_hov_text = new Texture(Gdx.files.internal("ui/l_arrow_click.png"));
         Image l_arrow = new Image(l_arrow_text);
         l_arrow.setSize(screenWidth * 0.05f, screenHeight * 0.05f);
-        l_arrow.setPosition(screenWidth * 0.01f, screenHeight * 0.25f);
+        l_arrow.setPosition(screenWidth * 0.01f, screenHeight * 0.8f);
         stage.addActor(l_arrow);
 
         // Right arrow textures and image
@@ -162,7 +156,7 @@ public class LevelSelectScene implements Screen {
         Texture r_arrow_hov_text = new Texture(Gdx.files.internal("ui/r_arrow_click.png"));
         Image r_arrow = new Image(r_arrow_text);
         r_arrow.setSize(screenWidth * 0.05f, screenHeight * 0.05f);
-        r_arrow.setPosition(screenWidth * 0.94f, screenHeight * 0.25f);
+        r_arrow.setPosition(screenWidth * 0.94f, screenHeight * 0.8f);
         stage.addActor(r_arrow);
 
         // Create drawables for hover effects

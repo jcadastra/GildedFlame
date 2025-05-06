@@ -574,6 +574,10 @@ public class GameplayScene implements Screen {
         if (lightController != null){
             lightController.dispose();}
 
+        if (floatingLights!=null && floatingLights.size()>0){
+            floatingLights.get(0).reset();
+        }
+
         for (ObstacleSprite sprite : sprites) {
             Obstacle obj = sprite.getObstacle();
             sprite.getObstacle().deactivatePhysics(world);
@@ -1263,7 +1267,7 @@ public class GameplayScene implements Screen {
             }
         }
         for (FloatingLight light : floatingLights) {
-            lightController.attachAmbientLight(light);
+            lightController.attachAmbientLight(light,true);
         }
 //        debugPrintOut();
     }
@@ -1380,7 +1384,7 @@ public class GameplayScene implements Screen {
         Array<Lighting> fireLights =lightController.fireLights(fireController);
         attachFireLightJoints(fireLights);
         //TODO:Attach light joints
-        lightController.update(fireController);
+        lightController.update(fireController,true);
 
         InputController input = InputController.getInstance();
 
@@ -2121,6 +2125,19 @@ public class GameplayScene implements Screen {
             }
         }
 
+        batch.end();
+        for (FloatingLight light : floatingLights){
+            if (light.isOff()){
+                lightController.turnOffAmbientLight(light,true);
+            }else{
+                //System.out.println("light id"+light.ID);
+                lightController.attachAmbientLight(light,true);
+            }
+        }
+        lightController.update(contactListener.beginSmother());
+        lightController.render();
+
+        batch.begin();
         // Draw a final message
         if (complete && !failed) {
             //batch.drawText(goodMessage, width/2, height/2);
@@ -2129,17 +2146,7 @@ public class GameplayScene implements Screen {
             //batch.drawText(badMessage, width/2, height/2);
             listener.exitScreen(this, EXIT_FAILURE);
         }
-
         batch.end();
-        for (FloatingLight light : floatingLights){
-            if (light.isOff()){
-                lightController.turnOffAmbientLight(light);
-            }else{
-                lightController.attachAmbientLight(light);
-            }
-        }
-        lightController.update(contactListener.beginSmother());
-        lightController.render();
     }
 
     /**

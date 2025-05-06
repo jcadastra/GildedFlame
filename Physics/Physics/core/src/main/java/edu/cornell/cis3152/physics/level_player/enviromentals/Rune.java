@@ -1,13 +1,7 @@
 package edu.cornell.cis3152.physics.level_player.enviromentals;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Affine2;
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import edu.cornell.cis3152.physics.level_player.utils.EventAction;
 import edu.cornell.gdiac.graphics.SpriteBatch;
@@ -20,6 +14,8 @@ import java.util.Objects;
 
 public class Rune extends ObstacleSprite {
 
+    static int counter = 0;
+    public int ID;
     private float powerLevel = 0;
     private float prevPowerLevel = 0;
     private float r = 1.5f;
@@ -61,6 +57,8 @@ public class Rune extends ObstacleSprite {
         this.eventActions = new HashSet<>();
         this.thresholds = thresholds;
         this.runeSigilSet = TextureRegion.split(runeSigil,400,520);
+        ID = counter;
+        counter++;
     }
 
     public float getPowerLevel() {
@@ -90,35 +88,6 @@ public class Rune extends ObstacleSprite {
                 powerLevel = currentLatchThreshold;
             }
         }
-    }
-
-    @Override
-    public void draw(SpriteBatch batch) {
-        super.draw(batch);
-
-        int idx;
-        if (powerLevel == 0) {
-            idx = 0;
-        } else if (powerLevel >= 1) {
-            idx = 10;
-        } else {
-            idx = (int) (powerLevel / .11) + 1;
-        }
-        TextureRegion region = runeSigilSet[0][idx];
-
-        float texW = region.getRegionWidth();
-        float texH = region.getRegionHeight();
-        float drawW = width * units;
-        float drawH = height * units;
-
-        float offsetTexPx = yOffsetForRuneCenter * (texH / drawH);
-        SpriteBatch.computeTransform(
-            transform, texW * 0.5f, texH * 0.5f + offsetTexPx,
-            obstacle.getX() * units,  obstacle.getY() * units,
-            rotationDeg, drawW / texW,  drawH / texH
-        );
-
-        batch.draw(region, transform);
     }
 
     public float getRadius () {return r;}
