@@ -118,6 +118,20 @@ public class LevelSelectScene implements Screen {
             } else {
                 baseTex = loadDoorTexture("locked", levelNumber, false);
                 hoverTex = loadDoorTexture("locked", levelNumber, true);
+
+                Image door = new Image(baseTex);
+                door.setSize(doorWidth, doorHeight);
+
+                final DoorEntry entry = new DoorEntry(
+                    door,
+                    new TextureRegionDrawable(new TextureRegion(baseTex)),
+                    new TextureRegionDrawable(new TextureRegion(hoverTex)),
+                    levelNumber
+                );
+
+                doorEntries.add(entry);
+                stage.addActor(door);
+                continue;
             }
 
             Image door = new Image(baseTex);
