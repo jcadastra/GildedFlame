@@ -85,8 +85,8 @@
             "scale": 0.180796875,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4798.2024025581195,
-                "y": 2696.3961628208453
+                "x": 4795.4368680321495,
+                "y": 2690.8650937689054
             }
         },
         "earthtile.tsx": {
@@ -100,14 +100,14 @@
         },
         "example_level.tmj": {
             "expandedObjectLayers": [
-                5,
-                6
+                6,
+                5
             ],
             "scale": 0.25,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 4798,
-                "y": 2042
+                "x": 4792,
+                "y": 2038
             }
         },
         "example_level.tmx": {
@@ -130,8 +130,8 @@
             "scale": 0.25,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 4798,
-                "y": 2698
+                "x": 4792,
+                "y": 2694
             }
         },
         "example_level2.tmx": {
@@ -171,16 +171,16 @@
         },
         "level10.tmj": {
             "expandedObjectLayers": [
+                6,
                 5,
                 2,
-                6,
                 4
             ],
             "scale": 0.125,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 4796,
-                "y": 1388
+                "x": 4792,
+                "y": 1380
             }
         },
         "level2.tmj": {
@@ -207,8 +207,8 @@
             "scale": 0.1914,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 4798.850574712644,
-                "y": 2698.5370950888196
+                "x": 4791.013584117033,
+                "y": 2693.3124346917452
             }
         },
         "level5.tmj": {
@@ -229,15 +229,15 @@
         },
         "level7.tmj": {
             "expandedObjectLayers": [
-                5,
                 6,
+                5,
                 4
             ],
             "scale": 1.5,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 4799.666666666666,
-                "y": 2699.6666666666665
+                "x": 4798.666666666666,
+                "y": 2699
             }
         },
         "level8.tmj": {
@@ -250,35 +250,35 @@
         },
         "level9.tmj": {
             "expandedObjectLayers": [
-                7,
-                3
+                3,
+                7
             ],
             "scale": 0.1703,
             "selectedLayer": 4,
             "viewCenter": {
                 "x": 4785.672342924252,
-                "y": 3649.4421608925422
+                "y": 3643.5701702877277
             }
         },
         "mediumLevel.tmj": {
             "scale": 0.1759259259259259,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4803.1578947368425,
-                "y": 2702.842105263158
+                "x": 4797.473684210528,
+                "y": 2697.157894736842
             }
         },
         "sample.tmj": {
             "expandedObjectLayers": [
+                6,
                 5,
-                2,
-                6
+                2
             ],
             "scale": 0.1414,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 4798.444130127298,
-                "y": 2705.0919377652053
+                "x": 4794.908062234795,
+                "y": 2698.0198019801983
             }
         },
         "temp.tmj": {
@@ -304,8 +304,8 @@
             "scale": 0.125,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 4796,
-                "y": 2700
+                "x": 4792,
+                "y": 2692
             }
         },
         "test2.tmx": {
@@ -315,8 +315,8 @@
             "scale": 0.0625,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 4768,
-                "y": 2696
+                "x": 4792,
+                "y": 2712
             }
         },
         "test3.tmj": {
@@ -365,16 +365,16 @@
         },
         "test7.tmj": {
             "expandedObjectLayers": [
+                3,
                 5,
                 2,
-                4,
-                3
+                4
             ],
             "scale": 0.0625,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 4792,
-                "y": 88
+                "x": 4784,
+                "y": 72
             }
         },
         "test7.tmx": {
@@ -392,8 +392,8 @@
             "scale": 0.0802,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 4781.795511221945,
-                "y": 5442.643391521197
+                "x": 4775.561097256858,
+                "y": 5430.174563591023
             }
         },
         "test_map.tmj": {
@@ -406,15 +406,15 @@
         },
         "test_map.tmx": {
             "expandedObjectLayers": [
+                3,
                 2,
-                4,
-                3
+                4
             ],
             "scale": 0.5,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 960,
-                "y": 1233
+                "x": 963,
+                "y": 1237
             }
         },
         "tileset.tsx": {
