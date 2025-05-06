@@ -96,13 +96,14 @@ public class Moth extends Enemy {
         attackAnimationTexture = directory.getEntry("platform-mothATTACKANIMATION", Texture.class);
         frustratedAnimationTexture = directory.getEntry("platform-mothFRUSTRATEDANIMATION", Texture.class);
         dustAnimationTexture = directory.getEntry("platform-mothDUSTANIMATION", Texture.class);
-
         attackTimer = new Timer(data.getInt("attackTimer"));
 //        attackAnimationTimer = new Timer(data.getInt("attackAnimationTimer"));
         attackAnimationTimer = new Timer(50);
         tranceTimer = new Timer(100);
         smotherTimer = new Timer(data.getInt("smotherTimer"));
         dazedTimer = new Timer(data.getInt("dazedTimer"));
+        obstacle.setRestitution(data.getFloat("restitution", 0));
+        setGrounded(true);
     }
 
     private void resetFrames() {
@@ -328,9 +329,9 @@ public class Moth extends Enemy {
             body.setType(BodyDef.BodyType.DynamicBody);
             body.setAwake(true);
             body.setGravityScale(0.5f);
-            float jumpVy  = 3f;
+            float jumpVy  = 2.5f;
             float gEff    = Math.abs(body.getWorld().getGravity().y * body.getGravityScale());
-            float T       = (2f * jumpVy) / gEff;
+            float T       = (1.5f * jumpVy) / gEff;
             float dx      = torchPos.x - body.getPosition().x;
             float jumpVx  = dx / T;
             body.setLinearVelocity(jumpVx, jumpVy);
@@ -338,9 +339,14 @@ public class Moth extends Enemy {
     }
 
     @Override
+    public void update(){
+        super.update();
+    }
+
+    @Override
     public void smother() {
         setHasJumped(false);
-        stop();
+//        stop();
         if (isSmotherTimerZero()) {
             System.out.println("Game Over");
         } else {
@@ -361,8 +367,8 @@ public class Moth extends Enemy {
         obstacle.setBodyType(BodyDef.BodyType.DynamicBody);
         updateFrame(DAZED_FRAME_DURATION, TOTAL_DAZED_FRAMES);
         body.setGravityScale(1.0f);
-        Vector2 vel = body.getLinearVelocity();
-        body.setLinearVelocity(0f, vel.y);
+//        Vector2 vel = body.getLinearVelocity();
+//        body.setLinearVelocity(0f, vel.y);
         decrementDazedTimer();
 
     }

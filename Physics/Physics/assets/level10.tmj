@@ -25,7 +25,7 @@
          "visible":false,
          "x":0,
          "y":0
-        }, 
+        },
         {
          "draworder":"topdown",
          "id":4,
@@ -42,7 +42,7 @@
                  "width":300,
                  "x":4778,
                  "y":4106
-                }, 
+                },
                 {
                  "gid":59,
                  "height":294,
@@ -54,7 +54,7 @@
                  "width":298.496,
                  "x":6296,
                  "y":4192
-                }, 
+                },
                 {
                  "gid":59,
                  "height":292,
@@ -72,7 +72,7 @@
          "visible":true,
          "x":0,
          "y":0
-        }, 
+        },
         {
          "data":[27, 27, 27, 33, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 34, 27, 27, 27, 27, 27, 27, 27, 27, 27,
             27, 27, 27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 27, 33, 39, 34, 27, 27, 27, 27, 27,
@@ -101,7 +101,7 @@
          "width":32,
          "x":0,
          "y":0
-        }, 
+        },
         {
          "draworder":"topdown",
          "id":3,
@@ -118,7 +118,7 @@
                  "width":300,
                  "x":810,
                  "y":4202
-                }, 
+                },
                 {
                  "gid":56,
                  "height":300,
@@ -136,7 +136,7 @@
          "visible":true,
          "x":0,
          "y":0
-        }, 
+        },
         {
          "draworder":"topdown",
          "id":5,
@@ -153,7 +153,7 @@
                  "width":346,
                  "x":8419,
                  "y":3262
-                }, 
+                },
                 {
                  "gid":57,
                  "height":298,
@@ -165,7 +165,7 @@
                  "width":278,
                  "x":1500,
                  "y":2400
-                }, 
+                },
                 {
                  "gid":57,
                  "height":298,
@@ -177,7 +177,7 @@
                  "width":298,
                  "x":1500,
                  "y":600
-                }, 
+                },
                 {
                  "gid":62,
                  "height":308,
@@ -189,7 +189,7 @@
                  "width":1204,
                  "x":6932.60187169116,
                  "y":2788.35593195083
-                }, 
+                },
                 {
                  "gid":62,
                  "height":300,
@@ -201,7 +201,7 @@
                  "width":575,
                  "x":3900,
                  "y":1800
-                }, 
+                },
                 {
                  "gid":62,
                  "height":300,
@@ -219,7 +219,7 @@
          "visible":true,
          "x":0,
          "y":0
-        }, 
+        },
         {
          "draworder":"topdown",
          "id":2,
@@ -236,7 +236,7 @@
                  "width":300,
                  "x":2018,
                  "y":4216
-                }, 
+                },
                 {
                  "gid":51,
                  "height":300,
@@ -254,7 +254,7 @@
          "visible":true,
          "x":0,
          "y":0
-        }, 
+        },
         {
          "draworder":"topdown",
          "id":6,
@@ -270,22 +270,22 @@
                          "name":"endPos",
                          "type":"string",
                          "value":"10,9"
-                        }, 
+                        },
                         {
                          "name":"interpolation",
                          "type":"string",
                          "value":"smoother"
-                        }, 
+                        },
                         {
                          "name":"moveEvent",
                          "type":"bool",
                          "value":true
-                        }, 
+                        },
                         {
                          "name":"platformName",
                          "type":"string",
                          "value":"platform1"
-                        }, 
+                        },
                         {
                          "name":"startPos",
                          "type":"string",
@@ -297,7 +297,7 @@
                  "width":211,
                  "x":4212,
                  "y":5024
-                }, 
+                },
                 {
                  "gid":71,
                  "height":120,
@@ -308,27 +308,27 @@
                          "name":"endPos",
                          "type":"string",
                          "value":"25.5,13"
-                        }, 
+                        },
                         {
                          "name":"interpolation",
                          "type":"string",
                          "value":"smoother"
-                        }, 
+                        },
                         {
                          "name":"moveEvent",
                          "type":"bool",
                          "value":true
-                        }, 
+                        },
                         {
                          "name":"platformName",
                          "type":"string",
                          "value":"platform3"
-                        }, 
+                        },
                         {
                          "name":"startPos",
                          "type":"string",
                          "value":"25.5,9"
-                        }, 
+                        },
                         {
                          "name":"time",
                          "type":"float",
@@ -340,7 +340,7 @@
                  "width":211,
                  "x":5700,
                  "y":5033.33333333333
-                }, 
+                },
                 {
                  "gid":84,
                  "height":57,
@@ -352,7 +352,7 @@
                  "width":57,
                  "x":4890.18181818182,
                  "y":3995.66666666667
-                }, 
+                },
                 {
                  "gid":84,
                  "height":57,
@@ -364,7 +364,7 @@
                  "width":57,
                  "x":4111.39393939394,
                  "y":4959.30303030303
-                }, 
+                },
                 {
                  "gid":84,
                  "height":57,
@@ -376,7 +376,7 @@
                  "width":57,
                  "x":5623.51515151515,
                  "y":4962.33333333333
-                }, 
+                },
                 {
                  "gid":84,
                  "height":57,
@@ -388,7 +388,7 @@
                  "width":57,
                  "x":7181.09090909091,
                  "y":3889.60606060606
-                }, 
+                },
                 {
                  "gid":84,
                  "height":57,
@@ -400,7 +400,7 @@
                  "width":57,
                  "x":1641.69696969697,
                  "y":1925.9696969697
-                }, 
+                },
                 {
                  "gid":84,
                  "height":57,
@@ -412,7 +412,7 @@
                  "width":57,
                  "x":5305.33333333333,
                  "y":1329
-                }, 
+                },
                 {
                  "gid":84,
                  "height":57,
@@ -424,7 +424,7 @@
                  "width":57,
                  "x":3202.30303030303,
                  "y":2144.15151515152
-                }, 
+                },
                 {
                  "gid":84,
                  "height":57,
@@ -436,7 +436,7 @@
                  "width":57,
                  "x":4196.24242424242,
                  "y":3247.18181818182
-                }, 
+                },
                 {
                  "gid":84,
                  "height":57,
@@ -448,7 +448,7 @@
                  "width":57,
                  "x":4912,
                  "y":2701
-                }, 
+                },
                 {
                  "gid":84,
                  "height":57,
@@ -460,7 +460,7 @@
                  "width":57,
                  "x":8532,
                  "y":3213
-                }, 
+                },
                 {
                  "gid":84,
                  "height":57,
@@ -472,7 +472,7 @@
                  "width":57,
                  "x":1347.5,
                  "y":4043.5
-                }, 
+                },
                 {
                  "gid":72,
                  "height":520,
@@ -483,22 +483,22 @@
                          "name":"endPos",
                          "type":"string",
                          "value":"13,0.85"
-                        }, 
+                        },
                         {
                          "name":"moveEvent",
                          "type":"bool",
                          "value":true
-                        }, 
+                        },
                         {
                          "name":"platformName",
                          "type":"string",
                          "value":"platform2"
-                        }, 
+                        },
                         {
                          "name":"startPos",
                          "type":"string",
                          "value":"13,10"
-                        }, 
+                        },
                         {
                          "name":"thresholds",
                          "type":"string",
@@ -527,19 +527,19 @@
         {
          "firstgid":1,
          "source":"PlatformTiles.tsx"
-        }, 
+        },
         {
          "firstgid":49,
          "source":"PlayerTorchTiles.tsx"
-        }, 
+        },
         {
          "firstgid":53,
          "source":"EnemyTiles.tsx"
-        }, 
+        },
         {
          "firstgid":57,
          "source":"GameObjectTiles.tsx"
-        }, 
+        },
         {
          "firstgid":74,
          "source":"BackgroundAssets.tsx"

@@ -338,6 +338,10 @@ public class GameplayScene implements Screen {
     private float animationOffsetTorchArc = .18f;
     private float expectedDTForTorchToHitGround = 0;
 
+    private boolean playerDied = false;
+    private float deathTimer = 0.0f;
+    private static final float DEATH_DELAY = 2.0f;
+
 
     /**
      * Creates a new game world from the given asset directory
@@ -802,6 +806,12 @@ public class GameplayScene implements Screen {
                     } else if (objName.contains("burnable")) {
                         float width = object.getFloat("width") / levelData.getInt("tilewidth");
                         float height = object.getFloat("height") / levelData.getInt("tileheight");
+                        String materialType = "wood";
+                        try {
+                            materialType = object.getString("material");
+                        } catch (Exception e) {
+                            System.err.println("failed to find material type, revert to wood");
+                        }
                         GameObject box;
                         if (objName.contains("non")) {
                             box = new GameObject(new float[]{
@@ -813,7 +823,7 @@ public class GameplayScene implements Screen {
                                 (width)/3, (height)/2 * .8f,
                                 -(width)/3, (height)/2 * .8f
                             }, x,y, width, height, units);
-                            box.setMaterial(new ObstacleMaterial("stone"));
+                            materialType = "stone";
                             box.setTexture(directory.getEntry("nonburnable", Texture.class));
                             box.getObstacle().setPhysicsUnits(units);
                         } else {
@@ -833,9 +843,9 @@ public class GameplayScene implements Screen {
                                -width/2, (height) * (3f/10),
                                 -width/2, -(height) * (3f/10)
                             }, x,y, width, height, units);
-                            box.setMaterial(new ObstacleMaterial("wood"));
                             box.setTexture(directory.getEntry("burnable", Texture.class));
                         }
+                        box.setMaterial(new ObstacleMaterial(materialType));
                         box.getObstacle().setBodyType(BodyType.DynamicBody);
                         box.getObstacle().setName(objName);
                         box.getObstacle().setPhysicsUnits(units);
@@ -879,7 +889,7 @@ public class GameplayScene implements Screen {
 
                                 addSprite(decoration);
                             } else {
-                                System.out.println("Unknown object: " + objName);
+//                                System.out.println("Unknown object: " + objName);
                             }
                         }
                     }
@@ -1280,6 +1290,7 @@ public class GameplayScene implements Screen {
      * @param dt    Number of seconds since last animation frame
      */
     public void update(float dt) {
+
         soundEngine.tendToMusicLoop();
 //        System.out.println(Gdx.graphics.getFramesPerSecond());
 //        SavedDataHandler temp = new SavedDataHandler();
@@ -1527,7 +1538,7 @@ public class GameplayScene implements Screen {
             factor = Math.max(factor,0);
             factor = Math.min(factor,1);
             if (factor == 0 || factor == 1) {
-                break;
+                continue;
             }
 
             for (EventAction<?> undefEventAction : rune.getEventAction()) {
@@ -1603,10 +1614,7 @@ public class GameplayScene implements Screen {
                         if (avatar.getGroundedState().equals(GroundState.CLIMBING)) {
                             avatar.removeClimbingPhysics();
                         }
-
-                    } else {
-                        avatar.resetFallTimer();
-                        avatar.startFallTimer();
+                        avatar.setGroundedState(GroundState.AIRBORNE);
                     }
                     break;
                 case "addClimbingJoint":

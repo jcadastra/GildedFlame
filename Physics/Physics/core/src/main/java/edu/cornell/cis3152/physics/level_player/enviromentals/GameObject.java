@@ -106,7 +106,7 @@ public class GameObject extends EnhancedObstacleSprite {
         obstacle = new ObstacleSprite(temp).getObstacle();
         obstacle.setDensity(0.5f);
         obstacle.setFriction(0.5f);
-        obstacle.setRestitution(.1f);
+        obstacle.setRestitution(0f);
         obstacle.setPhysicsUnits(units);
         obstacle.setFixedRotation(true);
         obstacle.setName(name);
