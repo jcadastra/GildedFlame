@@ -145,7 +145,26 @@ public class MainMenuScreen implements Screen {
                 System.out.println("ImageButton pressed");
                 startClicked = true;
                 if (listener != null) {
-                    listener.exitScreen(MainMenuScreen.this, 1);
+                    SavedDataHandler handler = new SavedDataHandler();
+                    String lastCompleted = handler.getDataVal("lastLevel");
+                    System.out.println("last completed" +lastCompleted);
+                    int nextLevel = 1;
+                    try {
+                        if (lastCompleted != null) {
+                            nextLevel = Integer.parseInt(lastCompleted) + 1;
+                        }
+                    } catch (NumberFormatException e) {
+                        System.err.println("Invalid level stored: " + lastCompleted);
+                    }
+
+                    // Optional: cap nextLevel to the max number of levels
+                    int maxLevel = 10; // change to however many levels you have
+                    if (nextLevel > maxLevel) {
+                        nextLevel = maxLevel;
+                    }
+
+                    // Go to the next level
+                    listener.exitScreen(MainMenuScreen.this, -1);
                 }
                 return true;
             }
@@ -168,7 +187,7 @@ public class MainMenuScreen implements Screen {
 
 // Add the ImageButton to your stage
         stage.addActor(imageButton);
-       // stage.addActor(contButt1);
+        stage.addActor(contButt1);
        // stage.addActor(settingsButt1);
 
 

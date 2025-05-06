@@ -32,8 +32,10 @@ public class SuccessScene implements Screen {
     private Sound clickSound;
     private InputController inputController = InputController.getInstance();
     private boolean prevButtonA = false;
+    private int currentLevel;
     /** The asset directory for retrieving textures, atlases */
     protected AssetDirectory directory;
+
 
     public SuccessScene(AssetDirectory directory) {
         this.directory = directory;
@@ -42,6 +44,11 @@ public class SuccessScene implements Screen {
         clickSound = Gdx.audio.newSound(Gdx.files.internal("soundEffects/clickSound.mp3"));
         createBasicUI();
     }
+
+    public void setCurrentLevel(int level) {
+        this.currentLevel = level;
+    }
+
 
     private void createBasicUI() {
         float screenWidth = Gdx.graphics.getWidth();
@@ -103,6 +110,11 @@ public class SuccessScene implements Screen {
                 System.out.println("ImageButton pressed");
                 clickSound.play();
                 startClicked = true;
+                SavedDataHandler handler = new SavedDataHandler();
+                String levelKey = "level" + currentLevel;
+                handler.setDataVal(levelKey, "true");
+                handler.setDataVal("lastLevel", String.valueOf(currentLevel));
+                System.out.println("level saved: " + String.valueOf(currentLevel));
                 if (listener != null) {
                     listener.exitScreen(SuccessScene.this, 1);
                 }
@@ -116,6 +128,11 @@ public class SuccessScene implements Screen {
                 clickSound.play();
                 System.out.println("ImageButton pressed");
                 startClicked = true;
+                SavedDataHandler handler = new SavedDataHandler();
+                String levelKey = "level" + currentLevel;
+                handler.setDataVal(levelKey, "true");
+                handler.setDataVal("lastLevel", String.valueOf(currentLevel));
+                System.out.println("level saved: " + String.valueOf(currentLevel));
                 if (listener != null) {
                     listener.exitScreen(SuccessScene.this, 4);
                 }
@@ -129,6 +146,11 @@ public class SuccessScene implements Screen {
                 clickSound.play();
                 System.out.println("ImageButton pressed");
                 startClicked = true;
+                SavedDataHandler handler = new SavedDataHandler();
+                String levelKey = "level" + currentLevel;
+                handler.setDataVal(levelKey, "true");
+                handler.setDataVal("lastLevel", String.valueOf(currentLevel));
+                System.out.println("level saved: " + String.valueOf(currentLevel));
                 if (listener != null) {
                     listener.exitScreen(SuccessScene.this, 0);
                 }
