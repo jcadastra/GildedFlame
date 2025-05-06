@@ -1,122 +1,32 @@
-{ "backgroundcolor":"#2b4859",
- "compressionlevel":-1,
- "height":18,
+{ "compressionlevel":-1,
+ "height":10,
  "infinite":false,
  "layers":[
         {
-         "draworder":"topdown",
-         "id":7,
-         "name":"BackgroundTiles",
-         "objects":[
-                {
-                 "gid":74,
-                 "height":600,
-                 "id":115,
-                 "name":"brickBackground",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":600,
-                 "x":600,
-                 "y":3300
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "id":4,
-         "name":"Background",
-         "objects":[
-                {
-                 "gid":89,
-                 "height":834.168755221387,
-                 "id":318,
-                 "name":"window",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":500.501253132832,
-                 "x":3000,
-                 "y":4800
-                }, 
-                {
-                 "gid":89,
-                 "height":834.168755221387,
-                 "id":319,
-                 "name":"window",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":500.501253132832,
-                 "x":5400,
-                 "y":4800
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "data":[27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
-            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
-            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
-            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
-            27, 27, 27, 27, 27, 33, 39, 39, 34, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
-            27, 33, 39, 39, 39, 40, 0, 0, 38, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 34,
-            27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26,
-            27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26,
-            27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26,
-            27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26,
-            27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26,
-            27, 45, 15, 15, 15, 15, 15, 15, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 46,
-            27, 27, 27, 27, 27, 27, 27, 27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
-            27, 27, 27, 27, 27, 27, 27, 27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
-            27, 27, 27, 27, 27, 27, 27, 27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
-            27, 27, 27, 27, 27, 27, 27, 27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
-            27, 27, 27, 27, 27, 27, 27, 27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
-            27, 27, 27, 27, 27, 27, 27, 27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27],
-         "height":18,
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+         "height":10,
          "id":1,
          "name":"Tile Layer 1",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
-         "width":32,
+         "width":10,
          "x":0,
          "y":0
         }, 
         {
          "draworder":"topdown",
          "id":3,
-         "name":"Enemies",
-         "objects":[
-                {
-                 "gid":55,
-                 "height":300,
-                 "id":330,
-                 "name":"totem",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":300,
-                 "x":6796.96193771626,
-                 "y":3143.59169550173
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "id":2,
-         "name":"Player",
+         "name":"Object Layer 1",
          "objects":[
                 {
                  "gid":52,
@@ -127,188 +37,32 @@
                  "type":"",
                  "visible":true,
                  "width":300,
-                 "x":882,
-                 "y":3268
+                 "x":138,
+                 "y":2608
                 }, 
                 {
                  "gid":51,
-                 "height":300,
+                 "height":437,
                  "id":2,
                  "name":"torch",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":150,
-                 "x":1147.2484345913,
-                 "y":3221.66187172111
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "id":5,
-         "name":"Entities",
-         "objects":[
+                 "width":216,
+                 "x":1596,
+                 "y":2491
+                }, 
                 {
-                 "gid":61,
+                 "gid":57,
                  "height":235,
-                 "id":114,
+                 "id":3,
                  "name":"goaldoor",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":346,
-                 "x":7471,
-                 "y":3266
-                }, 
-                {
-                 "gid":62,
-                 "height":300,
-                 "id":238,
-                 "name":"platforma",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":900,
-                 "x":4800,
-                 "y":3600
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "id":6,
-         "name":"Action Entities",
-         "objects":[
-                {
-                 "gid":90,
-                 "height":57,
-                 "id":321,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":3883.59588626739,
-                 "y":3130.05401434621
-                }, 
-                {
-                 "gid":90,
-                 "height":57,
-                 "id":322,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":7621.46849883329,
-                 "y":3170.64722150203
-                }, 
-                {
-                 "gid":90,
-                 "height":57,
-                 "id":324,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":3217.5,
-                 "y":4223.5
-                }, 
-                {
-                 "gid":90,
-                 "height":57,
-                 "id":325,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":3231.5,
-                 "y":4625.5
-                }, 
-                {
-                 "gid":90,
-                 "height":57,
-                 "id":326,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":5627.5,
-                 "y":4217.5
-                }, 
-                {
-                 "gid":90,
-                 "height":57,
-                 "id":327,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":5627.5,
-                 "y":4615.5
-                }, 
-                {
-                 "gid":90,
-                 "height":57,
-                 "id":328,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":2480.27802243892,
-                 "y":3004.45082311
-                }, 
-                {
-                 "gid":72,
-                 "height":520,
-                 "id":332,
-                 "name":"rune",
-                 "properties":[
-                        {
-                         "name":"endPos",
-                         "type":"string",
-                         "value":"10,6"
-                        }, 
-                        {
-                         "name":"moveEvent",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"platformName",
-                         "type":"string",
-                         "value":"platforma"
-                        }, 
-                        {
-                         "name":"startPos",
-                         "type":"string",
-                         "value":"19,6"
-                        }, 
-                        {
-                         "name":"thresholds",
-                         "type":"string",
-                         "value":"0"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":400,
-                 "x":2321.59090909091,
-                 "y":3336.01515151515
+                 "x":1463,
+                 "y":466
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -316,8 +70,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":8,
- "nextobjectid":333,
+ "nextlayerid":4,
+ "nextobjectid":4,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
@@ -333,22 +87,10 @@
         }, 
         {
          "firstgid":53,
-         "source":"EnemyTiles.tsx"
-        }, 
-        {
-         "firstgid":57,
          "source":"GameObjectTiles.tsx"
-        }, 
-        {
-         "firstgid":74,
-         "source":"BackgroundAssets.tsx"
-        }, 
-        {
-         "firstgid":86,
-         "source":"BackgroundStickers.tsx"
         }],
  "tilewidth":300,
  "type":"map",
  "version":"1.10",
- "width":32
+ "width":10
 }

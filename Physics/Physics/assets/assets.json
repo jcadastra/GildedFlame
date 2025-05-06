@@ -234,6 +234,7 @@
     "chain-mid": "environment/Rope/chainBody.png",
     "runeBase": "environment/runeBase.png",
     "runeCharged": "environment/runeCharged.png",
+    "rainDrop": "environment/rainDrop.png",
     "platform-torch": "platform/torch.png",
     "platform-rope": "platform/ropebridge.png",
     "platform-barrier": "platform/barrier.png",

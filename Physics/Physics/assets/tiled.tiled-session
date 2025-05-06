@@ -212,8 +212,8 @@
             "scale": 0.1914,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 4798.850574712644,
-                "y": 2698.5370950888196
+                "x": 4785.788923719959,
+                "y": 2688.087774294671
             }
         },
         "level5.tmj": {
@@ -234,15 +234,13 @@
         },
         "level7.tmj": {
             "expandedObjectLayers": [
-                4,
-                6,
-                5
+                3
             ],
-            "scale": 1.5,
-            "selectedLayer": 6,
+            "scale": 0.25,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 4799.666666666666,
-                "y": 2699.6666666666665
+                "x": 1312,
+                "y": 1710
             }
         },
         "level8.tmj": {
@@ -261,8 +259,8 @@
             "scale": 0.1703,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4794.480328831473,
-                "y": 2698.1796829125074
+                "x": 4785.672342924252,
+                "y": 2692.3076923076924
             }
         },
         "mediumLevel.tmj": {
@@ -370,16 +368,13 @@
         },
         "test7.tmj": {
             "expandedObjectLayers": [
-                2,
-                3,
-                4,
-                5
+                2
             ],
             "scale": 0.0625,
-            "selectedLayer": 3,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 4784,
-                "y": 72
+                "x": 7320,
+                "y": 2520
             }
         },
         "test7.tmx": {
@@ -397,8 +392,8 @@
             "scale": 0.0802,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 4781.795511221945,
-                "y": 5442.643391521197
+                "x": 4763.092269326682,
+                "y": 5417.705735660848
             }
         },
         "test_map.tmj": {
@@ -438,12 +433,12 @@
     },
     "last.exportedFilePath": "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/assets",
     "last.imagePath": "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/assets/environment",
-    "map.height": 18,
+    "map.height": 10,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "map.lastUsedFormat": "json",
     "map.tileHeight": 300,
     "map.tileWidth": 300,
-    "map.width": 50,
+    "map.width": 10,
     "openFiles": [
         "test_map.tmx",
         "EnemyTiles.tsx",
@@ -468,6 +463,7 @@
     "property.type": "int",
     "recentFiles": [
         "test7.tmj",
+        "level7.tmj",
         "test_map.tmx",
         "EnemyTiles.tsx",
         "GameObjectTiles.tsx",
@@ -477,7 +473,6 @@
         "example_level.tmj",
         "test2.tmj",
         "example_level2.tmj",
-        "sample.tmj",
-        "level10.tmj"
+        "sample.tmj"
     ]
 }

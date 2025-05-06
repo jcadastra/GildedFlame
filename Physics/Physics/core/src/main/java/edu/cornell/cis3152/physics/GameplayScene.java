@@ -370,7 +370,8 @@ public class GameplayScene implements Screen {
         this.fitViewport = new ExtendViewport(1280, 720);
 
         // pull out sounds
-        volume = constants.getFloat("volume", 1.0f);
+        volume = 0.1f;
+//        volume = constants.getFloat("volume", 1.0f);
 
         sensorFixtures = new ObjectSet<Fixture>();
 
@@ -1184,8 +1185,24 @@ public class GameplayScene implements Screen {
                     String objName = object.getString("name", "unnamed");
                     float x = object.getFloat("x") / levelData.getInt("tilewidth");
                     float y = (bounds.height * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
+                    boolean wander = false;
                     if (objName.contains("light")) {
+                        JsonValue props = object.get("properties");
+                        if (props!=null) {
+                            for (JsonValue prop : props) {
+                                String pname = prop.getString("name");
+                                String val = prop.getString("value");
+                                switch (pname) {
+                                    case "wander":
+                                        wander = Boolean.parseBoolean(val);
+                                        break;
+                                }
+                            }
+                        }
                         FloatingLight light = new FloatingLight(units,new Vector2(x,y),1,goalPos);
+                        if (wander) {
+//                            light.setWander();
+                        }
 //                        System.out.println("floating light: " + (int)x+","+ (int)y);
                         light.getObstacle().setPosition(x,y);
                         floatingLights.add(light);
@@ -1836,8 +1853,7 @@ public class GameplayScene implements Screen {
             RainFlag todo = todos.pop();
             switch (todo.getName()) {
                 case "addRain":
-//                    todo.getSubject().setTexture(directory.getEntry("platform-torch", Texture.class));
-
+                    todo.getSubject().setTexture(directory.getEntry("rainDrop", Texture.class));
                     addSprite(todo.getSubject());
                     break;
             }

@@ -163,7 +163,7 @@ public class LightController {
         //rayHandler.useCustomViewport(viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
         rayHandler.useDiffuseLight(true);
         // Uncomment if you want no overlay dark hue  ⬇️
-        rayHandler.useDiffuseLight(false);
+//        rayHandler.useDiffuseLight(false);
         // Background light color, original hue ⬇️
 //        rayHandler.setAmbientLight(0.15f, 0.15f, 0.35f, 1f); // same hue, just darker
         // Background black color ⬇️
@@ -342,25 +342,11 @@ public class LightController {
         float dy = mainCamera.position.y;
         this.camera.position.set(dx / BOX_TO_WORLD, dy / BOX_TO_WORLD, 0);
         camera.zoom=cameraZoomLevel;
-        inBounds();
         this.camera.viewportWidth = mainCamera.viewportWidth/BOX_TO_WORLD;
         this.camera.viewportHeight = mainCamera.viewportHeight/BOX_TO_WORLD;
         this.camera.update();
         rayHandler.setCombinedMatrix(camera);
         rayHandler.update();
-    }
-
-    private void inBounds(){
-//        System.out.println(camera.viewportWidth+ ",  ***  , " + camera.viewportHeight);
-        float visibleW =  camera.viewportWidth/2*camera.zoom; //half of world visible, zoomed
-        float visibleH = camera.viewportHeight/2*camera.zoom;
-
-        camera.position.x = MathUtils.clamp(camera.position.x,
-            bounds.x * WORLD_TO_BOX + visibleW * WORLD_TO_BOX,
-            (bounds.x + bounds.width) * BOX_TO_WORLD - visibleW);
-        camera.position.y = MathUtils.clamp(camera.position.y,
-            bounds.y * BOX_TO_WORLD + visibleH,
-            (bounds.y + bounds.height) * BOX_TO_WORLD - visibleH);
     }
 
     public void updateCamera(float dx, float dy) {
@@ -371,10 +357,6 @@ public class LightController {
         camera.update();
         // --- UPDATE RAYHANDLER ---
         // Convert the camera's physics position to pixel units for the RayHandler
-        float cameraPixelX = camera.position.x;
-        float cameraPixelY = camera.position.y;
-
-        inBounds();
         // Update RayHandler with the camera's position in pixel units
         rayHandler.setCombinedMatrix(camera);
         rayHandler.update();
