@@ -330,30 +330,6 @@
                  "width":464,
                  "x":1552,
                  "y":3738.28
-                }, 
-                {
-                 "gid":85,
-                 "height":57,
-                 "id":437,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":1744.16,
-                 "y":3089.72
-                }, 
-                {
-                 "gid":85,
-                 "height":57,
-                 "id":438,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":1762.35,
-                 "y":3580.63
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -403,56 +379,9 @@
         }, 
         {
          "draworder":"topdown",
-         "id":2,
-         "name":"Player",
-         "objects":[
-                {
-                 "gid":52,
-                 "height":600,
-                 "id":1,
-                 "name":"player",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":300,
-                 "x":7173.0303030303,
-                 "y":4798.30303030303
-                }, 
-                {
-                 "gid":51,
-                 "height":437,
-                 "id":428,
-                 "name":"torch",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":216,
-                 "x":8908,
-                 "y":2387
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
          "id":5,
          "name":"Entities",
          "objects":[
-                {
-                 "gid":61,
-                 "height":235,
-                 "id":114,
-                 "name":"goaldoor",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":346,
-                 "x":351,
-                 "y":2730
-                }, 
                 {
                  "gid":57,
                  "height":230,
@@ -628,6 +557,53 @@
                  "width":150,
                  "x":7877,
                  "y":4795
+                }, 
+                {
+                 "gid":61,
+                 "height":235,
+                 "id":442,
+                 "name":"goaldoor",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":346,
+                 "x":485.666666666667,
+                 "y":2765.16666666667
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":2,
+         "name":"Player",
+         "objects":[
+                {
+                 "gid":52,
+                 "height":600,
+                 "id":1,
+                 "name":"player",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":300,
+                 "x":7173.0303030303,
+                 "y":4798.30303030303
+                }, 
+                {
+                 "gid":51,
+                 "height":437,
+                 "id":428,
+                 "name":"torch",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":216,
+                 "x":8908,
+                 "y":2387
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -711,6 +687,30 @@
                  "width":57,
                  "x":8070.955,
                  "y":2380.41
+                }, 
+                {
+                 "gid":85,
+                 "height":57,
+                 "id":440,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":1745.67772727273,
+                 "y":3055.62075757576
+                }, 
+                {
+                 "gid":85,
+                 "height":57,
+                 "id":441,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":1763.86772727273,
+                 "y":3546.53075757576
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -719,7 +719,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":439,
+ "nextobjectid":443,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
