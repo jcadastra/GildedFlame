@@ -9,7 +9,7 @@
          "name":"BackgroundTiles",
          "objects":[
                 {
-                 "gid":72,
+                 "gid":74,
                  "height":600,
                  "id":115,
                  "name":"brickBackground",
@@ -32,7 +32,7 @@
          "name":"Background",
          "objects":[
                 {
-                 "gid":86,
+                 "gid":89,
                  "height":834.168755221387,
                  "id":318,
                  "name":"window",
@@ -44,7 +44,7 @@
                  "y":4800
                 }, 
                 {
-                 "gid":86,
+                 "gid":89,
                  "height":834.168755221387,
                  "id":319,
                  "name":"window",
@@ -189,9 +189,93 @@
          "name":"Action Entities",
          "objects":[
                 {
-                 "gid":70,
-                 "height":93,
-                 "id":240,
+                 "gid":90,
+                 "height":57,
+                 "id":321,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":3883.59588626739,
+                 "y":3130.05401434621
+                }, 
+                {
+                 "gid":90,
+                 "height":57,
+                 "id":322,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":7621.46849883329,
+                 "y":3170.64722150203
+                }, 
+                {
+                 "gid":90,
+                 "height":57,
+                 "id":324,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":3217.5,
+                 "y":4223.5
+                }, 
+                {
+                 "gid":90,
+                 "height":57,
+                 "id":325,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":3231.5,
+                 "y":4625.5
+                }, 
+                {
+                 "gid":90,
+                 "height":57,
+                 "id":326,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":5627.5,
+                 "y":4217.5
+                }, 
+                {
+                 "gid":90,
+                 "height":57,
+                 "id":327,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":5627.5,
+                 "y":4615.5
+                }, 
+                {
+                 "gid":90,
+                 "height":57,
+                 "id":328,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":2480.27802243892,
+                 "y":3004.45082311
+                }, 
+                {
+                 "gid":72,
+                 "height":520,
+                 "id":332,
                  "name":"rune",
                  "properties":[
                         {
@@ -222,93 +306,9 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":73,
-                 "x":2498.39317898613,
-                 "y":3060.3534301091
-                }, 
-                {
-                 "gid":87,
-                 "height":57,
-                 "id":321,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":3883.59588626739,
-                 "y":3130.05401434621
-                }, 
-                {
-                 "gid":87,
-                 "height":57,
-                 "id":322,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":7621.46849883329,
-                 "y":3170.64722150203
-                }, 
-                {
-                 "gid":87,
-                 "height":57,
-                 "id":324,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":3217.5,
-                 "y":4223.5
-                }, 
-                {
-                 "gid":87,
-                 "height":57,
-                 "id":325,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":3231.5,
-                 "y":4625.5
-                }, 
-                {
-                 "gid":87,
-                 "height":57,
-                 "id":326,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":5627.5,
-                 "y":4217.5
-                }, 
-                {
-                 "gid":87,
-                 "height":57,
-                 "id":327,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":5627.5,
-                 "y":4615.5
-                }, 
-                {
-                 "gid":87,
-                 "height":57,
-                 "id":328,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":2480.27802243892,
-                 "y":3004.45082311
+                 "width":400,
+                 "x":2321.59090909091,
+                 "y":3336.01515151515
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -317,7 +317,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":331,
+ "nextobjectid":333,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
@@ -340,11 +340,11 @@
          "source":"GameObjectTiles.tsx"
         }, 
         {
-         "firstgid":72,
+         "firstgid":74,
          "source":"BackgroundAssets.tsx"
         }, 
         {
-         "firstgid":83,
+         "firstgid":86,
          "source":"BackgroundStickers.tsx"
         }],
  "tilewidth":300,

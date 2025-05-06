@@ -5,7 +5,7 @@
   <properties>
    <property name="name" value="torch"/>
   </properties>
-  <image width="150" height="300" source="tiled_images/torch_resize.png"/>
+  <image width="216" height="437" source="platform/torch.png"/>
   <objectgroup draworder="index" id="2">
    <object id="1" x="26" y="15" width="98" height="271"/>
   </objectgroup>

@@ -22,7 +22,7 @@ public class MarthasWeatherMachine {
     private float physicsUnits;
     private int rainTimer;
     private int rainFreq;
-    private Vector2 windVel;
+    private Vector2 windVel = new Vector2(Vector2.Zero);
     private Random random;
     private World world;
 
@@ -68,6 +68,8 @@ public class MarthasWeatherMachine {
     public boolean isWindActive() {
         return windVel.len()!=0;
     }
+
+    public void updateWorld(World world) {this.world = world;}
 
     public void update(World world) {
         if (isRainActive()) {
@@ -136,14 +138,16 @@ public class MarthasWeatherMachine {
         if (!isRainActive()) {return false;}
         Vector2 pos = sprite.getObstacle().getPosition();
         collidedObstacles.clear();
+        if (world == null) {return false;}
         world.rayCast(rayCastCallback, pos, new Vector2(pos.x, 18));
+        System.out.println("raycast in rain");
 
         for (Fixture fixture : collidedObstacles) {
             Object userData = fixture.getBody().getUserData();
             if (userData instanceof ObstacleSprite) {
                 ObstacleSprite target = (ObstacleSprite) userData;
                 if ((target.getObstacle().getBodyType() == BodyType.KinematicBody || target.getObstacle().getBodyType() == BodyType.StaticBody)
-                    && !target.getObstacle().isSensor()) {
+                    && !target.getObstacle().isSensor() && !target.getObstacle().getName().contains("grate")) {
                     return false;
                 }
             }

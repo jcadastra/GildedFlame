@@ -50,11 +50,11 @@ public class ObstacleMaterial {
                 this.smokeTimerLimit = 3;
                 break;
 
-            case "driedGrass":
+            case "infinite":
                 this.flammability = 1f;
                 this.burnTimerLimit = 0f;
                 this.ignitionTimerLimit = 1f;
-                this.smokeTimerLimit = 20;
+                this.smokeTimerLimit = 10;
                 break;
             case "stone":
             case "iron":
@@ -78,6 +78,7 @@ public class ObstacleMaterial {
     public boolean isExpiredBurnTimer() {
         return burnTimer > burnTimerLimit && burnTimerLimit > 0;
     }
+    public void resetBurnTimer() {burnTimer = 0f;}
     public boolean surpassIgnitionTimer(Integer v) {
         return v > ignitionTimerLimit;
     }
