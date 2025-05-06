@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Fire;
 import edu.cornell.cis3152.physics.level_player.enviromentals.FloatingLight;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Lighting;
+import edu.cornell.cis3152.physics.level_player.enviromentals.Rune;
 import edu.cornell.cis3152.physics.level_player.player.Avatar;
 //import edu.cornell.cis3152.physics.level_player.player.Traci;
 import edu.cornell.cis3152.physics.level_player.utils.FireFlag;
@@ -69,6 +70,7 @@ public class LightController {
     private int flickerMax = 300;
     private int flickerCount = 300;
     private int lightIndex = 0;
+    private int fireIndex = 0;
     private float lightRadius = 5f;
     private boolean debug;
     public static final short CATEGORY_AVATAR = 0x0002;  // 00000010
@@ -80,13 +82,35 @@ public class LightController {
     /*Pool of lights for doing fire*/
     //private PooledList<PointLight> lightPool;
     private Array<PointLight> lightPool = new Array<>();
-    private int maxLights = 30;
+    private Array<PointLight> fireLightPool = new Array<>();
+    private int maxLights = 10;
+    private int maxFireLights = 20;
     Map<Body, PointLight> lightAssignments = new HashMap<>();
 
     private Map<Integer,PointLight> fireAssignments = new HashMap<>();
 
     private int[] lightInUse = new int[maxLights];
 
+    /*
+     * Map for light assignments.
+     * Keys are strings in the format of :
+     * - Floating Lights - "FL+ID"
+     * - Fires - "Fire+ID"
+     * - Runes - "Rune+ID"
+     * Values: point lights
+     * */
+    private Map<String,PointLight> lightingAssignments = new HashMap<>();
+
+    /*
+     * Reverse Map of the thing above
+     */
+    private Map<PointLight,String> reverseLightingAssignments = new HashMap<>();
+    /*
+     * Map for obstacleSprite name assignments
+     * Keys: are the string names for each
+     * Value: are the obstacle Sprites
+     */
+   // private Map<String,ObstacleSprite> obstacleSpriteAssignments = new HashMap<>();
 
     public void initLights(RayHandler rayHandler) {
         lightPool = new Array<>();
@@ -95,6 +119,12 @@ public class LightController {
             PointLight light = new PointLight(rayHandler, 20, Color.LIGHT_GRAY, 0.5f, 0, 0);
             light.setActive(false);  // Hide initially
             lightPool.add(light);
+        }
+        fireLightPool = new Array<>();
+        for (int i = 0; i < maxFireLights; i++) {
+            PointLight light = new PointLight(rayHandler, 20, Color.YELLOW, 0.5f, 0, 0);
+            light.setActive(false);  // Hide initially
+            fireLightPool.add(light);
         }
     }
 
@@ -207,6 +237,22 @@ public class LightController {
     }
 
 
+    /*Assigns a name for identifying to the sprite*/
+    private String assignName(ObstacleSprite sprite) {
+        if(sprite.getClass()==Fire.class){
+            Fire fire = (Fire) sprite;
+            return "Fire"+ fire.fireID;
+        }else if(sprite.getClass()== FloatingLight.class){
+            FloatingLight flight = (FloatingLight) sprite;
+            return "FL"+flight.ID;
+        }else if(sprite.getClass()== Rune.class){
+            Rune rune = (Rune) sprite;
+            return "Rune"+rune.ID;
+        }
+        return "";
+    }
+
+
     public void updateAttach(Fire fire) {
         Vector2 bodyPosition = fire.getObstacle().getPosition();
 
@@ -217,6 +263,91 @@ public class LightController {
         // Update the light's position (in world coordinates)
         torchLighting.setPosition(lightPosX, lightPosY);
     }
+
+    public void attachAmbientLight(ObstacleSprite sprite,Boolean check){
+        String name = assignName(sprite);
+        System.out.println(name);
+        if(name.contains("Fire")){// Fire, highest priority
+            if(lightingAssignments.get(name)==null){//no light assigned tao this fire
+//                if(reverseLightingAssignments.get(light)!=null){//detach previous lights
+//                    light.attachToBody(null);
+//                    light.setActive(false);
+//                    String lastName = reverseLightingAssignments.get(light);
+//                    reverseLightingAssignments.remove(light);
+//                    lightingAssignments.remove(lastName);
+//                }
+                PointLight light = fireLightPool.get(fireIndex);
+                Fire spriteFire = (Fire) sprite;
+                light.setColor(Color.YELLOW);
+                light.setDistance(3f);
+                light.attachToBody(spriteFire.getObstacle().getBody());
+                System.out.println("fire at"+spriteFire.getObstacle().getPosition());
+                light.setActive(true);
+                light.setContactFilter(CATEGORY_LIGHT, (short) 0,
+                    (short) CATEGORY_ENVIRONMENT);
+                light.setSoft(true);
+                lightingAssignments.put(name, light);
+                fireIndex = (fireIndex+1)%maxFireLights; //increment when there's a fire
+            }
+        }else if(name.contains("Rune")){// Rune, mid priority
+            if(lightingAssignments.get(name)==null){
+                PointLight light = lightPool.get(lightIndex);
+//                if(reverseLightingAssignments.get(light)!=null&&
+//                    !reverseLightingAssignments.get(light).contains("Fire")){//make sure don't take a fire's light
+//                    if(reverseLightingAssignments.get(light)!=null){//detach previous lights
+//                        light.attachToBody(null);
+//                        light.setActive(false);
+//                        String lastName = reverseLightingAssignments.get(light);
+//                        reverseLightingAssignments.remove(light);
+//                        lightingAssignments.remove(lastName);
+//                    }
+                    light.setColor(Color.DARK_GRAY);
+                    light.setDistance(1f);
+                    light.attachToBody(sprite.getObstacle().getBody());
+                    light.setActive(true);
+                    light.setContactFilter(CATEGORY_LIGHT, (short) 0,
+                        (short) CATEGORY_ENVIRONMENT);
+                    light.setSoft(true);
+                    lightingAssignments.put(name, light);
+                    lightInUse[lightIndex] = 2;
+                    lightIndex = (lightIndex+1)%maxLights;
+                //}
+            }
+        }else if (name.contains("FL")){// Floating Lights, lowest priority
+            if(lightingAssignments.get(name)==null){
+                //if(
+//                    (reverseLightingAssignments.get(light)!=null&&
+//                    !reverseLightingAssignments.get(light).contains("Fire")&&
+//                    !reverseLightingAssignments.get(light).contains("Rune"))||
+                    //reverseLightingAssignments.get(light)==null){//make sure don't take a fire's light nor a rune's light
+//                        if(reverseLightingAssignments.get(light)!=null){//detach previous lights
+//                            light.attachToBody(null);
+//                            light.setActive(false);
+//                            String lastName = reverseLightingAssignments.get(light);
+//                            reverseLightingAssignments.remove(light);
+//                            lightingAssignments.remove(lastName);
+//                        }
+                        PointLight light = lightPool.get(lightIndex);
+                        light.setColor(Color.LIGHT_GRAY.r, Color.LIGHT_GRAY.g, Color.LIGHT_GRAY.b, 1f);
+                        light.setDistance(1.5f);
+                        light.attachToBody(sprite.getObstacle().getBody());
+                        light.setActive(true);
+                        light.setSoft(true);
+                        light.setContactFilter(CATEGORY_LIGHT, (short) 0,
+                            (short) CATEGORY_ENVIRONMENT);
+                        lightingAssignments.put(name, light);
+                        lightInUse[lightIndex] = 3;
+                        lightIndex = (lightIndex+1)%maxLights;
+
+               // }
+            }
+
+        }
+        System.out.println("lightindex"+lightIndex);
+    }
+
+
+
 
     public void attachAmbientLight(ObstacleSprite sprite) {
         PointLight light = lightPool.get(lightIndex);
@@ -234,7 +365,8 @@ public class LightController {
 //            System.out.println(fireAssignments.get(fire.fireID)==null);
             if (fireAssignments.get(fire.fireID)!=light){//only adds fires when it's not already there
 //                System.out.println("add fire!");
-                light.setColor(Color.YELLOW);
+                Color fireColor = new Color(Color.YELLOW.r,Color.YELLOW.g,Color.YELLOW.b,0.6f);
+                light.setColor(fireColor);
                 light.setDistance(3f);
                 light.attachToBody(sprite.getObstacle().getBody());
                 light.setActive(true);
@@ -277,11 +409,21 @@ public class LightController {
                     Lighting lighting = new Lighting(2.2f,fire.getObstacle().getPosition());
                     fireLights.add(lighting);
 //                    System.out.print("fire id"+fire.fireID+" ");
-                    attachAmbientLight(fire);
-
+                    attachAmbientLight(fire,true);
             }
         }
         return fireLights;
+    }
+
+    public void turnOffAmbientLight(ObstacleSprite sprite, boolean check) {
+        String name = assignName(sprite);
+        PointLight light = lightingAssignments.get(name);
+        if (light != null) {
+            light.attachToBody(null);
+            light.setActive(false);
+            lightingAssignments.remove(name);
+            reverseLightingAssignments.remove(light);
+        }
     }
 
 
@@ -289,14 +431,79 @@ public class LightController {
         PointLight light = lightAssignments.get(sprite.getObstacle().getBody());
         if (light != null) {
             light.setActive(false);
+            int index = lightPool.indexOf(light,true);
+            System.out.println("index of light off"+index);
+            //lightInUse[lightPool.indexOf(light,true)]=0;
             lightAssignments.remove(sprite.getObstacle().getBody());
         }
         //Arrays.fill(lightInUse,0);
     }
 
-    public void translate() {
 
+    public void update(FireController fireController,Boolean check){
+        Set<Fire> allFires = fireController.getAllFires();
+        Set<Fire> litFires = fireController.getLitFires();
+//        if (!allFires.equals(litFires)){//only if a fire died
+//            for (Fire fire : allFires) {
+//                if(!litFires.contains(fire)){// turn off dead fires
+//                    String name = assignName(fire);
+//                    PointLight light = lightingAssignments.get(name);
+//                    if (light != null) {
+//                        System.out.println("deadfire"+name);
+//                        light.setActive(false);
+//                        light.attachToBody(null);
+//                        lightingAssignments.remove(name);
+//                        int index = lightPool.indexOf(light,true);
+//                        lightInUse[index]=0;
+//                        reverseLightingAssignments.remove(light);
+//                        //lightIndex = lightPool.indexOf(light,false);
+//                    }
+//                }
+//            }
+//        }
+        for (Fire fire: allFires){
+            String name = assignName(fire);
+            PointLight light = lightingAssignments.get(name);
+            if (light!=null){
+                light.setActive(false);
+                light.attachToBody(null);
+                lightingAssignments.remove(name);
+                reverseLightingAssignments.remove(light);
+                //int index = lightPool.indexOf(light,true);
+                //lightInUse[index]=0;
+            }
+        }
+        for (Fire fire : litFires) {
+            if(fire.fireID!=0){
+                attachAmbientLight(fire,true);
+            }
+        }
     }
+
+//    public void update(FireController fireController) {
+//        Set<Fire> allFires = fireController.getAllFires();
+//        Set<Fire> litFires = fireController.getLitFires();
+//        for (Fire fire : allFires) {//turn off all fires
+//            if (fireAssignments.containsKey(fire.fireID)) {
+//                PointLight light = fireAssignments.get(fire.fireID);
+//                light.setActive(false);
+//            }
+//            fireAssignments.clear();
+//            Arrays.fill(lightInUse,0);
+//        }
+//        for (Fire fire : litFires) {
+//            if (fire.fireID!=0){//not torch flamed
+////                    System.out.println(fire.fireID);
+//                Lighting lighting = new Lighting(2.2f,fire.getObstacle().getPosition());
+////               System.out.print("fire id"+fire.fireID+" ");
+//                attachAmbientLight(fire);
+//
+//            }
+//        }
+//    }
+
+
+    public void translate() {}
 
 
     public void render() {
@@ -416,27 +623,6 @@ public class LightController {
 //        }
 //    }
 
-    public void update(FireController fireController) {
-       Set<Fire> allFires = fireController.getAllFires();
-       Set<Fire> litFires = fireController.getLitFires();
-       for (Fire fire : allFires) {//turn off all fires
-           if (fireAssignments.containsKey(fire.fireID)) {
-               PointLight light = fireAssignments.get(fire.fireID);
-               light.setActive(false);
-           }
-           fireAssignments.clear();
-           Arrays.fill(lightInUse,0);
-       }
-       for (Fire fire : litFires) {
-           if (fire.fireID!=0){//not torch flamed
-//                    System.out.println(fire.fireID);
-               Lighting lighting = new Lighting(2.2f,fire.getObstacle().getPosition());
-//               System.out.print("fire id"+fire.fireID+" ");
-               attachAmbientLight(fire);
-
-           }
-       }
-    }
 
 
 

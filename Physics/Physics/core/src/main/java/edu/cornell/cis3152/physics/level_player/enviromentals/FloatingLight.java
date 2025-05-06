@@ -14,7 +14,8 @@ public class FloatingLight extends ObstacleSprite {
         TRAVELING,
         OFF
     }
-
+        private static int counter = 0;
+        public int ID;
         private FloatingLightState state;
         private Vector2 centerPoint;     // For circulating
         private Vector2 position;
@@ -52,6 +53,8 @@ public class FloatingLight extends ObstacleSprite {
             obstacle.setUserData(this);
             obstacle.setPhysicsUnits(units);
             obstacle.setSensor(true);
+            this.ID = counter;
+            counter++;
         }
 
         public void update(float deltaTime) {
@@ -129,6 +132,7 @@ public class FloatingLight extends ObstacleSprite {
         public boolean isCirculating() {return state == FloatingLightState.CIRCULATING;}
         public boolean isTraveling() {return state == FloatingLightState.TRAVELING;}
         public boolean isOff() {return state == FloatingLightState.OFF;}
+    public void reset(){ counter = 0; }
 }
 
 
