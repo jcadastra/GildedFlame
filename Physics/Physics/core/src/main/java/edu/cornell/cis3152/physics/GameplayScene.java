@@ -30,9 +30,12 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectSet;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import edu.cornell.cis3152.physics.level_player.CollisionController;
 import edu.cornell.cis3152.physics.level_player.EventHandler;
 import edu.cornell.cis3152.physics.level_player.FireController;
@@ -67,6 +70,9 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.audio.SoundEffect;
 import edu.cornell.gdiac.audio.SoundEffectManager;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import edu.cornell.gdiac.util.*;
 import edu.cornell.gdiac.graphics.*;
 import edu.cornell.gdiac.physics2.*;
@@ -97,6 +103,14 @@ public class GameplayScene implements Screen {
     public static final int EXIT_NEXT = 1;
     /** Exit code for jumping back to previous level */
     public static final int EXIT_PREV = 2;
+    /** Exit code for going to the success screen */
+    public static final int EXIT_SUCCESS = 3;
+    /** Exit code for replaying the current level */
+    public static final int EXIT_REPLAY = 4;
+    /** Exit code for returning to the main menu */
+    public static final int EXIT_MAINMENU = 5;
+    /** Exit code for going to the failure screen */
+    public static final int EXIT_FAILURE = 6;
     /** How many frames after winning/losing do we continue? */
     public static final int EXIT_COUNT = 180;
     private boolean queueFailure;
@@ -149,6 +163,8 @@ public class GameplayScene implements Screen {
     protected boolean failed;
     /** Whether debug mode is active */
     protected boolean debug;
+    /** Whether the game is paused */
+    protected boolean paused;
     /** Countdown active for winning or losing */
     protected int countdown;
 
@@ -181,6 +197,20 @@ public class GameplayScene implements Screen {
      */
     private float volume;
 
+    private GroundState prevGroundState = GroundState.GROUNDED;
+    private float totemSoundCoolDown = 0f;
+    private Map<Totem, Enemy.EnemyState> totemPreviousStates = new HashMap<>();
+
+    private boolean isFadingOut = false;
+    private float fadeTime = 0f;
+    private float fadeDuration = 1f; // seconds
+    private int fadeExitCode = -1;
+    private Texture blackTexture;
+
+
+    private Stage pauseStage;
+    private Skin skin;
+
     /**
      * Active joint for avatar holding torch
      */
@@ -207,7 +237,11 @@ public class GameplayScene implements Screen {
 
     protected ParticleEngine particleEngine;
 
+    //private ObstacleSprite[] eyes;
+
     protected Fire torchFire;
+
+    private Texture eye;
 
     /**
      * Flag to add torch to avatar in update
@@ -374,14 +408,15 @@ public class GameplayScene implements Screen {
         this.fitViewport = new ExtendViewport(1280, 720);
 
         // pull out sounds
-        volume = constants.getFloat("volume", 1.0f);
+        volume = 0.1f;
+//        volume = constants.getFloat("volume", 1.0f);
 
         sensorFixtures = new ObjectSet<Fixture>();
 
         scale = new Vector2();
         //TODO: Value needs to be imported from level vvvv
 //        bounds = new Rectangle(0,0,defaults.get("bounds").getFloat( 0 ), defaults.get("bounds").getFloat( 1 ));
-        bounds = new Rectangle(0,0,50,18);
+        bounds = new Rectangle(0,0,32,50);
         resize(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 
         displayFont = directory.getEntry( "shared-unica" ,BitmapFont.class);
@@ -551,9 +586,16 @@ public class GameplayScene implements Screen {
         if (lightController != null){
             lightController.dispose();}
 
+        if (floatingLights!=null && floatingLights.size()>0){
+            floatingLights.get(0).reset();
+        }
+
         for (ObstacleSprite sprite : sprites) {
             Obstacle obj = sprite.getObstacle();
             sprite.getObstacle().deactivatePhysics(world);
+        }
+        if(particleEngine!=null){
+            particleEngine.dispose();
         }
         sprites.clear();
         addQueue.clear();
@@ -620,6 +662,41 @@ public class GameplayScene implements Screen {
     private void populateLevel() {}
     private Rope temp;
 
+    private void initPauseUI() {
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
+        pauseStage = new Stage(new ScreenViewport());
+        skin = new Skin();
+        Texture resumeText = directory.getEntry("contButt", Texture.class);
+        Texture resumeClickText = directory.getEntry("contButtClick", Texture.class);
+        TextureRegionDrawable resumeButtUp = new TextureRegionDrawable(new TextureRegion(resumeText));
+        TextureRegionDrawable resumeButtOver = new TextureRegionDrawable(new TextureRegion(resumeClickText));
+
+        ImageButton.ImageButtonStyle resumeButt = new ImageButton.ImageButtonStyle();
+        resumeButt.up = resumeButtUp;
+        resumeButt.over = resumeButtOver;
+
+        ImageButton resumeButton = new ImageButton(resumeButt);
+
+        resumeButton.setSize(screenWidth * 0.2f, screenHeight * 0.06f);
+        resumeButton.setPosition(
+            screenWidth * 0.40f,
+            screenHeight * 0.5f
+        );
+
+        resumeButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+            @Override
+            public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
+                                     float x, float y, int pointer, int button) {
+                paused = false;
+                //Gdx.input.setInputProcessor(gameInput);
+                return true;
+            }
+        });
+
+        pauseStage.addActor(resumeButton);
+    }
+
     private List<float[]> extractSurfaces(int[] data, int cols, int rows) {
         List<float[]> surfaces = new ArrayList<>();
         for (int y = 0; y < rows; y++) {
@@ -643,7 +720,7 @@ public class GameplayScene implements Screen {
 
     public void loadLevel(String levelName, String levelInfoName) {
         this.levelName = levelName;
-        float units = height / bounds.height;
+        float units = 40 * Gdx.graphics.getWidth() / 1280f;
         phyiscsUnits = units;
 
         JsonValue levelData = directory.getEntry(levelName,JsonValue.class);
@@ -826,6 +903,15 @@ public class GameplayScene implements Screen {
                             materialType = "stone";
                             box.setTexture(directory.getEntry("nonburnable", Texture.class));
                             box.getObstacle().setPhysicsUnits(units);
+                        } else if (objName.contains("inf")) {
+                            box = new GameObject(new float[]{
+                                0, -height/2,
+                                width/2,0,
+                                0,height/2,
+                                -width/2,0
+                            }, x,y, width, height, units);
+                            materialType = "infinite";
+                            box.setTexture(directory.getEntry("brazier", Texture.class));
                         } else {
                             box = new GameObject(new float[]{
                                 -(width) * (3f/10f), -(height)/2.1f,
@@ -1186,6 +1272,8 @@ public class GameplayScene implements Screen {
         FloatingLight goalLight = new FloatingLight(units,goalPos,1,goalPos);
         floatingLights.add(goalLight);
 
+        eye = directory.getEntry("eyes", Texture.class);
+
         for (JsonValue layer : layers) {
             String layerType = layer.getString("type");
 
@@ -1194,8 +1282,24 @@ public class GameplayScene implements Screen {
                     String objName = object.getString("name", "unnamed");
                     float x = object.getFloat("x") / levelData.getInt("tilewidth");
                     float y = (bounds.height * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
+                    boolean wander = false;
                     if (objName.contains("light")) {
+                        JsonValue props = object.get("properties");
+                        if (props!=null) {
+                            for (JsonValue prop : props) {
+                                String pname = prop.getString("name");
+                                String val = prop.getString("value");
+                                switch (pname) {
+                                    case "wander":
+                                        wander = Boolean.parseBoolean(val);
+                                        break;
+                                }
+                            }
+                        }
                         FloatingLight light = new FloatingLight(units,new Vector2(x,y),1,goalPos);
+                        if (wander) {
+//                            light.setWander();
+                        }
 //                        System.out.println("floating light: " + (int)x+","+ (int)y);
                         light.getObstacle().setPosition(x,y);
                         floatingLights.add(light);
@@ -1205,7 +1309,7 @@ public class GameplayScene implements Screen {
             }
         }
         for (FloatingLight light : floatingLights) {
-            lightController.attachAmbientLight(light);
+            lightController.attachAmbientLight(light,true);
         }
 //        debugPrintOut();
     }
@@ -1254,8 +1358,9 @@ public class GameplayScene implements Screen {
         } else if (countdown == 0) {
             if (failed) {
                 pause();
-                listener.exitScreen(this, EXIT_QUIT);
-                return false;
+                isFadingOut = true;
+                // listener.exitScreen(this, EXIT_FAILURE);
+                return true;
             } else if (complete) {
                 pause();
                 listener.exitScreen(this, EXIT_NEXT);
@@ -1322,7 +1427,7 @@ public class GameplayScene implements Screen {
         Array<Lighting> fireLights =lightController.fireLights(fireController);
         attachFireLightJoints(fireLights);
         //TODO:Attach light joints
-        lightController.update(fireController);
+        lightController.update(fireController,true);
 
         InputController input = InputController.getInstance();
 
@@ -1358,6 +1463,43 @@ public class GameplayScene implements Screen {
             avatar.setGroundedState(GroundState.AIRBORNE);
             SoundEffectManager sounds = SoundEffectManager.getInstance();
 //            soundEngine.jump();
+        }
+
+        GroundState currentGroundState = avatar.getGroundedState();
+        if (prevGroundState.equals(GroundState.AIRBORNE) && currentGroundState.equals(GroundState.GROUNDED)) {
+            soundEngine.landing();
+        }
+
+        prevGroundState = currentGroundState;
+
+        boolean totemChanged = false;
+        totemSoundCoolDown -= dt;
+
+        for (Enemy enemy : enemies) {
+            if (enemy instanceof Totem) {
+                Totem totem = (Totem) enemy;
+
+                Enemy.EnemyState current = totem.getState();
+                Enemy.EnemyState previous = totemPreviousStates.getOrDefault(totem, totem.getState());
+
+                if ((previous == Enemy.EnemyState.OUT_OF_LIGHT && current == Enemy.EnemyState.IN_LIGHT) ||
+                    (previous == Enemy.EnemyState.IN_LIGHT && current != Enemy.EnemyState.IN_LIGHT)) {
+                    totemChanged = true;
+                }
+                totemPreviousStates.put(totem, current);
+            }
+        }
+
+        if (totemChanged && totemSoundCoolDown <= 0f) {
+            soundEngine.totemTurnAround();
+            totemSoundCoolDown = 0.3f;
+        }
+
+        if (isFadingOut) {
+            fadeTime += dt;
+            if (fadeTime >= fadeDuration) {
+                listener.exitScreen(this, fadeExitCode);
+            }
         }
 
         if ((queueAddTorch && activeTorchJoint == null) || (activeTorchJoint != null &&
@@ -1844,8 +1986,7 @@ public class GameplayScene implements Screen {
             RainFlag todo = todos.pop();
             switch (todo.getName()) {
                 case "addRain":
-//                    todo.getSubject().setTexture(directory.getEntry("platform-torch", Texture.class));
-
+                    todo.getSubject().setTexture(directory.getEntry("rainParticle"+todo.rainNum, Texture.class));
                     addSprite(todo.getSubject());
                     break;
             }
@@ -2033,23 +2174,50 @@ public class GameplayScene implements Screen {
             }
         }
 
-        // Draw a final message
-        if (complete && !failed) {
-            batch.drawText(goodMessage, width/2, height/2);
-        } else if (failed) {
-            batch.drawText(badMessage, width/2, height/2);
-        }
-
         batch.end();
         for (FloatingLight light : floatingLights){
             if (light.isOff()){
-                lightController.turnOffAmbientLight(light);
+                lightController.turnOffAmbientLight(light,true);
             }else{
-                lightController.attachAmbientLight(light);
+                //System.out.println("light id"+light.ID);
+                lightController.attachAmbientLight(light,true);
             }
         }
         lightController.update(contactListener.beginSmother());
         lightController.render();
+
+        batch.begin();
+        //Draw enemy eyes in the dark
+        for( Enemy enemy: enemies){
+            if (enemy.getClass()== Moth.class){
+                if(enemy.getState()== Enemy.EnemyState.OUT_OF_LIGHT){
+                    Vector2 pos = enemy.getObstacle().getPosition();
+                    batch.draw(eye,(pos.x-0.5f)*phyiscsUnits,(pos.y-0.7f)*phyiscsUnits,0.1f*eye.getWidth(),0.1f*eye.getHeight());
+                    //batch.draw(eye,enemy.getX(),enemy.getY());
+                }
+            }
+        }
+        // Draw a final message
+        if (!isFadingOut) {
+            if (complete && !failed) {
+                isFadingOut = true;
+                fadeExitCode = EXIT_SUCCESS;
+            } else if (failed) {
+                isFadingOut = true;
+                fadeExitCode = EXIT_FAILURE;
+            }
+        }
+
+        batch.end();
+
+        if (isFadingOut) {
+            batch.begin();
+            float alpha = Math.min(fadeTime / fadeDuration, 1f);
+            batch.setColor(0, 0, 0, alpha);
+            batch.draw(blackTexture, 0, 0, width, height);
+            batch.setColor(Color.WHITE);
+            batch.end();
+        }
     }
 
     /**
@@ -2127,6 +2295,12 @@ public class GameplayScene implements Screen {
     public void show() {
         // Useless if called in outside animation loop
         active = true;
+        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pixmap.setColor(Color.BLACK);
+        pixmap.fill();
+        blackTexture = new Texture(pixmap);
+        pixmap.dispose();
+
     }
 
     /**

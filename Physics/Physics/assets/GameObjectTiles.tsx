@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.10.2" name="GameObjects" tilewidth="800" tileheight="520" tilecount="11" columns="0">
+<tileset version="1.10" tiledversion="1.10.2" name="GameObjects" tilewidth="800" tileheight="520" tilecount="12" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <properties>
@@ -34,6 +34,9 @@
   <image width="346" height="235" source="environment/treasure.png"/>
  </tile>
  <tile id="5">
+  <properties>
+   <property name="name" value="infburnable"/>
+  </properties>
   <image width="800" height="181" source="environment/platform.png"/>
  </tile>
  <tile id="14">
@@ -88,5 +91,8 @@ swing</property>
  </tile>
  <tile id="17">
   <image width="300" height="300" source="environment/grate.png"/>
+ </tile>
+ <tile id="18">
+  <image width="323" height="242" source="environment/brazier.png"/>
  </tile>
 </tileset>

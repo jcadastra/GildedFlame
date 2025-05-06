@@ -109,7 +109,7 @@
                  "y":14663.7176025961
                 }, 
                 {
-                 "gid":70,
+                 "gid":71,
                  "height":600,
                  "id":5,
                  "name":"player",
@@ -121,7 +121,7 @@
                  "y":14752.9019980971
                 }, 
                 {
-                 "gid":69,
+                 "gid":70,
                  "height":437,
                  "id":6,
                  "name":"torch",
@@ -143,6 +143,18 @@
                  "width":346,
                  "x":5716.62892483349,
                  "y":14647.0199809705
+                }, 
+                {
+                 "gid":67,
+                 "height":242,
+                 "id":8,
+                 "name":"infburnable",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":323,
+                 "x":3948.09090909091,
+                 "y":14678.5757575758
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -151,7 +163,7 @@
          "y":0
         }],
  "nextlayerid":3,
- "nextobjectid":8,
+ "nextobjectid":9,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
@@ -166,7 +178,7 @@
          "source":"GameObjectTiles.tsx"
         }, 
         {
-         "firstgid":67,
+         "firstgid":68,
          "source":"PlayerTorchTiles.tsx"
         }],
  "tilewidth":300,

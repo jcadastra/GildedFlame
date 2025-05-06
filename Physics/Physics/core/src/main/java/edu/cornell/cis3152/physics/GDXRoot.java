@@ -167,13 +167,56 @@ public class GDXRoot extends Game implements ScreenListener {
         }
         // Handle exit from the main menu.
         else if (screen instanceof MainMenuScreen) {
-            LevelSelectScene levelSelect = new LevelSelectScene();
-            levelSelect.setScreenListener(this);
-            setScreen(levelSelect);
+            if (exitCode == -1) {
+                SavedDataHandler handler = new SavedDataHandler();
+                String lastCompleted = handler.getDataVal("lastLevel");
+
+                int nextLevel = 1;
+                try {
+                    if (lastCompleted != null) {
+                        nextLevel = Integer.parseInt(lastCompleted) + 1;
+                    }
+                } catch (NumberFormatException e) {
+                    Gdx.app.error("GDXRoot", "Invalid saved level: " + lastCompleted);
+                }
+
+                levels = new String[]{"move_intro","jump_intro","throw_intro","climb_intro","advanced_movement","box_intro","totem_intro","moth_intro","moth_medium","moth_medium_2"};
+
+                current = Math.min(nextLevel - 1, levels.length - 1);
+
+                soundEngine.stopMusicLoop();
+                soundEngine.registerMusic("in_game", directory.getEntry("in_game_music", Music.class));
+                ArrayList<String> temp = new ArrayList<>();
+                temp.add("in_game");
+                soundEngine.startMusicLoop(temp);
+
+                currentScene = new GameplayScene(directory, soundEngine, "platform");
+                currentScene.loadLevel(levels[current], "rope_test");
+                currentScene.setScreenListener(this);
+                currentScene.setSpriteBatch(batch);
+                setScreen(currentScene);
+            } else {
+                // Fallback: go to level select
+                LevelSelectScene levelSelect = new LevelSelectScene();
+                levelSelect.setScreenListener(this);
+                setScreen(levelSelect);
+            }
             return;
         }
+
         // Handle exit from the level selection screen.
         else if (screen instanceof LevelSelectScene) {
+            if (exitCode == 0) {
+                MainMenuScreen mainMenu = new MainMenuScreen();
+                mainMenu.setScreenListener(this);
+                setScreen(mainMenu);
+                soundEngine.stopMusicLoop();
+                soundEngine.registerMusic("menu_music", directory.getEntry("menu_music", Music.class));
+                ArrayList<String> temp = new ArrayList<>();
+                temp.add("menu_music");
+                soundEngine.startMusicLoop(temp);
+                return;
+            }
             int selectedLevel = ((LevelSelectScene) screen).getSelectedLevel();
             soundEngine.stopMusicLoop();
             // Register sound effects.
@@ -182,21 +225,20 @@ public class GDXRoot extends Game implements ScreenListener {
             soundEngine.registerSoundEffect("plop", directory.getEntry("platform-plop", SoundEffect.class));
             soundEngine.registerSoundEffect("dirtFootStep", directory.getEntry("dirtFootStep", SoundEffect.class));
             soundEngine.registerSoundEffect("torchThrow", directory.getEntry("torchThrow", SoundEffect.class));
+            soundEngine.registerSoundEffect("torchLanding", directory.getEntry("torch_landing", SoundEffect.class));
+            soundEngine.registerSoundEffect("landing", directory.getEntry("jumper_landing", SoundEffect.class));
+            soundEngine.registerSoundEffect("totemTurn", directory.getEntry("turn_around", SoundEffect.class));
 
             // Register music and start a loop.
-            //soundEngine.registerMusic("eerie1", directory.getEntry("eerie", Music.class));
-            //soundEngine.registerMusic("eerieCriminal", directory.getEntry("eerieCriminal", Music.class));
             //soundEngine.registerMusic("tenseSoundscape", directory.getEntry("tenseSoundscape", Music.class));
             soundEngine.registerMusic("in_game", directory.getEntry("in_game_music", Music.class));
             ArrayList<String> temp = new ArrayList<>();
-            //temp.add("eerieCriminal");
-            //temp.add("eerie1");
             temp.add("in_game");
             soundEngine.startMusicLoop(temp);
 
             // Initialize the gameplay scene and level data.
             currentScene = new GameplayScene(directory, soundEngine, "platform");
-            levels = new String[]{"move_intro","jump_intro","throw_intro","climb_intro","advanced_movement","box_intro","totem_intro","moth_intro","moth_medium","moth_medium_2"};
+            levels = new String[]{"move_intro","jump_intro","throw_intro","climb_intro","advanced_movement","box_intro","totem_intro","moth_intro","moth_medium","moth_medium_2","rune1","rune2","rainChallenge1","rainChallenge2"};
             currentScene.loadLevel(levels[selectedLevel - 1], "rope_test");
             currentScene.setScreenListener(this);
             currentScene.setSpriteBatch(batch);
@@ -204,6 +246,61 @@ public class GDXRoot extends Game implements ScreenListener {
             setScreen(currentScene);
 
             return;
+        }
+        else if (screen instanceof SuccessScene) {
+            if (exitCode == GameplayScene.EXIT_NEXT) {
+                current = (current + 1) % levels.length;
+            } else if (exitCode == GameplayScene.EXIT_REPLAY) {
+                current = current;
+            } else if (exitCode == GameplayScene.EXIT_QUIT) {
+                LevelSelectScene levelSelect = new LevelSelectScene();
+                levelSelect.setScreenListener(this);
+                setScreen(levelSelect);
+                soundEngine.stopMusicLoop();
+                soundEngine.registerMusic("menu_music", directory.getEntry("menu_music", Music.class));
+                ArrayList<String> temp = new ArrayList<>();
+                temp.add("menu_music");
+                soundEngine.startMusicLoop(temp);
+                return;
+            }
+
+            currentScene = new GameplayScene(directory, soundEngine, "platform");
+            currentScene.loadLevel(levels[current], "rope_test");
+            currentScene.setScreenListener(this);
+            currentScene.setSpriteBatch(batch);
+            setScreen(currentScene);
+            return;
+        }
+        else if (screen instanceof FailureScene) {
+            if (exitCode == GameplayScene.EXIT_MAINMENU) {
+                MainMenuScreen mainMenu = new MainMenuScreen();
+                mainMenu.setScreenListener(this);
+                setScreen(mainMenu);
+                soundEngine.stopMusicLoop();
+                soundEngine.registerMusic("menu_music", directory.getEntry("menu_music", Music.class));
+                ArrayList<String> temp = new ArrayList<>();
+                temp.add("menu_music");
+                soundEngine.startMusicLoop(temp);
+                return;
+            } else if (exitCode == GameplayScene.EXIT_REPLAY) {
+                current = current;
+                currentScene = new GameplayScene(directory, soundEngine, "platform");
+                currentScene.loadLevel(levels[current], "rope_test");
+                currentScene.setScreenListener(this);
+                currentScene.setSpriteBatch(batch);
+                setScreen(currentScene);
+                return;
+            } else if (exitCode == GameplayScene.EXIT_QUIT) {
+                LevelSelectScene levelSelect = new LevelSelectScene();
+                levelSelect.setScreenListener(this);
+                setScreen(levelSelect);
+                soundEngine.stopMusicLoop();
+                soundEngine.registerMusic("menu_music", directory.getEntry("menu_music", Music.class));
+                ArrayList<String> temp = new ArrayList<>();
+                temp.add("menu_music");
+                soundEngine.startMusicLoop(temp);
+                return;
+            }
         }
 
         // Handle exit codes from any GameplayScene.
@@ -230,6 +327,15 @@ public class GDXRoot extends Game implements ScreenListener {
                 temp.add("menu_music");
                 soundEngine.startMusicLoop(temp);
                 return;
+            } else if (exitCode == GameplayScene.EXIT_SUCCESS) {
+                SuccessScene success = new SuccessScene(directory);
+                success.setScreenListener(this);
+                success.setCurrentLevel(current+1);
+                setScreen(success);
+            } else if (exitCode == GameplayScene.EXIT_FAILURE) {
+                FailureScene failure = new FailureScene(directory);
+                failure.setScreenListener(this);
+                setScreen(failure);
             }
             // Handle exit from the main menu.
             else if (screen instanceof MainMenuScreen) {

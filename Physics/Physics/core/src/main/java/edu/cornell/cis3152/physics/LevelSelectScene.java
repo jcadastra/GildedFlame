@@ -17,14 +17,13 @@ import edu.cornell.gdiac.util.XBoxController;
 
 public class LevelSelectScene implements Screen {
     private static final int DOORS_VISIBLE = 5;
-    private static final int TOTAL_LEVELS = 10;
+    private static final int TOTAL_LEVELS = 15;
 
     private Stage stage;
     private Skin skin;
     private Texture bgTexture;
 
     private Array<DoorEntry> doorEntries;
-    private Texture[] baseDoorTextures;
 
     private float doorWidth, doorHeight, spacing;
     private int scrollIndex = 0;
@@ -38,6 +37,8 @@ public class LevelSelectScene implements Screen {
     private Texture chapTitleTexture, chap1TitleTexture, chap3TitleTexture;
     private Image chapLabel;
     private ParticleEngine particleEngine;
+    private boolean doorDisplayDirty = true;
+
 
     private class DoorEntry {
         public Image door;
@@ -64,13 +65,19 @@ public class LevelSelectScene implements Screen {
         stage.addActor(bgImage);
         createBasicUI();
     }
+    private Texture loadDoorTexture(String statePrefix, int levelNumber, boolean hover) {
+        String suffix = hover ? "Hover" : "";
+        int cappedLevel = ((levelNumber - 1) % 5) + 1;
+        String path = String.format("ui/doors/%sDoor%s%d.png", statePrefix, suffix, cappedLevel);
+        return new Texture(Gdx.files.internal(path));
+    }
 
     private void createBasicUI() {
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
-        doorWidth = screenWidth * 0.15f;
-        doorHeight = screenHeight * 0.2f;
-        spacing = screenWidth * 0.03f;
+        doorWidth = screenWidth * 0.18f;
+        doorHeight = screenHeight * 0.35f;
+        spacing = screenWidth * 0.001f;
 
         Texture chamberLabelTexture = new Texture(Gdx.files.internal("ui/chamber_sel.png"));
         Image chamberLabel = new Image(chamberLabelTexture);
@@ -83,52 +90,75 @@ public class LevelSelectScene implements Screen {
         chap3TitleTexture = new Texture(Gdx.files.internal("ui/chap3_title.png"));
         chapLabel = new Image(chapTitleTexture);
         chapLabel.setSize(screenWidth * 0.2f, screenHeight * 0.05f);
-        float verticalSpacing = screenHeight * 0.02f;
+        float verticalSpacing = screenHeight * 0.057f;
         chapLabel.setPosition((screenWidth - screenWidth * 0.2f) / 2f,
             chamberLabel.getY() - screenHeight * 0.05f - verticalSpacing);
         stage.addActor(chapLabel);
 
-        baseDoorTextures = new Texture[]{
-            new Texture(Gdx.files.internal("ui/doors/door1.png")),
-            new Texture(Gdx.files.internal("ui/doors/door2.png")),
-            new Texture(Gdx.files.internal("ui/doors/door3.png")),
-            new Texture(Gdx.files.internal("ui/doors/door4.png")),
-            new Texture(Gdx.files.internal("ui/doors/door5.png"))
-        };
 
-        // Only create TOTAL_LEVELS doors
         doorEntries = new Array<>(TOTAL_LEVELS);
-        for (int i = 0; i < TOTAL_LEVELS; i++) {
-            int baseIndex = i % baseDoorTextures.length;
-            Texture defaultTexture = baseDoorTextures[baseIndex];
-            Texture hoverTexture  = new Texture(Gdx.files.internal(
-                "ui/doors/door" + (baseIndex+1) + "_click.png"));
+        SavedDataHandler handler = new SavedDataHandler();
+        boolean foundFirstIncomplete = false;
 
-            Image door = new Image(defaultTexture);
+        for (int i = 0; i < TOTAL_LEVELS; i++) {
+            int levelNumber = i + 1;
+            String key = "level" + levelNumber;
+            //String completed = handler.getDataVal(key);
+
+            Texture baseTex, hoverTex;
+            String completed = handler.getDataVal("level" + levelNumber);
+
+            if ("true".equals(completed)) {
+                baseTex = loadDoorTexture("complete", levelNumber, false);
+                hoverTex = loadDoorTexture("complete", levelNumber, true);
+            } else if (!foundFirstIncomplete) {
+                baseTex = loadDoorTexture("incomplete", levelNumber, false);
+                hoverTex = loadDoorTexture("incomplete", levelNumber, true);
+                foundFirstIncomplete = true;
+            } else {
+                baseTex = loadDoorTexture("locked", levelNumber, false);
+                hoverTex = loadDoorTexture("locked", levelNumber, true);
+
+                Image door = new Image(baseTex);
+                door.setSize(doorWidth, doorHeight);
+
+                final DoorEntry entry = new DoorEntry(
+                    door,
+                    new TextureRegionDrawable(new TextureRegion(baseTex)),
+                    new TextureRegionDrawable(new TextureRegion(hoverTex)),
+                    levelNumber
+                );
+
+                doorEntries.add(entry);
+                stage.addActor(door);
+                continue;
+            }
+
+            Image door = new Image(baseTex);
             door.setSize(doorWidth, doorHeight);
 
             final DoorEntry entry = new DoorEntry(
                 door,
-                new TextureRegionDrawable(new TextureRegion(defaultTexture)),
-                new TextureRegionDrawable(new TextureRegion(hoverTexture)),
-                i + 1  // levelIndex = 1..TOTAL_LEVELS
+                new TextureRegionDrawable(new TextureRegion(baseTex)),
+                new TextureRegionDrawable(new TextureRegion(hoverTex)),
+                levelNumber
             );
 
             door.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                    if (entry.levelIndex <= TOTAL_LEVELS) {
                         selectedLevel = entry.levelIndex;
                         if (listener != null) {
                             listener.exitScreen(LevelSelectScene.this, 1);
                         }
-                    }
+
                     return true;
                 }
 
                 @Override
                 public void enter(InputEvent event, float x, float y, int pointer, com.badlogic.gdx.scenes.scene2d.Actor fromActor) {
-                    ((Image)event.getListenerActor()).setDrawable(entry.hoverDrawable);
+                        ((Image)event.getListenerActor()).setDrawable(entry.hoverDrawable);
+
                 }
 
                 @Override
@@ -141,7 +171,9 @@ public class LevelSelectScene implements Screen {
             stage.addActor(door);
         }
 
+
         addArrowButtons();
+        addBackSetting();
         updateDoorDisplay();
     }
 
@@ -154,7 +186,7 @@ public class LevelSelectScene implements Screen {
         Texture l_arrow_hov_text = new Texture(Gdx.files.internal("ui/l_arrow_click.png"));
         Image l_arrow = new Image(l_arrow_text);
         l_arrow.setSize(screenWidth * 0.05f, screenHeight * 0.05f);
-        l_arrow.setPosition(screenWidth * 0.01f, screenHeight * 0.25f);
+        l_arrow.setPosition(screenWidth * 0.01f, screenHeight * 0.30f);
         stage.addActor(l_arrow);
 
         // Right arrow textures and image
@@ -162,7 +194,7 @@ public class LevelSelectScene implements Screen {
         Texture r_arrow_hov_text = new Texture(Gdx.files.internal("ui/r_arrow_click.png"));
         Image r_arrow = new Image(r_arrow_text);
         r_arrow.setSize(screenWidth * 0.05f, screenHeight * 0.05f);
-        r_arrow.setPosition(screenWidth * 0.94f, screenHeight * 0.25f);
+        r_arrow.setPosition(screenWidth * 0.94f, screenHeight * 0.30f);
         stage.addActor(r_arrow);
 
         // Create drawables for hover effects
@@ -179,7 +211,8 @@ public class LevelSelectScene implements Screen {
                     scrollIndex -= DOORS_VISIBLE;
                     int maxVisible = Math.min(DOORS_VISIBLE, doorEntries.size - scrollIndex);
                     currentIndex = Math.min(currentIndex, maxVisible - 1);
-                    updateDoorDisplay();
+                    doorDisplayDirty = true;
+                    //updateDoorDisplay();
 
                     // Title update
                     int firstVisible = scrollIndex;
@@ -214,7 +247,9 @@ public class LevelSelectScene implements Screen {
                     scrollIndex += DOORS_VISIBLE;
                     int maxVisible = Math.min(DOORS_VISIBLE, doorEntries.size - scrollIndex);
                     currentIndex = Math.min(currentIndex, maxVisible - 1);
-                    updateDoorDisplay();
+                    doorDisplayDirty = true;
+
+                    //updateDoorDisplay();
 
                     // Title update
                     int firstVisible = scrollIndex;
@@ -241,38 +276,69 @@ public class LevelSelectScene implements Screen {
             }
         });
     }
+    private void addBackSetting() {
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
+
+        Texture backButtText = new Texture(Gdx.files.internal("ui/back_butt.png"));
+        Texture settButtText = new Texture(Gdx.files.internal("ui/setting.png"));
+        Image backButt = new Image(backButtText);
+        backButt.setSize(screenWidth * 0.075f, screenHeight * 0.075f);
+        backButt.setPosition(screenWidth * 0.01f, screenHeight * 0.9f);
+        stage.addActor(backButt);
+
+        Image settButt = new Image(settButtText);
+        settButt.setSize(screenWidth * 0.075f, screenHeight * 0.075f);
+        settButt.setPosition(screenWidth * 0.915f, screenHeight * 0.9f);
+        stage.addActor(settButt);
+
+        // Create drawables for hover effects
+
+        // Left arrow listener
+        backButt.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (listener != null) {
+                    listener.exitScreen(LevelSelectScene.this, 0);
+                }
+                return true;
+            }
+        });
+    }
+
 
     private void updateDoorDisplay() {
         float screenWidth = Gdx.graphics.getWidth();
-        float offsetRight = screenWidth * 0.025f;
-        float startX = screenWidth / 2f - (doorWidth * DOORS_VISIBLE + spacing * (DOORS_VISIBLE - 1)) / 2f + offsetRight;
         float yPos = Gdx.graphics.getHeight() * 0.185f;
+
+        int doorsToShow = Math.min(DOORS_VISIBLE, doorEntries.size - scrollIndex);
+        float totalWidth = doorsToShow * doorWidth + (doorsToShow - 1) * spacing;
+        float startX = (screenWidth - totalWidth) / 2f;
 
         for (int i = 0; i < doorEntries.size; i++) {
             DoorEntry entry = doorEntries.get(i);
-            entry.targetX = startX + (i - scrollIndex) * (doorWidth + spacing);
-            entry.door.setY(yPos);
+
+            if (i >= scrollIndex && i < scrollIndex + doorsToShow) {
+                int visibleIndex = i - scrollIndex;
+                entry.targetX = startX + visibleIndex * (doorWidth + spacing);
+                entry.door.setY(yPos);
+                entry.door.setVisible(true);
+            } else {
+                // Move it far offscreen to force an animated entrance later
+                entry.door.setX(-1000);
+                entry.door.setVisible(false);
+            }
         }
     }
 
     private void updateDoorAnimation(float delta) {
-        float lerpSpeed = 10f; // Higher = faster movement
-        float screenWidth = Gdx.graphics.getWidth();
-        float startX = screenWidth / 2f - (doorWidth * DOORS_VISIBLE + spacing * (DOORS_VISIBLE - 1)) / 2f;
-
+        float lerpSpeed = 10f;
         for (int i = 0; i < doorEntries.size; i++) {
             DoorEntry entry = doorEntries.get(i);
-
             float currentX = entry.door.getX();
             float newX = currentX + (entry.targetX - currentX) * lerpSpeed * delta;
             entry.door.setX(newX);
-
-            // ✨ Control visibility
-            if (i >= scrollIndex && i < scrollIndex + DOORS_VISIBLE) {
-                entry.door.setVisible(true);
-            } else {
-                entry.door.setVisible(false);
-            }
+            // Remove visibility handling here
         }
     }
     private void controllerSelect() {
@@ -321,6 +387,11 @@ public class LevelSelectScene implements Screen {
 
     @Override
     public void render(float delta) {
+        if (doorDisplayDirty) {
+            updateDoorDisplay();
+            doorDisplayDirty = false;
+        }
+        updateDoorAnimation(delta);
         Gdx.gl.glClearColor(0.9f, 0.2f, 0.2f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         controllerSelect();

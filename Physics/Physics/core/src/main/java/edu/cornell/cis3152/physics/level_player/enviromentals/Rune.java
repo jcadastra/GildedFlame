@@ -38,6 +38,9 @@ public class Rune extends ObstacleSprite {
     private float height;
     private float sigilRadius;
     private float yOffsetForRuneCenter;
+    private static int counter =0;
+    public int ID;
+
 
     public Rune (float x, float y, float width, float height, float rotationDeg, float units, float[] thresholds, Texture runeSigil) {
         super(new WheelObstacle(x,y, .61f/40 * units));
@@ -61,6 +64,8 @@ public class Rune extends ObstacleSprite {
         this.eventActions = new HashSet<>();
         this.thresholds = thresholds;
         this.runeSigilSet = TextureRegion.split(runeSigil,400,520);
+        this.ID = counter;
+        counter++;
     }
 
     public float getPowerLevel() {

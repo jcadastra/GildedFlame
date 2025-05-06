@@ -974,6 +974,9 @@ public class Avatar extends ObstacleSprite {
 
     private void applyWeightToClimbable(Set<EnhancedObstacleSprite> set) {
         for (EnhancedObstacleSprite obj : set) {
+            if (    obj.getObstacle().isRemoved()) {
+                continue;
+            }
             Fixture fixture = obj.getObstacle().getBody().getFixtureList().first();
             //TODO: fix with updated masses later
             float currentDensity = fixture.getDensity();

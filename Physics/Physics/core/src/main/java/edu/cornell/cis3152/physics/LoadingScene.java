@@ -225,14 +225,29 @@ public class LoadingScene implements Screen, InputProcessor {
      */
     private void draw() {
         // Cornell colors
-        ScreenUtils.clear( 0.702f, 0.1255f, 0.145f,1.0f );
-
+        ScreenUtils.clear(0f, 0f, 0f, 1f);
         batch.begin(camera);
         batch.setColor( Color.WHITE );
 
         // Height lock the logo
-        Texture texture = internal.getEntry( "splash", Texture.class );
-        batch.draw(texture,(width-height)/2, 0, height, height);
+        Texture logo = internal.getEntry("logo", Texture.class);
+        float logoAspect = (float) logo.getWidth() / logo.getHeight();
+        float logoHeight = height * 0.15f;  // smaller logo
+        float logoWidth = logoHeight * logoAspect;
+        float logoX = (width - logoWidth) / 2f;
+        float logoY = height * 0.8f;
+        batch.draw(logo, logoX, logoY, logoWidth, logoHeight);
+
+// Draw textbutt below
+        Texture texture = internal.getEntry("textButt", Texture.class);
+        float imgWidth = texture.getWidth();
+        float imgHeight = texture.getHeight();
+        float aspectRatio = imgWidth / imgHeight;
+        float drawHeight = height * 0.4f;
+        float drawWidth = drawHeight * aspectRatio;
+        float drawX = (width - drawWidth) / 2f;
+        float drawY = height * 0.55f - drawHeight / 2f;
+        batch.draw(texture, drawX, drawY, drawWidth, drawHeight);
 
         if (progress < 1.0f) {
             drawProgress();

@@ -9,7 +9,7 @@
          "name":"BackgroundTiles",
          "objects":[
                 {
-                 "gid":75,
+                 "gid":76,
                  "height":600,
                  "id":115,
                  "name":"brickBackground",
@@ -32,7 +32,7 @@
          "name":"Background",
          "objects":[
                 {
-                 "gid":80,
+                 "gid":81,
                  "height":1000,
                  "id":364,
                  "name":"tClimb",
@@ -44,7 +44,7 @@
                  "y":4931.63636363636
                 }, 
                 {
-                 "gid":76,
+                 "gid":77,
                  "height":500,
                  "id":365,
                  "name":"colB",
@@ -56,7 +56,7 @@
                  "y":3918
                 }, 
                 {
-                 "gid":77,
+                 "gid":78,
                  "height":500,
                  "id":366,
                  "name":"colM",
@@ -68,7 +68,7 @@
                  "y":3532
                 }, 
                 {
-                 "gid":77,
+                 "gid":78,
                  "height":500,
                  "id":367,
                  "name":"colM",
@@ -80,7 +80,7 @@
                  "y":3046
                 }, 
                 {
-                 "gid":77,
+                 "gid":78,
                  "height":500,
                  "id":368,
                  "name":"colM",
@@ -92,7 +92,7 @@
                  "y":2550
                 }, 
                 {
-                 "gid":78,
+                 "gid":79,
                  "height":500,
                  "id":369,
                  "name":"colT",
@@ -104,7 +104,7 @@
                  "y":2274
                 }, 
                 {
-                 "gid":76,
+                 "gid":77,
                  "height":500,
                  "id":370,
                  "name":"colB",
@@ -116,7 +116,7 @@
                  "y":3620
                 }, 
                 {
-                 "gid":77,
+                 "gid":78,
                  "height":500,
                  "id":372,
                  "name":"colM",
@@ -128,7 +128,7 @@
                  "y":3036
                 }, 
                 {
-                 "gid":77,
+                 "gid":78,
                  "height":500,
                  "id":373,
                  "name":"colM",
@@ -140,7 +140,7 @@
                  "y":2540
                 }, 
                 {
-                 "gid":78,
+                 "gid":79,
                  "height":500,
                  "id":374,
                  "name":"colT",
@@ -152,7 +152,7 @@
                  "y":2264
                 }, 
                 {
-                 "gid":77,
+                 "gid":78,
                  "height":500,
                  "id":375,
                  "name":"colM",
@@ -164,7 +164,7 @@
                  "y":3140.66666666667
                 }, 
                 {
-                 "gid":77,
+                 "gid":78,
                  "height":500,
                  "id":377,
                  "name":"colM",
@@ -176,7 +176,7 @@
                  "y":2491.05893939394
                 }, 
                 {
-                 "gid":78,
+                 "gid":79,
                  "height":500,
                  "id":378,
                  "name":"colT",
@@ -188,7 +188,7 @@
                  "y":2215.05893939394
                 }, 
                 {
-                 "gid":76,
+                 "gid":77,
                  "height":500,
                  "id":380,
                  "name":"colB",
@@ -200,7 +200,7 @@
                  "y":2742
                 }, 
                 {
-                 "gid":79,
+                 "gid":80,
                  "height":972,
                  "id":385,
                  "name":"window",
@@ -212,7 +212,7 @@
                  "y":3824
                 }, 
                 {
-                 "gid":79,
+                 "gid":80,
                  "height":972,
                  "id":386,
                  "name":"window",
@@ -224,7 +224,7 @@
                  "y":3850
                 }, 
                 {
-                 "gid":76,
+                 "gid":77,
                  "height":500,
                  "id":387,
                  "name":"colB",
@@ -236,7 +236,7 @@
                  "y":4868.36363636364
                 }, 
                 {
-                 "gid":77,
+                 "gid":78,
                  "height":500,
                  "id":388,
                  "name":"colM",
@@ -248,7 +248,7 @@
                  "y":3558
                 }, 
                 {
-                 "gid":77,
+                 "gid":78,
                  "height":500,
                  "id":389,
                  "name":"colM",
@@ -260,7 +260,7 @@
                  "y":3072
                 }, 
                 {
-                 "gid":77,
+                 "gid":78,
                  "height":500,
                  "id":390,
                  "name":"colM",
@@ -272,7 +272,7 @@
                  "y":2576
                 }, 
                 {
-                 "gid":78,
+                 "gid":79,
                  "height":500,
                  "id":391,
                  "name":"colT",
@@ -284,7 +284,7 @@
                  "y":2260
                 }, 
                 {
-                 "gid":77,
+                 "gid":78,
                  "height":500,
                  "id":392,
                  "name":"colM",
@@ -296,7 +296,7 @@
                  "y":4046
                 }, 
                 {
-                 "gid":77,
+                 "gid":78,
                  "height":500,
                  "id":393,
                  "name":"colM",
@@ -308,7 +308,7 @@
                  "y":4367.09090909091
                 }, 
                 {
-                 "gid":79,
+                 "gid":80,
                  "height":972,
                  "id":397,
                  "name":"window",
@@ -320,7 +320,7 @@
                  "y":3062
                 }, 
                 {
-                 "gid":79,
+                 "gid":80,
                  "height":972,
                  "id":436,
                  "name":"window",
@@ -332,7 +332,7 @@
                  "y":3738.28
                 }, 
                 {
-                 "gid":85,
+                 "gid":86,
                  "height":57,
                  "id":437,
                  "name":"light",
@@ -344,7 +344,7 @@
                  "y":3089.72
                 }, 
                 {
-                 "gid":85,
+                 "gid":86,
                  "height":57,
                  "id":438,
                  "name":"light",
@@ -395,41 +395,6 @@
          "id":3,
          "name":"Enemies",
          "objects":[],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "id":2,
-         "name":"Player",
-         "objects":[
-                {
-                 "gid":52,
-                 "height":600,
-                 "id":1,
-                 "name":"player",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":300,
-                 "x":7173.0303030303,
-                 "y":4798.30303030303
-                }, 
-                {
-                 "gid":51,
-                 "height":437,
-                 "id":428,
-                 "name":"torch",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":216,
-                 "x":8908,
-                 "y":2387
-                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -589,11 +554,46 @@
         }, 
         {
          "draworder":"topdown",
+         "id":2,
+         "name":"Player",
+         "objects":[
+                {
+                 "gid":52,
+                 "height":600,
+                 "id":1,
+                 "name":"player",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":300,
+                 "x":7173.0303030303,
+                 "y":4798.30303030303
+                }, 
+                {
+                 "gid":51,
+                 "height":437,
+                 "id":428,
+                 "name":"torch",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":216,
+                 "x":8908,
+                 "y":2387
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
          "id":6,
          "name":"Action Entities",
          "objects":[
                 {
-                 "gid":85,
+                 "gid":86,
                  "height":57,
                  "id":420,
                  "name":"light",
@@ -605,7 +605,7 @@
                  "y":3175.44
                 }, 
                 {
-                 "gid":85,
+                 "gid":86,
                  "height":57,
                  "id":421,
                  "name":"light",
@@ -617,7 +617,7 @@
                  "y":3666.35
                 }, 
                 {
-                 "gid":85,
+                 "gid":86,
                  "height":57,
                  "id":422,
                  "name":"light",
@@ -629,7 +629,7 @@
                  "y":3179.44
                 }, 
                 {
-                 "gid":85,
+                 "gid":86,
                  "height":57,
                  "id":423,
                  "name":"light",
@@ -641,7 +641,7 @@
                  "y":3679.44
                 }, 
                 {
-                 "gid":85,
+                 "gid":86,
                  "height":57,
                  "id":424,
                  "name":"light",
@@ -653,7 +653,7 @@
                  "y":2877.38
                 }, 
                 {
-                 "gid":85,
+                 "gid":86,
                  "height":57,
                  "id":425,
                  "name":"light",
@@ -674,7 +674,7 @@
  "nextobjectid":439,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.11.2",
+ "tiledversion":"1.10.2",
  "tileheight":300,
  "tilesets":[
         {
@@ -694,7 +694,7 @@
          "source":"GameObjectTiles.tsx"
         }, 
         {
-         "firstgid":75,
+         "firstgid":76,
          "source":"BackgroundAssets.tsx"
         }],
  "tilewidth":300,
