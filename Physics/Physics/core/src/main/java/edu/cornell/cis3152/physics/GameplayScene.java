@@ -1523,7 +1523,7 @@ public class GameplayScene implements Screen {
             factor = Math.max(factor,0);
             factor = Math.min(factor,1);
             if (factor == 0 || factor == 1) {
-                break;
+                continue;
             }
 
             for (EventAction<?> undefEventAction : rune.getEventAction()) {
