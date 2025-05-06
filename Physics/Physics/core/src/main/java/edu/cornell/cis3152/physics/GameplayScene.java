@@ -408,14 +408,15 @@ public class GameplayScene implements Screen {
         this.fitViewport = new ExtendViewport(1280, 720);
 
         // pull out sounds
-        volume = constants.getFloat("volume", 1.0f);
+        volume = 0.1f;
+//        volume = constants.getFloat("volume", 1.0f);
 
         sensorFixtures = new ObjectSet<Fixture>();
 
         scale = new Vector2();
         //TODO: Value needs to be imported from level vvvv
 //        bounds = new Rectangle(0,0,defaults.get("bounds").getFloat( 0 ), defaults.get("bounds").getFloat( 1 ));
-        bounds = new Rectangle(0,0,50,18);
+        bounds = new Rectangle(0,0,32,50);
         resize(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 
         displayFont = directory.getEntry( "shared-unica" ,BitmapFont.class);
@@ -719,7 +720,7 @@ public class GameplayScene implements Screen {
 
     public void loadLevel(String levelName, String levelInfoName) {
         this.levelName = levelName;
-        float units = height / bounds.height;
+        float units = 40 * Gdx.graphics.getWidth() / 1280f;
         phyiscsUnits = units;
 
         JsonValue levelData = directory.getEntry(levelName,JsonValue.class);
@@ -1281,8 +1282,24 @@ public class GameplayScene implements Screen {
                     String objName = object.getString("name", "unnamed");
                     float x = object.getFloat("x") / levelData.getInt("tilewidth");
                     float y = (bounds.height * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
+                    boolean wander = false;
                     if (objName.contains("light")) {
+                        JsonValue props = object.get("properties");
+                        if (props!=null) {
+                            for (JsonValue prop : props) {
+                                String pname = prop.getString("name");
+                                String val = prop.getString("value");
+                                switch (pname) {
+                                    case "wander":
+                                        wander = Boolean.parseBoolean(val);
+                                        break;
+                                }
+                            }
+                        }
                         FloatingLight light = new FloatingLight(units,new Vector2(x,y),1,goalPos);
+                        if (wander) {
+//                            light.setWander();
+                        }
 //                        System.out.println("floating light: " + (int)x+","+ (int)y);
                         light.getObstacle().setPosition(x,y);
                         floatingLights.add(light);
@@ -1622,16 +1639,16 @@ public class GameplayScene implements Screen {
 
         float idealX = playerPos.x * phyiscsUnits;
         float idealY = playerPos.y * phyiscsUnits;
-//        System.out.println(camera.viewportWidth +",pp " + camera.viewportHeight);
-//        System.out.println(visibleW +",ppp " + visibleH);
-//        System.out.println(((visibleW)/2) +",ppasdp " +( (bounds.width* phyiscsUnits)-(visibleW)/2));
-//        System.out.println(((visibleW)/2) +",ppasdp " +( (bounds.width)));
-//        System.out.println(((visibleW)/2) +",ppasdp " +( (bounds.width * phyiscsUnits)));
-//        System.out.println("------");
-//        System.out.println(((visibleH)/2) +",hh " +( (bounds.height* phyiscsUnits)-(visibleH)/2));
-//        System.out.println(((visibleH)/2) +",hhh " +( (bounds.height)));
-//        System.out.println(((visibleH)/2) +",hhh " +( (bounds.height * phyiscsUnits)));
-//        System.out.println(scale +",awef " +phyiscsUnits);
+        System.out.println(camera.viewportWidth +",pp " + camera.viewportHeight);
+        System.out.println(visibleW +",ppp " + visibleH);
+        System.out.println(((visibleW)/2) +",ppasdp " +( (bounds.width* phyiscsUnits)-(visibleW)/2));
+        System.out.println(((visibleW)/2) +",ppasdp " +( (bounds.width)));
+        System.out.println(((visibleW)/2) +",ppasdp " +( (bounds.width * phyiscsUnits)));
+        System.out.println("------");
+        System.out.println(((visibleH)/2) +",hh " +( (bounds.height* phyiscsUnits)-(visibleH)/2));
+        System.out.println(((visibleH)/2) +",hhh " +( (bounds.height)));
+        System.out.println(((visibleH)/2) +",hhh " +( (bounds.height * phyiscsUnits)));
+        System.out.println(scale +",awef " +phyiscsUnits);
         camera.position.x = MathUtils.clamp(idealX, (visibleW), (bounds.width * phyiscsUnits)-(visibleW));
         camera.position.y = MathUtils.clamp(idealY, (visibleH), (bounds.height * phyiscsUnits)-(visibleH));
         camera.update();
@@ -1969,8 +1986,7 @@ public class GameplayScene implements Screen {
             RainFlag todo = todos.pop();
             switch (todo.getName()) {
                 case "addRain":
-//                    todo.getSubject().setTexture(directory.getEntry("platform-torch", Texture.class));
-
+                    todo.getSubject().setTexture(directory.getEntry("rainParticle"+todo.rainNum, Texture.class));
                     addSprite(todo.getSubject());
                     break;
             }
