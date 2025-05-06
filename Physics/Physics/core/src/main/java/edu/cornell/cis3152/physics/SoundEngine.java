@@ -151,6 +151,13 @@ public class SoundEngine {
         }
     }
 
+    public void platformMoving() {
+        SoundEffect platformMoving = registeredSoundEffects.get("platformMoving");
+        if (platformMoving != null) {
+            platformMoving.play();
+        }
+    }
+
     public void dispose() {
         for (SoundEffect soundEffect : registeredSoundEffects.values()) {
             soundEffect.dispose();

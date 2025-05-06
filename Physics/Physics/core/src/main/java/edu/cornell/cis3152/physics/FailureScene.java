@@ -36,6 +36,7 @@ public class FailureScene implements Screen {
     protected AssetDirectory directory;
 
     public FailureScene(AssetDirectory directory) {
+        this.directory = directory;
         stage = new Stage(new ScreenViewport());
         skin = new Skin();
         clickSound = Gdx.audio.newSound(Gdx.files.internal("soundEffects/clickSound.mp3"));
@@ -168,7 +169,7 @@ public class FailureScene implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         stage.act(delta);
