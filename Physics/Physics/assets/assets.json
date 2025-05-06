@@ -1,5 +1,6 @@
 {
   "textures": {
+    "eyes": "platform/enemyEyes.png",
     "shared-earth": {
       "file": "shared/earthtile.png",
       "wrapU": "repeated",

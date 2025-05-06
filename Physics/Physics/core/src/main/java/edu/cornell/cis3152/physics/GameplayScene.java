@@ -230,7 +230,11 @@ public class GameplayScene implements Screen {
 
     protected ParticleEngine particleEngine;
 
+    //private ObstacleSprite[] eyes;
+
     protected Fire torchFire;
+
+    private Texture eye;
 
     /**
      * Flag to add torch to avatar in update
@@ -581,6 +585,9 @@ public class GameplayScene implements Screen {
         for (ObstacleSprite sprite : sprites) {
             Obstacle obj = sprite.getObstacle();
             sprite.getObstacle().deactivatePhysics(world);
+        }
+        if(particleEngine!=null){
+            particleEngine.dispose();
         }
         sprites.clear();
         addQueue.clear();
@@ -1248,6 +1255,8 @@ public class GameplayScene implements Screen {
         FloatingLight goalLight = new FloatingLight(units,goalPos,1,goalPos);
         floatingLights.add(goalLight);
 
+        eye = directory.getEntry("eyes", Texture.class);
+
         for (JsonValue layer : layers) {
             String layerType = layer.getString("type");
 
@@ -1355,8 +1364,8 @@ public class GameplayScene implements Screen {
 
         soundEngine.tendToMusicLoop();
 //        System.out.println(Gdx.graphics.getFramesPerSecond());
-//        SavedDataHandler temp = new SavedDataHandler();
-//        temp.setDataVal("test" + Gdx.graphics.getFrameId(), Gdx.graphics.getFramesPerSecond());
+        SavedDataHandler temp = new SavedDataHandler();
+        temp.setDataVal("test" + Gdx.graphics.getFrameId(), Gdx.graphics.getFramesPerSecond());
 
         updateRunes(dt);
         supplementaryCollisionActions();
@@ -2138,6 +2147,16 @@ public class GameplayScene implements Screen {
         lightController.render();
 
         batch.begin();
+        //Draw enemy eyes in the dark
+        for( Enemy enemy: enemies){
+            if (enemy.getClass()== Moth.class){
+                if(enemy.getState()== Enemy.EnemyState.OUT_OF_LIGHT){
+                    Vector2 pos = enemy.getObstacle().getPosition();
+                    batch.draw(eye,(pos.x-0.5f)*phyiscsUnits,(pos.y-0.7f)*phyiscsUnits,0.1f*eye.getWidth(),0.1f*eye.getHeight());
+                    //batch.draw(eye,enemy.getX(),enemy.getY());
+                }
+            }
+        }
         // Draw a final message
         if (complete && !failed) {
             //batch.drawText(goodMessage, width/2, height/2);

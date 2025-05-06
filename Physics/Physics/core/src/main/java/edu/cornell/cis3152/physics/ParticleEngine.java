@@ -210,6 +210,15 @@ public class ParticleEngine implements Screen {
 
     @Override
     public void dispose() {
-
+        if (effect!=null){
+            effect.dispose();}
+        if (rainEffect!=null){
+            rainEffect.dispose();}
+        if (splashEffects!=null){
+            for (ParticleEffect effect: splashEffects){
+                effect.dispose();
+            }
+            splashEffects.clear();
+        }
     }
 }
