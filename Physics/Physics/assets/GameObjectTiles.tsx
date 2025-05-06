@@ -13,6 +13,7 @@
  </tile>
  <tile id="1">
   <properties>
+   <property name="material" value="wood/stone/infinite"/>
    <property name="name" value="burnable"/>
   </properties>
   <image width="458" height="500" source="environment/barrel.png"/>
