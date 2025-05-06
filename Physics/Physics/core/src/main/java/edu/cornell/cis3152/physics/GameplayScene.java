@@ -198,6 +198,8 @@ public class GameplayScene implements Screen {
     private float volume;
 
     private GroundState prevGroundState = GroundState.GROUNDED;
+    private float totemSoundCoolDown = 0f;
+    private Map<Totem, Enemy.EnemyState> totemPreviousStates = new HashMap<>();
 
     private Stage pauseStage;
     private Skin skin;
@@ -1423,18 +1425,27 @@ public class GameplayScene implements Screen {
 
         prevGroundState = currentGroundState;
 
+        boolean totemChanged = false;
+        totemSoundCoolDown -= dt;
+
         for (Enemy enemy : enemies) {
             if (enemy instanceof Totem) {
                 Totem totem = (Totem) enemy;
 
                 Enemy.EnemyState current = totem.getState();
-                Enemy.EnemyState previous = totem.getPreviousState();
+                Enemy.EnemyState previous = totemPreviousStates.getOrDefault(totem, totem.getState());
 
-                if ((previous != Enemy.EnemyState.IN_LIGHT && current == Enemy.EnemyState.IN_LIGHT) ||
+                if ((previous == Enemy.EnemyState.OUT_OF_LIGHT && current == Enemy.EnemyState.IN_LIGHT) ||
                     (previous == Enemy.EnemyState.IN_LIGHT && current != Enemy.EnemyState.IN_LIGHT)) {
-                    soundEngine.totemTurnAround();
+                    totemChanged = true;
                 }
+                totemPreviousStates.put(totem, current);
             }
+        }
+
+        if (totemChanged && totemSoundCoolDown <= 0f) {
+            soundEngine.totemTurnAround();
+            totemSoundCoolDown = 0.3f;
         }
 
         if ((queueAddTorch && activeTorchJoint == null) || (activeTorchJoint != null &&
