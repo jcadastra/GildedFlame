@@ -27,6 +27,7 @@ public class RainFlag {
      * the EOS, not obstaclesprite cause EOS can take a material, that the fire is affecting
      */
     private ObstacleSprite subject;
+    public int rainNum;
 
     /**
      * @return the subject that will be affected by the fire flag
@@ -41,9 +42,10 @@ public class RainFlag {
      * @param name name of the flag being called
      * @param subject the object that is related to the fire
      */
-    public RainFlag(String name, ObstacleSprite subject) {
+    public RainFlag(String name, ObstacleSprite subject, int rainNum) {
         this.name = name;
         this.subject = subject;
+        this.rainNum = rainNum;
     }
 
 }

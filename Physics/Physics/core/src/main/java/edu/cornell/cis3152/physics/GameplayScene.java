@@ -1853,7 +1853,7 @@ public class GameplayScene implements Screen {
             RainFlag todo = todos.pop();
             switch (todo.getName()) {
                 case "addRain":
-                    todo.getSubject().setTexture(directory.getEntry("rainDrop", Texture.class));
+                    todo.getSubject().setTexture(directory.getEntry("rainDrop"+todo.rainNum, Texture.class));
                     addSprite(todo.getSubject());
                     break;
             }
