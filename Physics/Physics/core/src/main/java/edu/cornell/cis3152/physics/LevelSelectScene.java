@@ -75,7 +75,7 @@ public class LevelSelectScene implements Screen {
     private void createBasicUI() {
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
-        doorWidth = screenWidth * 0.2f;
+        doorWidth = screenWidth * 0.18f;
         doorHeight = screenHeight * 0.35f;
         spacing = screenWidth * 0.001f;
 
@@ -90,7 +90,7 @@ public class LevelSelectScene implements Screen {
         chap3TitleTexture = new Texture(Gdx.files.internal("ui/chap3_title.png"));
         chapLabel = new Image(chapTitleTexture);
         chapLabel.setSize(screenWidth * 0.2f, screenHeight * 0.05f);
-        float verticalSpacing = screenHeight * 0.02f;
+        float verticalSpacing = screenHeight * 0.057f;
         chapLabel.setPosition((screenWidth - screenWidth * 0.2f) / 2f,
             chamberLabel.getY() - screenHeight * 0.05f - verticalSpacing);
         stage.addActor(chapLabel);
@@ -172,7 +172,7 @@ public class LevelSelectScene implements Screen {
         Texture l_arrow_hov_text = new Texture(Gdx.files.internal("ui/l_arrow_click.png"));
         Image l_arrow = new Image(l_arrow_text);
         l_arrow.setSize(screenWidth * 0.05f, screenHeight * 0.05f);
-        l_arrow.setPosition(screenWidth * 0.01f, screenHeight * 0.8f);
+        l_arrow.setPosition(screenWidth * 0.01f, screenHeight * 0.30f);
         stage.addActor(l_arrow);
 
         // Right arrow textures and image
@@ -180,7 +180,7 @@ public class LevelSelectScene implements Screen {
         Texture r_arrow_hov_text = new Texture(Gdx.files.internal("ui/r_arrow_click.png"));
         Image r_arrow = new Image(r_arrow_text);
         r_arrow.setSize(screenWidth * 0.05f, screenHeight * 0.05f);
-        r_arrow.setPosition(screenWidth * 0.94f, screenHeight * 0.8f);
+        r_arrow.setPosition(screenWidth * 0.94f, screenHeight * 0.30f);
         stage.addActor(r_arrow);
 
         // Create drawables for hover effects
@@ -266,18 +266,16 @@ public class LevelSelectScene implements Screen {
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
 
-        // Left arrow textures and image
         Texture backButtText = new Texture(Gdx.files.internal("ui/back_butt.png"));
         Texture settButtText = new Texture(Gdx.files.internal("ui/setting.png"));
         Image backButt = new Image(backButtText);
-        backButt.setSize(screenWidth * 0.05f, screenHeight * 0.05f);
+        backButt.setSize(screenWidth * 0.075f, screenHeight * 0.075f);
         backButt.setPosition(screenWidth * 0.01f, screenHeight * 0.9f);
         stage.addActor(backButt);
 
-        // Right arrow textures and image
         Image settButt = new Image(settButtText);
-        settButt.setSize(screenWidth * 0.05f, screenHeight * 0.05f);
-        settButt.setPosition(screenWidth * 0.94f, screenHeight * 0.9f);
+        settButt.setSize(screenWidth * 0.075f, screenHeight * 0.075f);
+        settButt.setPosition(screenWidth * 0.915f, screenHeight * 0.9f);
         stage.addActor(settButt);
 
         // Create drawables for hover effects
