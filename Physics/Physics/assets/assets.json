@@ -285,7 +285,14 @@
     "torchThrow": "soundEffects/torchThrow.wav",
     "platform-jump": "platform/jump.wav",
     "platform-pew": "platform/pew.wav",
-    "platform-plop": "platform/plop.wav"
+    "platform-plop": "platform/plop.wav",
+    "clickSound": "soundEffects/clickSound.mp3",
+    "turn_around": "soundEffects/turn_around.mp3",
+    "torch_landing": "soundEffects/torch_landing.mp3",
+    "jumper_landing": "soundEffects/jumper_landing.mp3",
+    "burnable_object": "soundEffects/burnable_object.mp3",
+    "fire_extinguished": "soundEffects/fire_extinguished.mp3",
+    "moving_platform": "soundEffects/moving_platform_2.mp3"
   },
   "fonts": {
     "shared-unica": {

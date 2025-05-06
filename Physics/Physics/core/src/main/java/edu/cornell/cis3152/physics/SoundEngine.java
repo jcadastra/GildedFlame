@@ -130,6 +130,20 @@ public class SoundEngine {
         }
     }
 
+    public void torchLanding() {
+        SoundEffect torchLanding = registeredSoundEffects.get("torchLanding");
+        if (torchLanding != null) {
+            torchLanding.play();
+        }
+    }
+
+    public void landing() {
+        SoundEffect landing = registeredSoundEffects.get("landing");
+        if(landing != null) {
+            landing.play();
+        }
+    }
+
     public void dispose() {
         for (SoundEffect soundEffect : registeredSoundEffects.values()) {
             soundEffect.dispose();

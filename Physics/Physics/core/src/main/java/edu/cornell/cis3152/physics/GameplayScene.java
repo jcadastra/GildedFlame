@@ -199,6 +199,8 @@ public class GameplayScene implements Screen {
      */
     private float volume;
 
+    private GroundState prevGroundState = GroundState.GROUNDED;
+
     private Stage pauseStage;
     private Skin skin;
 
@@ -1326,6 +1328,13 @@ public class GameplayScene implements Screen {
             SoundEffectManager sounds = SoundEffectManager.getInstance();
 //            soundEngine.jump();
         }
+
+        GroundState currentGroundState = avatar.getGroundedState();
+        if (prevGroundState.equals(GroundState.AIRBORNE) && currentGroundState.equals(GroundState.GROUNDED)) {
+            soundEngine.landing();
+        }
+
+        prevGroundState = currentGroundState;
 
         if ((queueAddTorch && activeTorchJoint == null) || (activeTorchJoint != null &&
             torchOnRight != avatar.isFacingRight())) {
