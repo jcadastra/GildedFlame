@@ -819,6 +819,7 @@ public class GameplayScene implements Screen {
                                 (width)/3, (height)/2 * .8f,
                                 -(width)/3, (height)/2 * .8f
                             }, x,y, width, height, units);
+                            materialType = "stone";
                             box.setTexture(directory.getEntry("nonburnable", Texture.class));
                             box.getObstacle().setPhysicsUnits(units);
                         } else {
