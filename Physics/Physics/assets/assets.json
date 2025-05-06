@@ -7,6 +7,7 @@
     },
     "treasure": "environment/treasure.png",
     "burnable": "environment/barrel.png",
+    "brazier": "environment/brazier.png",
     "nonburnable": "environment/statue.png",
     "tablet": "environment/tablet.png",
     "platform": "environment/platform.png",

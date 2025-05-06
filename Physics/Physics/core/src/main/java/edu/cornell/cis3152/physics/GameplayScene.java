@@ -888,6 +888,15 @@ public class GameplayScene implements Screen {
                             materialType = "stone";
                             box.setTexture(directory.getEntry("nonburnable", Texture.class));
                             box.getObstacle().setPhysicsUnits(units);
+                        } else if (objName.contains("inf")) {
+                            box = new GameObject(new float[]{
+                                0, -height/2,
+                                width/2,0,
+                                0,height/2,
+                                -width/2,0
+                            }, x,y, width, height, units);
+                            materialType = "infinite";
+                            box.setTexture(directory.getEntry("brazier", Texture.class));
                         } else {
                             box = new GameObject(new float[]{
                                 -(width) * (3f/10f), -(height)/2.1f,
