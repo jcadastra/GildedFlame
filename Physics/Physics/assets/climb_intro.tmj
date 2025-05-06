@@ -458,6 +458,22 @@
                  "height":230,
                  "id":349,
                  "name":"3",
+                 "properties":[
+                        {
+                         "name":"end1Material",
+                         "type":"string",
+                         "value":"iron"
+                        }, 
+                        {
+                         "name":"end2Material",
+                         "type":"string",
+                         "value":"iron"
+                        }, 
+                        {
+                         "name":"middleMaterial",
+                         "type":"string",
+                         "value":"iron"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -474,17 +490,17 @@
                         {
                          "name":"end1Material",
                          "type":"string",
-                         "value":"rope"
+                         "value":"iron"
                         }, 
                         {
                          "name":"end2Material",
                          "type":"string",
-                         "value":"rope"
+                         "value":"iron"
                         }, 
                         {
                          "name":"middleMaterial",
                          "type":"string",
-                         "value":"rope"
+                         "value":"iron"
                         }],
                  "rotation":0,
                  "type":"",
@@ -562,6 +578,22 @@
                  "height":150,
                  "id":433,
                  "name":"7",
+                 "properties":[
+                        {
+                         "name":"end1Material",
+                         "type":"string",
+                         "value":"iron"
+                        }, 
+                        {
+                         "name":"end2Material",
+                         "type":"string",
+                         "value":"iron"
+                        }, 
+                        {
+                         "name":"middleMaterial",
+                         "type":"string",
+                         "value":"iron"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -574,6 +606,22 @@
                  "height":150,
                  "id":434,
                  "name":"8",
+                 "properties":[
+                        {
+                         "name":"end1Material",
+                         "type":"string",
+                         "value":"iron"
+                        }, 
+                        {
+                         "name":"end2Material",
+                         "type":"string",
+                         "value":"iron"
+                        }, 
+                        {
+                         "name":"middleMaterial",
+                         "type":"string",
+                         "value":"iron"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
