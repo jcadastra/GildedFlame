@@ -338,6 +338,10 @@ public class GameplayScene implements Screen {
     private float animationOffsetTorchArc = .18f;
     private float expectedDTForTorchToHitGround = 0;
 
+    private boolean playerDied = false;
+    private float deathTimer = 0.0f;
+    private static final float DEATH_DELAY = 2.0f;
+
 
     /**
      * Creates a new game world from the given asset directory
@@ -885,7 +889,7 @@ public class GameplayScene implements Screen {
 
                                 addSprite(decoration);
                             } else {
-                                System.out.println("Unknown object: " + objName);
+//                                System.out.println("Unknown object: " + objName);
                             }
                         }
                     }
@@ -1286,6 +1290,7 @@ public class GameplayScene implements Screen {
      * @param dt    Number of seconds since last animation frame
      */
     public void update(float dt) {
+
         soundEngine.tendToMusicLoop();
 //        System.out.println(Gdx.graphics.getFramesPerSecond());
 //        SavedDataHandler temp = new SavedDataHandler();
@@ -1609,10 +1614,7 @@ public class GameplayScene implements Screen {
                         if (avatar.getGroundedState().equals(GroundState.CLIMBING)) {
                             avatar.removeClimbingPhysics();
                         }
-
-                    } else {
-                        avatar.resetFallTimer();
-                        avatar.startFallTimer();
+                        avatar.setGroundedState(GroundState.AIRBORNE);
                     }
                     break;
                 case "addClimbingJoint":

@@ -166,8 +166,6 @@ public class Enemy extends ObstacleSprite {
     public void setState(EnemyState value) {
         state = value;
     }
-
-
     public float getSpeed() {
         return speed;
     }
