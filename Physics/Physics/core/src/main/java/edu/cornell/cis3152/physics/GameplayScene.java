@@ -201,6 +201,13 @@ public class GameplayScene implements Screen {
     private float totemSoundCoolDown = 0f;
     private Map<Totem, Enemy.EnemyState> totemPreviousStates = new HashMap<>();
 
+    private boolean isFadingOut = false;
+    private float fadeTime = 0f;
+    private float fadeDuration = 1f; // seconds
+    private int fadeExitCode = -1;
+    private Texture blackTexture;
+
+
     private Stage pauseStage;
     private Skin skin;
 
@@ -230,7 +237,11 @@ public class GameplayScene implements Screen {
 
     protected ParticleEngine particleEngine;
 
+    //private ObstacleSprite[] eyes;
+
     protected Fire torchFire;
+
+    private Texture eye;
 
     /**
      * Flag to add torch to avatar in update
@@ -581,6 +592,9 @@ public class GameplayScene implements Screen {
         for (ObstacleSprite sprite : sprites) {
             Obstacle obj = sprite.getObstacle();
             sprite.getObstacle().deactivatePhysics(world);
+        }
+        if(particleEngine!=null){
+            particleEngine.dispose();
         }
         sprites.clear();
         addQueue.clear();
@@ -1257,6 +1271,8 @@ public class GameplayScene implements Screen {
         FloatingLight goalLight = new FloatingLight(units,goalPos,1,goalPos);
         floatingLights.add(goalLight);
 
+        eye = directory.getEntry("eyes", Texture.class);
+
         for (JsonValue layer : layers) {
             String layerType = layer.getString("type");
 
@@ -1325,8 +1341,9 @@ public class GameplayScene implements Screen {
         } else if (countdown == 0) {
             if (failed) {
                 pause();
-                listener.exitScreen(this, EXIT_QUIT);
-                return false;
+                isFadingOut = true;
+                // listener.exitScreen(this, EXIT_FAILURE);
+                return true;
             } else if (complete) {
                 pause();
                 listener.exitScreen(this, EXIT_NEXT);
@@ -1364,8 +1381,8 @@ public class GameplayScene implements Screen {
 
         soundEngine.tendToMusicLoop();
 //        System.out.println(Gdx.graphics.getFramesPerSecond());
-//        SavedDataHandler temp = new SavedDataHandler();
-//        temp.setDataVal("test" + Gdx.graphics.getFrameId(), Gdx.graphics.getFramesPerSecond());
+        SavedDataHandler temp = new SavedDataHandler();
+        temp.setDataVal("test" + Gdx.graphics.getFrameId(), Gdx.graphics.getFramesPerSecond());
 
         updateRunes(dt);
         supplementaryCollisionActions();
@@ -1459,6 +1476,13 @@ public class GameplayScene implements Screen {
         if (totemChanged && totemSoundCoolDown <= 0f) {
             soundEngine.totemTurnAround();
             totemSoundCoolDown = 0.3f;
+        }
+
+        if (isFadingOut) {
+            fadeTime += dt;
+            if (fadeTime >= fadeDuration) {
+                listener.exitScreen(this, fadeExitCode);
+            }
         }
 
         if ((queueAddTorch && activeTorchJoint == null) || (activeTorchJoint != null &&
@@ -2147,15 +2171,37 @@ public class GameplayScene implements Screen {
         lightController.render();
 
         batch.begin();
-        // Draw a final message
-        if (complete && !failed) {
-            //batch.drawText(goodMessage, width/2, height/2);
-            listener.exitScreen(this, EXIT_SUCCESS);
-        } else if (failed) {
-            //batch.drawText(badMessage, width/2, height/2);
-            listener.exitScreen(this, EXIT_FAILURE);
+        //Draw enemy eyes in the dark
+        for( Enemy enemy: enemies){
+            if (enemy.getClass()== Moth.class){
+                if(enemy.getState()== Enemy.EnemyState.OUT_OF_LIGHT){
+                    Vector2 pos = enemy.getObstacle().getPosition();
+                    batch.draw(eye,(pos.x-0.5f)*phyiscsUnits,(pos.y-0.7f)*phyiscsUnits,0.1f*eye.getWidth(),0.1f*eye.getHeight());
+                    //batch.draw(eye,enemy.getX(),enemy.getY());
+                }
+            }
         }
+        // Draw a final message
+        if (!isFadingOut) {
+            if (complete && !failed) {
+                isFadingOut = true;
+                fadeExitCode = EXIT_SUCCESS;
+            } else if (failed) {
+                isFadingOut = true;
+                fadeExitCode = EXIT_FAILURE;
+            }
+        }
+
         batch.end();
+
+        if (isFadingOut) {
+            batch.begin();
+            float alpha = Math.min(fadeTime / fadeDuration, 1f);
+            batch.setColor(0, 0, 0, alpha);
+            batch.draw(blackTexture, 0, 0, width, height);
+            batch.setColor(Color.WHITE);
+            batch.end();
+        }
     }
 
     /**
@@ -2233,6 +2279,12 @@ public class GameplayScene implements Screen {
     public void show() {
         // Useless if called in outside animation loop
         active = true;
+        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pixmap.setColor(Color.BLACK);
+        pixmap.fill();
+        blackTexture = new Texture(pixmap);
+        pixmap.dispose();
+
     }
 
     /**

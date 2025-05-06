@@ -28,6 +28,7 @@ public class FloatingLight extends ObstacleSprite {
         //WheelObstacle obstacle;
         private ShapeRenderer shapeRenderer = new ShapeRenderer();
         private boolean debug = true;
+        private boolean isWander = false;
 
         int circleCounter = 500;
         int offCounter = 500;
@@ -116,6 +117,9 @@ public class FloatingLight extends ObstacleSprite {
         public void stopMoving() {
             this.state = FloatingLightState.OFF;
         }
+        public boolean isWander() {return isWander;}
+
+        public void setWander(boolean isWander) {this.isWander = isWander;}
 
         public void startCirculating(Vector2 center, float radius) {
             this.centerPoint = center;

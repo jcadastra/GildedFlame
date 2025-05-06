@@ -116,13 +116,13 @@ public class LightController {
         lightPool = new Array<>();
 
         for (int i = 0; i < maxLights; i++) {
-            PointLight light = new PointLight(rayHandler, 20, Color.LIGHT_GRAY, 0.5f, 0, 0);
+            PointLight light = new PointLight(rayHandler, 20, Color.LIGHT_GRAY, 0.5f, -1, -1);
             light.setActive(false);  // Hide initially
             lightPool.add(light);
         }
         fireLightPool = new Array<>();
         for (int i = 0; i < maxFireLights; i++) {
-            PointLight light = new PointLight(rayHandler, 20, Color.YELLOW, 0.5f, 0, 0);
+            PointLight light = new PointLight(rayHandler, 20, Color.YELLOW, 0.5f, -1, -1);
             light.setActive(false);  // Hide initially
             fireLightPool.add(light);
         }
@@ -185,8 +185,9 @@ public class LightController {
         torchLighting.setSoftnessLength(10f);
         torchLightState = torchLight.getState();
 
-        Color playerLightCol = new Color(Color.LIGHT_GRAY.r, Color.LIGHT_GRAY.g, Color.LIGHT_GRAY.b, 0.1f);
-        playerLight = new PointLight(rayHandler, 60, Color.LIGHT_GRAY, 2.5f, points.x, points.y);
+        //Color playerLightCol = new Color(Color.LIGHT_GRAY.r, Color.LIGHT_GRAY.g, Color.LIGHT_GRAY.b, 0.1f);
+        Color playerLightCol = Color.WHITE;
+        playerLight = new PointLight(rayHandler, 60, playerLightCol, 2.5f, points.x, points.y);
         playerLight.setContactFilter(CATEGORY_LIGHT, (short) 0,
             (short) CATEGORY_ENVIRONMENT);
         playerLight.setSoft(true);
@@ -301,7 +302,7 @@ public class LightController {
 //                        reverseLightingAssignments.remove(light);
 //                        lightingAssignments.remove(lastName);
 //                    }
-                    light.setColor(Color.DARK_GRAY);
+                    light.setColor(Color.WHITE);
                     light.setDistance(1f);
                     light.attachToBody(sprite.getObstacle().getBody());
                     light.setActive(true);
@@ -605,8 +606,9 @@ public class LightController {
             camera = null;
         }
         lightPool.clear();
-        lightAssignments.clear();
-        fireAssignments.clear();
+        fireLightPool.clear();
+        lightingAssignments.clear();
+        reverseLightingAssignments.clear();
     }
 
 //    public void update(FireController fireController) {
