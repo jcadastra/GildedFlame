@@ -1,5 +1,5 @@
 {
-    "activeFile": "sample.tmj",
+    "activeFile": "test8.tmj",
     "expandedProjectPaths": [
         "."
     ],
@@ -25,7 +25,8 @@
         },
         "BackgroundStickers.tsx": {
             "dynamicWrapping": true,
-            "scaleInDock": 1
+            "scaleInDock": 1,
+            "scaleInEditor": 1
         },
         "C:/Users/ericj/Downloads/EnemyTiles.tsx": {
             "dynamicWrapping": true,
@@ -68,7 +69,7 @@
         "GameObjectTiles.tsx": {
             "dynamicWrapping": true,
             "scaleInDock": 0.25,
-            "scaleInEditor": 0.33
+            "scaleInEditor": 0.5
         },
         "PlatformTiles.tsx": {
             "dynamicWrapping": false,
@@ -85,7 +86,7 @@
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 4798.2024025581195,
-                "y": 2696.396162820845
+                "y": 2696.3961628208453
             }
         },
         "earthtile.tsx": {
@@ -106,7 +107,7 @@
             "selectedLayer": 4,
             "viewCenter": {
                 "x": 4798,
-                "y": 2698
+                "y": 2042
             }
         },
         "example_level.tmx": {
@@ -126,11 +127,11 @@
             "expandedObjectLayers": [
                 3
             ],
-            "scale": 1,
+            "scale": 0.25,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 4799.5,
-                "y": 2699.5
+                "x": 4798,
+                "y": 2698
             }
         },
         "example_level2.tmx": {
@@ -161,22 +162,25 @@
             "expandedObjectLayers": [
                 7
             ],
-            "scale": 0.3208,
-            "selectedLayer": 0,
+            "scale": 0.2789,
+            "selectedLayer": 5,
             "viewCenter": {
-                "x": 4071.0723192019955,
-                "y": 4883.104738154614
+                "x": 5353.173180351381,
+                "y": 4849.408390103979
             }
         },
         "level10.tmj": {
             "expandedObjectLayers": [
+                5,
+                2,
+                6,
                 4
             ],
-            "scale": 0.180796875,
-            "selectedLayer": 0,
+            "scale": 0.125,
+            "selectedLayer": 6,
             "viewCenter": {
-                "x": 4737.360642986778,
-                "y": 2641.0854723014436
+                "x": 4796,
+                "y": 1388
             }
         },
         "level2.tmj": {
@@ -196,11 +200,15 @@
             }
         },
         "level4.tmj": {
-            "scale": 0.180796875,
-            "selectedLayer": 0,
+            "expandedObjectLayers": [
+                5,
+                7
+            ],
+            "scale": 0.1914,
+            "selectedLayer": 5,
             "viewCenter": {
-                "x": 4789.9057989802095,
-                "y": 2690.8650937689054
+                "x": 4798.850574712644,
+                "y": 2698.5370950888196
             }
         },
         "level5.tmj": {
@@ -225,19 +233,19 @@
                 6,
                 4
             ],
-            "scale": 0.1445,
+            "scale": 1.5,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 2083.0449826989616,
-                "y": 1705.8823529411766
+                "x": 4799.666666666666,
+                "y": 2699.6666666666665
             }
         },
         "level8.tmj": {
             "scale": 0.25,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 296,
-                "y": 2994
+                "x": 292,
+                "y": 2990
             }
         },
         "level9.tmj": {
@@ -246,10 +254,18 @@
                 3
             ],
             "scale": 0.1703,
+            "selectedLayer": 4,
+            "viewCenter": {
+                "x": 4785.672342924252,
+                "y": 3649.4421608925422
+            }
+        },
+        "mediumLevel.tmj": {
+            "scale": 0.1759259259259259,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4735.7604227833235,
-                "y": 2633.5877862595416
+                "x": 4803.1578947368425,
+                "y": 2702.842105263158
             }
         },
         "sample.tmj": {
@@ -299,8 +315,8 @@
             "scale": 0.0625,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 4792,
-                "y": 2712
+                "x": 4768,
+                "y": 2696
             }
         },
         "test3.tmj": {
@@ -349,16 +365,16 @@
         },
         "test7.tmj": {
             "expandedObjectLayers": [
+                5,
                 2,
                 4,
-                3,
-                5
+                3
             ],
-            "scale": 0.125,
+            "scale": 0.0625,
             "selectedLayer": 3,
             "viewCenter": {
                 "x": 4792,
-                "y": 2692
+                "y": 88
             }
         },
         "test7.tmx": {
@@ -370,11 +386,14 @@
             }
         },
         "test8.tmj": {
-            "scale": 0.0625,
+            "expandedObjectLayers": [
+                2
+            ],
+            "scale": 0.0802,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 5424,
-                "y": 7944
+                "x": 4781.795511221945,
+                "y": 5442.643391521197
             }
         },
         "test_map.tmj": {
@@ -394,8 +413,8 @@
             "scale": 0.5,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 963,
-                "y": 1237
+                "x": 960,
+                "y": 1233
             }
         },
         "tileset.tsx": {
@@ -425,10 +444,15 @@
         "test2.tmj",
         "example_level2.tmj",
         "sample.tmj",
-        "level9.tmj",
         "level10.tmj",
+        "aaa.tmj",
+        "test8.tmj",
+        "test7.tmj",
+        "level4.tmj",
+        "BackgroundAssets.tsx",
         "level7.tmj",
-        "aaa.tmj"
+        "level9.tmj",
+        "test8.tmj"
     ],
     "project": "tiled.tiled-project",
     "recentFiles": [
@@ -441,8 +465,8 @@
         "example_level.tmj",
         "test2.tmj",
         "example_level2.tmj",
-        "aaa.tmj",
-        "level7.tmj",
-        "level10.tmj"
+        "sample.tmj",
+        "level10.tmj",
+        "aaa.tmj"
     ]
 }

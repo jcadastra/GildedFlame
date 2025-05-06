@@ -802,6 +802,12 @@ public class GameplayScene implements Screen {
                     } else if (objName.contains("burnable")) {
                         float width = object.getFloat("width") / levelData.getInt("tilewidth");
                         float height = object.getFloat("height") / levelData.getInt("tileheight");
+                        String materialType = "wood";
+                        try {
+                            materialType = object.getString("material");
+                        } catch (Exception e) {
+                            System.err.println("failed to find material type, revert to wood");
+                        }
                         GameObject box;
                         if (objName.contains("non")) {
                             box = new GameObject(new float[]{
@@ -813,7 +819,6 @@ public class GameplayScene implements Screen {
                                 (width)/3, (height)/2 * .8f,
                                 -(width)/3, (height)/2 * .8f
                             }, x,y, width, height, units);
-                            box.setMaterial(new ObstacleMaterial("stone"));
                             box.setTexture(directory.getEntry("nonburnable", Texture.class));
                             box.getObstacle().setPhysicsUnits(units);
                         } else {
@@ -833,9 +838,9 @@ public class GameplayScene implements Screen {
                                -width/2, (height) * (3f/10),
                                 -width/2, -(height) * (3f/10)
                             }, x,y, width, height, units);
-                            box.setMaterial(new ObstacleMaterial("wood"));
                             box.setTexture(directory.getEntry("burnable", Texture.class));
                         }
+                        box.setMaterial(new ObstacleMaterial(materialType));
                         box.getObstacle().setBodyType(BodyType.DynamicBody);
                         box.getObstacle().setName(objName);
                         box.getObstacle().setPhysicsUnits(units);
