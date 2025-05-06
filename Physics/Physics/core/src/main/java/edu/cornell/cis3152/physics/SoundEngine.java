@@ -144,6 +144,13 @@ public class SoundEngine {
         }
     }
 
+    public void totemTurnAround() {
+        SoundEffect totemTurnAround = registeredSoundEffects.get("totemTurn");
+        if (totemTurnAround != null) {
+            totemTurnAround.play();
+        }
+    }
+
     public void dispose() {
         for (SoundEffect soundEffect : registeredSoundEffects.values()) {
             soundEffect.dispose();

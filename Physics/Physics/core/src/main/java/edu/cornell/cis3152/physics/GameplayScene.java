@@ -1336,6 +1336,20 @@ public class GameplayScene implements Screen {
 
         prevGroundState = currentGroundState;
 
+        for (Enemy enemy : enemies) {
+            if (enemy instanceof Totem) {
+                Totem totem = (Totem) enemy;
+
+                Enemy.EnemyState current = totem.getState();
+                Enemy.EnemyState previous = totem.getPreviousState();
+
+                if ((previous != Enemy.EnemyState.IN_LIGHT && current == Enemy.EnemyState.IN_LIGHT) ||
+                    (previous == Enemy.EnemyState.IN_LIGHT && current != Enemy.EnemyState.IN_LIGHT)) {
+                    soundEngine.totemTurnAround();
+                }
+            }
+        }
+
         if ((queueAddTorch && activeTorchJoint == null) || (activeTorchJoint != null &&
             torchOnRight != avatar.isFacingRight())) {
             joinTorchtoAvatar();
