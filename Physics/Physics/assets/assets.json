@@ -306,7 +306,8 @@
     "jumper_landing": "soundEffects/jumper_landing.mp3",
     "burnable_object": "soundEffects/burnable_object.mp3",
     "fire_extinguished": "soundEffects/fire_extinguished.mp3",
-    "moving_platform": "soundEffects/moving_platform_2.mp3"
+    "moving_platform": "soundEffects/moving_platform_2.mp3",
+    "success_sound": "soundEffects/success_2.mp3"
   },
   "fonts": {
     "shared-unica": {

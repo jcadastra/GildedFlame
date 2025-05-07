@@ -15,6 +15,7 @@ package edu.cornell.cis3152.physics;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import edu.cornell.gdiac.audio.SoundEffect;
 import edu.cornell.gdiac.util.*;
 import edu.cornell.gdiac.assets.*;
@@ -329,14 +330,18 @@ public class GDXRoot extends Game implements ScreenListener {
                 soundEngine.startMusicLoop(temp);
                 return;
             } else if (exitCode == GameplayScene.EXIT_SUCCESS) {
+                soundEngine.registerSoundEffect("successSound", directory.getEntry("success_sound", SoundEffect.class));
                 SuccessScene success = new SuccessScene(directory);
                 success.setScreenListener(this);
                 success.setCurrentLevel(current+1);
                 setScreen(success);
+                soundEngine.successSound();
             } else if (exitCode == GameplayScene.EXIT_FAILURE) {
+                soundEngine.registerSoundEffect("failureSound", directory.getEntry("fire_extinguished", SoundEffect.class));
                 FailureScene failure = new FailureScene(directory);
                 failure.setScreenListener(this);
                 setScreen(failure);
+                soundEngine.failureSound();
             }
             // Handle exit from the main menu.
             else if (screen instanceof MainMenuScreen) {

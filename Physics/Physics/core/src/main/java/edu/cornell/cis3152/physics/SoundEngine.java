@@ -151,6 +151,20 @@ public class SoundEngine {
         }
     }
 
+    public void failureSound() {
+        SoundEffect failureSound = registeredSoundEffects.get("failureSound");
+        if (failureSound != null) {
+            failureSound.play();
+        }
+    }
+
+    public void successSound() {
+        SoundEffect successSound = registeredSoundEffects.get("successSound");
+        if (successSound != null) {
+            successSound.play();
+        }
+    }
+
     public void platformMoving(boolean moving) {
         SoundEffect platformMoving = registeredSoundEffects.get("platformMoving");
         if (platformMoving == null) return;
