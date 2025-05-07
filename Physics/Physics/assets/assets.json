@@ -301,7 +301,7 @@
     "platform-pew": "platform/pew.wav",
     "platform-plop": "platform/plop.wav",
     "clickSound": "soundEffects/clickSound.mp3",
-    "turn_around": "soundEffects/turn_around.mp3",
+    "turn_around": "soundEffects/turn_around_1.mp3",
     "torch_landing": "soundEffects/torch_landing.mp3",
     "jumper_landing": "soundEffects/jumper_landing.mp3",
     "burnable_object": "soundEffects/burnable_object.mp3",
