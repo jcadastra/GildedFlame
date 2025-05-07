@@ -451,6 +451,14 @@ public class CollisionController implements ContactListener {
                 }
             }
 
+            if (isXandY(bd1, bd2, Avatar.class, GameObject.class) == 1) {
+                Fixture subjectFixture = (bd1.getClass().equals(GameObject.class)) ? fix1 : fix2;
+
+                if (subjectFixture.getUserData() != null && subjectFixture.getUserData().equals("crushSensor")) {
+                    collisionFlags.add(new CollisionFlag("queueFailure"));
+                }
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -556,7 +564,7 @@ public class CollisionController implements ContactListener {
                 Lighting lighting = (Lighting) idX(bd1,bd2,Lighting.class);
                 float distance = Math.abs((new Vector2(lighting.getObstacle().getPosition()).sub(rune.getObstacle().getPosition())).len());
                 if (rune.getPowerLevel() < 1) {
-                    rune.addPowerLevel((float) (.005f * (1/Math.sqrt(distance) - distance/16)));
+                    rune.addPowerLevel();
                 }
                 sustainedContacts.put(key, -1);
 //                System.out.println(rune.getPowerLevel());
