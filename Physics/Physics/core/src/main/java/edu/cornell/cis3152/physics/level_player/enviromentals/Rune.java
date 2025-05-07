@@ -25,6 +25,7 @@ public class Rune extends ObstacleSprite {
     private float r = 1.5f;
     private float secondsToFullDissipation = 15;
     private float dispersalRate = 1/(60f * secondsToFullDissipation);
+    private float chargeRate;
 
     private int inLight = 0;
     private float currentLatchThreshold = 0;
@@ -75,9 +76,9 @@ public class Rune extends ObstacleSprite {
         return prevPowerLevel;
     }
 
-    public void addPowerLevel(float val) {
+    public void addPowerLevel() {
         prevPowerLevel = powerLevel;
-        powerLevel += val;
+        powerLevel += chargeRate;
         for (float th : thresholds) {
             if (powerLevel >= th) {
                 currentLatchThreshold = th;
@@ -130,6 +131,8 @@ public class Rune extends ObstacleSprite {
 
     public void addInLight() {inLight++;}
     public void subInLight() {inLight--;}
+    public void setTimeTo(float val) {chargeRate = 1/(60f * val);}
+    public void setDissipateTime (float val) {secondsToFullDissipation = val; dispersalRate = 1/(60f * secondsToFullDissipation);}
     public boolean returnInLight() {return inLight > 0;}
     public void registerEventAction(EventAction<?> eventAction) {eventActions.add(eventAction);}
     public HashSet<EventAction<?>> getEventAction() {return eventActions;}

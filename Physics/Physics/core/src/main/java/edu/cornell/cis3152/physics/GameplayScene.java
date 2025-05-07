@@ -994,6 +994,8 @@ public class GameplayScene implements Screen {
                         Vector2 platformEndPos = null;
                         float startDegree = Integer.MAX_VALUE;
                         float endDegree = 0f;
+                        float timeTo = 1;
+                        float timeToDissipate = 1;
                         String targetName = "";
                         float[] thresholds = null;
                         JsonValue runeProperties = object.get("properties");
@@ -1023,6 +1025,12 @@ public class GameplayScene implements Screen {
                                 case "platformName":
                                     targetName = value;
                                     break;
+                                case "timeTo":
+                                    timeTo = Float.parseFloat(value);
+                                    break;
+                                case "dissipateTime":
+                                    timeToDissipate = Float.parseFloat(value);
+                                    break;
                                 case "thresholds":
                                     String[] tokens = value.split(",");
                                     thresholds = new float[tokens.length];
@@ -1039,6 +1047,8 @@ public class GameplayScene implements Screen {
                         float width = textureRune.getWidth() / 300f;
                         float height = textureRune.getHeight() / 300f;
                         Rune rune = new Rune(x + width/2, y + height/2, width, height, (float) (-rotation), units, thresholds, directory.getEntry("runeCharged", Texture.class));
+                        rune.setTimeTo(timeTo);
+                        rune.setDissipateTime(timeToDissipate);
                         rune.getObstacle().setY(rune.getObstacle().getY() +  (.23f));
                         rune.setTexture(textureRune);
                         addSprite(rune);

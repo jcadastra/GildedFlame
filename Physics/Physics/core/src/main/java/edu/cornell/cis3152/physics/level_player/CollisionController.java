@@ -556,7 +556,7 @@ public class CollisionController implements ContactListener {
                 Lighting lighting = (Lighting) idX(bd1,bd2,Lighting.class);
                 float distance = Math.abs((new Vector2(lighting.getObstacle().getPosition()).sub(rune.getObstacle().getPosition())).len());
                 if (rune.getPowerLevel() < 1) {
-                    rune.addPowerLevel((float) (.005f * (1/Math.sqrt(distance) - distance/16)));
+                    rune.addPowerLevel();
                 }
                 sustainedContacts.put(key, -1);
 //                System.out.println(rune.getPowerLevel());
