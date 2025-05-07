@@ -868,8 +868,8 @@ public class GameplayScene implements Screen {
                         platform.getObstacle().setPhysicsUnits(units);
                         platform.setMaterial(new ObstacleMaterial("platform"));
                         platform.getObstacle().setAngle(rotation);
-
                         addSprite(platform);
+                        platform.generateInternalCrushSensor();
                     } else if (objName.contains("ambientLight")) {
                         continue;
                     } else if (objName.contains("grate")) {

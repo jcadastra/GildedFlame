@@ -451,6 +451,14 @@ public class CollisionController implements ContactListener {
                 }
             }
 
+            if (isXandY(bd1, bd2, Avatar.class, GameObject.class) == 1) {
+                Fixture subjectFixture = (bd1.getClass().equals(GameObject.class)) ? fix1 : fix2;
+
+                if (subjectFixture.getUserData() != null && subjectFixture.getUserData().equals("crushSensor")) {
+                    collisionFlags.add(new CollisionFlag("queueFailure"));
+                }
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
