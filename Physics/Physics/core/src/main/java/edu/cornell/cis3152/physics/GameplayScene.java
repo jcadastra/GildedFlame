@@ -310,7 +310,8 @@ public class GameplayScene implements Screen {
      */
     public void setComplete(boolean value) {
         if (value) {
-            countdown = EXIT_COUNT;
+            //countdown = EXIT_COUNT;
+            countdown = 60;
         }
         complete = value;
     }
@@ -335,7 +336,8 @@ public class GameplayScene implements Screen {
      */
     public void setFailure(boolean value) {
         if (value && !failed) {
-            countdown = EXIT_COUNT;
+            //countdown = EXIT_COUNT;
+            countdown = 0;
         }
         failed = value;
     }
