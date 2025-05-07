@@ -1526,6 +1526,7 @@ public class GameplayScene implements Screen {
 
     public void dropTorchHelper() {
         avatar.setHasTorch(false);
+        torch.setBeingHeld(false);
         world.destroyJoint(activeTorchJoint);
         activeTorchJoint = null;
         torch.resetPickUp();
@@ -1781,6 +1782,9 @@ public class GameplayScene implements Screen {
                 case "debugKillObj":
                     // not safe operation, for now will kill game on reload
                     world.destroyBody(todo_action.getSubject().getObstacle().getBody());
+                    break;
+                case "torchLand":
+                    soundEngine.torchLanding();
                     break;
             }
         }
@@ -2084,6 +2088,7 @@ public class GameplayScene implements Screen {
         torch.getObstacle().setSensor(true);
         queueAddTorch = false;
         avatar.setHasTorch(true);
+        torch.setBeingHeld(true);
         torchOnRight = avatar.isFacingRight();
     }
 
