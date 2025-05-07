@@ -56,8 +56,8 @@ public class DesktopLauncher {
         config.title = "The Gilded Flame";
 
         // Use windowed mode
-        config.fullscreen = true;
-        //config.fullscreen = false;
+//        config.fullscreen = true;
+        config.fullscreen = false;
         config.resizable = false;
         config.width = 1280;
         config.height = 720;

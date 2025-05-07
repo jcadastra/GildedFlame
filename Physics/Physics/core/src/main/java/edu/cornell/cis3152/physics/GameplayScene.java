@@ -35,6 +35,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectSet;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import edu.cornell.cis3152.physics.level_player.CollisionController;
 import edu.cornell.cis3152.physics.level_player.EventHandler;
@@ -119,7 +120,7 @@ public class GameplayScene implements Screen {
     protected AssetDirectory directory;
     /** The drawing camera for this scene */
     protected OrthographicCamera camera;
-    protected float cameraZoomLevel = .6f;
+    protected float cameraZoomLevel = (float) ((.6/Math.pow(1280, .894)) * Math.pow(Gdx.graphics.getWidth(), .894));;
     /** Reference to the sprite batch */
     protected SpriteBatch batch;
 
@@ -230,7 +231,7 @@ public class GameplayScene implements Screen {
     protected HashSet<Rune> runeSet;
     protected PooledList<TweenElement<Float>> tweenedMovmentObjectsFloat;
     protected PooledList<TweenElement<Vector2>> tweenedMovmentObjectsVec2;
-    protected ExtendViewport fitViewport;
+    protected FitViewport fitViewport;
 
     protected LightController lightController;
     protected ShapeRenderer shapeRenderer;
@@ -405,7 +406,7 @@ public class GameplayScene implements Screen {
         this.shapeRenderer = new ShapeRenderer();
         runeSet = new HashSet<>();
 
-        this.fitViewport = new ExtendViewport(1280, 720);
+        this.fitViewport = new FitViewport(1280, 720);
 
         // pull out sounds
         volume = 0.1f;
@@ -867,8 +868,8 @@ public class GameplayScene implements Screen {
                         platform.getObstacle().setPhysicsUnits(units);
                         platform.setMaterial(new ObstacleMaterial("platform"));
                         platform.getObstacle().setAngle(rotation);
-
                         addSprite(platform);
+                        platform.generateInternalCrushSensor();
                     } else if (objName.contains("ambientLight")) {
                         continue;
                     } else if (objName.contains("grate")) {
@@ -993,6 +994,8 @@ public class GameplayScene implements Screen {
                         Vector2 platformEndPos = null;
                         float startDegree = Integer.MAX_VALUE;
                         float endDegree = 0f;
+                        float timeTo = 1;
+                        float timeToDissipate = 1;
                         String targetName = "";
                         float[] thresholds = null;
                         JsonValue runeProperties = object.get("properties");
@@ -1022,6 +1025,12 @@ public class GameplayScene implements Screen {
                                 case "platformName":
                                     targetName = value;
                                     break;
+                                case "timeTo":
+                                    timeTo = Float.parseFloat(value);
+                                    break;
+                                case "dissipateTime":
+                                    timeToDissipate = Float.parseFloat(value);
+                                    break;
                                 case "thresholds":
                                     String[] tokens = value.split(",");
                                     thresholds = new float[tokens.length];
@@ -1038,6 +1047,8 @@ public class GameplayScene implements Screen {
                         float width = textureRune.getWidth() / 300f;
                         float height = textureRune.getHeight() / 300f;
                         Rune rune = new Rune(x + width/2, y + height/2, width, height, (float) (-rotation), units, thresholds, directory.getEntry("runeCharged", Texture.class));
+                        rune.setTimeTo(timeTo);
+                        rune.setDissipateTime(timeToDissipate);
                         rune.getObstacle().setY(rune.getObstacle().getY() +  (.23f));
                         rune.setTexture(textureRune);
                         addSprite(rune);
@@ -1616,28 +1627,8 @@ public class GameplayScene implements Screen {
 
         Vector2 playerPos = avatar.getObstacle().getPosition();
 
-//        float lerp = 0.3f;
-//        camera.position.x += (playerX - camera.position.x) * lerp;
-//        camera.position.y += (playerY - camera.position.y) * lerp;
-
-//        float visibleW =  (bounds.x + bounds.width) * scale.x/2*0.8f; //half of world visible
-//        float visibleH = (bounds.y + bounds.height) * scale.y/2*0.8f;
-
-//        System.out.println(camera.viewportWidth + ", " + camera.viewportHeight);
         float visibleW =  camera.viewportWidth/2*camera.zoom; //half of world visible, zoomed
         float visibleH = camera.viewportHeight/2*camera.zoom;
-
-
-
-//        camera.position.x = MathUtils.clamp(camera.position.x,
-//            bounds.x*scale.x+visibleW,
-//            (bounds.x+bounds.width)*scale.x - visibleW);
-//        System.out.println(camera.position.x +", " + bounds.x + " , " + bounds.width + " , " + bounds.height+ " , " + scale);
-//        System.out.println("min: "+ (bounds.x*scale.x+visibleW )+ "max: "+ ((bounds.x+bounds.width)*scale.x - visibleW));
-        //System.out.println("x reached bounds:"+(camera.position.x==bounds.x*scale.x+visibleW));
-//        camera.position.y = MathUtils.clamp(camera.position.y,
-//            bounds.y*scale.y+visibleH,
-//            (bounds.y+bounds.height)*scale.y - visibleH);
 
         float idealX = playerPos.x * phyiscsUnits;
         float idealY = playerPos.y * phyiscsUnits;
@@ -2151,8 +2142,8 @@ public class GameplayScene implements Screen {
      */
     public void draw(float dt) {
         // Clear the screen (color is homage to the XNA years)
-        ScreenUtils.clear(0.17f, 0.28f, 0.35f, 1.0f);
-//        ScreenUtils.clear(0,0,0,1);
+//        ScreenUtils.clear(0.17f, 0.28f, 0.35f, 1.0f);
+        ScreenUtils.clear(0,0,0,1);
         // This shows off how powerful our new SpriteBatch is
         fitViewport.apply();
         batch.begin(camera);
@@ -2239,17 +2230,23 @@ public class GameplayScene implements Screen {
      * @param height The new height in pixels
      */
     public void resize(int width, int height) {
+//        height = 720;
+//        width = 1280;
         this.width  = width;
         this.height = height;
+//        cameraZoomLevel = (.6/Math,po)
+//        cameraZoomLevel = 1.34375f;
+//        cameraZoomLevel = cameraZoomLevel * (40 * Gdx.graphics.getWidth() / 1280f)/40;
         if (camera == null) {
+            System.out.println(width+"ll"+height);
             camera = new OrthographicCamera();
-            camera.zoom = cameraZoomLevel;
+            camera.zoom = (float) ((.6/Math.pow(1280, 1.579)) * Math.pow(Gdx.graphics.getWidth(), 1.579));
         }
         camera.setToOrtho( false, width, height );
         scale.x = width/bounds.width;
         scale.y = height/bounds.height;
 //        scale.x = scale.y;
-        // this works???? ^^^
+        // this works???? ^^^, no it doesnt
         System.out.println(width + "x" + height);
 
         fitViewport.update(width, height, true);

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.10.2" name="GameObjects" tilewidth="800" tileheight="520" tilecount="12" columns="0">
+<tileset version="1.10" tiledversion="1.10.2" name="GameObjects" tilewidth="5000" tileheight="1250" tilecount="12" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <properties>
@@ -37,7 +37,7 @@
   <properties>
    <property name="name" value="infburnable"/>
   </properties>
-  <image width="800" height="181" source="environment/platform.png"/>
+  <image width="5000" height="1250" source="environment/platform.png"/>
  </tile>
  <tile id="14">
   <properties>
@@ -59,6 +59,7 @@ swing</property>
  </tile>
  <tile id="15">
   <properties>
+   <property name="dissipateTime" type="float" value="1"/>
    <property name="endDegree" type="float" value="0"/>
    <property name="endPos" value=""/>
    <property name="moveEvent" type="bool" value="false"/>
@@ -67,6 +68,7 @@ swing</property>
    <property name="startDegree" type="float" value="0"/>
    <property name="startPos" value=""/>
    <property name="thresholds" value=""/>
+   <property name="timeTo" type="float" value="1"/>
   </properties>
   <image width="400" height="520" source="environment/runeBase.png"/>
  </tile>
