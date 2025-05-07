@@ -151,10 +151,20 @@ public class SoundEngine {
         }
     }
 
-    public void platformMoving() {
+    public void platformMoving(boolean moving) {
         SoundEffect platformMoving = registeredSoundEffects.get("platformMoving");
-        if (platformMoving != null) {
-            platformMoving.play();
+        if (platformMoving == null) return;
+        if (!moving) {
+            if (activeLoopingSounds.containsKey("platformMoving")) {
+                long id = activeLoopingSounds.get("platformMoving");
+                platformMoving.stop(id);
+                activeLoopingSounds.remove("platformMoving");
+            }
+        } else {
+            if (!activeLoopingSounds.containsKey("platformMoving")) {
+                long id = platformMoving.loop();
+                activeLoopingSounds.put("platformMoving", id);
+            }
         }
     }
 

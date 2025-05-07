@@ -1051,6 +1051,7 @@ public class GameplayScene implements Screen {
                             EventAction<Vector2> moveAction = new EventAction<>(target, "move",
                                 platformStartPos, platformEndPos);
                             rune.registerEventAction(moveAction);
+
                         }
 
                         if (hasRotateEvent) {
@@ -1695,8 +1696,11 @@ public class GameplayScene implements Screen {
                             Vector2 delta = endPointZeroed.cpy().scl(factor).sub(endPointZeroed.cpy().scl(prevFactor));
                             delta.scl(1/dt) ;
                             eventAction.getTarget().getObstacle().setLinearVelocity(delta.scl(rune.returnInLight() ? 1 : -1));
+                            boolean isMoving = delta.len2() > 0.01f;
+                            soundEngine.platformMoving(isMoving);
                             if (2*factor - prevFactor >= 1 || 2*factor - prevFactor <= 0) {
                                 eventAction.getTarget().getObstacle().setLinearVelocity(Vector2.Zero);
+                                soundEngine.platformMoving(false);
                             }
                             break;
                     }
