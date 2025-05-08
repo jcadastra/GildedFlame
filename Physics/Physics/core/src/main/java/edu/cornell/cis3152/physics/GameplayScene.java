@@ -1828,6 +1828,7 @@ public class GameplayScene implements Screen {
             switch (fireFlag.getName()) {
                 case "attachFire":
                     Fire fire = fireFlag.getFire();
+                    fire.setBurntObstacle(fireFlag.getSubject());
                     addSprite(fire);
                     Lighting light = new Lighting(phyiscsUnits, 2.2f,fire.getObstacle().getPosition());
                     addSprite(light);
@@ -2445,7 +2446,7 @@ public class GameplayScene implements Screen {
     //attaches light to fire
     private void attachFireLightJoints(Fire fire,Lighting light) {
         WeldJointDef jointDef = new WeldJointDef();
-        jointDef.initialize(fire.getObstacle().getBody(),light.getObstacle().getBody(),fire.getObstacle().getPosition());
+        jointDef.initialize(fire.getBurntObstacle().getObstacle().getBody(),light.getObstacle().getBody(),fire.getObstacle().getPosition());
         jointDef.collideConnected = false;  // they won't collide with each other
         Joint fireLightJoint = world.createJoint(jointDef);
         fire.setLightJoint(fireLightJoint);
