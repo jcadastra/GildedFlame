@@ -442,12 +442,19 @@ public class CollisionController implements ContactListener {
 
             if (isX(bd1, bd2, Torch.class) == 1) {
                 ObstacleSprite nonTorch = bd1 instanceof Torch ? bd2 : bd1;
-                ObstacleSprite torch = idX(bd1, bd2, Torch.class);
+                // ObstacleSprite torch = idX(bd1, bd2, Torch.class);
+                Torch torch = (Torch) idX(bd1, bd2, Torch.class);
                 if (isGround(nonTorch)) {
                     float av = torch.getObstacle().getAngularVelocity();
 //                    System.out.println("detected BONKKK w/ " + nonTorch.getName());
                     torch.getObstacle().setAngularVelocity(Math.signum(av) * .8f);
                     torch.getObstacle().setLinearVelocity(Vector2.Zero);
+
+                    if(!torch.hasLanded() && !torch.isBeingHeld() && torch.getLandCooldownTimer() <= 0) {
+                        torch.setHasLanded(true);
+                        torch.setLandCooldownTimer(60);
+                        collisionFlags.push(new CollisionFlag("torchLand", torch));
+                    }
                 }
             }
 
@@ -697,6 +704,19 @@ public class CollisionController implements ContactListener {
             ContactKey key = new ContactKey(fix1, fix2);
             sustainedContacts.remove(key);
 //                collisionFlags.push(new Object[]{"addTorch", idX(bd1, bd2, Traci.class)});
+        }
+
+        /**
+         * Ground and Torch collision
+         * If the torch leaves the ground, set the hasLanded state back to false.
+         */
+        if (isX(bd1, bd2, Torch.class) == 1) {
+            Torch torch = (Torch) idX(bd1, bd2, Torch.class);
+            ObstacleSprite other = (bd1 instanceof Torch) ? bd2 : bd1;
+
+            if (isGround(other)) {
+                torch.setHasLanded(false);
+            }
         }
 
         /**
