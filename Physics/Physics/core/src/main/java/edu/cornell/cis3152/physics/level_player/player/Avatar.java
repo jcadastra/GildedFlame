@@ -718,8 +718,7 @@ public class Avatar extends ObstacleSprite {
 
     public JointDef attachTorchToAvatar(Torch t) {
         WeldJointDef jointDef = new WeldJointDef();
-        Vector2 anchor = new Vector2(obstacle.getX(), obstacle.getY());
-        jointDef.initialize(obstacle.getBody(), t.getObstacle().getBody(), anchor);
+        jointDef.initialize(obstacle.getBody(), t.getObstacle().getBody(), t.getObstacle().getPosition());
         jointDef.collideConnected = false;
         return jointDef;
     }

@@ -1320,17 +1320,16 @@ public class GameplayScene implements Screen {
                         }
                         FloatingLight light = new FloatingLight(units,new Vector2(x,y),1,goalPos);
                         light.setWander(wander);
+//                        System.out.println("floating light: " + (int)x+","+ (int)y);
+                        light.getObstacle().setPosition(x,y);
+                        floatingLights.add(light);
+                        addSprite(light);
                         if (!pinTarget.isEmpty()) {
                             String finalPinTarget = pinTarget;
                             ObstacleSprite target = sprites.stream().filter(os -> os.getName().equals(
                                 finalPinTarget)).findFirst().orElse(null);
                             pinLightToObject(target,light);
                         }
-
-//                        System.out.println("floating light: " + (int)x+","+ (int)y);
-                        light.getObstacle().setPosition(x,y);
-                        floatingLights.add(light);
-                        addSprite(light);
                     }
                 }
             }
@@ -1435,7 +1434,7 @@ public class GameplayScene implements Screen {
         weatherMachine.updateWorld(world);
         if (weatherMachine.isRainActive()) {
             supplementaryRainActions();
-            particleEngine.ra
+//            particleEngine.ra
         }
         //updateFireLights();
         updateTweenedMovementObjectsVec2(dt);
