@@ -97,8 +97,8 @@
             "scale": 0.180796875,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 4798.2024025581195,
-                "y": 2696.396162820845
+                "x": 4795.4368680321495,
+                "y": 2690.8650937689054
             }
         },
         "earthtile.tsx": {
@@ -183,16 +183,24 @@
         },
         "level10.tmj": {
             "expandedObjectLayers": [
+                4,
                 5,
-                6,
                 2,
-                4
+                6
             ],
             "scale": 0.125,
             "selectedLayer": 6,
             "viewCenter": {
                 "x": 4796,
                 "y": 2700
+            }
+        },
+        "level11.tmj": {
+            "scale": 0.180796875,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 4800.9679370840895,
+                "y": 2701.9272318727853
             }
         },
         "level2.tmj": {
@@ -213,14 +221,14 @@
         },
         "level4.tmj": {
             "expandedObjectLayers": [
-                7,
-                5
+                5,
+                7
             ],
             "scale": 0.1914,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 4798.850574712644,
-                "y": 2698.5370950888196
+                "x": 4791.013584117033,
+                "y": 2693.3124346917452
             }
         },
         "level5.tmj": {
@@ -243,8 +251,8 @@
             "scale": 1.5,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 1499.6666666666665,
-                "y": 1499.6666666666665
+                "x": 1498.6666666666665,
+                "y": 1499
             }
         },
         "level8.tmj": {
@@ -279,16 +287,16 @@
             "scale": 0.180796875,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 4798.2024025581195,
-                "y": 2696.396162820845
+                "x": 4795.4368680321495,
+                "y": 2690.8650937689054
             }
         },
         "rune1.tmj": {
             "scale": 0.180796875,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 1963.5295134387693,
-                "y": 4184.253737792758
+                "x": 1957.9984443868293,
+                "y": 4178.722668740817
             }
         },
         "sample.tmj": {
@@ -393,8 +401,8 @@
             "scale": 0.0625,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 7496,
-                "y": 2712
+                "x": 7472,
+                "y": 2696
             }
         },
         "test7.tmx": {
@@ -412,8 +420,8 @@
             "scale": 0.0802,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 4794.26433915212,
-                "y": 7500.000000000001
+                "x": 4788.029925187033,
+                "y": 7487.5311720698255
             }
         },
         "test_map.tmj": {
@@ -426,9 +434,9 @@
         },
         "test_map.tmx": {
             "expandedObjectLayers": [
-                3,
+                4,
                 2,
-                4
+                3
             ],
             "scale": 0.5,
             "selectedLayer": 2,
@@ -476,7 +484,7 @@
         "rune1.tmj"
     ],
     "project": "tiled.tiled-project",
-    "property.type": "float",
+    "property.type": "string",
     "recentFiles": [
         "test_map.tmx",
         "EnemyTiles.tsx",
