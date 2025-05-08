@@ -122,46 +122,28 @@ public class SoundEngine {
         }
     }
 
-    public void throwTorch() {
-        SoundEffect torchThrow = registeredSoundEffects.get("torchThrow");
-//        System.out.println("throwing");
-        if (torchThrow != null) {
-            torchThrow.play();
+    public void playSoundEffect(String key) {
+        SoundEffect sound = registeredSoundEffects.get(key);
+        if (sound != null) {
+            System.out.println("Playing sound: " + key);
+            sound.play();
+        } else {
+            System.out.println("Sound not found: " + key);
         }
     }
 
-    public void torchLanding() {
-        SoundEffect torchLanding = registeredSoundEffects.get("torchLanding");
-        if (torchLanding != null) {
-            torchLanding.play();
+    public void stopSoundEffect(String key) {
+        SoundEffect sound = registeredSoundEffects.get(key);
+        if (sound != null) {
+            sound.stop();
         }
     }
 
-    public void landing() {
-        SoundEffect landing = registeredSoundEffects.get("landing");
-        if(landing != null) {
-            landing.play();
-        }
-    }
-
-    public void totemTurnAround() {
-        SoundEffect totemTurnAround = registeredSoundEffects.get("totemTurn");
-        if (totemTurnAround != null) {
-            totemTurnAround.play();
-        }
-    }
-
-    public void failureSound() {
-        SoundEffect failureSound = registeredSoundEffects.get("failureSound");
-        if (failureSound != null) {
-            failureSound.play();
-        }
-    }
-
-    public void successSound() {
-        SoundEffect successSound = registeredSoundEffects.get("successSound");
-        if (successSound != null) {
-            successSound.play();
+    public void stopAllSoundEffects() {
+        for (SoundEffect sound : registeredSoundEffects.values()) {
+            if (sound != null) {
+                sound.stop();
+            }
         }
     }
 

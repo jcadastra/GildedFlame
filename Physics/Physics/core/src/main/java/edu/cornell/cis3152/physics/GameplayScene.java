@@ -201,6 +201,9 @@ public class GameplayScene implements Screen {
     private GroundState prevGroundState = GroundState.GROUNDED;
     private float totemSoundCoolDown = 0f;
     private Map<Totem, Enemy.EnemyState> totemPreviousStates = new HashMap<>();
+    private float mothAttackSoundCooldown = 0f;
+    private Map<Moth, Enemy.EnemyState> mothPreviousStates = new HashMap<>();
+
 
     private boolean isFadingOut = false;
     private float fadeTime = 0f;
@@ -1466,7 +1469,7 @@ public class GameplayScene implements Screen {
         if (input.getThrowing() && avatar.getHasTorch() && activeTorchJoint != null) {
             dropTorchHelper();
             torch.applyThrowForce(avatar.isFacingRight() ? 1 : -1, expectedDTForTorchToHitGround);
-            soundEngine.throwTorch();
+            soundEngine.playSoundEffect("torchThrow");
         }
 
         generateTorchArc(input.assistParabola());
@@ -1481,13 +1484,18 @@ public class GameplayScene implements Screen {
 
         GroundState currentGroundState = avatar.getGroundedState();
         if (prevGroundState.equals(GroundState.AIRBORNE) && currentGroundState.equals(GroundState.GROUNDED)) {
-            soundEngine.landing();
+            //soundEngine.landing();
+            soundEngine.playSoundEffect("landing");
         }
 
         prevGroundState = currentGroundState;
 
         boolean totemChanged = false;
+        boolean mothAttacked = false;
+        boolean mothCharged = false;
+        boolean mothSmother = false;
         totemSoundCoolDown -= dt;
+        mothAttackSoundCooldown -= dt;
 
         for (Enemy enemy : enemies) {
             if (enemy instanceof Totem) {
@@ -1501,15 +1509,42 @@ public class GameplayScene implements Screen {
                     totemChanged = true;
                 }
                 totemPreviousStates.put(totem, current);
+            } else if (enemy instanceof Moth) {
+                Moth moth = (Moth) enemy;
+
+                Enemy.EnemyState current = moth.getState();
+                Enemy.EnemyState previous = mothPreviousStates.getOrDefault(moth, current);
+
+                if (previous != Enemy.EnemyState.ATTACK && current == Enemy.EnemyState.ATTACK) {
+                    mothAttacked = true;
+                } else if (previous != Enemy.EnemyState.CD && current == Enemy.EnemyState.CD) {
+                    mothCharged = true;
+                } else if (previous != Enemy.EnemyState.SMOTHER && current == Enemy.EnemyState.SMOTHER) {
+                    mothSmother = true;
+                } else if (previous == Enemy.EnemyState.SMOTHER && current != Enemy.EnemyState.SMOTHER) {
+                    soundEngine.stopSoundEffect("mothSmother");
+                }
+                mothPreviousStates.put(moth, current);
             }
         }
 
         if (totemChanged && totemSoundCoolDown <= 0f) {
-            soundEngine.totemTurnAround();
+            //soundEngine.totemTurnAround();
+            soundEngine.playSoundEffect("totemTurn");
             totemSoundCoolDown = 0.3f;
         }
 
+        if (mothAttacked && mothAttackSoundCooldown <= 0f) {
+            soundEngine.playSoundEffect("mothAttack");
+            mothAttackSoundCooldown = 0.3f;
+        }
+
+        if (mothCharged) soundEngine.playSoundEffect("mothCharging");
+        if (mothSmother) soundEngine.playSoundEffect("mothSmother");
+
+
         if (isFadingOut) {
+            soundEngine.stopAllSoundEffects();
             fadeTime += dt;
             if (fadeTime >= fadeDuration) {
                 listener.exitScreen(this, fadeExitCode);
@@ -1777,7 +1812,8 @@ public class GameplayScene implements Screen {
                     world.destroyBody(todo_action.getSubject().getObstacle().getBody());
                     break;
                 case "torchLand":
-                    soundEngine.torchLanding();
+                    //soundEngine.torchLanding();
+                    soundEngine.playSoundEffect("torchLanding");
                     break;
             }
         }

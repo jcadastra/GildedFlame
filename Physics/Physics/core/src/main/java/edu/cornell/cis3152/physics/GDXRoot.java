@@ -230,6 +230,9 @@ public class GDXRoot extends Game implements ScreenListener {
             soundEngine.registerSoundEffect("landing", directory.getEntry("jumper_landing", SoundEffect.class));
             soundEngine.registerSoundEffect("totemTurn", directory.getEntry("turn_around", SoundEffect.class));
             soundEngine.registerSoundEffect("platformMoving", directory.getEntry("moving_platform", SoundEffect.class));
+            soundEngine.registerSoundEffect("mothAttack", directory.getEntry("moth_attack", SoundEffect.class));
+            soundEngine.registerSoundEffect("mothCharging", directory.getEntry("moth_charging", SoundEffect.class));
+            soundEngine.registerSoundEffect("mothSmother", directory.getEntry("moth_fluttering", SoundEffect.class));
 
             // Register music and start a loop.
             //soundEngine.registerMusic("tenseSoundscape", directory.getEntry("tenseSoundscape", Music.class));
@@ -330,18 +333,22 @@ public class GDXRoot extends Game implements ScreenListener {
                 soundEngine.startMusicLoop(temp);
                 return;
             } else if (exitCode == GameplayScene.EXIT_SUCCESS) {
+                soundEngine.stopAllSoundEffects();
                 soundEngine.registerSoundEffect("successSound", directory.getEntry("success_sound", SoundEffect.class));
                 SuccessScene success = new SuccessScene(directory);
                 success.setScreenListener(this);
                 success.setCurrentLevel(current+1);
                 setScreen(success);
-                soundEngine.successSound();
+                //soundEngine.successSound();
+                soundEngine.playSoundEffect("successSound");
             } else if (exitCode == GameplayScene.EXIT_FAILURE) {
+                soundEngine.stopAllSoundEffects();
                 soundEngine.registerSoundEffect("failureSound", directory.getEntry("fire_extinguished", SoundEffect.class));
                 FailureScene failure = new FailureScene(directory);
                 failure.setScreenListener(this);
                 setScreen(failure);
-                soundEngine.failureSound();
+                //soundEngine.failureSound();
+                soundEngine.playSoundEffect("failureSound");
             }
             // Handle exit from the main menu.
             else if (screen instanceof MainMenuScreen) {
