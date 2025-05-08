@@ -561,10 +561,10 @@ public class GameplayScene implements Screen {
             world.destroyJoint(activeFireJoint);
             activeFireJoint = null;
         }
-        for(Joint lightJoint:activeLightJoints){
-            world.destroyJoint(lightJoint);
-        }
-        activeLightJoints.clear();
+//        for(Joint lightJoint:activeLightJoints){
+//            world.destroyJoint(lightJoint);
+//        }
+//        activeLightJoints.clear();
         //TODO: improve above
 
         if (fireController != null) {
@@ -632,10 +632,10 @@ public class GameplayScene implements Screen {
             world.destroyJoint(activeLightJoint);
             activeLightJoint = null;
         }
-        for (Joint lightJoint: activeLightJoints) {
-            world.destroyJoint(lightJoint);
-        }
-        activeLightJoints.clear();
+//        for (Joint lightJoint: activeLightJoints) {
+//            world.destroyJoint(lightJoint);
+//        }
+//        activeLightJoints.clear();
         for (ObstacleSprite sprite : sprites) {
             Obstacle obj = sprite.getObstacle();
             sprite.getObstacle().deactivatePhysics(world);
@@ -1425,6 +1425,7 @@ public class GameplayScene implements Screen {
         if (weatherMachine.isRainActive()) {
             supplementaryRainActions();
         }
+        //updateFireLights();
         updateTweenedMovementObjectsVec2(dt);
         updateTweenedMovementObjectsFloat(dt);
 
@@ -1434,14 +1435,13 @@ public class GameplayScene implements Screen {
             }
         }
 
+
         torch.update();
 //        weatherMachine.activateWind(new Vector2(0f,0));
         weatherMachine.update(world);
         fireController.update(weatherMachine);
         eventHandler.update();
         contactListener.sustainedContact();
-        Array<Lighting> fireLights =lightController.fireLights(fireController);
-        attachFireLightJoints(fireLights);
         //TODO:Attach light joints
         lightController.update(fireController,true);
 
@@ -1564,14 +1564,7 @@ public class GameplayScene implements Screen {
 //        }
         updateCamera();
     }
-    //TODO:finish this
-    private void attachFireLightJoints(Array<Lighting> fireLights) {
-        Set<Fire> fires = fireController.getLitFires();
-        for (Fire fire : fires) {
 
-        }
-
-    }
 
     public void dropTorchHelper() {
         avatar.setHasTorch(false);
@@ -1827,12 +1820,18 @@ public class GameplayScene implements Screen {
      */
     private void supplementaryFireActions() {
         Stack<FireFlag> todos = fireController.getFireFlags();
+       lightController.fireLights(fireController);
+        int idx = 0;
         while (!todos.isEmpty()) {
             FireFlag fireFlag = todos.pop();
+            //System.out.println("Fire flag " + fireFlag.getName());
             switch (fireFlag.getName()) {
                 case "attachFire":
                     Fire fire = fireFlag.getFire();
                     addSprite(fire);
+                    Lighting light = new Lighting(phyiscsUnits, 2.2f,fire.getObstacle().getPosition());
+                    addSprite(light);
+                    attachFireLightJoints(fire, light);
                     if ((fireFlag.getSubject()).getObstacle().getBody() == null) {
                         break;
                     }
@@ -1844,6 +1843,7 @@ public class GameplayScene implements Screen {
                             world.destroyJoint(f.getFixtureJoint());
                             f.setFixtureJoint(null);
                         }
+                        detachFireLightJoints(f);
                         f.dispose();
                     }
                     (fireFlag.getSubject()).getObstacle().markRemoved(true);
@@ -1861,6 +1861,17 @@ public class GameplayScene implements Screen {
                         }
                         f.setFixtureJoint(null);
                     }
+//                    if (f.getLightJoint()!=null){
+//                        if (!world.isLocked()) {
+//                            Lighting lighting = f.getLighting();
+//                            System.out.println("has light"+sprites.contains(lighting));
+//                            lighting.getObstacle().markRemoved(true);
+//                            //world.destroyBody(lighting.getObstacle().getBody());
+//                            world.destroyJoint(f.getLightJoint());
+//                        }
+//                        f.setLightJoint(null);
+//                        f.setLighting(null);
+//                    }
                     if (torchFire != null && f.fireID == torchFire.fireID) {
                         if (activeTorchJoint != null && !world.isLocked()) {
                             world.destroyJoint(activeTorchJoint);
@@ -1880,6 +1891,16 @@ public class GameplayScene implements Screen {
                             }
                             killFires_fire.setFixtureJoint(null);
                         }
+//                        if (killFires_fire.getLightJoint()!=null){
+//                            if (!world.isLocked()) {
+//                                Lighting lighting = killFires_fire.getLighting();
+//                                lighting.getObstacle().markRemoved(true);
+//                                //world.destroyBody(lighting.getObstacle().getBody());
+//                                world.destroyJoint(killFires_fire.getLightJoint());
+//                            }
+//                            killFires_fire.setLightJoint(null);
+//                            killFires_fire.setLighting(null);
+//                        }
                         if (torchFire != null && killFires_fire.fireID == torchFire.fireID) {
                             if (activeTorchJoint != null && !world.isLocked()) {
                                 world.destroyJoint(activeTorchJoint);
@@ -2420,4 +2441,40 @@ public class GameplayScene implements Screen {
         failed = false;
         complete = false;
     }
+
+    //attaches light to fire
+    private void attachFireLightJoints(Fire fire,Lighting light) {
+        WeldJointDef jointDef = new WeldJointDef();
+        jointDef.initialize(fire.getObstacle().getBody(),light.getObstacle().getBody(),fire.getObstacle().getPosition());
+        jointDef.collideConnected = false;  // they won't collide with each other
+        Joint fireLightJoint = world.createJoint(jointDef);
+        fire.setLightJoint(fireLightJoint);
+        light.setLightJoint(fireLightJoint);
+        fire.setLighting(light);
+        //activeLightJoints.add(fireLightJoint);
+    }
+
+    private void updateFireLights(){
+        Set<Fire> litFires = fireController.getLitFires();
+        for (Fire fire:fireController.getAllFires()){
+            if (!litFires.contains(fire)){
+                detachFireLightJoints(fire);
+            }
+        }
+    }
+
+    private void detachFireLightJoints(Fire fire) {
+        if (fire.getLightJoint()!=null){
+                if (!world.isLocked()) {
+                    Lighting lighting = fire.getLighting();
+                    System.out.println("has light"+sprites.contains(lighting));
+                    lighting.getObstacle().markRemoved(true);
+                    //world.destroyBody(lighting.getObstacle().getBody());
+                    world.destroyJoint(fire.getLightJoint());
+                }
+                fire.setLightJoint(null);
+                fire.setLighting(null);
+        }
+    }
+
 }
