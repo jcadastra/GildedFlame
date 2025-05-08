@@ -1365,7 +1365,7 @@ public class GameplayScene implements Screen {
         }
 
         // Handle resets
-        if (input.didReset()) {
+        if (input.didReset() && !failed) {
             reset();
         }
 
