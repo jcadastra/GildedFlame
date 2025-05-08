@@ -87,7 +87,8 @@ public class Lighting extends ObstacleSprite {
         this.state = LightState.LIGHT_ON;
         obstacle = new WheelObstacle(pos.x,pos.y,radius);
         obstacle.setDensity(0.0001f);
-        obstacle.setMass(0.0001f);
+        //obstacle.setMass(0.0001f);
+        obstacle.setMass(0.0000001f);
         obstacle.setInertia(0.0001f);
         obstacle.setBodyType( BodyType.DynamicBody );
 //        obstacle.setPhysicsUnits(units);
