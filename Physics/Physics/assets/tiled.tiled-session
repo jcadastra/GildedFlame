@@ -328,13 +328,14 @@
         },
         "rain_medium.tmj": {
             "expandedObjectLayers": [
+                6,
                 2
             ],
-            "scale": 0.180796875,
+            "scale": 0.25,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 5243.453461239305,
-                "y": 3216.316653703224
+                "x": 3528,
+                "y": 3282
             }
         },
         "rope_intro.tmj": {
@@ -354,10 +355,13 @@
             }
         },
         "rune_intro.tmj": {
+            "expandedObjectLayers": [
+                5
+            ],
             "scale": 0.180796875,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 4795.4368680321495,
+                "x": 4789.9057989802095,
                 "y": 2690.8650937689054
             }
         },
