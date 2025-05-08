@@ -316,11 +316,26 @@
             }
         },
         "rain_intro.tmj": {
-            "scale": 0.25,
+            "expandedObjectLayers": [
+                6
+            ],
+            "scale": 0.125,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 5236,
-                "y": 590
+                "x": 4024,
+                "y": 3996
+            }
+        },
+        "rain_medium.tmj": {
+            "expandedObjectLayers": [
+                6,
+                2
+            ],
+            "scale": 0.25,
+            "selectedLayer": 5,
+            "viewCenter": {
+                "x": 3528,
+                "y": 3282
             }
         },
         "rope_intro.tmj": {
@@ -340,11 +355,14 @@
             }
         },
         "rune_intro.tmj": {
+            "expandedObjectLayers": [
+                5
+            ],
             "scale": 0.180796875,
-            "selectedLayer": 2,
+            "selectedLayer": 5,
             "viewCenter": {
-                "x": 4798.2024025581195,
-                "y": 2696.396162820845
+                "x": 4789.9057989802095,
+                "y": 2690.8650937689054
             }
         },
         "rune_medium.tmj": {
