@@ -164,6 +164,7 @@ public class GDXRoot extends Game implements ScreenListener {
             ArrayList<String> temp = new ArrayList<>();
             temp.add("menu_music");
             soundEngine.startMusicLoop(temp);
+            soundEngine.registerSoundEffect("clickSound", directory.getEntry("clickSound", SoundEffect.class));
             return;
         }
         // Handle exit from the main menu.
@@ -335,7 +336,7 @@ public class GDXRoot extends Game implements ScreenListener {
             } else if (exitCode == GameplayScene.EXIT_SUCCESS) {
                 soundEngine.stopAllSoundEffects();
                 soundEngine.registerSoundEffect("successSound", directory.getEntry("success_sound", SoundEffect.class));
-                SuccessScene success = new SuccessScene(directory);
+                SuccessScene success = new SuccessScene(directory, soundEngine);
                 success.setScreenListener(this);
                 success.setCurrentLevel(current+1);
                 setScreen(success);
@@ -344,7 +345,7 @@ public class GDXRoot extends Game implements ScreenListener {
             } else if (exitCode == GameplayScene.EXIT_FAILURE) {
                 soundEngine.stopAllSoundEffects();
                 soundEngine.registerSoundEffect("failureSound", directory.getEntry("fire_extinguished", SoundEffect.class));
-                FailureScene failure = new FailureScene(directory);
+                FailureScene failure = new FailureScene(directory, soundEngine);
                 failure.setScreenListener(this);
                 setScreen(failure);
                 //soundEngine.failureSound();

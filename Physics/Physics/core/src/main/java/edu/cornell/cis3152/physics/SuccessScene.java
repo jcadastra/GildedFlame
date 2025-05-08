@@ -29,19 +29,19 @@ public class SuccessScene implements Screen {
     private boolean visible = false;
     private boolean startClicked = false;
     private ScreenListener listener;
-    private Sound clickSound;
     private InputController inputController = InputController.getInstance();
     private boolean prevButtonA = false;
     private int currentLevel;
+    protected SoundEngine soundEngine;
     /** The asset directory for retrieving textures, atlases */
     protected AssetDirectory directory;
 
 
-    public SuccessScene(AssetDirectory directory) {
+    public SuccessScene(AssetDirectory directory, SoundEngine soundEngine) {
         this.directory = directory;
         stage = new Stage(new ScreenViewport());
         skin = new Skin();
-        clickSound = Gdx.audio.newSound(Gdx.files.internal("soundEffects/clickSound.mp3"));
+        this.soundEngine = soundEngine;
         createBasicUI();
     }
 
@@ -108,7 +108,7 @@ public class SuccessScene implements Screen {
             public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
                                      float x, float y, int pointer, int button) {
                 System.out.println("ImageButton pressed");
-                clickSound.play();
+                soundEngine.playSoundEffect("clickSound");
                 startClicked = true;
                 SavedDataHandler handler = new SavedDataHandler();
                 String levelKey = "level" + currentLevel;
@@ -125,7 +125,7 @@ public class SuccessScene implements Screen {
             @Override
             public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
                                      float x, float y, int pointer, int button) {
-                clickSound.play();
+                soundEngine.playSoundEffect("clickSound");
                 System.out.println("ImageButton pressed");
                 startClicked = true;
                 SavedDataHandler handler = new SavedDataHandler();
@@ -143,7 +143,7 @@ public class SuccessScene implements Screen {
             @Override
             public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
                                      float x, float y, int pointer, int button) {
-                clickSound.play();
+                soundEngine.playSoundEffect("clickSound");
                 System.out.println("ImageButton pressed");
                 startClicked = true;
                 SavedDataHandler handler = new SavedDataHandler();
