@@ -22,7 +22,14 @@ public class ParticleEngine implements Screen {
     private float physicsUnits;
 
     private ParticleEffect rainEffect = new ParticleEffect();
+    private ParticleEffect splash = new ParticleEffect();
 
+    public void load(){
+        effect.load(Gdx.files.internal("platform/particles/flame.p"),Gdx.files.internal("platform/particles/"));
+        rainEffect.load(Gdx.files.internal("platform/particles/rain.p"),Gdx.files.internal("platform/particles/"));
+        splash.load(Gdx.files.internal("platform/particles/splash.p"), Gdx.files.internal("platform/particles/"));
+        // Set the splash position
+    }
     // splash pool
     Pool<ParticleEffect> splashPool = new Pool<ParticleEffect>(5,20) {
         @Override
@@ -40,8 +47,8 @@ public class ParticleEngine implements Screen {
     * TODO: modify code structure to allow environmental lights*/
 
     public ParticleEngine (Fire fire, float physicsUnits){
+        load();
         this.physicsUnits = physicsUnits;
-        effect.load(Gdx.files.internal("platform/particles/flame.p"),Gdx.files.internal("platform/particles/"));
         //effect.set
         effect.start();
 
@@ -55,7 +62,7 @@ public class ParticleEngine implements Screen {
     public ParticleEngine(){}
 
     public void rainEffect(Rectangle bounds){
-        rainEffect.load(Gdx.files.internal("platform/particles/rain.p"),Gdx.files.internal("platform/particles/"));
+        load();
         rainEffect.start();
         rainEffect.scaleEffect(0.5f);
         rainEffect.setPosition(0,bounds.height );
@@ -63,6 +70,7 @@ public class ParticleEngine implements Screen {
 
     /*Particle effect for text effects*/
     public ParticleEngine (TextButton button){
+        load();
         effect.load(Gdx.files.internal("platform/particles/flame.p"),Gdx.files.internal("platform/particles/"));
         //effect.set
         effect.start();
@@ -83,7 +91,6 @@ public class ParticleEngine implements Screen {
     public void newFires(FireController fireController){
         //particleAtlas = new TextureAtlas();
         for (Fire fire: fireController.getLitFires()){
-            effect.load(Gdx.files.internal("platform/particles/flame.p"),Gdx.files.internal("platform/particles/"));
         //effect.set
         effect.start();
         //Setting the position of the ParticleEffect
@@ -118,13 +125,11 @@ public class ParticleEngine implements Screen {
     }
 
     public void splashEffects(float x,float y,float width,float height){
+        load();
         float h = 2f;
         int k = (int) width/(int)h;
         splashEffects = new Array<>(k);
         for (int i = 0; i<k; i++){
-            ParticleEffect splash = new ParticleEffect();
-            splash.load(Gdx.files.internal("platform/particles/splash.p"), Gdx.files.internal("platform/particles/"));;
-            // Set the splash position
             float splashX = (x + (i * h))*32;  // Spread the splashes across the width
             float splashY = y*32;            // Position on the Y-axis (adjust if needed)
             splash.setPosition(splashX, splashY);

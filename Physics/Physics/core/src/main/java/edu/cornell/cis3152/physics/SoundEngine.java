@@ -1,6 +1,7 @@
 package edu.cornell.cis3152.physics;
 
 import com.badlogic.gdx.audio.Music;
+import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.audio.SoundEffect;
 import edu.cornell.gdiac.util.PooledList;
 import java.util.ArrayList;
@@ -15,8 +16,9 @@ public class SoundEngine {
     private HashMap<String, Long> activeLoopingSounds;
 
     private PooledList<Music> activeMusic;
+    private ArrayList<String> trackList = new ArrayList<>();
     private int activeMusicIndex;
-
+    private AssetDirectory directory;
     private Random random;
 
     public SoundEngine() {
@@ -25,6 +27,38 @@ public class SoundEngine {
         activeLoopingSounds = new HashMap<>();
         activeMusic = new PooledList<>();
         random = new Random();
+
+    }
+
+    public boolean needsPopulating() {return directory == null;}
+
+    public void populateSoundEngine(AssetDirectory directory) {
+        if (this.directory == null && directory != null) {
+            this.directory = directory;
+            System.out.println("Populating sound engine");
+
+            registerSoundEffect("clickSound", directory.getEntry("clickSound", SoundEffect.class));
+            registerSoundEffect("doorOpening", directory.getEntry("door_opening", SoundEffect.class));
+            registerSoundEffect("jump", directory.getEntry("platform-jump", SoundEffect.class));
+            registerSoundEffect("pew", directory.getEntry("platform-pew", SoundEffect.class));
+            registerSoundEffect("plop", directory.getEntry("platform-plop", SoundEffect.class));
+            registerSoundEffect("dirtFootStep",
+                directory.getEntry("dirtFootStep", SoundEffect.class));
+            registerSoundEffect("torchThrow", directory.getEntry("torchThrow", SoundEffect.class));
+            registerSoundEffect("torchLanding",
+                directory.getEntry("torch_landing", SoundEffect.class));
+            registerSoundEffect("landing", directory.getEntry("jumper_landing", SoundEffect.class));
+            registerSoundEffect("totemTurn", directory.getEntry("turn_around", SoundEffect.class));
+            registerSoundEffect("platformMoving",
+                directory.getEntry("moving_platform", SoundEffect.class));
+            registerSoundEffect("mothAttack", directory.getEntry("moth_attack", SoundEffect.class));
+            registerSoundEffect("mothCharging", directory.getEntry("moth_charging", SoundEffect.class));
+            registerSoundEffect("mothSmother", directory.getEntry("moth_fluttering", SoundEffect.class));
+            registerSoundEffect("successSound", directory.getEntry("success_sound", SoundEffect.class));
+            registerSoundEffect("failureSound", directory.getEntry("fire_extinguished", SoundEffect.class));
+            registerMusic("menu_music", directory.getEntry("menu_music", Music.class));
+            registerMusic("in_game", directory.getEntry("in_game_music", Music.class));
+        }
     }
 
     public void registerSoundEffect(String name, SoundEffect soundEffect) {
@@ -52,27 +86,33 @@ public class SoundEngine {
         }
     }
 
-    public void startMusicLoop(ArrayList<String> musicSet) {
-        activeMusic.clear();
-        for (String musicName : musicSet) {
-            Music music = registeredMusic.get(musicName);
-            if (music != null) {
-                activeMusic.add(music);
+    public void startMusicLoop(ArrayList<String> trackList) {
+        if (!this.trackList.toString().equals(trackList.toString())) {
+            stopMusicLoop();
+            this.trackList = trackList;
+            for (String musicName : trackList) {
+                Music music = registeredMusic.get(musicName);
+                if (music != null) {
+                    activeMusic.add(music);
+                }
             }
         }
-        if (activeMusic.size() > 0) {
+        if (!activeMusic.isEmpty()) {
             activeMusic.get(0).play();
             activeMusicIndex = 0;
         }
     }
 
-    public void stopMusicLoop() {
+    private void stopMusicLoop() {
         for (Music music : activeMusic) {
             music.stop();
         }
         activeMusic.clear();
+        trackList.clear();
         activeMusicIndex = 0;
     }
+
+    public ArrayList<String> getMusicLoop() {return trackList;}
 
     public void pauseLoopingSoundEffects() {
         for (String name : activeLoopingSounds.keySet()) {
@@ -122,32 +162,20 @@ public class SoundEngine {
         }
     }
 
-    public void throwTorch() {
-        SoundEffect torchThrow = registeredSoundEffects.get("torchThrow");
-//        System.out.println("throwing");
-        if (torchThrow != null) {
-            torchThrow.play();
+    public void playSoundEffect(String key) {
+        SoundEffect sound = registeredSoundEffects.get(key);
+        if (sound != null) {
+            System.out.println("Playing sound: " + key);
+            sound.play();
+        } else {
+            System.out.println("Sound not found: " + key);
         }
     }
 
-    public void torchLanding() {
-        SoundEffect torchLanding = registeredSoundEffects.get("torchLanding");
-        if (torchLanding != null) {
-            torchLanding.play();
-        }
-    }
-
-    public void landing() {
-        SoundEffect landing = registeredSoundEffects.get("landing");
-        if(landing != null) {
-            landing.play();
-        }
-    }
-
-    public void totemTurnAround() {
-        SoundEffect totemTurnAround = registeredSoundEffects.get("totemTurn");
-        if (totemTurnAround != null) {
-            totemTurnAround.play();
+    public void stopSoundEffect(String key) {
+        SoundEffect sound = registeredSoundEffects.get(key);
+        if (sound != null) {
+            sound.stop();
         }
     }
 
@@ -162,6 +190,14 @@ public class SoundEngine {
         SoundEffect successSound = registeredSoundEffects.get("successSound");
         if (successSound != null) {
             successSound.play();
+        }
+    }
+
+    public void stopAllSoundEffects() {
+        for (SoundEffect sound : registeredSoundEffects.values()) {
+            if (sound != null) {
+                sound.stop();
+            }
         }
     }
 

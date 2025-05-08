@@ -201,6 +201,9 @@ public class GameplayScene implements Screen {
     private GroundState prevGroundState = GroundState.GROUNDED;
     private float totemSoundCoolDown = 0f;
     private Map<Totem, Enemy.EnemyState> totemPreviousStates = new HashMap<>();
+    private float mothAttackSoundCooldown = 0f;
+    private Map<Moth, Enemy.EnemyState> mothPreviousStates = new HashMap<>();
+
 
     private boolean isFadingOut = false;
     private float fadeTime = 0f;
@@ -310,7 +313,8 @@ public class GameplayScene implements Screen {
      */
     public void setComplete(boolean value) {
         if (value) {
-            countdown = EXIT_COUNT;
+            //countdown = EXIT_COUNT;
+            countdown = 60;
         }
         complete = value;
     }
@@ -335,7 +339,8 @@ public class GameplayScene implements Screen {
      */
     public void setFailure(boolean value) {
         if (value && !failed) {
-            countdown = EXIT_COUNT;
+            //countdown = EXIT_COUNT;
+            countdown = 0;
         }
         failed = value;
     }
@@ -464,7 +469,6 @@ public class GameplayScene implements Screen {
             }
         }
 
-        soundEngine.dispose();
         lightController.dispose();
         eventHandler.dispose();
         sprites.clear();
@@ -557,10 +561,10 @@ public class GameplayScene implements Screen {
             world.destroyJoint(activeFireJoint);
             activeFireJoint = null;
         }
-        for(Joint lightJoint:activeLightJoints){
-            world.destroyJoint(lightJoint);
-        }
-        activeLightJoints.clear();
+//        for(Joint lightJoint:activeLightJoints){
+//            world.destroyJoint(lightJoint);
+//        }
+//        activeLightJoints.clear();
         //TODO: improve above
 
         if (fireController != null) {
@@ -628,10 +632,10 @@ public class GameplayScene implements Screen {
             world.destroyJoint(activeLightJoint);
             activeLightJoint = null;
         }
-        for (Joint lightJoint: activeLightJoints) {
-            world.destroyJoint(lightJoint);
-        }
-        activeLightJoints.clear();
+//        for (Joint lightJoint: activeLightJoints) {
+//            world.destroyJoint(lightJoint);
+//        }
+//        activeLightJoints.clear();
         for (ObstacleSprite sprite : sprites) {
             Obstacle obj = sprite.getObstacle();
             sprite.getObstacle().deactivatePhysics(world);
@@ -1421,6 +1425,7 @@ public class GameplayScene implements Screen {
         if (weatherMachine.isRainActive()) {
             supplementaryRainActions();
         }
+        //updateFireLights();
         updateTweenedMovementObjectsVec2(dt);
         updateTweenedMovementObjectsFloat(dt);
 
@@ -1430,14 +1435,13 @@ public class GameplayScene implements Screen {
             }
         }
 
+
         torch.update();
 //        weatherMachine.activateWind(new Vector2(0f,0));
         weatherMachine.update(world);
         fireController.update(weatherMachine);
         eventHandler.update();
         contactListener.sustainedContact();
-        Array<Lighting> fireLights =lightController.fireLights(fireController);
-        attachFireLightJoints(fireLights);
         //TODO:Attach light joints
         lightController.update(fireController,true);
 
@@ -1464,7 +1468,7 @@ public class GameplayScene implements Screen {
         if (input.getThrowing() && avatar.getHasTorch() && activeTorchJoint != null) {
             dropTorchHelper();
             torch.applyThrowForce(avatar.isFacingRight() ? 1 : -1, expectedDTForTorchToHitGround);
-            soundEngine.throwTorch();
+            soundEngine.playSoundEffect("torchThrow");
         }
 
         generateTorchArc(input.assistParabola());
@@ -1479,13 +1483,18 @@ public class GameplayScene implements Screen {
 
         GroundState currentGroundState = avatar.getGroundedState();
         if (prevGroundState.equals(GroundState.AIRBORNE) && currentGroundState.equals(GroundState.GROUNDED)) {
-            soundEngine.landing();
+            //soundEngine.landing();
+            soundEngine.playSoundEffect("landing");
         }
 
         prevGroundState = currentGroundState;
 
         boolean totemChanged = false;
+        boolean mothAttacked = false;
+        boolean mothCharged = false;
+        boolean mothSmother = false;
         totemSoundCoolDown -= dt;
+        mothAttackSoundCooldown -= dt;
 
         for (Enemy enemy : enemies) {
             if (enemy instanceof Totem) {
@@ -1499,15 +1508,44 @@ public class GameplayScene implements Screen {
                     totemChanged = true;
                 }
                 totemPreviousStates.put(totem, current);
+            } else if (enemy instanceof Moth) {
+                Moth moth = (Moth) enemy;
+
+                Enemy.EnemyState current = moth.getState();
+                Enemy.EnemyState previous = mothPreviousStates.getOrDefault(moth, current);
+
+                if (previous != Enemy.EnemyState.ATTACK && current == Enemy.EnemyState.ATTACK) {
+                    mothAttacked = true;
+                } else if (previous != Enemy.EnemyState.CD && current == Enemy.EnemyState.CD) {
+                    mothCharged = true;
+                } else if (previous != Enemy.EnemyState.SMOTHER && current == Enemy.EnemyState.SMOTHER) {
+                    mothSmother = true;
+                } else if (previous == Enemy.EnemyState.SMOTHER && current != Enemy.EnemyState.SMOTHER) {
+                    soundEngine.stopSoundEffect("mothSmother");
+                }  else if (previous == Enemy.EnemyState.CD && current != Enemy.EnemyState.CD) {
+                    soundEngine.stopSoundEffect("mothCharging");
+                }
+                mothPreviousStates.put(moth, current);
             }
         }
 
         if (totemChanged && totemSoundCoolDown <= 0f) {
-            soundEngine.totemTurnAround();
+            //soundEngine.totemTurnAround();
+            soundEngine.playSoundEffect("totemTurn");
             totemSoundCoolDown = 0.3f;
         }
 
+        if (mothAttacked && mothAttackSoundCooldown <= 0f) {
+            soundEngine.playSoundEffect("mothAttack");
+            mothAttackSoundCooldown = 0.3f;
+        }
+
+        if (mothCharged) soundEngine.playSoundEffect("mothCharging");
+        if (mothSmother) soundEngine.playSoundEffect("mothSmother");
+
+
         if (isFadingOut) {
+            soundEngine.stopAllSoundEffects();
             fadeTime += dt;
             if (fadeTime >= fadeDuration) {
                 listener.exitScreen(this, fadeExitCode);
@@ -1526,14 +1564,7 @@ public class GameplayScene implements Screen {
 //        }
         updateCamera();
     }
-    //TODO:finish this
-    private void attachFireLightJoints(Array<Lighting> fireLights) {
-        Set<Fire> fires = fireController.getLitFires();
-        for (Fire fire : fires) {
 
-        }
-
-    }
 
     public void dropTorchHelper() {
         avatar.setHasTorch(false);
@@ -1775,7 +1806,8 @@ public class GameplayScene implements Screen {
                     world.destroyBody(todo_action.getSubject().getObstacle().getBody());
                     break;
                 case "torchLand":
-                    soundEngine.torchLanding();
+                    //soundEngine.torchLanding();
+                    soundEngine.playSoundEffect("torchLanding");
                     break;
             }
         }
@@ -1788,12 +1820,18 @@ public class GameplayScene implements Screen {
      */
     private void supplementaryFireActions() {
         Stack<FireFlag> todos = fireController.getFireFlags();
+       lightController.fireLights(fireController);
+        int idx = 0;
         while (!todos.isEmpty()) {
             FireFlag fireFlag = todos.pop();
+            //System.out.println("Fire flag " + fireFlag.getName());
             switch (fireFlag.getName()) {
                 case "attachFire":
                     Fire fire = fireFlag.getFire();
                     addSprite(fire);
+                    Lighting light = new Lighting(phyiscsUnits, 2.2f,fire.getObstacle().getPosition());
+                    addSprite(light);
+                    attachFireLightJoints(fire, light);
                     if ((fireFlag.getSubject()).getObstacle().getBody() == null) {
                         break;
                     }
@@ -1805,6 +1843,7 @@ public class GameplayScene implements Screen {
                             world.destroyJoint(f.getFixtureJoint());
                             f.setFixtureJoint(null);
                         }
+                        detachFireLightJoints(f);
                         f.dispose();
                     }
                     (fireFlag.getSubject()).getObstacle().markRemoved(true);
@@ -1822,6 +1861,17 @@ public class GameplayScene implements Screen {
                         }
                         f.setFixtureJoint(null);
                     }
+//                    if (f.getLightJoint()!=null){
+//                        if (!world.isLocked()) {
+//                            Lighting lighting = f.getLighting();
+//                            System.out.println("has light"+sprites.contains(lighting));
+//                            lighting.getObstacle().markRemoved(true);
+//                            //world.destroyBody(lighting.getObstacle().getBody());
+//                            world.destroyJoint(f.getLightJoint());
+//                        }
+//                        f.setLightJoint(null);
+//                        f.setLighting(null);
+//                    }
                     if (torchFire != null && f.fireID == torchFire.fireID) {
                         if (activeTorchJoint != null && !world.isLocked()) {
                             world.destroyJoint(activeTorchJoint);
@@ -1841,6 +1891,16 @@ public class GameplayScene implements Screen {
                             }
                             killFires_fire.setFixtureJoint(null);
                         }
+//                        if (killFires_fire.getLightJoint()!=null){
+//                            if (!world.isLocked()) {
+//                                Lighting lighting = killFires_fire.getLighting();
+//                                lighting.getObstacle().markRemoved(true);
+//                                //world.destroyBody(lighting.getObstacle().getBody());
+//                                world.destroyJoint(killFires_fire.getLightJoint());
+//                            }
+//                            killFires_fire.setLightJoint(null);
+//                            killFires_fire.setLighting(null);
+//                        }
                         if (torchFire != null && killFires_fire.fireID == torchFire.fireID) {
                             if (activeTorchJoint != null && !world.isLocked()) {
                                 world.destroyJoint(activeTorchJoint);
@@ -2374,6 +2434,47 @@ public class GameplayScene implements Screen {
             counter++;
             myWriter.close();
         } catch (Exception e) {System.out.println("failed pritnout " + counter +", " + e.getMessage());}
+    }
+
+
+    public void hackyForceResetFailedComplete() {
+        failed = false;
+        complete = false;
+    }
+
+    //attaches light to fire
+    private void attachFireLightJoints(Fire fire,Lighting light) {
+        WeldJointDef jointDef = new WeldJointDef();
+        jointDef.initialize(fire.getObstacle().getBody(),light.getObstacle().getBody(),fire.getObstacle().getPosition());
+        jointDef.collideConnected = false;  // they won't collide with each other
+        Joint fireLightJoint = world.createJoint(jointDef);
+        fire.setLightJoint(fireLightJoint);
+        light.setLightJoint(fireLightJoint);
+        fire.setLighting(light);
+        //activeLightJoints.add(fireLightJoint);
+    }
+
+    private void updateFireLights(){
+        Set<Fire> litFires = fireController.getLitFires();
+        for (Fire fire:fireController.getAllFires()){
+            if (!litFires.contains(fire)){
+                detachFireLightJoints(fire);
+            }
+        }
+    }
+
+    private void detachFireLightJoints(Fire fire) {
+        if (fire.getLightJoint()!=null){
+                if (!world.isLocked()) {
+                    Lighting lighting = fire.getLighting();
+                    System.out.println("has light"+sprites.contains(lighting));
+                    lighting.getObstacle().markRemoved(true);
+                    //world.destroyBody(lighting.getObstacle().getBody());
+                    world.destroyJoint(fire.getLightJoint());
+                }
+                fire.setLightJoint(null);
+                fire.setLighting(null);
+        }
     }
 
 }
