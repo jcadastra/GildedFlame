@@ -18,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.ScreenUtils;
+import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.util.ScreenListener;
 import com.badlogic.gdx.audio.Sound;
 
@@ -28,20 +29,24 @@ public class MainMenuScreen implements Screen {
     private Texture bgTexture;
     private boolean startClicked = false;
     private ScreenListener listener;
-    private Sound clickSound;
     private InputController inputController = InputController.getInstance();
-    private boolean prevButtonA = false;;
+    private boolean prevButtonA = false;
+    protected SoundEngine soundEngine;
+    /** The asset directory for retrieving textures, atlases */
+    protected AssetDirectory directory;
 
     public void setScreenListener(ScreenListener listener) {
         this.listener = listener;
     }
 
-    public MainMenuScreen() {
+    public MainMenuScreen(AssetDirectory directory, SoundEngine soundEngine) {
+        this.directory = directory;
+        this.soundEngine = soundEngine;
         stage = new Stage(new ScreenViewport());
         skin = new Skin();
-        clickSound = Gdx.audio.newSound(Gdx.files.internal("soundEffects/clickSound.mp3"));
 
-        bgTexture = new Texture(Gdx.files.internal("loading/menuScreen.png"));
+        bgTexture = directory.getEntry("menuScreen", Texture.class);
+        //bgTexture = new Texture(Gdx.files.internal("loading/menuScreen.png"));
         Image bgImage = new Image(bgTexture);
         bgImage.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage.addActor(bgImage);
@@ -66,8 +71,8 @@ public class MainMenuScreen implements Screen {
         pixmap.dispose();
         Drawable drawable = new TextureRegionDrawable(texture);
 
-        Texture newGameText = new Texture(Gdx.files.internal("ui/newGameButt.png"));
-        Texture newGameClickText = new Texture(Gdx.files.internal("ui/newGameButtClick.png"));
+        Texture newGameText = directory.getEntry("newGameButt", Texture.class);
+        Texture newGameClickText = directory.getEntry("newGameButtClick", Texture.class);
 
         TextureRegionDrawable buttonUp = new TextureRegionDrawable(new TextureRegion(newGameText));
         TextureRegionDrawable buttonOver = new TextureRegionDrawable(new TextureRegion(newGameClickText));
@@ -77,8 +82,8 @@ public class MainMenuScreen implements Screen {
         newGame.up = buttonUp;
         newGame.over = buttonOver;
 
-        Texture contText = new Texture(Gdx.files.internal("ui/contbutt.png"));
-        Texture contClickText = new Texture(Gdx.files.internal("ui/contButtClick.png"));
+        Texture contText = directory.getEntry("contButt", Texture.class);
+        Texture contClickText = directory.getEntry("contButtClick", Texture.class);
         TextureRegionDrawable contButtUp = new TextureRegionDrawable(new TextureRegion(contText));
         TextureRegionDrawable contButtOver = new TextureRegionDrawable(new TextureRegion(contClickText));
 
@@ -86,8 +91,8 @@ public class MainMenuScreen implements Screen {
         contButt.up = contButtUp;
         contButt.over = contButtOver;
 
-        Texture settingsText = new Texture(Gdx.files.internal("ui/settingsbutt.png"));
-        Texture settingsClickText = new Texture(Gdx.files.internal("ui/settingsButtClick.png"));
+        Texture settingsText = directory.getEntry("settingsButt", Texture.class);
+        Texture settingsClickText = directory.getEntry("settingsButtClick", Texture.class);
         TextureRegionDrawable settingsTextUp = new TextureRegionDrawable(new TextureRegion(settingsText));
         TextureRegionDrawable settingsTextOver = new TextureRegionDrawable(new TextureRegion(settingsClickText));
 
@@ -129,7 +134,7 @@ public class MainMenuScreen implements Screen {
             public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
                                      float x, float y, int pointer, int button) {
                 System.out.println("ImageButton pressed");
-                clickSound.play();
+                soundEngine.playSoundEffect("clickSound");
                 startClicked = true;
                 if (listener != null) {
                     listener.exitScreen(MainMenuScreen.this, 1);
@@ -141,7 +146,7 @@ public class MainMenuScreen implements Screen {
             @Override
             public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
                                      float x, float y, int pointer, int button) {
-                clickSound.play();
+                soundEngine.playSoundEffect("clickSound");
                 System.out.println("ImageButton pressed");
                 startClicked = true;
                 if (listener != null) {
@@ -173,7 +178,7 @@ public class MainMenuScreen implements Screen {
             @Override
             public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
                                      float x, float y, int pointer, int button) {
-                clickSound.play();
+                soundEngine.playSoundEffect("clickSound");
                 System.out.println("ImageButton pressed");
                 startClicked = true;
                 if (listener != null) {
@@ -191,7 +196,7 @@ public class MainMenuScreen implements Screen {
        // stage.addActor(settingsButt1);
 
 
-        Texture topRightTexture = new Texture(Gdx.files.internal("ui/textbutt.png"));
+        Texture topRightTexture = directory.getEntry("textButt", Texture.class);
         Image topRightImage = new Image(topRightTexture);
 
         topRightImage.setSize(screenWidth * 0.3f, screenHeight * 0.2f);
