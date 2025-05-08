@@ -1,6 +1,7 @@
 package edu.cornell.cis3152.physics;
 
 import com.badlogic.gdx.audio.Music;
+import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.audio.SoundEffect;
 import edu.cornell.gdiac.util.PooledList;
 import java.util.ArrayList;
@@ -15,8 +16,9 @@ public class SoundEngine {
     private HashMap<String, Long> activeLoopingSounds;
 
     private PooledList<Music> activeMusic;
+    private ArrayList<String> trackList = new ArrayList<>();
     private int activeMusicIndex;
-
+    private AssetDirectory directory;
     private Random random;
 
     public SoundEngine() {
@@ -25,6 +27,33 @@ public class SoundEngine {
         activeLoopingSounds = new HashMap<>();
         activeMusic = new PooledList<>();
         random = new Random();
+
+    }
+
+    public boolean needsPopulating() {return directory == null;}
+
+    public void populateSoundEngine(AssetDirectory directory) {
+        if (this.directory == null && directory != null) {
+            this.directory = directory;
+            System.out.println("Populating sound engine");
+
+            registerSoundEffect("jump", directory.getEntry("platform-jump", SoundEffect.class));
+            registerSoundEffect("pew", directory.getEntry("platform-pew", SoundEffect.class));
+            registerSoundEffect("plop", directory.getEntry("platform-plop", SoundEffect.class));
+            registerSoundEffect("dirtFootStep",
+                directory.getEntry("dirtFootStep", SoundEffect.class));
+            registerSoundEffect("torchThrow", directory.getEntry("torchThrow", SoundEffect.class));
+            registerSoundEffect("torchLanding",
+                directory.getEntry("torch_landing", SoundEffect.class));
+            registerSoundEffect("landing", directory.getEntry("jumper_landing", SoundEffect.class));
+            registerSoundEffect("totemTurn", directory.getEntry("turn_around", SoundEffect.class));
+            registerSoundEffect("platformMoving",
+                directory.getEntry("moving_platform", SoundEffect.class));
+            registerSoundEffect("successSound", directory.getEntry("success_sound", SoundEffect.class));
+            registerSoundEffect("failureSound", directory.getEntry("fire_extinguished", SoundEffect.class));
+            registerMusic("menu_music", directory.getEntry("menu_music", Music.class));
+            registerMusic("in_game", directory.getEntry("in_game_music", Music.class));
+        }
     }
 
     public void registerSoundEffect(String name, SoundEffect soundEffect) {
@@ -52,27 +81,35 @@ public class SoundEngine {
         }
     }
 
-    public void startMusicLoop(ArrayList<String> musicSet) {
-        activeMusic.clear();
-        for (String musicName : musicSet) {
-            Music music = registeredMusic.get(musicName);
-            if (music != null) {
-                activeMusic.add(music);
+    public void startMusicLoop(ArrayList<String> trackList) {
+        System.out.println(this.trackList.toString());
+        System.out.println(trackList.toString());
+        if (!this.trackList.toString().equals(trackList.toString())) {
+            stopMusicLoop();
+            this.trackList = trackList;
+            for (String musicName : trackList) {
+                Music music = registeredMusic.get(musicName);
+                if (music != null) {
+                    activeMusic.add(music);
+                }
             }
         }
-        if (activeMusic.size() > 0) {
+        if (!activeMusic.isEmpty()) {
             activeMusic.get(0).play();
             activeMusicIndex = 0;
         }
     }
 
-    public void stopMusicLoop() {
+    private void stopMusicLoop() {
         for (Music music : activeMusic) {
             music.stop();
         }
         activeMusic.clear();
+        trackList.clear();
         activeMusicIndex = 0;
     }
+
+    public ArrayList<String> getMusicLoop() {return trackList;}
 
     public void pauseLoopingSoundEffects() {
         for (String name : activeLoopingSounds.keySet()) {

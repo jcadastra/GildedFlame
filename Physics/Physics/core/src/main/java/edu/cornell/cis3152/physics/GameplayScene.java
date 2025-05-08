@@ -464,7 +464,6 @@ public class GameplayScene implements Screen {
             }
         }
 
-        soundEngine.dispose();
         lightController.dispose();
         eventHandler.dispose();
         sprites.clear();

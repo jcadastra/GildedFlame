@@ -117,8 +117,12 @@ public class FireController {
                         }
 
                         if (fire.getStrength() <= .01) {
-                            fireFlags.add(new FireFlag("killFires", object, firesOnShape.get(object)));
-                            break;
+                            if (fire.getInRain()) {
+                                fireFlags.add(new FireFlag("killFires", object, firesOnShape.get(object)));
+                                break;
+                            } else {
+                                fireFlags.add(new FireFlag("killFire", object, firesOnShape.get(object)));
+                            }
                         }
                     }
             }
