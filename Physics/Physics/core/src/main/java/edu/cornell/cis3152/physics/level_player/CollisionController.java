@@ -786,6 +786,13 @@ public class CollisionController implements ContactListener {
             }
         }
 
+        if (isXandY(bd1, bd2, "burnable", Totem.class) == 1) {
+            Totem totem = (Totem) idX(bd1, bd2, Totem.class);
+            if (totem.getState() == EnemyState.OUT_OF_LIGHT) {
+                contact.setEnabled(false);
+            }
+        }
+
         if (isXandY(bd1, bd2, Moth.class, Torch.class) == 1) {
             Moth moth = (Moth) idX(bd1, bd2, Moth.class);
 //            if (moth.getState() == EnemyState.DAZED) {

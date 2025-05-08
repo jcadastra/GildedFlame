@@ -53,7 +53,7 @@ public class GDXRoot extends Game implements ScreenListener {
      */
     private GameplayScene[] controllers;
 
-    private String[] levels = new String[]{"move_intro","jump_intro","throw_intro","climb_intro","advanced_movement","box_intro","totem_intro","moth_intro","moth_medium","moth_medium_2", "rune1", "rune2", "rainChallenge1", "rainChallenge1", "rainChallenge1"};
+    private String[] levels = new String[]{"move_intro","jump_intro","throw_intro","climb_intro","advanced_movement","box_intro","totem_intro","moth_intro","moth_medium","moth_medium_2", "rune_intro", "rune_medium", "rain_intro", "rain_medium", "rune_hard"};
 
     private GameplayScene currentScene;
     private LevelSelectScene levelSelectScene;

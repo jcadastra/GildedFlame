@@ -225,7 +225,7 @@ public class Moth extends Enemy {
             if (rr.targetObject instanceof Torch && !Avatar.getHasTorch()){
                 setState(EnemyState.TRANCE);
                 resetTranceTimer();
-            } else if (rr.targetObject instanceof Avatar) {
+            } else if (rr.targetObject instanceof Avatar && Avatar.getHasTorch()) {
                 setState(EnemyState.CD);
             } else if (rr.targetObject instanceof Fire){
                 setState(EnemyState.TRANCE);

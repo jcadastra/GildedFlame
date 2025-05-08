@@ -123,6 +123,12 @@
                  "height":150,
                  "id":424,
                  "name":"8",
+                 "properties":[
+                        {
+                         "name":"pin2",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -135,30 +141,48 @@
                  "height":150,
                  "id":425,
                  "name":"7",
+                 "properties":[
+                        {
+                         "name":"pin1",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":150,
-                 "x":3353.9696969697,
-                 "y":2690.63636363636
+                 "x":3361.06060606061,
+                 "y":2670.51515151515
                 }, 
                 {
                  "gid":57,
                  "height":150,
                  "id":426,
                  "name":"5",
+                 "properties":[
+                        {
+                         "name":"pin1",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":150,
-                 "x":4267.90909090909,
-                 "y":2699.48484848485
+                 "x":4264.87878787879,
+                 "y":2657.06060606061
                 }, 
                 {
                  "gid":57,
                  "height":150,
                  "id":427,
                  "name":"6",
+                 "properties":[
+                        {
+                         "name":"pin2",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -171,6 +195,12 @@
                  "height":150,
                  "id":428,
                  "name":"4",
+                 "properties":[
+                        {
+                         "name":"pin2",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -187,8 +217,8 @@
                  "type":"",
                  "visible":true,
                  "width":150,
-                 "x":5155.30303030303,
-                 "y":2698.87878787879
+                 "x":5167.42424242424,
+                 "y":2671.60606060606
                 }, 
                 {
                  "gid":61,
@@ -281,8 +311,8 @@
                  "type":"",
                  "visible":true,
                  "width":57,
-                 "x":3415.5,
-                 "y":3815.5
+                 "x":3409.43939393939,
+                 "y":3797.31818181818
                 }, 
                 {
                  "gid":86,
@@ -414,7 +444,7 @@
  "nextobjectid":467,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.10.2",
+ "tiledversion":"1.11.2",
  "tileheight":300,
  "tilesets":[
         {
