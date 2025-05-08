@@ -97,7 +97,6 @@ public class ParticleEngine implements Screen {
             effect.setPosition(1000,100);
         effect.setPosition(fire.getObstacle().getX()*physicsUnits, fire.getObstacle().getY()*physicsUnits);
         //System.out.println("fire-pos"+fire.getObstacle().getX()*32+","+fire.getObstacle().getY()*32);
-
         }
         //effect.scaleEffect(1/2f);
         //System.out.println();
@@ -120,6 +119,7 @@ public class ParticleEngine implements Screen {
         //Delta being the time to progress the particle effect by, usually you pass in Gdx.graphics.getDeltaTime();
         // Update the particle effect's position to follow the fire's position
         effect.setPosition(fire.getObstacle().getX()*physicsUnits, fire.getObstacle().getY()*physicsUnits);
+        //effect.scaleEffect(1/5*fire.getStrength()*physicsUnits/32);
         effect.update(Gdx.graphics.getDeltaTime());
         effect.draw(batch,Gdx.graphics.getDeltaTime());
     }
