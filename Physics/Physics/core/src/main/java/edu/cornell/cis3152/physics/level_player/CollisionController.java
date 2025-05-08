@@ -161,7 +161,9 @@ public class CollisionController implements ContactListener {
 
 
             if (isXandY(bd1, bd2, Avatar.class, Torch.class )== 1) {
-                collisionFlags.push(new CollisionFlag("addTorch", idX(bd1, bd2, Avatar.class)));
+                if (((Avatar)idX(bd1,bd2, Avatar.class)).getGroundedState() != GroundState.CLIMBING) {
+                    collisionFlags.push(new CollisionFlag("addTorch", idX(bd1, bd2, Avatar.class)));
+                }
             }
 
             if (isXandY(bd1, bd2, "wall", Enemy.class) == 1) {

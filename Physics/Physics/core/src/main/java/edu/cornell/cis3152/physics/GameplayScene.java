@@ -1246,21 +1246,21 @@ public class GameplayScene implements Screen {
                         System.out.println("pin1: " + pin1 + ";; pin 2 " + pin2);
                         if (pin1 != null && !pin1.isEmpty()) {
                             rope.deactivateAnchor(0);
-                            String finalPin1 = pin1;
-                            ObstacleSprite target = sprites.stream().filter(os -> os.getName().equals(finalPin1)).findFirst().orElse(null);
-                            if (target == null) {System.err.println("Target is null for pin 1, check target pin name"); }
-                            pinJoint.initialize(rope.getAnchors().get(0).getObstacle().getBody(), target.getObstacle().getBody(), (rope.getAnchors().get(0).getObstacle().getBody()
-                                .getWorldCenter()));
-                            world.createJoint(pinJoint);
+//                            String finalPin1 = pin1;
+//                            ObstacleSprite target = sprites.stream().filter(os -> os.getName().equals(finalPin1)).findFirst().orElse(null);
+//                            if (target == null) {System.err.println("Target is null for pin 1, check target pin name"); }
+//                            pinJoint.initialize(rope.getAnchors().get(0).getObstacle().getBody(), target.getObstacle().getBody(), (rope.getAnchors().get(0).getObstacle().getBody()
+//                                .getWorldCenter()));
+//                            world.createJoint(pinJoint);
                         }
                         if (pin2 != null && !pin2.isEmpty()) {
                             rope.deactivateAnchor(1);
-                            String finalPin2 = pin2;
-                            ObstacleSprite target = sprites.stream().filter(os -> os.getName().equals(finalPin2)).findFirst().orElse(null);
-                            if (target == null) {System.err.println("Target is null for pin 2, check target pin name"); }
-                            pinJoint.initialize(rope.getAnchors().get(1).getObstacle().getBody(), target.getObstacle().getBody(), (rope.getAnchors().get(1).getObstacle().getBody()
-                                .getWorldCenter()));
-                            world.createJoint(pinJoint);
+//                            String finalPin2 = pin2;
+//                            ObstacleSprite target = sprites.stream().filter(os -> os.getName().equals(finalPin2)).findFirst().orElse(null);
+//                            if (target == null) {System.err.println("Target is null for pin 2, check target pin name"); }
+//                            pinJoint.initialize(rope.getAnchors().get(1).getObstacle().getBody(), target.getObstacle().getBody(), (rope.getAnchors().get(1).getObstacle().getBody()
+//                                .getWorldCenter()));
+//                            world.createJoint(pinJoint);
                         }
                     }
 
