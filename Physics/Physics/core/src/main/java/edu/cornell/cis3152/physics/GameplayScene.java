@@ -1522,6 +1522,8 @@ public class GameplayScene implements Screen {
                     mothSmother = true;
                 } else if (previous == Enemy.EnemyState.SMOTHER && current != Enemy.EnemyState.SMOTHER) {
                     soundEngine.stopSoundEffect("mothSmother");
+                }  else if (previous == Enemy.EnemyState.CD && current != Enemy.EnemyState.CD) {
+                    soundEngine.stopSoundEffect("mothCharging");
                 }
                 mothPreviousStates.put(moth, current);
             }
