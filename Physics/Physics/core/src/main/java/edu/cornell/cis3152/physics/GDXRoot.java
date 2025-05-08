@@ -276,7 +276,7 @@ public class GDXRoot extends Game implements ScreenListener {
     }
 
     private void createSwapSuccess() {
-        SuccessScene success = new SuccessScene(directory);
+        SuccessScene success = new SuccessScene(directory, soundEngine);
         success.setScreenListener(this);
         success.setCurrentLevel(current+1);
         setScreen(success);
@@ -284,7 +284,7 @@ public class GDXRoot extends Game implements ScreenListener {
     }
 
     private void createSwapFailure() {
-        FailureScene failure = new FailureScene(directory);
+        FailureScene failure = new FailureScene(directory, soundEngine);
         failure.setScreenListener(this);
         setScreen(failure);
         soundEngine.failureSound();

@@ -37,6 +37,8 @@ public class SoundEngine {
             this.directory = directory;
             System.out.println("Populating sound engine");
 
+            registerSoundEffect("clickSound", directory.getEntry("clickSound", SoundEffect.class));
+            registerSoundEffect("doorOpening", directory.getEntry("door_opening", SoundEffect.class));
             registerSoundEffect("jump", directory.getEntry("platform-jump", SoundEffect.class));
             registerSoundEffect("pew", directory.getEntry("platform-pew", SoundEffect.class));
             registerSoundEffect("plop", directory.getEntry("platform-plop", SoundEffect.class));
@@ -49,6 +51,9 @@ public class SoundEngine {
             registerSoundEffect("totemTurn", directory.getEntry("turn_around", SoundEffect.class));
             registerSoundEffect("platformMoving",
                 directory.getEntry("moving_platform", SoundEffect.class));
+            registerSoundEffect("mothAttack", directory.getEntry("moth_attack", SoundEffect.class));
+            registerSoundEffect("mothCharging", directory.getEntry("moth_charging", SoundEffect.class));
+            registerSoundEffect("mothSmother", directory.getEntry("moth_fluttering", SoundEffect.class));
             registerSoundEffect("successSound", directory.getEntry("success_sound", SoundEffect.class));
             registerSoundEffect("failureSound", directory.getEntry("fire_extinguished", SoundEffect.class));
             registerMusic("menu_music", directory.getEntry("menu_music", Music.class));

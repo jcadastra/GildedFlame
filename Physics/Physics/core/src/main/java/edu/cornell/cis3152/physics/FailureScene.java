@@ -29,17 +29,17 @@ public class FailureScene implements Screen {
     private boolean visible = false;
     private boolean startClicked = false;
     private ScreenListener listener;
-    private Sound clickSound;
     private InputController inputController = InputController.getInstance();
     private boolean prevButtonA = false;
+    protected SoundEngine soundEngine;
     /** The asset directory for retrieving textures, atlases */
     protected AssetDirectory directory;
 
-    public FailureScene(AssetDirectory directory) {
+    public FailureScene(AssetDirectory directory, SoundEngine soundEngine) {
         this.directory = directory;
+        this.soundEngine = soundEngine;
         stage = new Stage(new ScreenViewport());
         skin = new Skin();
-        clickSound = Gdx.audio.newSound(Gdx.files.internal("soundEffects/clickSound.mp3"));
         createBasicUI();
     }
 
@@ -101,7 +101,7 @@ public class FailureScene implements Screen {
             public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
                                      float x, float y, int pointer, int button) {
                 System.out.println("ImageButton pressed");
-                clickSound.play();
+                soundEngine.playSoundEffect("clickSound");
                 startClicked = true;
                 if (listener != null) {
                     listener.exitScreen(FailureScene.this, 4);
@@ -113,7 +113,7 @@ public class FailureScene implements Screen {
             @Override
             public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
                                      float x, float y, int pointer, int button) {
-                clickSound.play();
+                soundEngine.playSoundEffect("clickSound");
                 System.out.println("ImageButton pressed");
                 startClicked = true;
                 if (listener != null) {
@@ -126,7 +126,7 @@ public class FailureScene implements Screen {
             @Override
             public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
                                      float x, float y, int pointer, int button) {
-                clickSound.play();
+                soundEngine.playSoundEffect("clickSound");
                 System.out.println("ImageButton pressed");
                 startClicked = true;
                 if (listener != null) {

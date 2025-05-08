@@ -306,7 +306,8 @@
     "success_sound": "soundEffects/success_2.mp3",
     "moth_attack": "soundEffects/moth_attack.mp3",
     "moth_charging": "soundEffects/moth_charging_1.mp3",
-    "moth_fluttering": "soundEffects/moth_fluttering.mp3"
+    "moth_fluttering": "soundEffects/moth_fluttering.mp3",
+    "door_opening": "soundEffects/opening_door_1.mp3"
   },
   "fonts": {
     "shared-unica": {

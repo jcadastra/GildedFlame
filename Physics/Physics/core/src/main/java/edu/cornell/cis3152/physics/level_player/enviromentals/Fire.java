@@ -40,6 +40,15 @@ public class Fire extends ObstacleSprite {
     public Joint getFixtureJoint() {return fixtureJoint;}
     public void setFixtureJoint(Joint j) {fixtureJoint = j;}
 
+    // The joint that connects the fire to its light
+    private Joint lightJoint;
+    public Joint getLightJoint() {return lightJoint;}
+    public void setLightJoint (Joint j) {lightJoint =j;}
+
+    private Lighting lighting;
+    public Lighting getLighting() {return lighting;}
+    public void setLighting(Lighting l) {lighting = l;}
+
     public Fire(Float units, Vector2 point) {
         super();
 //        this.radius = data.getFloat("radius");
