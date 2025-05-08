@@ -469,7 +469,6 @@ public class GameplayScene implements Screen {
             }
         }
 
-        soundEngine.dispose();
         lightController.dispose();
         eventHandler.dispose();
         sprites.clear();
@@ -2414,4 +2413,9 @@ public class GameplayScene implements Screen {
         } catch (Exception e) {System.out.println("failed pritnout " + counter +", " + e.getMessage());}
     }
 
+
+    public void hackyForceResetFailedComplete() {
+        failed = false;
+        complete = false;
+    }
 }
