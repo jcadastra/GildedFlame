@@ -264,6 +264,7 @@ public class GDXRoot extends Game implements ScreenListener {
         current = (level) % levels.length;
         currentScene.loadLevel(levels[current], "rope_test");
         setScreen(currentScene);
+        currentScene.reset();
     }
 
     private void createSetGamePlayScene(int level) {

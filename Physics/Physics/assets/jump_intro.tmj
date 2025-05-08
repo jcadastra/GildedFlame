@@ -9,7 +9,7 @@
          "name":"BackgroundTiles",
          "objects":[
                 {
-                 "gid":75,
+                 "gid":76,
                  "height":600,
                  "id":228,
                  "name":"brickBackground",
@@ -32,7 +32,7 @@
          "name":"Background",
          "objects":[
                 {
-                 "gid":81,
+                 "gid":82,
                  "height":1000,
                  "id":195,
                  "name":"tJump",
@@ -44,7 +44,7 @@
                  "y":4932
                 }, 
                 {
-                 "gid":76,
+                 "gid":77,
                  "height":500,
                  "id":196,
                  "name":"colB",
@@ -56,7 +56,7 @@
                  "y":4214
                 }, 
                 {
-                 "gid":77,
+                 "gid":78,
                  "height":500,
                  "id":197,
                  "name":"colM",
@@ -68,7 +68,7 @@
                  "y":3866
                 }, 
                 {
-                 "gid":77,
+                 "gid":78,
                  "height":500,
                  "id":198,
                  "name":"colM",
@@ -80,7 +80,7 @@
                  "y":3402
                 }, 
                 {
-                 "gid":78,
+                 "gid":79,
                  "height":500,
                  "id":199,
                  "name":"colT",
@@ -92,7 +92,7 @@
                  "y":3166
                 }, 
                 {
-                 "gid":79,
+                 "gid":80,
                  "height":816,
                  "id":200,
                  "name":"window",
@@ -104,7 +104,7 @@
                  "y":3958
                 }, 
                 {
-                 "gid":76,
+                 "gid":77,
                  "height":500,
                  "id":201,
                  "name":"colB",
@@ -116,7 +116,7 @@
                  "y":4218
                 }, 
                 {
-                 "gid":77,
+                 "gid":78,
                  "height":500,
                  "id":202,
                  "name":"colM",
@@ -128,7 +128,7 @@
                  "y":3870
                 }, 
                 {
-                 "gid":77,
+                 "gid":78,
                  "height":500,
                  "id":203,
                  "name":"colM",
@@ -140,7 +140,7 @@
                  "y":3406
                 }, 
                 {
-                 "gid":78,
+                 "gid":79,
                  "height":500,
                  "id":204,
                  "name":"colT",
@@ -152,7 +152,7 @@
                  "y":3170
                 }, 
                 {
-                 "gid":79,
+                 "gid":80,
                  "height":816,
                  "id":209,
                  "name":"window",
@@ -164,7 +164,7 @@
                  "y":3648
                 }, 
                 {
-                 "gid":79,
+                 "gid":80,
                  "height":816,
                  "id":210,
                  "name":"window",
@@ -176,7 +176,7 @@
                  "y":3352
                 }, 
                 {
-                 "gid":79,
+                 "gid":80,
                  "height":816,
                  "id":211,
                  "name":"window",
@@ -189,7 +189,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -299,7 +299,7 @@
          "name":"Action Entities",
          "objects":[
                 {
-                 "gid":85,
+                 "gid":86,
                  "height":57,
                  "id":212,
                  "name":"light",
@@ -308,10 +308,10 @@
                  "visible":true,
                  "width":57,
                  "x":4606.42424242424,
-                 "y":3076.51515151515
+                 "y":3173.48484848485
                 }, 
                 {
-                 "gid":85,
+                 "gid":86,
                  "height":57,
                  "id":213,
                  "name":"light",
@@ -320,10 +320,10 @@
                  "visible":true,
                  "width":57,
                  "x":4615.51515151515,
-                 "y":3488.63636363636
+                 "y":3585.60606060606
                 }, 
                 {
-                 "gid":85,
+                 "gid":86,
                  "height":57,
                  "id":214,
                  "name":"light",
@@ -332,10 +332,10 @@
                  "visible":true,
                  "width":57,
                  "x":6126.54545454545,
-                 "y":2774.21212121212
+                 "y":2871.18181818182
                 }, 
                 {
-                 "gid":85,
+                 "gid":86,
                  "height":57,
                  "id":215,
                  "name":"light",
@@ -344,10 +344,10 @@
                  "visible":true,
                  "width":57,
                  "x":6135.63636363636,
-                 "y":3210.57575757576
+                 "y":3307.54545454546
                 }, 
                 {
-                 "gid":85,
+                 "gid":86,
                  "height":57,
                  "id":216,
                  "name":"light",
@@ -356,10 +356,10 @@
                  "visible":true,
                  "width":57,
                  "x":7632.36363636364,
-                 "y":2423.06060606061
+                 "y":2520.03030303031
                 }, 
                 {
-                 "gid":85,
+                 "gid":86,
                  "height":57,
                  "id":217,
                  "name":"light",
@@ -368,10 +368,10 @@
                  "visible":true,
                  "width":57,
                  "x":7638.42424242424,
-                 "y":2874.57575757576
+                 "y":2971.54545454546
                 }, 
                 {
-                 "gid":85,
+                 "gid":86,
                  "height":57,
                  "id":218,
                  "name":"light",
@@ -383,7 +383,7 @@
                  "y":2921.24242424242
                 }, 
                 {
-                 "gid":85,
+                 "gid":86,
                  "height":57,
                  "id":219,
                  "name":"light",
@@ -395,7 +395,7 @@
                  "y":4322.93939393939
                 }, 
                 {
-                 "gid":85,
+                 "gid":86,
                  "height":57,
                  "id":222,
                  "name":"light",
@@ -404,10 +404,10 @@
                  "visible":true,
                  "width":57,
                  "x":2971.5,
-                 "y":3395.5
+                 "y":3492.4696969697
                 }, 
                 {
-                 "gid":85,
+                 "gid":86,
                  "height":57,
                  "id":223,
                  "name":"light",
@@ -416,7 +416,7 @@
                  "visible":true,
                  "width":57,
                  "x":2971.5,
-                 "y":3835.5
+                 "y":3932.4696969697
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -428,7 +428,7 @@
  "nextobjectid":229,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.11.2",
+ "tiledversion":"1.10.2",
  "tileheight":300,
  "tilesets":[
         {
@@ -448,7 +448,7 @@
          "source":"GameObjectTiles.tsx"
         }, 
         {
-         "firstgid":75,
+         "firstgid":76,
          "source":"BackgroundAssets.tsx"
         }],
  "tilewidth":300,
