@@ -121,7 +121,7 @@ public class MarthasWeatherMachine {
         ObstacleSprite rain = new ObstacleSprite(rainTemp);
         rain.getObstacle().setUserData(rain);
         rainDrops.add(rain);
-        rainflags.add(new RainFlag("addRain" , rain, random.nextInt(1,5)));
+        rainflags.add(new RainFlag("addRain" , rain, random.nextInt(4)+1));
         return rain;
     }
 

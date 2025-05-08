@@ -1817,7 +1817,7 @@ public class GameplayScene implements Screen {
                 case "resetRain":
                     ObstacleSprite os = todo_action.getSubject();
                     weatherMachine.resetRain(os);
-                    particleEngine.splashEffects(os.getObstacle().getX(), os.getObstacle().getY(), .5f);
+                    //particleEngine.splashEffects(os.getObstacle().getX(), os.getObstacle().getY(), .5f);
                     break;
                 case "debugKillObj":
                     // not safe operation, for now will kill game on reload
@@ -2247,6 +2247,7 @@ public class GameplayScene implements Screen {
         if (!torchFire.getObstacle().isRemoved()) {
             particleEngine.draw(batch,torchFire);
         }
+        //particleEngine.drawSplash(batch);
 
 
 
@@ -2266,7 +2267,7 @@ public class GameplayScene implements Screen {
                 lightController.attachAmbientLight(light,true);
             }
         }
-        lightController.update(contactListener.beginSmother());
+        lightController.update(contactListener.beginSmother(),fireController);
         lightController.render();
 
         batch.begin();

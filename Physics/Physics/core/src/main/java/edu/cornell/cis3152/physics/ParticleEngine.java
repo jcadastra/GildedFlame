@@ -137,14 +137,15 @@ public class ParticleEngine implements Screen {
             splash.scaleEffect(10f);
             splashEffects.add(splash);
         }
-
     }
 
-    public void drawSplash(Batch batch, float x,float y){
-        splash.setPosition(x,y);
-        splash.start();
-        splash.update(Gdx.graphics.getDeltaTime());
-        splash.draw(batch,Gdx.graphics.getDeltaTime());
+    public void drawSplash(Batch batch){
+//        splash.setPosition(x,y);
+//        splash.start();
+        for (ParticleEffect splash: splashEffects){
+            splash.update(Gdx.graphics.getDeltaTime());
+            splash.draw(batch,Gdx.graphics.getDeltaTime());
+        }
     }
 
     public void drawSplash(Batch batch, float x,float y,float width,float height){
