@@ -233,7 +233,7 @@ public class GDXRoot extends Game implements ScreenListener {
     }
 
     private void swapCreateMainMenuScene() {
-        MainMenuScreen mainMenu = new MainMenuScreen();
+        MainMenuScreen mainMenu = new MainMenuScreen(directory, soundEngine);
         mainMenu.setScreenListener(this);
         setScreen(mainMenu);
         ArrayList<String> temp = new ArrayList<>();

@@ -18,6 +18,12 @@
       "wrapU": "repeated",
       "wrapV": "repeated"
     },
+    "menuScreen": "loading/menuScreen.png",
+    "newGameButt": "ui/newGameButt.png",
+    "newGameButtClick": "ui/newGameButtClick.png",
+    "settingsButt": "ui/settingsbutt.png",
+    "settingsButtClick": "ui/settingsButtClick.png",
+    "textButt": "ui/textbutt.png",
     "contButt": "ui/contbutt.png",
     "contButtClick": "ui/contButtClick.png",
     "replayButt": "ui/replayButt.png",
