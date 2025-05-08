@@ -92,7 +92,7 @@
                  "visible":true,
                  "width":800,
                  "x":7861.69696969697,
-                 "y":4685.5
+                 "y":4701.5
                 }, 
                 {
                  "gid":65,
@@ -103,7 +103,7 @@
                         {
                          "name":"rain",
                          "type":"int",
-                         "value":5
+                         "value":4
                         }],
                  "rotation":0,
                  "type":"",
@@ -181,7 +181,7 @@
                         {
                          "name":"dissipateTime",
                          "type":"float",
-                         "value":10
+                         "value":5
                         }, 
                         {
                          "name":"endPos",
@@ -211,7 +211,7 @@
                         {
                          "name":"timeTo",
                          "type":"float",
-                         "value":10
+                         "value":5
                         }],
                  "rotation":0,
                  "type":"",
@@ -319,12 +319,18 @@
                  "height":57,
                  "id":36,
                  "name":"light",
+                 "properties":[
+                        {
+                         "name":"pinTarget",
+                         "type":"string",
+                         "value":"platform1"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":57,
-                 "x":8319.5,
-                 "y":4611.5
+                 "x":8239.5,
+                 "y":4634.16666666667
                 }],
          "opacity":1,
          "type":"objectgroup",
