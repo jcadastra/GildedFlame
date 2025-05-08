@@ -1437,6 +1437,7 @@ public class GameplayScene implements Screen {
         if (weatherMachine.isRainActive()) {
             supplementaryRainActions();
         }
+        updateTorchLight();
         //updateFireLights();
         updateTweenedMovementObjectsVec2(dt);
         updateTweenedMovementObjectsFloat(dt);
@@ -2487,6 +2488,16 @@ public class GameplayScene implements Screen {
         }
     }
 
+    private void updateTorchLight(){
+        if (!fireController.getLitFires().contains(torchFire)){//torch fire going out
+            if(torchFire.getLighting()!=null){
+                torchFire.getLighting().getObstacle().markRemoved(true);
+                activeFireJoint=null;
+                activeLightJoints=null;
+            }
+        }
+    }
+
     private void detachFireLightJoints(Fire fire) {
         if (fire.getLightJoint()!=null){
 //            if (fire.fireID==0){
@@ -2497,13 +2508,6 @@ public class GameplayScene implements Screen {
                     lighting.getObstacle().markRemoved(true);
                     //world.destroyBody(lighting.getObstacle().getBody());
                     world.destroyJoint(fire.getLightJoint());
-                    if (fire.fireID==0){//torch fire going out
-                       if(torchFire.getLighting()!=null){
-                           torchFire.getLighting().getObstacle().markRemoved(true);
-                           activeFireJoint=null;
-                           activeLightJoints=null;
-                       }
-                    }
                 }
                 fire.setLightJoint(null);
                 fire.setLighting(null);
