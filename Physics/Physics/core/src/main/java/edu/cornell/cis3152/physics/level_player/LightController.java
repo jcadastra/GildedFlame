@@ -90,6 +90,7 @@ public class LightController {
     private Map<Integer,PointLight> fireAssignments = new HashMap<>();
 
     private int[] lightInUse = new int[maxLights];
+   // private float units;
 
     /*
      * Map for light assignments.
@@ -173,7 +174,7 @@ public class LightController {
         rayHandler = new RayHandler(world, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         rayHandler.setCombinedMatrix(this.camera);
 
-        torchLight = new Lighting(2.2f, points);
+        torchLight = new Lighting(BOX_TO_WORLD,2.2f, points);
 
         //Initializes torch light
         //PositionalLight testlight = new PointLight(rayHandler,10,Color.WHITE,100f,10,10);
@@ -196,7 +197,7 @@ public class LightController {
         //rayHandler.useCustomViewport(viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
         rayHandler.useDiffuseLight(true);
 //         Uncomment if you want no overlay dark hue  ⬇️
-        rayHandler.useDiffuseLight(false);
+        //rayHandler.useDiffuseLight(false);
         // Background light color, original hue ⬇️
 //        rayHandler.setAmbientLight(0.15f, 0.15f, 0.35f, 1f); // same hue, just darker
         // Background black color ⬇️
@@ -402,18 +403,20 @@ public class LightController {
         }
 
 
-    public Array<Lighting> fireLights(FireController fireController) {
+    public void fireLights(FireController fireController) {
         Array<Lighting> fireLights = new Array<>();
+        //System.out.println(fireLights.isEmpty() );
         for (Fire fire: fireController.getLitFires()){
                 if (fire.fireID!=0){//not torch flamed
 //                    System.out.println(fire.fireID);
-                    Lighting lighting = new Lighting(2.2f,fire.getObstacle().getPosition());
-                    fireLights.add(lighting);
-//                    System.out.print("fire id"+fire.fireID+" ");
+                    Lighting lighting = new Lighting(BOX_TO_WORLD,2.2f,fire.getObstacle().getPosition());
+                    //fireLights.add(lighting);
+                    //System.out.print("fire light added for"+fire.fireID+" ");
                     attachAmbientLight(fire,true);
             }
         }
-        return fireLights;
+        //System.out.println(fireLights.isEmpty());
+        //return fireLights;
     }
 
     public void turnOffAmbientLight(ObstacleSprite sprite, boolean check) {

@@ -2,6 +2,7 @@ package edu.cornell.cis3152.physics.level_player.enviromentals;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.ParserUtils;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
@@ -27,6 +28,10 @@ public class Lighting extends ObstacleSprite {
     private int damp;
 
     JsonValue data;
+
+    private Joint lightJoint;
+    public Joint getLightJoint() {return lightJoint;}
+    public void setLightJoint (Joint j) {lightJoint =j;}
 
     /*
      * LIGHT_ON: the light is on, has a radius, capable of lighting a flame
@@ -75,10 +80,24 @@ public class Lighting extends ObstacleSprite {
     * */
     public Vector2 getCenter(){return center;}
 
-    public Lighting (float radius, Vector2 pos){
+    public Lighting (float units,float radius, Vector2 pos){
         super();
         this.radius = radius;
         position = pos;
+        this.state = LightState.LIGHT_ON;
+        obstacle = new WheelObstacle(pos.x,pos.y,radius);
+        obstacle.setDensity(0.0001f);
+        obstacle.setMass(0.0001f);
+        obstacle.setInertia(0.0001f);
+        obstacle.setBodyType( BodyType.DynamicBody );
+//        obstacle.setPhysicsUnits(units);
+        obstacle.setRestitution( 0 );
+        obstacle.setGravityScale(0);
+        obstacle.setPhysicsUnits( units );
+        obstacle.setUserData( this );
+        obstacle.setSensor(true);
+        obstacle.setName("light");
+        mesh.set( -radius, -radius, 2 * radius, 2 * radius );
     }
 
     public Lighting(float units, JsonValue data){

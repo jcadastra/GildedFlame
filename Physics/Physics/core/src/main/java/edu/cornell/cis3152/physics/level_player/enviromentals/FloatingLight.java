@@ -56,10 +56,11 @@ public class FloatingLight extends ObstacleSprite {
             obstacle.setSensor(true);
             this.ID = counter;
             counter++;
+            isWander = false;
         }
 
         public void update(float deltaTime) {
-            if (debug) {
+            if (!isWander) {//don't move
 
             } else {
                 switch (state) {
