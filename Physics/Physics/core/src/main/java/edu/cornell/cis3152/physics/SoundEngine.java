@@ -220,10 +220,14 @@ public class SoundEngine {
 
     public void dispose() {
         for (SoundEffect soundEffect : registeredSoundEffects.values()) {
-            soundEffect.dispose();
+            if (soundEffect != null) {
+                soundEffect.dispose();
+            }
         }
         for (Music music : registeredMusic.values()) {
-            music.dispose();
+            if (music != null) {
+                music.dispose();
+            }
         }
     }
 }

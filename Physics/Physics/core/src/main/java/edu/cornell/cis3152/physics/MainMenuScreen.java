@@ -1,6 +1,9 @@
 package edu.cornell.cis3152.physics;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -182,7 +185,7 @@ public class MainMenuScreen implements Screen {
                 System.out.println("ImageButton pressed");
                 startClicked = true;
                 if (listener != null) {
-                    listener.exitScreen(MainMenuScreen.this, 1);
+                    listener.exitScreen(MainMenuScreen.this, 2);
                 }
                 return true;
             }
@@ -193,7 +196,7 @@ public class MainMenuScreen implements Screen {
 // Add the ImageButton to your stage
         stage.addActor(imageButton);
         stage.addActor(contButt1);
-       // stage.addActor(settingsButt1);
+        stage.addActor(settingsButt1);
 
 
         Texture topRightTexture = directory.getEntry("textButt", Texture.class);

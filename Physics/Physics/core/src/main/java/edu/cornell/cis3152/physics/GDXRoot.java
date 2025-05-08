@@ -172,9 +172,11 @@ public class GDXRoot extends Game implements ScreenListener {
                 }
                 current = Math.min(nextLevel - 1, levels.length - 1);
                 createSetGamePlayScene(current);
-            } else {
+            } else if (exitCode == 1) {
                 // Fallback: go to level select
                 swapCreateLevelSelect();
+            } else {
+                Gdx.app.exit();
             }
             return;
         }

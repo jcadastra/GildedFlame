@@ -319,6 +319,12 @@
                  "height":57,
                  "id":36,
                  "name":"light",
+                 "properties":[
+                        {
+                         "name":"pinTarget",
+                         "type":"string",
+                         "value":"platform1"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -336,7 +342,7 @@
  "nextobjectid":41,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.11.2",
+ "tiledversion":"1.10.2",
  "tileheight":300,
  "tilesets":[
         {
