@@ -143,8 +143,8 @@ public class GameObject extends EnhancedObstacleSprite {
 
     public void generateInternalCrushSensor() {
         Body body = obstacle.getBody();
-        float halfW = width  / 2.3f;
-        float halfH = height / 3f;
+        float halfW = width  / 2.6f;
+        float halfH = height / 4f;
 
         FixtureDef sensorDef = new FixtureDef();
         sensorDef.density  = 0;
