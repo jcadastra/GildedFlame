@@ -44,7 +44,7 @@ public class ParticleEngine implements Screen {
 
 
     /* Handles the torch fire.
-     * TODO: modify code structure to allow environmental lights*/
+    * TODO: modify code structure to allow environmental lights*/
 
     public ParticleEngine (Fire fire, float physicsUnits){
         load();
@@ -91,12 +91,12 @@ public class ParticleEngine implements Screen {
     public void newFires(FireController fireController){
         //particleAtlas = new TextureAtlas();
         for (Fire fire: fireController.getLitFires()){
-            //effect.set
-            effect.start();
-            //Setting the position of the ParticleEffect
+        //effect.set
+        effect.start();
+        //Setting the position of the ParticleEffect
             effect.setPosition(1000,100);
-            effect.setPosition(fire.getObstacle().getX()*physicsUnits, fire.getObstacle().getY()*physicsUnits);
-            //System.out.println("fire-pos"+fire.getObstacle().getX()*32+","+fire.getObstacle().getY()*32);
+        effect.setPosition(fire.getObstacle().getX()*physicsUnits, fire.getObstacle().getY()*physicsUnits);
+        //System.out.println("fire-pos"+fire.getObstacle().getX()*32+","+fire.getObstacle().getY()*32);
 
         }
         //effect.scaleEffect(1/2f);
@@ -124,20 +124,28 @@ public class ParticleEngine implements Screen {
         effect.draw(batch,Gdx.graphics.getDeltaTime());
     }
 
-    public void splashEffects(float x,float y,float width,float height){
+    public void splashEffects(float x,float y,float width){
         load();
         float h = 2f;
         int k = (int) width/(int)h;
         splashEffects = new Array<>(k);
         for (int i = 0; i<k; i++){
-            float splashX = (x + (i * h))*32;  // Spread the splashes across the width
-            float splashY = y*32;            // Position on the Y-axis (adjust if needed)
+            float splashX = (x + (i * h))*physicsUnits;  // Spread the splashes across the width
+            float splashY = y*physicsUnits;            // Position on the Y-axis (adjust if needed)
             splash.setPosition(splashX, splashY);
             splash.start();
             splash.scaleEffect(10f);
             splashEffects.add(splash);
         }
+    }
 
+    public void drawSplash(Batch batch){
+//        splash.setPosition(x,y);
+//        splash.start();
+        for (ParticleEffect splash: splashEffects){
+            splash.update(Gdx.graphics.getDeltaTime());
+            splash.draw(batch,Gdx.graphics.getDeltaTime());
+        }
     }
 
     public void drawSplash(Batch batch, float x,float y,float width,float height){
@@ -148,21 +156,21 @@ public class ParticleEngine implements Screen {
             //splashEffects = new Array<>(k);
             for (int i = 0; i<k; i++){
                 ParticleEffect splash = splashEffects.get(i);
-                float splashX = (x + (i * h))*32;  // Spread the splashes across the width
-                float splashY = y*32;            // Position on the Y-axis (adjust if needed)
+                float splashX = (x + (i * h))*physicsUnits;  // Spread the splashes across the width
+                float splashY = y*physicsUnits;            // Position on the Y-axis (adjust if needed)
                 splash.setPosition(splashX, splashY);
                 System.out.println("Splash at: " + splashX + ", " + splashY);
                 splash.update(Gdx.graphics.getDeltaTime());
                 splash.draw(batch);
-                // If the splash effect is complete
+            // If the splash effect is complete
 //            if (splash.isComplete()) {
 //                splashPool.free(splash); // Return the splash effect to the pool
 //            }
-            }
-            //splashEffects.clear();
-        }}
+        }
+        //splashEffects.clear();
+    }}
     public void drawRain (SpriteBatch batch,Rectangle bounds){
-        rainEffect.setPosition(32,bounds.height*32 );
+        rainEffect.setPosition(physicsUnits,bounds.height*physicsUnits );
         rainEffect.update(Gdx.graphics.getDeltaTime());
         rainEffect.draw(batch);
         //drawSplash(batch,Gdx.graphics.getDeltaTime());

@@ -83,8 +83,8 @@ public class LightController {
     //private PooledList<PointLight> lightPool;
     private Array<PointLight> lightPool = new Array<>();
     private Array<PointLight> fireLightPool = new Array<>();
-    private int maxLights = 10;
-    private int maxFireLights = 20;
+    private int maxLights = 20;
+    private int maxFireLights = 30;
     Map<Body, PointLight> lightAssignments = new HashMap<>();
 
     private Map<Integer,PointLight> fireAssignments = new HashMap<>();
@@ -617,7 +617,7 @@ public class LightController {
 
 
 
-    public void update(Boolean beginSmother) {
+    public void update(Boolean beginSmother, FireController fireController) {
         if (beginSmother) {
             //torchLight.waver(flickerCount);
 //            System.out.println("flickerCount"+flickerCount);
@@ -635,7 +635,22 @@ public class LightController {
 //                System.out.println("reset light radius");
                 torchLighting.setDistance(lightRadius);
             }
+            for (Fire fire: fireController.getLitFires()){
+                if (fire.getInRain()){
+                    if (fire.equals(this.fire)){
+                        torchLighting.setDistance(torchLighting.getDistance()*fire.getStrength());
+                    }else{
+                        String name = assignName(fire);
+                        PointLight light = lightingAssignments.get(name);
+                        if (light != null) {
+                            float distance = light.getDistance();
+                            light.setDistance(distance*fire.getStrength());
+                        }
+                    }
+                }
+            }
         }
+
     }
 }
 

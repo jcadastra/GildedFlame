@@ -315,6 +315,14 @@
                 "y": 3792.424242424243
             }
         },
+        "rain_intro.tmj": {
+            "scale": 0.25,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 5236,
+                "y": 590
+            }
+        },
         "rope_intro.tmj": {
             "scale": 0.180796875,
             "selectedLayer": 5,
@@ -340,6 +348,9 @@
             }
         },
         "rune_medium.tmj": {
+            "expandedObjectLayers": [
+                5
+            ],
             "scale": 0.25,
             "selectedLayer": 6,
             "viewCenter": {

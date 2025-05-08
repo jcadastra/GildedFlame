@@ -441,6 +441,12 @@
                  "height":57,
                  "id":31,
                  "name":"light",
+                 "properties":[
+                        {
+                         "name":"pinTarget",
+                         "type":"string",
+                         "value":"platform1"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -507,30 +513,6 @@
                  "width":57,
                  "x":1115.02,
                  "y":3251.295
-                }, 
-                {
-                 "gid":82,
-                 "height":57,
-                 "id":63,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":7163.5,
-                 "y":3447.5
-                }, 
-                {
-                 "gid":82,
-                 "height":57,
-                 "id":64,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":8015.5,
-                 "y":3443.5
                 }, 
                 {
                  "gid":82,
@@ -614,7 +596,7 @@
  "nextobjectid":78,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.11.2",
+ "tiledversion":"1.10.2",
  "tileheight":300,
  "tilesets":[
         {
