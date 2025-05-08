@@ -373,6 +373,12 @@
                  "height":57,
                  "id":46,
                  "name":"light",
+                 "properties":[
+                        {
+                         "name":"pinTarget",
+                         "type":"string",
+                         "value":"platform2"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -397,12 +403,18 @@
                  "height":57,
                  "id":48,
                  "name":"light",
+                 "properties":[
+                        {
+                         "name":"pinTarget",
+                         "type":"string",
+                         "value":"platform1"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":57,
-                 "x":3162.98484848485,
-                 "y":2545.25757575758
+                 "x":3124.26736512127,
+                 "y":2550.78864480952
                 }, 
                 {
                  "gid":82,
