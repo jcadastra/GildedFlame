@@ -1237,7 +1237,7 @@ public class GameplayScene implements Screen {
                         }
                         System.out.println(pin1Material + " " + pin2Material + " " + middleMaterial);
                         Rope rope = new Rope(new Vector2(x1, y1), new Vector2(x2, y2), depth, thickness, piecelen, units, levelInfo.get("ropes").get(0));
-                        rope.customRopeDesignation(pin1Material.equals("iron") ? directory.getEntry( "chain-end", Texture.class ) : directory.getEntry( "rope-end", Texture.class ),
+                        rope.customRopeDesignation(pin1Material.equals("iron") ? directory.getEntry( "rope-end", Texture.class ) : directory.getEntry( "rope-end", Texture.class ),
                             middleMaterial.equals("iron") ? directory.getEntry( "chain-mid", Texture.class ) : directory.getEntry( "rope-mid", Texture.class ),
                             pin2Material.equals("iron") ? directory.getEntry( "chain-end", Texture.class ) : directory.getEntry( "rope-end", Texture.class ),
                             pin1Material, middleMaterial, pin2Material);
@@ -1710,7 +1710,7 @@ public class GameplayScene implements Screen {
     @SuppressWarnings("unchecked")
     private void updateRunes(float dt) {
         for (Rune rune : runeSet) {
-//            System.out.println(rune.getPowerLevel());
+            System.out.println(rune.getPowerLevel());
             if (!rune.returnInLight()) {
                 rune.dissapatePowerLevel();
             }
@@ -1757,6 +1757,7 @@ public class GameplayScene implements Screen {
 
                 }
             }
+            rune.resetTriggeredPowerLevel();
         }
     }
 
@@ -1817,7 +1818,7 @@ public class GameplayScene implements Screen {
                 case "resetRain":
                     ObstacleSprite os = todo_action.getSubject();
                     weatherMachine.resetRain(os);
-                    particleEngine.splashEffects(os.getObstacle().getX(), os.getObstacle().getY(), .5f);
+//                    particleEngine.splashEffects(os.getObstacle().getX(), os.getObstacle().getY(), .5f);
                     break;
                 case "debugKillObj":
                     // not safe operation, for now will kill game on reload

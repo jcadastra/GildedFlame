@@ -7,6 +7,9 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import edu.cornell.cis3152.physics.level_player.enemies.Enemy;
+import edu.cornell.cis3152.physics.level_player.player.Avatar;
+import edu.cornell.cis3152.physics.level_player.utils.CollisionFlag;
 import edu.cornell.cis3152.physics.level_player.utils.RainFlag;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
 import edu.cornell.gdiac.physics2.WheelObstacle;
@@ -143,7 +146,10 @@ public class MarthasWeatherMachine {
             if (userData instanceof ObstacleSprite) {
                 ObstacleSprite target = (ObstacleSprite) userData;
                 if ((target.getObstacle().getBodyType() == BodyType.KinematicBody || target.getObstacle().getBodyType() == BodyType.StaticBody)
-                    && !target.getObstacle().isSensor() && !target.getObstacle().getName().contains("grate")) {
+                    && !target.getObstacle().isSensor() && !target.getName().contains("grate") ) {
+                    return false;
+
+                } else if ((target instanceof Enemy || target instanceof Avatar || target.getName().contains("platform") || target.getName().contains("burnable"))&& !target.getName().contains("grate")) {
                     return false;
                 }
             }

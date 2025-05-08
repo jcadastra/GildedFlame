@@ -311,20 +311,8 @@
                  "type":"",
                  "visible":true,
                  "width":57,
-                 "x":3409.43939393939,
-                 "y":3797.31818181818
-                }, 
-                {
-                 "gid":86,
-                 "height":57,
-                 "id":449,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":4319.5,
-                 "y":3815.5
+                 "x":3849.43939393939,
+                 "y":3925.31818181818
                 }, 
                 {
                  "gid":86,
@@ -335,8 +323,8 @@
                  "type":"",
                  "visible":true,
                  "width":57,
-                 "x":5231.5,
-                 "y":3815.5
+                 "x":4813.5,
+                 "y":3909.5
                 }, 
                 {
                  "gid":86,
@@ -444,7 +432,7 @@
  "nextobjectid":467,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.11.2",
+ "tiledversion":"1.10.2",
  "tileheight":300,
  "tilesets":[
         {
