@@ -1299,6 +1299,7 @@ public class GameplayScene implements Screen {
                     float x = object.getFloat("x") / levelData.getInt("tilewidth");
                     float y = (bounds.height * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
                     boolean wander = false;
+                    String pinTarget = "";
                     if (objName.contains("light")) {
                         JsonValue props = object.get("properties");
                         if (props!=null) {
@@ -1309,13 +1310,21 @@ public class GameplayScene implements Screen {
                                     case "wander":
                                         wander = Boolean.parseBoolean(val);
                                         break;
+                                    case "pinTarget":
+                                        pinTarget = val;
+                                        break;
                                 }
                             }
                         }
                         FloatingLight light = new FloatingLight(units,new Vector2(x,y),1,goalPos);
-                        if (wander) {
-//                            light.setWander();
+                        light.setWander(wander);
+                        if (!pinTarget.isEmpty()) {
+                            String finalPinTarget = pinTarget;
+                            ObstacleSprite target = sprites.stream().filter(os -> os.getName().equals(
+                                finalPinTarget)).findFirst().orElse(null);
+                            pinLightToObject(target,light);
                         }
+
 //                        System.out.println("floating light: " + (int)x+","+ (int)y);
                         light.getObstacle().setPosition(x,y);
                         floatingLights.add(light);
@@ -1828,6 +1837,7 @@ public class GameplayScene implements Screen {
             switch (fireFlag.getName()) {
                 case "attachFire":
                     Fire fire = fireFlag.getFire();
+                    fire.setBurntObstacle(fireFlag.getSubject());
                     addSprite(fire);
                     Lighting light = new Lighting(phyiscsUnits, 2.2f,fire.getObstacle().getPosition());
                     addSprite(light);
@@ -2445,13 +2455,20 @@ public class GameplayScene implements Screen {
     //attaches light to fire
     private void attachFireLightJoints(Fire fire,Lighting light) {
         WeldJointDef jointDef = new WeldJointDef();
-        jointDef.initialize(fire.getObstacle().getBody(),light.getObstacle().getBody(),fire.getObstacle().getPosition());
+        jointDef.initialize(fire.getBurntObstacle().getObstacle().getBody(),light.getObstacle().getBody(),fire.getObstacle().getPosition());
         jointDef.collideConnected = false;  // they won't collide with each other
         Joint fireLightJoint = world.createJoint(jointDef);
         fire.setLightJoint(fireLightJoint);
         light.setLightJoint(fireLightJoint);
         fire.setLighting(light);
         //activeLightJoints.add(fireLightJoint);
+    }
+
+    private void pinLightToObject(ObstacleSprite os, FloatingLight light) {
+        WeldJointDef jointDef = new WeldJointDef();
+        jointDef.initialize(os.getObstacle().getBody(),light.getObstacle().getBody(),light.getObstacle().getPosition());
+        jointDef.collideConnected = false;  // they won't collide with each other
+        world.createJoint(jointDef);
     }
 
     private void updateFireLights(){

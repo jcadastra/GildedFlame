@@ -86,4 +86,8 @@ public class Fire extends ObstacleSprite {
     public void modifStrength(float val) {strength += val;}
     public void setInRain(boolean val) {inRain =  val;}
     public boolean getInRain() {return inRain;}
+
+    private EnhancedObstacleSprite burntObstacle;
+    public EnhancedObstacleSprite getBurntObstacle() {return burntObstacle;}
+    public void setBurntObstacle (EnhancedObstacleSprite obs) {burntObstacle = obs;}
 }

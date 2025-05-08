@@ -48,6 +48,7 @@
  </tile>
  <tile id="10">
   <properties>
+   <property name="pinTarget" value=""/>
    <property name="wander" type="bool" value="false"/>
   </properties>
   <image width="57" height="57" source="tiled_images/light.png"/>
