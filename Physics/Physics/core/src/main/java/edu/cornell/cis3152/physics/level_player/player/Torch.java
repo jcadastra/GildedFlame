@@ -43,6 +43,17 @@ public class Torch extends EnhancedObstacleSprite {
     public boolean canBePickedUp() {return pickUpTimer == 0;}
     public void resetPickUp() {pickUpTimer = data.getInt("pickupTimer");}
 
+    private boolean hasLanded = false;
+    private int landCooldownTimer = 60;
+    private boolean isBeingHeld = false;
+    public boolean hasLanded() {return hasLanded;}
+    public void setHasLanded(boolean hasLanded) {this.hasLanded = hasLanded;}
+    public float getLandCooldownTimer() {return landCooldownTimer;}
+    public void setLandCooldownTimer(int time) {this.landCooldownTimer = time;}
+    public void setBeingHeld(boolean held) {isBeingHeld = held;}
+    public boolean isBeingHeld() {return isBeingHeld;}
+
+
     /**
      * Torch constructor, takes in the physics units and the json source
      * inits a torch that can be thrown and has a light attached to it
@@ -119,6 +130,9 @@ public class Torch extends EnhancedObstacleSprite {
     public void update() {
         if (pickUpTimer != 0) {
             pickUpTimer--;
+        }
+        if (landCooldownTimer != 0) {
+            landCooldownTimer --;
         }
         if (intialThrowVelocity.equals(Vector2.Zero)) {
             obstacle.getBody().applyLinearImpulse(getThrowForce(1),obstacle.getPosition(),true);

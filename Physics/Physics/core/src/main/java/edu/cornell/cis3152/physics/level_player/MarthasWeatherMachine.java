@@ -73,7 +73,8 @@ public class MarthasWeatherMachine {
 
     public void update(World world) {
         if (isRainActive()) {
-            generateRain();
+            for (int i = 0; i < rainFreq; i++)
+                generateRain();
         }
 
         if (isWindActive()) {
@@ -82,18 +83,13 @@ public class MarthasWeatherMachine {
     }
 
     private void generateRain() {
-        rainTimer -= random.nextInt(3)+1;
-        if (rainTimer <= 0) {
-            rainTimer = rainFreq;
-
-            ObstacleSprite newDrop = getFreeRain();
-            if (newDrop.getObstacle() == null) {
-                return;
-            }
-
-            newDrop.getObstacle().setPosition(random.nextInt(40) + random.nextFloat(), 18);
-            newDrop.getObstacle().setLinearVelocity(new Vector2(0,-5));
+        ObstacleSprite newDrop = getFreeRain();
+        if (newDrop.getObstacle() == null) {
+            return;
         }
+
+        newDrop.getObstacle().setPosition(random.nextInt(40) + random.nextFloat(), 18);
+        newDrop.getObstacle().setLinearVelocity(new Vector2(0,-5));
     }
     public void blowWind(World world) {
         Array<Body> entities = new Array<Body>();

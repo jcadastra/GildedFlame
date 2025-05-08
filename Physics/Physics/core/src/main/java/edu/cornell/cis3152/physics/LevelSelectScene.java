@@ -39,20 +39,34 @@ public class LevelSelectScene implements Screen {
     private ParticleEngine particleEngine;
     private boolean doorDisplayDirty = true;
 
+    private ArrowEntry leftArrowEntry, rightArrowEntry;
 
-    private class DoorEntry {
-        public Image door;
-        public float targetX;
+    public class Entry{
+        public Image image;
         public TextureRegionDrawable defaultDrawable;
         public TextureRegionDrawable hoverDrawable;
+    }
+    private class DoorEntry extends Entry{
+        public float targetX;
         public int levelIndex;
 
         public DoorEntry(Image door, TextureRegionDrawable defaultDrawable, TextureRegionDrawable hoverDrawable, int levelIndex) {
-            this.door = door;
+            this.image = door;
             this.defaultDrawable = defaultDrawable;
             this.hoverDrawable = hoverDrawable;
             this.levelIndex = levelIndex;
             this.targetX = door.getX();
+        }
+    }
+
+    private class ArrowEntry extends Entry {
+        public int direction;
+
+        public ArrowEntry(Image arrow, int direction, TextureRegionDrawable defaultDrawable, TextureRegionDrawable hoverDrawable) {
+            this.image = arrow;
+            this.direction = direction;
+            this.defaultDrawable = defaultDrawable;
+            this.hoverDrawable = hoverDrawable;
         }
     }
 
@@ -188,6 +202,8 @@ public class LevelSelectScene implements Screen {
         l_arrow.setSize(screenWidth * 0.05f, screenHeight * 0.05f);
         l_arrow.setPosition(screenWidth * 0.01f, screenHeight * 0.30f);
         stage.addActor(l_arrow);
+        leftArrowEntry = new ArrowEntry(l_arrow,-1,
+            new TextureRegionDrawable(l_arrow_text),new TextureRegionDrawable(l_arrow_hov_text));
 
         // Right arrow textures and image
         Texture r_arrow_text = new Texture(Gdx.files.internal("ui/r_arrow.png"));
@@ -196,6 +212,8 @@ public class LevelSelectScene implements Screen {
         r_arrow.setSize(screenWidth * 0.05f, screenHeight * 0.05f);
         r_arrow.setPosition(screenWidth * 0.94f, screenHeight * 0.30f);
         stage.addActor(r_arrow);
+        rightArrowEntry = new ArrowEntry(r_arrow,1,
+            new TextureRegionDrawable(r_arrow_text),new TextureRegionDrawable(r_arrow_hov_text));
 
         // Create drawables for hover effects
         final TextureRegionDrawable l_arrow_drawable = new TextureRegionDrawable(new TextureRegion(l_arrow_text));
@@ -321,12 +339,12 @@ public class LevelSelectScene implements Screen {
             if (i >= scrollIndex && i < scrollIndex + doorsToShow) {
                 int visibleIndex = i - scrollIndex;
                 entry.targetX = startX + visibleIndex * (doorWidth + spacing);
-                entry.door.setY(yPos);
-                entry.door.setVisible(true);
+                entry.image.setY(yPos);
+                entry.image.setVisible(true);
             } else {
                 // Move it far offscreen to force an animated entrance later
-                entry.door.setX(-1000);
-                entry.door.setVisible(false);
+                entry.image.setX(-1000);
+                entry.image.setVisible(false);
             }
         }
     }
@@ -335,18 +353,19 @@ public class LevelSelectScene implements Screen {
         float lerpSpeed = 10f;
         for (int i = 0; i < doorEntries.size; i++) {
             DoorEntry entry = doorEntries.get(i);
-            float currentX = entry.door.getX();
+            float currentX = entry.image.getX();
             float newX = currentX + (entry.targetX - currentX) * lerpSpeed * delta;
-            entry.door.setX(newX);
+            entry.image.setX(newX);
             // Remove visibility handling here
         }
     }
+
+
     private void controllerSelect() {
         if (inputController.isUsingController()) {
             XBoxController xbox = inputController.xbox;
             boolean start = xbox.getA();
-            DoorEntry currentEntry = doorEntries.get(currentIndex);
-            currentEntry.door.setDrawable(currentEntry.hoverDrawable);
+            Entry currentEntry = controllerButton();
             if (start && !prevButtonA) {
                 int selectionIndex = scrollIndex + currentIndex;
                 if (selectionIndex >= 0 && selectionIndex < doorEntries.size) {
@@ -354,9 +373,9 @@ public class LevelSelectScene implements Screen {
                     InputEvent downEvent = new InputEvent();
                     downEvent.setType(InputEvent.Type.touchDown);
                     downEvent.setStage(stage);
-                    downEvent.setTarget(currentEntry.door);
+                    downEvent.setTarget(currentEntry.image);
                     downEvent.setButton(0);
-                    currentEntry.door.fire(downEvent);
+                    currentEntry.image.fire(downEvent);
                 }
             }
             prevButtonA = start;
@@ -366,13 +385,13 @@ public class LevelSelectScene implements Screen {
             if (joystickCooldown <= 0) {
                 if (horizontal < -0.4f && !moved) {
 //                    particleEngine.dispose();
-                    currentEntry.door.setDrawable(currentEntry.defaultDrawable);
+                    currentEntry.image.setDrawable(currentEntry.defaultDrawable);
                     currentIndex = Math.max(currentIndex - 1, 0);  // Prevent going negative
                     moved = true;
                     joystickCooldown = 0.25f;
                 } else if (horizontal > 0.4f && !moved) {
-                    currentEntry.door.setDrawable(currentEntry.defaultDrawable);
-                    int maxVisible = Math.min(DOORS_VISIBLE, doorEntries.size - scrollIndex);
+                    currentEntry.image.setDrawable(currentEntry.defaultDrawable);
+                    int maxVisible = Math.min(DOORS_VISIBLE+1, doorEntries.size - scrollIndex);
                     currentIndex = Math.min(currentIndex + 1, maxVisible - 1);  // Prevent going off right
                     moved = true;
                     joystickCooldown = 0.25f;
@@ -383,6 +402,18 @@ public class LevelSelectScene implements Screen {
             }
             joystickCooldown -= Gdx.graphics.getDeltaTime();
         }
+    }
+
+    private Entry controllerButton(){
+        Entry currentEntry;
+        if (currentIndex ==0) {
+            currentEntry = leftArrowEntry;
+        }else if(currentIndex ==(DOORS_VISIBLE+1)) {
+            currentEntry = rightArrowEntry;
+        }else{
+            currentEntry = doorEntries.get(currentIndex);
+        }
+        return currentEntry;
     }
 
     @Override

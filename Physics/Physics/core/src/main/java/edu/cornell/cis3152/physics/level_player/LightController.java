@@ -91,6 +91,9 @@ public class LightController {
 
     private int[] lightInUse = new int[maxLights];
 
+    private Color fireColor = new Color(255/255f, 255/255f, 204/255f, 1f);
+    private Color lightColor = Color.LIGHT_GRAY;
+
     /*
      * Map for light assignments.
      * Keys are strings in the format of :
@@ -173,20 +176,20 @@ public class LightController {
         rayHandler = new RayHandler(world, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         rayHandler.setCombinedMatrix(this.camera);
 
-        torchLight = new Lighting(2.2f, points);
+        torchLight = new Lighting(BOX_TO_WORLD,2.2f, points);
 
         //Initializes torch light
         //PositionalLight testlight = new PointLight(rayHandler,10,Color.WHITE,100f,10,10);
         //Color lightCol = new Color(1f, 0.92f, 0.6f, 1);
         Color lightCol = Color.WHITE;
-        torchLighting = new PointLight(rayHandler, 100, lightCol,
+        torchLighting = new PointLight(rayHandler, 100, fireColor,
             5f, points.x, points.y);
         torchLighting.setSoft(false);
         torchLighting.setSoftnessLength(10f);
         torchLightState = torchLight.getState();
 
         //Color playerLightCol = new Color(Color.LIGHT_GRAY.r, Color.LIGHT_GRAY.g, Color.LIGHT_GRAY.b, 0.1f);
-        Color playerLightCol = Color.WHITE;
+        Color playerLightCol = lightColor;
         playerLight = new PointLight(rayHandler, 60, playerLightCol, 2.5f, points.x, points.y);
         playerLight.setContactFilter(CATEGORY_LIGHT, (short) 0,
             (short) CATEGORY_ENVIRONMENT);
@@ -196,7 +199,7 @@ public class LightController {
         //rayHandler.useCustomViewport(viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
         rayHandler.useDiffuseLight(true);
 //         Uncomment if you want no overlay dark hue  ⬇️
-//        rayHandler.useDiffuseLight(false);
+        //rayHandler.useDiffuseLight(false);
         // Background light color, original hue ⬇️
 //        rayHandler.setAmbientLight(0.15f, 0.15f, 0.35f, 1f); // same hue, just darker
         // Background black color ⬇️
@@ -279,7 +282,7 @@ public class LightController {
 //                }
                 PointLight light = fireLightPool.get(fireIndex);
                 Fire spriteFire = (Fire) sprite;
-                light.setColor(Color.YELLOW);
+                light.setColor(fireColor);
                 light.setDistance(3f);
                 light.attachToBody(spriteFire.getObstacle().getBody());
                 System.out.println("fire at"+spriteFire.getObstacle().getPosition());
@@ -302,8 +305,8 @@ public class LightController {
 //                        reverseLightingAssignments.remove(light);
 //                        lightingAssignments.remove(lastName);
 //                    }
-                    light.setColor(Color.WHITE);
-                    light.setDistance(1f);
+                    light.setColor(lightColor);
+                    light.setDistance(1.5f);
                     light.attachToBody(sprite.getObstacle().getBody());
                     light.setActive(true);
                     light.setContactFilter(CATEGORY_LIGHT, (short) 0,
@@ -329,8 +332,9 @@ public class LightController {
 //                            lightingAssignments.remove(lastName);
 //                        }
                         PointLight light = lightPool.get(lightIndex);
-                        light.setColor(Color.LIGHT_GRAY.r, Color.LIGHT_GRAY.g, Color.LIGHT_GRAY.b, 1f);
-                        light.setDistance(1.5f);
+                        //light.setColor(Color.LIGHT_GRAY.r, Color.LIGHT_GRAY.g, Color.LIGHT_GRAY.b, 1f);
+                        light.setColor(lightColor);
+                        light.setDistance(2.5f);
                         light.attachToBody(sprite.getObstacle().getBody());
                         light.setActive(true);
                         light.setSoft(true);
@@ -402,18 +406,20 @@ public class LightController {
         }
 
 
-    public Array<Lighting> fireLights(FireController fireController) {
+    public void fireLights(FireController fireController) {
         Array<Lighting> fireLights = new Array<>();
+        //System.out.println(fireLights.isEmpty() );
         for (Fire fire: fireController.getLitFires()){
                 if (fire.fireID!=0){//not torch flamed
 //                    System.out.println(fire.fireID);
-                    Lighting lighting = new Lighting(2.2f,fire.getObstacle().getPosition());
-                    fireLights.add(lighting);
-//                    System.out.print("fire id"+fire.fireID+" ");
+                    Lighting lighting = new Lighting(BOX_TO_WORLD,2.2f,fire.getObstacle().getPosition());
+                    //fireLights.add(lighting);
+                    //System.out.print("fire light added for"+fire.fireID+" ");
                     attachAmbientLight(fire,true);
             }
         }
-        return fireLights;
+        //System.out.println(fireLights.isEmpty());
+        //return fireLights;
     }
 
     public void turnOffAmbientLight(ObstacleSprite sprite, boolean check) {
