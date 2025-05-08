@@ -145,7 +145,7 @@ public class CollisionController implements ContactListener {
                     && !nonRain.getObstacle().isSensor() && !nonRain.getName().contains("grate") ) {
                     collisionFlags.add(new CollisionFlag("resetRain",idX(bd1, bd2, "rain") ));
 
-                } else if (nonRain instanceof Enemy || nonRain instanceof Avatar || nonRain.getName().contains("platform") || nonRain.getName().contains("burnable")) {
+                } else if ((nonRain instanceof Enemy || nonRain instanceof Avatar || nonRain.getName().contains("platform") || nonRain.getName().contains("burnable"))&& !nonRain.getName().contains("grate")) {
                     collisionFlags.add(new CollisionFlag("resetRain",idX(bd1, bd2, "rain") ));
                 }
             }

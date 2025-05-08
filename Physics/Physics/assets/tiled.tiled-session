@@ -86,19 +86,35 @@
             "scale": 0.180796875,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4798.2024025581195,
-                "y": 2696.396162820845
+                "x": 9557.687321752659,
+                "y": 3719.643937429782
             }
         },
         "advanced_movement.tmj": {
             "expandedObjectLayers": [
                 5
             ],
-            "scale": 0.180796875,
+            "scale": 0.33,
+            "selectedLayer": 6,
+            "viewCenter": {
+                "x": 5321.212121212121,
+                "y": 3401.515151515152
+            }
+        },
+        "box_intro.tmj": {
+            "scale": 0.33,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 4798.2024025581195,
-                "y": 2696.396162820845
+                "x": 3012.121212121212,
+                "y": 2931.818181818182
+            }
+        },
+        "climb_intro.tmj": {
+            "scale": 0.180796875,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 4800.9679370840895,
+                "y": 2701.9272318727853
             }
         },
         "earthtile.tsx": {
@@ -118,8 +134,8 @@
             "scale": 0.25,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 4798,
-                "y": 2698
+                "x": 8240,
+                "y": 3438
             }
         },
         "example_level.tmx": {
@@ -142,8 +158,8 @@
             "scale": 0.25,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 4798,
-                "y": 2698
+                "x": 8240,
+                "y": 3438
             }
         },
         "example_level2.tmx": {
@@ -152,6 +168,14 @@
             "viewCenter": {
                 "x": 4793.478260869565,
                 "y": 2690.217391304348
+            }
+        },
+        "jump_intro.tmj": {
+            "scale": 0.125,
+            "selectedLayer": 6,
+            "viewCenter": {
+                "x": 4816,
+                "y": 3212
             }
         },
         "level 4 (1).tmj": {
@@ -184,15 +208,15 @@
         "level10.tmj": {
             "expandedObjectLayers": [
                 6,
+                4,
                 5,
-                2,
-                4
+                2
             ],
             "scale": 0.125,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 4796,
-                "y": 2700
+                "x": 11680,
+                "y": 4188
             }
         },
         "level11.tmj": {
@@ -221,14 +245,14 @@
         },
         "level4.tmj": {
             "expandedObjectLayers": [
-                5,
-                7
+                7,
+                5
             ],
             "scale": 0.1914,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 4798.850574712644,
-                "y": 2698.5370950888196
+                "x": 9294.670846394984,
+                "y": 3665.099268547545
             }
         },
         "level5.tmj": {
@@ -251,8 +275,8 @@
             "scale": 1.5,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 1499.6666666666665,
-                "y": 1499.6666666666665
+                "x": 2072.6666666666665,
+                "y": 1623
             }
         },
         "level8.tmj": {
@@ -283,6 +307,22 @@
                 "y": 2697.157894736842
             }
         },
+        "move_intro.tmj": {
+            "scale": 0.33,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 3472.727272727273,
+                "y": 3792.424242424243
+            }
+        },
+        "rain_intro.tmj": {
+            "scale": 0.25,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 5236,
+                "y": 590
+            }
+        },
         "rope_intro.tmj": {
             "scale": 0.180796875,
             "selectedLayer": 5,
@@ -293,7 +333,7 @@
         },
         "rune1.tmj": {
             "scale": 0.180796875,
-            "selectedLayer": 1,
+            "selectedLayer": 2,
             "viewCenter": {
                 "x": 4798.2024025581195,
                 "y": 2696.396162820845
@@ -303,8 +343,19 @@
             "scale": 0.180796875,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 4800.9679370840895,
-                "y": 2701.9272318727853
+                "x": 4798.2024025581195,
+                "y": 2696.396162820845
+            }
+        },
+        "rune_medium.tmj": {
+            "expandedObjectLayers": [
+                5
+            ],
+            "scale": 0.25,
+            "selectedLayer": 6,
+            "viewCenter": {
+                "x": 5644,
+                "y": 2834
             }
         },
         "sample.tmj": {
@@ -343,8 +394,8 @@
             "scale": 0.125,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 4796,
-                "y": 2700
+                "x": 11680,
+                "y": 4188
             }
         },
         "test2.tmx": {
@@ -409,8 +460,8 @@
             "scale": 0.0625,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 7496,
-                "y": 2712
+                "x": 21264,
+                "y": 5688
             }
         },
         "test7.tmx": {
@@ -428,8 +479,8 @@
             "scale": 0.0802,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 4794.26433915212,
-                "y": 7500.000000000001
+                "x": 15523.690773067334,
+                "y": 9806.733167082293
             }
         },
         "test_map.tmj": {
@@ -442,9 +493,9 @@
         },
         "test_map.tmx": {
             "expandedObjectLayers": [
-                2,
                 4,
-                3
+                3,
+                2
             ],
             "scale": 0.5,
             "selectedLayer": 2,
@@ -453,10 +504,26 @@
                 "y": 1237
             }
         },
+        "throw_intro.tmj": {
+            "scale": 0.33,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 4151.515151515152,
+                "y": 3668.181818181818
+            }
+        },
         "tileset.tsx": {
             "dynamicWrapping": false,
             "scaleInDock": 0.12,
             "scaleInEditor": 0.33
+        },
+        "totem_intro.tmj": {
+            "scale": 0.180796875,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 4800.9679370840895,
+                "y": 2701.9272318727853
+            }
         },
         "untitled.tmj": {
             "scale": 0.08658854166666666,
@@ -489,17 +556,18 @@
         "level7.tmj",
         "advanced_movement.tmj",
         "rope_intro.tmj",
-        "rune1.tmj"
+        "rune1.tmj",
+        "rune_intro.tmj"
     ],
     "project": "tiled.tiled-project",
     "property.type": "string",
     "recentFiles": [
+        "PlatformTiles.tsx",
         "test_map.tmx",
         "EnemyTiles.tsx",
         "GameObjectTiles.tsx",
         "PlayerTorchTiles.tsx",
         "test2.tmx",
-        "PlatformTiles.tsx",
         "example_level.tmj",
         "test2.tmj",
         "example_level2.tmj",

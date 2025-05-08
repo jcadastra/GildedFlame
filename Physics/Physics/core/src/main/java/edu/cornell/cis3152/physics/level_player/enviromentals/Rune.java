@@ -76,6 +76,8 @@ public class Rune extends ObstacleSprite {
         return prevPowerLevel;
     }
 
+    private boolean triggeredPowerLevel = false;
+    public void resetTriggeredPowerLevel() {triggeredPowerLevel = false;}
     public void addPowerLevel() {
         prevPowerLevel = powerLevel;
         powerLevel += chargeRate;
@@ -86,6 +88,7 @@ public class Rune extends ObstacleSprite {
                 break;
             }
         }
+        triggeredPowerLevel = true;
     }
 
     public void dissapatePowerLevel() {
