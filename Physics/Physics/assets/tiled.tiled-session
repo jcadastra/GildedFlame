@@ -326,6 +326,7 @@
         },
         "rain_intro.tmj": {
             "expandedObjectLayers": [
+                2,
                 6
             ],
             "scale": 0.125,
@@ -343,8 +344,8 @@
             "scale": 0.25,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 4798,
-                "y": 2698
+                "x": 4584,
+                "y": 3278
             }
         },
         "rope_intro.tmj": {
@@ -580,6 +581,8 @@
     "project": "tiled.tiled-project",
     "property.type": "string",
     "recentFiles": [
+        "rain_medium.tmj",
+        "rain_intro.tmj",
         "move_intro.tmj",
         "jump_intro.tmj",
         "throw_intro.tmj",
@@ -588,8 +591,6 @@
         "box_intro.tmj",
         "totem_intro.tmj",
         "rune_medium.tmj",
-        "rain_intro.tmj",
-        "rain_medium.tmj",
         "rune_intro.tmj",
         "PlatformTiles.tsx"
     ]
