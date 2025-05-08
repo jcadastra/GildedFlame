@@ -910,7 +910,9 @@ public class GameplayScene implements Screen {
                             box.getObstacle().setPhysicsUnits(units);
                         } else if (objName.contains("inf")) {
                             box = new GameObject(new float[]{
-                                0, -height/2,
+                                -width/4, -height/2,
+                                width/4, -height/2,
+
                                 width/2,0,
                                 0,height/2,
                                 -width/2,0

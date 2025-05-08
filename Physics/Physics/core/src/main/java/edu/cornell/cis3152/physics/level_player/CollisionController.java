@@ -142,7 +142,10 @@ public class CollisionController implements ContactListener {
             if (isX(bd1, bd2, "rain") == 1) {
                 ObstacleSprite nonRain = bd1.getObstacle().getName().contains("rain") ? bd2 : bd1;
                 if ((nonRain.getObstacle().getBodyType() == BodyType.KinematicBody || nonRain.getObstacle().getBodyType() == BodyType.StaticBody)
-                    && !nonRain.getObstacle().isSensor() && !nonRain.getName().contains("grate")) {
+                    && !nonRain.getObstacle().isSensor() && !nonRain.getName().contains("grate") ) {
+                    collisionFlags.add(new CollisionFlag("resetRain",idX(bd1, bd2, "rain") ));
+
+                } else if (nonRain instanceof Enemy || nonRain instanceof Avatar || nonRain.getName().contains("platform") || nonRain.getName().contains("burnable")) {
                     collisionFlags.add(new CollisionFlag("resetRain",idX(bd1, bd2, "rain") ));
                 }
             }
