@@ -123,17 +123,17 @@ public class LevelSelectScene implements Screen {
 
             Texture baseTex, hoverTex;
 
-            if ("true".equals(completed)) {
+//            if ("true".equals(completed)) {
                 baseTex = loadDoorTexture("complete", false);
                 hoverTex = loadDoorTexture("complete", true);
-            } else if (!foundFirstIncomplete) {
-                baseTex = loadDoorTexture("incomplete", false);
-                hoverTex = loadDoorTexture("incomplete", true);
-                foundFirstIncomplete = true;
-            } else {
-                baseTex = loadDoorTexture("locked", false);
-                hoverTex = baseTex;
-            }
+//            } else if (!foundFirstIncomplete) {
+//                baseTex = loadDoorTexture("incomplete", false);
+//                hoverTex = loadDoorTexture("incomplete", true);
+//                foundFirstIncomplete = true;
+//            } else {
+//                baseTex = loadDoorTexture("locked", false);
+//                hoverTex = baseTex;
+//            }
 
             Image door = new Image(baseTex);
             door.setSize(doorWidth, doorHeight);
