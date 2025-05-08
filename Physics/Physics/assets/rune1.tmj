@@ -209,6 +209,11 @@
                  "name":"rune",
                  "properties":[
                         {
+                         "name":"dissipateTime",
+                         "type":"float",
+                         "value":3
+                        }, 
+                        {
                          "name":"endPos",
                          "type":"string",
                          "value":"10,4.85"
@@ -236,14 +241,14 @@
                         {
                          "name":"timeTo",
                          "type":"float",
-                         "value":5
+                         "value":3
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":400,
-                 "x":1778.78787878788,
-                 "y":3920.84848484848
+                 "x":2002.78787878788,
+                 "y":3908.84848484848
                 }, 
                 {
                  "gid":54,
@@ -254,8 +259,8 @@
                  "type":"",
                  "visible":true,
                  "width":800,
-                 "x":5244,
-                 "y":2611
+                 "x":5096,
+                 "y":2603
                 }, 
                 {
                  "gid":64,
@@ -264,9 +269,14 @@
                  "name":"rune",
                  "properties":[
                         {
+                         "name":"dissipateTime",
+                         "type":"float",
+                         "value":2.5
+                        }, 
+                        {
                          "name":"endPos",
                          "type":"string",
-                         "value":"10,10"
+                         "value":"9,10"
                         }, 
                         {
                          "name":"moveEvent",
@@ -287,6 +297,11 @@
                          "name":"thresholds",
                          "type":"string",
                          "value":"0"
+                        }, 
+                        {
+                         "name":"timeTo",
+                         "type":"float",
+                         "value":2.5
                         }],
                  "rotation":0,
                  "type":"",
@@ -362,8 +377,8 @@
                  "type":"",
                  "visible":true,
                  "width":57,
-                 "x":5546.5,
-                 "y":2575.5
+                 "x":5442.5,
+                 "y":2559.5
                 }, 
                 {
                  "gid":82,
@@ -374,8 +389,8 @@
                  "type":"",
                  "visible":true,
                  "width":57,
-                 "x":6516.5,
-                 "y":2561.5
+                 "x":7520.5,
+                 "y":2153.5
                 }, 
                 {
                  "gid":82,
@@ -410,8 +425,8 @@
                  "type":"",
                  "visible":true,
                  "width":57,
-                 "x":1947.37878787879,
-                 "y":3643.98484848485
+                 "x":2171.37878787879,
+                 "y":3611.98484848485
                 }, 
                 {
                  "gid":82,
@@ -448,6 +463,18 @@
                  "width":57,
                  "x":8803.5,
                  "y":1831.5
+                }, 
+                {
+                 "gid":82,
+                 "height":57,
+                 "id":61,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":8811.5,
+                 "y":2323.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -456,7 +483,7 @@
          "y":0
         }],
  "nextlayerid":7,
- "nextobjectid":61,
+ "nextobjectid":62,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
