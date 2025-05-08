@@ -136,7 +136,7 @@ public class MarthasWeatherMachine {
         collidedObstacles.clear();
         if (world == null) {return false;}
         world.rayCast(rayCastCallback, pos, new Vector2(pos.x, 18));
-        System.out.println("raycast in rain");
+        //System.out.println("raycast in rain");
 
         for (Fixture fixture : collidedObstacles) {
             Object userData = fixture.getBody().getUserData();

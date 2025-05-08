@@ -806,6 +806,7 @@ public class GameplayScene implements Screen {
                         l.createSensor();
                         torchFire = new Fire(units, new Vector2(10,10));
                         addSprite(torchFire);
+                        torchFire.setLighting(l);
 
                         particleEngine = new ParticleEngine(torchFire, units);
                         particleEngine.newFires(fireController);
@@ -823,6 +824,8 @@ public class GameplayScene implements Screen {
                             torch.getObstacle().getPosition().cpy().add(0, torch.getHeight() / 4)));
                         activeLightJoint = world.createJoint(torch.attachObj(l));
                         activeFireJoint = world.createJoint(torch.attachObj(torchFire));
+                        torchFire.setLightJoint(activeLightJoint);
+                        l.setLightJoint(activeLightJoint);
                     } else if (objName.contains("env_light")) {
                         floatingLightPositions.add(new Vector2(pos[0], pos[1]));
                     } else if (objName.contains("moth")) {
@@ -1869,6 +1872,8 @@ public class GameplayScene implements Screen {
                         if (!world.isLocked()) {
                             world.destroyJoint(f.getFixtureJoint());
                         }
+                        System.out.println("KILL FIRE! "+ f.fireID);
+                        detachFireLightJoints(f);
                         f.setFixtureJoint(null);
                     }
 //                    if (f.getLightJoint()!=null){
@@ -1899,6 +1904,8 @@ public class GameplayScene implements Screen {
                             if (!world.isLocked()) {
                                 world.destroyJoint(killFires_fire.getFixtureJoint());
                             }
+                            System.out.println("KILL FIRES! "+ killFires_fire.fireID +" object: "+fireFlag.getSubject().getName());
+                            detachFireLightJoints(killFires_fire);
                             killFires_fire.setFixtureJoint(null);
                         }
 //                        if (killFires_fire.getLightJoint()!=null){
@@ -2482,12 +2489,21 @@ public class GameplayScene implements Screen {
 
     private void detachFireLightJoints(Fire fire) {
         if (fire.getLightJoint()!=null){
+//            if (fire.fireID==0){
+            //System.out.println("remove the joint!");}
                 if (!world.isLocked()) {
                     Lighting lighting = fire.getLighting();
-                    System.out.println("has light"+sprites.contains(lighting));
+                    //System.out.println("has light"+sprites.contains(lighting));
                     lighting.getObstacle().markRemoved(true);
                     //world.destroyBody(lighting.getObstacle().getBody());
                     world.destroyJoint(fire.getLightJoint());
+                    if (fire.fireID==0){//torch fire going out
+                       if(torchFire.getLighting()!=null){
+                           torchFire.getLighting().getObstacle().markRemoved(true);
+                           activeFireJoint=null;
+                           activeLightJoints=null;
+                       }
+                    }
                 }
                 fire.setLightJoint(null);
                 fire.setLighting(null);

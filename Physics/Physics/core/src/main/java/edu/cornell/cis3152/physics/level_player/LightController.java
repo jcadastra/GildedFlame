@@ -176,7 +176,7 @@ public class LightController {
         rayHandler = new RayHandler(world, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         rayHandler.setCombinedMatrix(this.camera);
 
-        torchLight = new Lighting(BOX_TO_WORLD,2.2f, points);
+        //torchLight = new Lighting(BOX_TO_WORLD,2.2f, points);
 
         //Initializes torch light
         //PositionalLight testlight = new PointLight(rayHandler,10,Color.WHITE,100f,10,10);
@@ -186,7 +186,7 @@ public class LightController {
             5f, points.x, points.y);
         torchLighting.setSoft(false);
         torchLighting.setSoftnessLength(10f);
-        torchLightState = torchLight.getState();
+        torchLightState = Lighting.LightState.LIGHT_ON;
 
         //Color playerLightCol = new Color(Color.LIGHT_GRAY.r, Color.LIGHT_GRAY.g, Color.LIGHT_GRAY.b, 0.1f);
         Color playerLightCol = lightColor;
@@ -233,7 +233,7 @@ public class LightController {
     public void attachTorchLight(Fire fire) {
         this.fire = fire;
         torchLighting.attachToBody(fire.getObstacle().getBody());
-        torchLightState = torchLight.getState();
+        torchLightState = Lighting.LightState.LIGHT_ON;
     }
 
     public void attachPlayerLight(Avatar avatar) {
