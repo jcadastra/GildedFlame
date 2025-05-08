@@ -124,14 +124,14 @@ public class ParticleEngine implements Screen {
         effect.draw(batch,Gdx.graphics.getDeltaTime());
     }
 
-    public void splashEffects(float x,float y,float width,float height){
+    public void splashEffects(float x,float y,float width){
         load();
         float h = 2f;
         int k = (int) width/(int)h;
         splashEffects = new Array<>(k);
         for (int i = 0; i<k; i++){
-            float splashX = (x + (i * h))*32;  // Spread the splashes across the width
-            float splashY = y*32;            // Position on the Y-axis (adjust if needed)
+            float splashX = (x + (i * h))*physicsUnits;  // Spread the splashes across the width
+            float splashY = y*physicsUnits;            // Position on the Y-axis (adjust if needed)
             splash.setPosition(splashX, splashY);
             splash.start();
             splash.scaleEffect(10f);
@@ -140,7 +140,7 @@ public class ParticleEngine implements Screen {
 
     }
 
-    public void drawSplash(Batch batch, float x,float y,float width,float height){
+    public void drawSplash(Batch batch, float x,float y){
         if (splashEffects!=null){
             float h = 1f;
             int k = splashEffects.size;
@@ -148,8 +148,8 @@ public class ParticleEngine implements Screen {
             //splashEffects = new Array<>(k);
             for (int i = 0; i<k; i++){
                 ParticleEffect splash = splashEffects.get(i);
-                float splashX = (x + (i * h))*32;  // Spread the splashes across the width
-                float splashY = y*32;            // Position on the Y-axis (adjust if needed)
+                float splashX = (x + (i * h))*physicsUnits;  // Spread the splashes across the width
+                float splashY = y*physicsUnits;            // Position on the Y-axis (adjust if needed)
                 splash.setPosition(splashX, splashY);
                 System.out.println("Splash at: " + splashX + ", " + splashY);
                 splash.update(Gdx.graphics.getDeltaTime());
@@ -162,7 +162,7 @@ public class ParticleEngine implements Screen {
         //splashEffects.clear();
     }}
     public void drawRain (SpriteBatch batch,Rectangle bounds){
-        rainEffect.setPosition(32,bounds.height*32 );
+        rainEffect.setPosition(physicsUnits,bounds.height*physicsUnits );
         rainEffect.update(Gdx.graphics.getDeltaTime());
         rainEffect.draw(batch);
         //drawSplash(batch,Gdx.graphics.getDeltaTime());

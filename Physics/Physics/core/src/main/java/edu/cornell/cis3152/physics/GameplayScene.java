@@ -1435,6 +1435,7 @@ public class GameplayScene implements Screen {
         weatherMachine.updateWorld(world);
         if (weatherMachine.isRainActive()) {
             supplementaryRainActions();
+            particleEngine.ra
         }
         //updateFireLights();
         updateTweenedMovementObjectsVec2(dt);
@@ -1807,10 +1808,13 @@ public class GameplayScene implements Screen {
                     setComplete(true);
                     break;
                 case "queueFailure":
+                    avatar.setGroundedState(GroundState.DEAD);
                     queueFailure = true;
                     break;
                 case "resetRain":
-                    weatherMachine.resetRain(todo_action.getSubject());
+                    ObstacleSprite os = todo_action.getSubject();
+                    weatherMachine.resetRain(os);
+                    particleEngine.splashEffects(os.getObstacle().getX(), os.getObstacle().getY(), .5f);
                     break;
                 case "debugKillObj":
                     // not safe operation, for now will kill game on reload

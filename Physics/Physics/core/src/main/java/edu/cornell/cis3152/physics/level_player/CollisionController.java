@@ -764,12 +764,13 @@ public class CollisionController implements ContactListener {
         ObstacleSprite bd2 = (ObstacleSprite) body2.getUserData();
 
 
-        if (bd1 instanceof Avatar && ((Avatar) bd1).isDead() ||
-            bd2 instanceof Avatar && ((Avatar) bd2).isDead()) {
-            contact.setEnabled(false);
+        if (isXandY(bd1, bd2, Avatar.class, Enemy.class) == 1) {
+            if (((Avatar)idX(bd1,bd2,Avatar.class)).isDead()) {
+                contact.setEnabled(false);
+            }
         }
 
-        if (isXandY(bd1, bd2, Moth.class, Avatar.class) == 1) {
+        if (isXandY(bd1, bd2, Moth.class, Avatar.class) == 1 || isXandY(bd1, bd2, "platform", Avatar.class) == 1) {
             Avatar avatar = (Avatar) idX(bd1, bd2, Avatar.class);
             if (avatar.isDead() || avatar.getGroundedState() == GroundState.DEAD){
                 contact.setEnabled(false);
