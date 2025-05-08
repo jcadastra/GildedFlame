@@ -142,7 +142,10 @@ public class CollisionController implements ContactListener {
             if (isX(bd1, bd2, "rain") == 1) {
                 ObstacleSprite nonRain = bd1.getObstacle().getName().contains("rain") ? bd2 : bd1;
                 if ((nonRain.getObstacle().getBodyType() == BodyType.KinematicBody || nonRain.getObstacle().getBodyType() == BodyType.StaticBody)
-                    && !nonRain.getObstacle().isSensor() && !nonRain.getName().contains("grate")) {
+                    && !nonRain.getObstacle().isSensor() && !nonRain.getName().contains("grate") ) {
+                    collisionFlags.add(new CollisionFlag("resetRain",idX(bd1, bd2, "rain") ));
+
+                } else if (nonRain instanceof Enemy || nonRain instanceof Avatar || nonRain.getName().contains("platform") || nonRain.getName().contains("burnable")) {
                     collisionFlags.add(new CollisionFlag("resetRain",idX(bd1, bd2, "rain") ));
                 }
             }
@@ -158,7 +161,9 @@ public class CollisionController implements ContactListener {
 
 
             if (isXandY(bd1, bd2, Avatar.class, Torch.class )== 1) {
-                collisionFlags.push(new CollisionFlag("addTorch", idX(bd1, bd2, Avatar.class)));
+                if (((Avatar)idX(bd1,bd2, Avatar.class)).getGroundedState() != GroundState.CLIMBING) {
+                    collisionFlags.push(new CollisionFlag("addTorch", idX(bd1, bd2, Avatar.class)));
+                }
             }
 
             if (isXandY(bd1, bd2, "wall", Enemy.class) == 1) {
@@ -761,12 +766,13 @@ public class CollisionController implements ContactListener {
         ObstacleSprite bd2 = (ObstacleSprite) body2.getUserData();
 
 
-        if (bd1 instanceof Avatar && ((Avatar) bd1).isDead() ||
-            bd2 instanceof Avatar && ((Avatar) bd2).isDead()) {
-            contact.setEnabled(false);
+        if (isXandY(bd1, bd2, Avatar.class, Enemy.class) == 1) {
+            if (((Avatar)idX(bd1,bd2,Avatar.class)).isDead()) {
+                contact.setEnabled(false);
+            }
         }
 
-        if (isXandY(bd1, bd2, Moth.class, Avatar.class) == 1) {
+        if (isXandY(bd1, bd2, Moth.class, Avatar.class) == 1 || isXandY(bd1, bd2, "platform", Avatar.class) == 1) {
             Avatar avatar = (Avatar) idX(bd1, bd2, Avatar.class);
             if (avatar.isDead() || avatar.getGroundedState() == GroundState.DEAD){
                 contact.setEnabled(false);
