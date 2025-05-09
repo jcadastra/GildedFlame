@@ -890,7 +890,7 @@ public class GameplayScene implements Screen {
                     } else if (objName.contains("grate")) {
                         float width = object.getFloat("width") / levelData.getInt("tilewidth");
                         float height = object.getFloat("height") / levelData.getInt("tileheight");
-                        GameObject grate = new GameObject(x,y,width,height,units,true);
+                        GameObject grate = new GameObject(x,y,width,height,units,true,0);
                         grate.getObstacle().setBodyType(BodyType.StaticBody);
                         grate.getObstacle().setName("grateplatform");
                         grate.setTexture(directory.getEntry("grate", Texture.class));
