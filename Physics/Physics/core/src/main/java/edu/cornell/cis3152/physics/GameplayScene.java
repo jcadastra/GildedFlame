@@ -792,13 +792,17 @@ public class GameplayScene implements Screen {
                     float y = (bounds.height * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
                     float[] pos = new float[]{x, y};
                     if (objName.contains("player")) {
-                            Texture playerTexture = directory.getEntry("platform-player", Texture.class);
-                            avatar = new Avatar(directory, units, levelInfo.get("traci"));
-                            avatar.setTexture(playerTexture);
-                            avatar.getObstacle().setPosition(pos[0], pos[1]);
-                            //System.out.println("position" + pos[0] + " " + pos[1]);
-                            addSprite(avatar);
-                            avatar.createSensor();
+                        Texture playerTexture = directory.getEntry("platform-player", Texture.class);
+                        avatar = new Avatar(directory, units, levelInfo.get("traci"));
+                        avatar.setTexture(playerTexture);
+                        float width = object.getFloat("width") / levelData.getInt("tilewidth");
+                        float height = object.getFloat("height") / levelData.getInt("tileheight");
+                        x -= width;
+                        y += height/2 - 50/units;
+                        avatar.getObstacle().setPosition(x,y);
+                        //System.out.println("position" + pos[0] + " " + pos[1]);
+                        addSprite(avatar);
+                        avatar.createSensor();
 
                     } else if (objName.contains("torch")) {
                         Lighting l = new Lighting(units, levelInfo.get("light"));
@@ -813,7 +817,7 @@ public class GameplayScene implements Screen {
 
                         texture = directory.getEntry("platform-torch", Texture.class);
                         torch = new Torch(units, constants.get("torch"));
-                        torch.getObstacle().setPosition(pos[0], pos[1]);
+                        torch.getObstacle().setPosition(x,y);
                         torch.setTexture(texture);
                         torch.setMaterial(new ObstacleMaterial("torch"));
                         addSprite(torch);
@@ -840,7 +844,11 @@ public class GameplayScene implements Screen {
                         enemies.add(moth);
                     } else if (objName.contains("totem")) {
                         texture = directory.getEntry("platform-totem01", Texture.class);
-                        Vector2 position = new Vector2(pos[0], pos[1]);
+                        float width = object.getFloat("width") / levelData.getInt("tilewidth");
+                        float height = object.getFloat("height") / levelData.getInt("tileheight");
+                        x = x + width/2;
+                        y = y + height/2;
+                        Vector2 position = new Vector2(x,y);
                         Totem totem = new Totem(1, units,
                             levelInfo.get("enemies").get("totems").get("instances").get(0),
                             directory, position);
@@ -891,6 +899,8 @@ public class GameplayScene implements Screen {
                     } else if (objName.contains("burnable")) {
                         float width = object.getFloat("width") / levelData.getInt("tilewidth");
                         float height = object.getFloat("height") / levelData.getInt("tileheight");
+                        x = x + width/2;
+                        y = y + height/2;
                         String materialType = "wood";
                         try {
                             materialType = object.getString("material");
@@ -1467,6 +1477,10 @@ public class GameplayScene implements Screen {
         soundEngine.avatarWalking(input.getHorizontal(), avatar.getGroundedState().equals(GroundState.GROUNDED));
         avatar.setJumping(input.didPrimary());
         avatar.setShooting(input.didSecondary());
+
+        if (input.didPrimary()) {
+            world.step(dt, WORLD_VELOC, WORLD_POSIT);
+        }
 
         if (!(avatar.getBodyTouchedClimbables().isEmpty()) && !avatar.getHasTorch() && !avatar.getGroundedState().equals(GroundState.CLIMBING)
              && input.didVertical()) {
@@ -2193,7 +2207,7 @@ public class GameplayScene implements Screen {
         // Turn the physics engine crank.
         // NORMALLY we would use a fixed step, not dt
         // But that is harder and a topic of the advanced class
-        world.step(dt,WORLD_VELOC,WORLD_POSIT);
+        world.step(1/60f,WORLD_VELOC,WORLD_POSIT);
 
         // Garbage collect the deleted objects.
         // Note how we use the linked list nodes to delete O(1) in place.

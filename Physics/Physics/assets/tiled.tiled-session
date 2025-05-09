@@ -1,5 +1,5 @@
 {
-    "activeFile": "rain_medium.tmj",
+    "activeFile": "box_intro.tmj",
     "expandedProjectPaths": [
         "."
     ],
@@ -69,7 +69,7 @@
         },
         "GameObjectTiles.tsx": {
             "dynamicWrapping": true,
-            "scaleInDock": 0.25,
+            "scaleInDock": 0.03125,
             "scaleInEditor": 0.5
         },
         "PlatformTiles.tsx": {
@@ -104,14 +104,14 @@
         },
         "box_intro.tmj": {
             "expandedObjectLayers": [
-                5,
-                2
+                2,
+                5
             ],
-            "scale": 0.33,
-            "selectedLayer": 4,
+            "scale": 0.25,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 4798.484848484848,
-                "y": 2698.484848484848
+                "x": 2820,
+                "y": 3498
             }
         },
         "climb_intro.tmj": {
@@ -326,8 +326,8 @@
         },
         "rain_intro.tmj": {
             "expandedObjectLayers": [
-                6,
-                2
+                2,
+                6
             ],
             "scale": 0.125,
             "selectedLayer": 3,
@@ -338,14 +338,14 @@
         },
         "rain_medium.tmj": {
             "expandedObjectLayers": [
-                6,
-                2
+                2,
+                6
             ],
             "scale": 0.25,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 5156,
-                "y": 3270
+                "x": 5398,
+                "y": 2698
             }
         },
         "rope_intro.tmj": {
@@ -371,8 +371,8 @@
             "scale": 0.180796875,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 4795.4368680321495,
-                "y": 2690.8650937689054
+                "x": 4798.2024025581195,
+                "y": 2696.396162820845
             }
         },
         "rune_medium.tmj": {
@@ -586,12 +586,12 @@
         "throw_intro.tmj",
         "climb_intro.tmj",
         "advanced_movement.tmj",
-        "box_intro.tmj",
-        "totem_intro.tmj",
-        "rune_medium.tmj",
-        "rain_intro.tmj",
         "rune_intro.tmj",
         "rain_medium.tmj",
+        "rain_intro.tmj",
+        "rune_medium.tmj",
+        "totem_intro.tmj",
+        "box_intro.tmj",
         "PlatformTiles.tsx"
     ]
 }
