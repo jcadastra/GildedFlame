@@ -44,7 +44,7 @@ public class Rune extends ObstacleSprite {
 
 
     public Rune (float x, float y, float width, float height, float rotationDeg, float units, float[] thresholds, Texture runeSigil) {
-        super(new WheelObstacle(x,y, .61f/40 * units));
+        super(new WheelObstacle(x,y, .61f));
         this.sigilRadius = .61f/40 * units;
         this.rotationDeg = rotationDeg;
 
@@ -79,16 +79,18 @@ public class Rune extends ObstacleSprite {
     private boolean triggeredPowerLevel = false;
     public void resetTriggeredPowerLevel() {triggeredPowerLevel = false;}
     public void addPowerLevel() {
-        prevPowerLevel = powerLevel;
-        powerLevel += chargeRate;
-        for (float th : thresholds) {
-            if (powerLevel >= th) {
-                currentLatchThreshold = th;
-            } else {
-                break;
+        if (!triggeredPowerLevel) {
+            prevPowerLevel = powerLevel;
+            powerLevel += chargeRate;
+            for (float th : thresholds) {
+                if (powerLevel >= th) {
+                    currentLatchThreshold = th;
+                } else {
+                    break;
+                }
             }
+            triggeredPowerLevel = true;
         }
-        triggeredPowerLevel = true;
     }
 
     public void dissapatePowerLevel() {

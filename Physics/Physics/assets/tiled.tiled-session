@@ -1,5 +1,5 @@
 {
-    "activeFile": "box_intro.tmj",
+    "activeFile": "rune_intro.tmj",
     "expandedProjectPaths": [
         "."
     ],
@@ -92,26 +92,26 @@
         },
         "advanced_movement.tmj": {
             "expandedObjectLayers": [
-                5,
-                6
+                6,
+                5
             ],
             "scale": 0.33,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 4798.484848484848,
-                "y": 2698.484848484848
+                "x": 4793.939393939394,
+                "y": 2692.4242424242425
             }
         },
         "box_intro.tmj": {
             "expandedObjectLayers": [
-                2,
-                5
+                5,
+                2
             ],
             "scale": 0.25,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 2820,
-                "y": 3498
+                "x": 4758,
+                "y": 2658
             }
         },
         "climb_intro.tmj": {
@@ -177,8 +177,8 @@
         },
         "jump_intro.tmj": {
             "expandedObjectLayers": [
-                7,
-                4
+                4,
+                7
             ],
             "scale": 0.125,
             "selectedLayer": 6,
@@ -326,26 +326,26 @@
         },
         "rain_intro.tmj": {
             "expandedObjectLayers": [
-                2,
-                6
+                6,
+                2
             ],
             "scale": 0.125,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 4796,
-                "y": 2700
+                "x": 4792,
+                "y": 2692
             }
         },
         "rain_medium.tmj": {
             "expandedObjectLayers": [
-                2,
-                6
+                6,
+                2
             ],
             "scale": 0.25,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 5398,
-                "y": 2698
+                "x": 5392,
+                "y": 2694
             }
         },
         "rope_intro.tmj": {
@@ -369,10 +369,10 @@
                 5
             ],
             "scale": 0.180796875,
-            "selectedLayer": 5,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": 4798.2024025581195,
-                "y": 2696.396162820845
+                "x": 4789.9057989802095,
+                "y": 2690.8650937689054
             }
         },
         "rune_medium.tmj": {
@@ -382,8 +382,8 @@
             "scale": 0.25,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 4798,
-                "y": 2698
+                "x": 4792,
+                "y": 2694
             }
         },
         "sample.tmj": {
@@ -549,8 +549,8 @@
             "scale": 0.180796875,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4798.2024025581195,
-                "y": 2696.396162820845
+                "x": 4795.4368680321495,
+                "y": 2690.8650937689054
             }
         },
         "untitled.tmj": {
@@ -586,12 +586,12 @@
         "throw_intro.tmj",
         "climb_intro.tmj",
         "advanced_movement.tmj",
-        "rune_intro.tmj",
-        "rain_medium.tmj",
-        "rain_intro.tmj",
-        "rune_medium.tmj",
-        "totem_intro.tmj",
         "box_intro.tmj",
+        "totem_intro.tmj",
+        "rune_medium.tmj",
+        "rain_intro.tmj",
+        "rain_medium.tmj",
+        "rune_intro.tmj",
         "PlatformTiles.tsx"
     ]
 }

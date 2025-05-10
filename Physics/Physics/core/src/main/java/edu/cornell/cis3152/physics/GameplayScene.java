@@ -602,6 +602,11 @@ public class GameplayScene implements Screen {
         if(particleEngine!=null){
             particleEngine.dispose();
         }
+
+        if (avatar!=null) {
+            avatar.reset();
+        }
+        
         sprites.clear();
         addQueue.clear();
         runeSet.clear();
@@ -921,17 +926,22 @@ public class GameplayScene implements Screen {
                             materialType = "stone";
                             box.setTexture(directory.getEntry("nonburnable", Texture.class));
                             box.getObstacle().setPhysicsUnits(units);
+                            box.getObstacle().setDensity(1.5f );
                         } else if (objName.contains("inf")) {
                             box = new GameObject(new float[]{
-                                -width/4, -height/2,
-                                width/4, -height/2,
+                                -width/4, -height/2.2f,
+                                -width/8,-height/2.1f,
+                                0,-height/2,
+                                width/8,-height/2.1f,
+                                width/4, -height/2.2f,
 
-                                width/2,0,
+                                width/2,height/3,
                                 0,height/2,
-                                -width/2,0
+                                -width/2,height/3
                             }, x,y, width, height, units);
                             materialType = "infinite";
                             box.setTexture(directory.getEntry("brazier", Texture.class));
+                            box.getObstacle().setDensity(1.8f );
                         } else {
                             box = new GameObject(new float[]{
                                 -(width) * (3f/10f), -(height)/2.1f,
@@ -950,12 +960,13 @@ public class GameplayScene implements Screen {
                                 -width/2, -(height) * (3f/10)
                             }, x,y, width, height, units);
                             box.setTexture(directory.getEntry("burnable", Texture.class));
+                            box.getObstacle().setDensity(1.5f );
                         }
                         box.setMaterial(new ObstacleMaterial(materialType));
                         box.getObstacle().setBodyType(BodyType.DynamicBody);
                         box.getObstacle().setName(objName);
                         box.getObstacle().setPhysicsUnits(units);
-                        box.getObstacle().setDensity(1f );
+                        box.getObstacle().setFriction(1f);
                         addSprite(box);
                     } else if (objName.contains("rain")) {
                         for (JsonValue prop : object.get("properties")) {
@@ -1771,6 +1782,7 @@ public class GameplayScene implements Screen {
 
                 }
             }
+            rune.resetTriggeredPowerLevel();
         }
     }
 

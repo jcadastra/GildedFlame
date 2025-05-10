@@ -285,7 +285,7 @@ public class LightController {
                 light.setColor(fireColor);
                 light.setDistance(3f);
                 light.attachToBody(spriteFire.getObstacle().getBody());
-                System.out.println("fire at"+spriteFire.getObstacle().getPosition());
+//                System.out.println("fire at"+spriteFire.getObstacle().getPosition());
                 light.setActive(true);
                 light.setContactFilter(CATEGORY_LIGHT, (short) 0,
                     (short) CATEGORY_ENVIRONMENT);

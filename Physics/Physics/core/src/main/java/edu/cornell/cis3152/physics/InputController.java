@@ -123,7 +123,7 @@ public class InputController {
         return vertical;
     }
     public boolean didVertical() {
-        return (vertical != 0) && (verticalPrevious == 0);
+        return (vertical != 0);
     }
 
     /**

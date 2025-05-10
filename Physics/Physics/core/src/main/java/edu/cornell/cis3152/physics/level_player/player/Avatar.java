@@ -1001,6 +1001,7 @@ public class Avatar extends ObstacleSprite {
     public Set<EnhancedObstacleSprite> getBodyTouchedClimbables() {
         return bodyTouchedClimbables;
     }
+    public void reset() {bodyTouchedClimbables.clear();}
 
     public enum GroundState {
         GROUNDED, AIRBORNE, CLIMBING, DEAD
