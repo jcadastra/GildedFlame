@@ -23,6 +23,7 @@ import com.badlogic.gdx.physics.box2d.*;
 
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.utils.JsonValue;
+import edu.cornell.cis3152.physics.GDXRoot;
 import edu.cornell.cis3152.physics.level_player.enviromentals.EnhancedObstacleSprite;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Ladder;
 import edu.cornell.gdiac.assets.AssetDirectory;
@@ -644,7 +645,7 @@ public class Avatar extends ObstacleSprite {
             avgAngle /= (count);
             Vector2 closestPos = bodyTouchedClimbables.stream().min(
                     Comparator.comparingDouble(x -> x.getObstacle().getPosition().dst(obstacle.getPosition())))
-                    .map(x -> x.getObstacle().getPosition()).orElse(obstacle.getPosition());
+                .map(x -> x.getObstacle().getPosition()).orElse(obstacle.getPosition());
             obstacle.setAngle((float) ((Math.PI / 2) - Math.abs(avgAngle)));
 
             Vector2 ropeDir = new Vector2((float) Math.cos(avgAngle), (float) Math.sin(avgAngle));
@@ -813,7 +814,9 @@ public class Avatar extends ObstacleSprite {
             case AIRBORNE:
                 if (prevFalling == -1 && (getIsFalling() == 0 || getIsFalling() == 1)) { // if it was falling before, and now is not (landed)
                     setGroundedState(GroundState.GROUNDED);
-                }
+                    } else if (prevFalling == 0 && (Math.abs(getVelocity().y) < 0.01f)) {
+                        setGroundedState(GroundState.GROUNDED);
+                    }
                 break;
             case DEAD:
             case CLIMBING:
