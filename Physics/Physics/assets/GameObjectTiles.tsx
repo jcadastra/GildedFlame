@@ -95,6 +95,9 @@ swing</property>
   <image width="300" height="300" source="environment/grate.png"/>
  </tile>
  <tile id="18">
+  <properties>
+   <property name="startOnFire" type="bool" value="false"/>
+  </properties>
   <image width="323" height="242" source="environment/brazier.png"/>
  </tile>
 </tileset>

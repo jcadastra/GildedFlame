@@ -98,8 +98,8 @@
             "scale": 0.33,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 4793.939393939394,
-                "y": 2692.4242424242425
+                "x": 4790.90909090909,
+                "y": 2689.3939393939395
             }
         },
         "box_intro.tmj": {
@@ -110,16 +110,16 @@
             "scale": 0.25,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 4758,
-                "y": 2658
+                "x": 4752,
+                "y": 2654
             }
         },
         "climb_intro.tmj": {
             "scale": 0.180796875,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4798.2024025581195,
-                "y": 2696.396162820845
+                "x": 4795.4368680321495,
+                "y": 2690.8650937689054
             }
         },
         "earthtile.tsx": {
@@ -177,14 +177,14 @@
         },
         "jump_intro.tmj": {
             "expandedObjectLayers": [
-                4,
-                7
+                7,
+                4
             ],
             "scale": 0.125,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 4796,
-                "y": 2700
+                "x": 4792,
+                "y": 2692
             }
         },
         "level 4 (1).tmj": {
@@ -332,8 +332,8 @@
             "scale": 0.125,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 4792,
-                "y": 2692
+                "x": 4784,
+                "y": 2684
             }
         },
         "rain_medium.tmj": {
@@ -344,8 +344,8 @@
             "scale": 0.25,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 5392,
-                "y": 2694
+                "x": 5388,
+                "y": 2690
             }
         },
         "rope_intro.tmj": {
@@ -371,7 +371,7 @@
             "scale": 0.180796875,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 4789.9057989802095,
+                "x": 4784.3747299282695,
                 "y": 2690.8650937689054
             }
         },
@@ -382,8 +382,8 @@
             "scale": 0.25,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 4792,
-                "y": 2694
+                "x": 4784,
+                "y": 2686
             }
         },
         "sample.tmj": {
@@ -536,8 +536,8 @@
             "scale": 0.33,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4798.484848484848,
-                "y": 2698.484848484848
+                "x": 4793.939393939394,
+                "y": 2692.4242424242425
             }
         },
         "tileset.tsx": {
@@ -549,7 +549,7 @@
             "scale": 0.180796875,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4795.4368680321495,
+                "x": 4789.9057989802095,
                 "y": 2690.8650937689054
             }
         },
@@ -579,7 +579,7 @@
         "rune_intro.tmj"
     ],
     "project": "tiled.tiled-project",
-    "property.type": "string",
+    "property.type": "bool",
     "recentFiles": [
         "move_intro.tmj",
         "jump_intro.tmj",

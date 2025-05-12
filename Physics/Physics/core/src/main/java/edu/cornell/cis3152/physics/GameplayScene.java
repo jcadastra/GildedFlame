@@ -235,6 +235,7 @@ public class GameplayScene implements Screen {
     protected PooledList<TweenElement<Float>> tweenedMovmentObjectsFloat;
     protected PooledList<TweenElement<Vector2>> tweenedMovmentObjectsVec2;
     protected FitViewport fitViewport;
+    protected Random random;
 
     protected LightController lightController;
     protected ShapeRenderer shapeRenderer;
@@ -410,6 +411,7 @@ public class GameplayScene implements Screen {
         tweenedMovmentObjectsFloat = new PooledList<>();
         this.shapeRenderer = new ShapeRenderer();
         runeSet = new HashSet<>();
+        this.random = new Random();
 
         this.fitViewport = new FitViewport(1280, 720);
 
@@ -606,7 +608,7 @@ public class GameplayScene implements Screen {
         if (avatar!=null) {
             avatar.reset();
         }
-        
+
         sprites.clear();
         addQueue.clear();
         runeSet.clear();
@@ -940,7 +942,10 @@ public class GameplayScene implements Screen {
                                 -width/2,height/3
                             }, x,y, width, height, units);
                             materialType = "infinite";
+                            boolean startOnFire = true;
+                            if (object.hasChild("startOnFire")) object.getBoolean("startOnFire");
                             box.setTexture(directory.getEntry("brazier", Texture.class));
+                            if (startOnFire) fireController.lightAnew(box, new Vector2(box.getObstacle().getX() + (random.nextFloat()-.5f)/2, box.getObstacle().getY()));
                             box.getObstacle().setDensity(1.8f );
                         } else {
                             box = new GameObject(new float[]{
