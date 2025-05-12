@@ -3,6 +3,8 @@
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <properties>
+   <property name="dynamic1" type="bool" value="false"/>
+   <property name="dynamic2" type="bool" value="false"/>
    <property name="end1Material" value="rope,iron"/>
    <property name="end2Material" value="rope,iron"/>
    <property name="middleMaterial" value="rope,iron"/>

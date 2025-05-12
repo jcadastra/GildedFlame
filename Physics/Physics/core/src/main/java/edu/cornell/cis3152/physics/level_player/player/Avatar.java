@@ -23,7 +23,6 @@ import com.badlogic.gdx.physics.box2d.*;
 
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.utils.JsonValue;
-import edu.cornell.cis3152.physics.GDXRoot;
 import edu.cornell.cis3152.physics.level_player.enviromentals.EnhancedObstacleSprite;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Ladder;
 import edu.cornell.gdiac.assets.AssetDirectory;
@@ -209,6 +208,9 @@ public class Avatar extends ObstacleSprite {
     private boolean reachedApex = false;
     private boolean hadTorch;
     private float deathOpacity = 0f;
+    private int jumpDeadTimer = 0;
+    public void setJumpDeadTimer() {jumpDeadTimer = 20;}
+    public boolean jumpDeadTimerAvaliable() {return jumpDeadTimer <= 0;}
 
     /**
      * Creates a new Traci avatar with the given physics data
@@ -735,6 +737,9 @@ public class Avatar extends ObstacleSprite {
     public void update(float dt) {
         Vector2 currentPosition = getLocation();
         prevFalling = getIsFalling();
+        if (jumpDeadTimer > 0) {
+            jumpDeadTimer--;
+        }
 
         if (groundState == GroundState.DEAD) {
             cdFrameCount++;
