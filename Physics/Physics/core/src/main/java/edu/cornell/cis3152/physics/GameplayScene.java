@@ -942,7 +942,7 @@ public class GameplayScene implements Screen {
                                 -width/2,height/3
                             }, x,y, width, height, units);
                             materialType = "infinite";
-                            boolean startOnFire = true;
+                            boolean startOnFire = false;
                             if (object.hasChild("startOnFire")) object.getBoolean("startOnFire");
                             box.setTexture(directory.getEntry("brazier", Texture.class));
                             if (startOnFire) fireController.lightAnew(box, new Vector2(box.getObstacle().getX() + (random.nextFloat()-.5f)/2, box.getObstacle().getY()));
