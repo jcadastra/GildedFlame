@@ -58,6 +58,18 @@
     "holder" : "backgroundAssets/holder.png",
     "chandelier" : "backgroundAssets/chandelier.png",
     "grate" : "environment/grate.png",
+    "maskCrumbleANIMATION": {
+      "file": "ui/maskCrumble.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "maskFallANIMATION": {
+      "file": "ui/maskFall.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
     "platform-totemLIGHTANIMATION": {
       "file": "platform/totemInLightAnimation.png",
       "mipmaps": true,
