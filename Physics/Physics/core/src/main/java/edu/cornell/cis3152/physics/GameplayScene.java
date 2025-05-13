@@ -217,11 +217,6 @@ public class GameplayScene implements Screen {
     private Skin skin;
 
     /**
-     * Active joint for avatar holding torch
-     */
-    private Joint activeTorchJoint;
-
-    /**
      * Active joint for torch holding light
      */
     private Joint activeLightJoint;
@@ -237,6 +232,7 @@ public class GameplayScene implements Screen {
     protected PooledList<TweenElement<Vector2>> tweenedMovmentObjectsVec2;
     protected FitViewport fitViewport;
     protected Random random;
+    protected JsonValue torchHoldState;
 
     protected LightController lightController;
     protected ShapeRenderer shapeRenderer;
@@ -248,11 +244,6 @@ public class GameplayScene implements Screen {
     protected Fire torchFire;
 
     private Texture eye;
-
-    /**
-     * Flag to add torch to avatar in update
-     */
-    private boolean queueAddTorch;
 
     /**
      * If torch is on the right of the avatar
@@ -402,6 +393,7 @@ public class GameplayScene implements Screen {
         this.directory = directory;
         constants = directory.getEntry(prefix+"-constants",JsonValue.class);
         JsonValue defaults = constants.get("world");
+        torchHoldState = directory.getEntry("torchHoldState",JsonValue.class);
         fireController = new FireController(directory);
         contactListener = new CollisionController(directory, fireController);
         this.eventHandler = new EventHandler();
@@ -555,10 +547,6 @@ public class GameplayScene implements Screen {
             queueFailure = false;
         }
 
-        if (activeTorchJoint != null) {
-            world.destroyJoint(activeTorchJoint);
-            activeTorchJoint = null;
-        }
         if (activeLightJoint != null) {
             world.destroyJoint(activeLightJoint);
             activeLightJoint = null;
@@ -643,10 +631,6 @@ public class GameplayScene implements Screen {
         JsonValue values = constants.get("world");
         Vector2 gravity = new Vector2(0, values.getFloat("gravity"));
 
-        if (activeTorchJoint != null) {
-            world.destroyJoint(activeTorchJoint);
-            activeTorchJoint = null;
-        }
         if (activeLightJoint != null) {
             world.destroyJoint(activeLightJoint);
             activeLightJoint = null;
@@ -903,6 +887,7 @@ public class GameplayScene implements Screen {
                         platform.getObstacle().setPhysicsUnits(units);
                         platform.setMaterial(new ObstacleMaterial("platform"));
                         platform.getObstacle().setAngle(rotation);
+                        platform.getObstacle().setFriction(1);
                         addSprite(platform);
                         platform.generateInternalCrushSensor();
                     } else if (objName.contains("ambientLight")) {
@@ -1476,6 +1461,7 @@ public class GameplayScene implements Screen {
     public void update(float dt) {
 
         soundEngine.tendToMusicLoop();
+        torch.onRight = avatar.isFacingRight();
 //        System.out.println(Gdx.graphics.getFramesPerSecond());
 //        SavedDataHandler temp = new SavedDataHandler();
 //        temp.setDataVal("test" + Gdx.graphics.getFrameId(), Gdx.graphics.getFramesPerSecond());
@@ -1530,9 +1516,10 @@ public class GameplayScene implements Screen {
             avatar.removeClimbingPhysics();
         }
 
-        if (input.getThrowing() && avatar.getHasTorch() && activeTorchJoint != null) {
+        if (input.getThrowing() && avatar.getHasTorch()) {
             dropTorchHelper();
             torch.applyThrowForce(avatar.isFacingRight() ? 1 : -1, expectedDTForTorchToHitGround);
+            avatar.dropTorchPhys(torch);
             soundEngine.playSoundEffect("torchThrow");
         }
 
@@ -1619,9 +1606,22 @@ public class GameplayScene implements Screen {
             }
         }
 
-        if ((queueAddTorch && activeTorchJoint == null) || (activeTorchJoint != null &&
-            torchOnRight != avatar.isFacingRight())) {
-            joinTorchtoAvatar();
+        if (avatar.getHasTorch()) {
+            String animation = avatar.getTorchFrameAnimationName();
+            int desiredFrame = (avatar.getFrameIndex() + 1);
+            if (animation.equals("JumpFall")) {
+                desiredFrame = Math.min(desiredFrame, 2);
+            } else if (animation.equals("JumpUp")) {
+                desiredFrame = Math.min(desiredFrame, 4);
+            }
+            JsonValue animationFrames = torchHoldState.get(animation).get(desiredFrame +"");
+            System.out.println("shit");
+            System.out.println("animation fram" + animation);
+            System.out.println("frame index" + (desiredFrame));
+            System.out.println(animationFrames);
+            Vector2 location = avatar.getObstacle().getPosition().cpy().add(avatar.getVelocity().scl(1/phyiscsUnits));
+            torch.getObstacle().setPosition(location.add(animationFrames.getFloat("x")/350 * (torch.onRight ? 1 : -1),animationFrames.getFloat("y")/350));
+            torch.getObstacle().setAngle((float) Math.toRadians(animationFrames.getFloat("ang") * (torch.onRight ? -1 : 1)));
         }
 
 //        for (ObstacleSprite sprite : sprites) {
@@ -1629,6 +1629,7 @@ public class GameplayScene implements Screen {
 //                sprite.getObstacle().getBody().applyForceToCenter(new Vector2(1f,0f), true);
 //            }
 //        }
+        System.out.println(torch.getObstacle().getMass());
         updateCamera();
     }
 
@@ -1636,9 +1637,9 @@ public class GameplayScene implements Screen {
     public void dropTorchHelper() {
         avatar.setHasTorch(false);
         torch.setBeingHeld(false);
-        world.destroyJoint(activeTorchJoint);
-        activeTorchJoint = null;
         torch.resetPickUp();
+        torch.getObstacle().setSensor(false);
+        torch.getObstacle().setGravityScale(1);
         torch.getObstacle().setSensor(false);
     }
 
@@ -1824,15 +1825,15 @@ public class GameplayScene implements Screen {
             CollisionFlag todo_action = todos.pop();
             switch (todo_action.getName()) {
                 case "addTorch":
-                    if (torch.canBePickedUp()) {
-                        queueAddTorch = true;
+                    if (!avatar.getHasTorch()) {
+                        avatar.attachTorchToAvatar(torch);
+                        avatar.setHasTorch(true);
+                        torch.getObstacle().setGravityScale(0);
+                        torch.getObstacle().setSensor(true);
                     }
                     break;
                 case "forceDropTorch":
-                    if (activeTorchJoint != null) {
-                        dropTorchHelper();
-                        torch.getObstacle().setLinearVelocity(Vector2.Zero);
-                    }
+                    dropTorchHelper();
                     break;
                 case "traciGrounded":
                     System.out.println("SET GROUNDED");
@@ -1947,10 +1948,6 @@ public class GameplayScene implements Screen {
 //                        f.setLighting(null);
 //                    }
                     if (torchFire != null && f.fireID == torchFire.fireID) {
-                        if (activeTorchJoint != null && !world.isLocked()) {
-                            world.destroyJoint(activeTorchJoint);
-                            activeTorchJoint = null;
-                        }
                     }
                     fireController.cleanFire(f);
                     f.dispose();
@@ -1978,10 +1975,6 @@ public class GameplayScene implements Screen {
 //                            killFires_fire.setLighting(null);
 //                        }
                         if (torchFire != null && killFires_fire.fireID == torchFire.fireID) {
-                            if (activeTorchJoint != null && !world.isLocked()) {
-                                world.destroyJoint(activeTorchJoint);
-                                activeTorchJoint = null;
-                            }
                         }
                         killFires_fire.dispose();
                     }
@@ -2197,27 +2190,6 @@ public class GameplayScene implements Screen {
         }
     }
 
-
-    /**
-     * Generates torch joint and connects the avatar to the torch Also used to flip the torch round
-     * if avatar rotates
-     */
-    private void joinTorchtoAvatar() {
-        if (activeTorchJoint != null) {
-            world.destroyJoint(activeTorchJoint);
-            activeTorchJoint = null;
-        }
-        torch.getObstacle().setAngle(0);
-        Vector2 offset = (new Vector2((avatar.isFacingRight() ? 1 : -1) * avatar.getWidth() / 2,
-            avatar.getHeight() / 4));
-        torch.getObstacle().setPosition(avatar.getObstacle().getPosition().add(offset));
-        activeTorchJoint = world.createJoint(avatar.attachTorchToAvatar(torch));
-        torch.getObstacle().setSensor(true);
-        queueAddTorch = false;
-        avatar.setHasTorch(true);
-        torch.setBeingHeld(true);
-        torchOnRight = avatar.isFacingRight();
-    }
 
     private void joinFireToObject (ObstacleSprite o, Fire f) {
         WeldJointDef jointDef = new WeldJointDef();
