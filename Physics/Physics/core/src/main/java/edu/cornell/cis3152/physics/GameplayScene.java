@@ -1430,6 +1430,19 @@ public class GameplayScene implements Screen {
             pause();
             listener.exitScreen(this, EXIT_PREV);
             return false;
+        } else if (countdown > 0) {
+            countdown--;
+        } else if (countdown == 0) {
+            if (failed) {
+                pause();
+                isFadingOut = true;
+                // listener.exitScreen(this, EXIT_FAILURE);
+                return true;
+            } else if (complete) {
+                pause();
+                listener.exitScreen(this, EXIT_NEXT);
+                return false;
+            }
         }
 
         contactListener.processPendingMerges();
