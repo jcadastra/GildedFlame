@@ -1,5 +1,5 @@
 {
-    "activeFile": "mothDecoratives.tsx",
+    "activeFile": "advanced_movement.tmj",
     "expandedProjectPaths": [
         "."
     ],
@@ -22,7 +22,7 @@
         "BackgroundAssets.tsx": {
             "dynamicWrapping": false,
             "scaleInDock": 0.25,
-            "scaleInEditor": 0.33
+            "scaleInEditor": 0.12
         },
         "BackgroundStickers.tsx": {
             "dynamicWrapping": true,
@@ -70,7 +70,7 @@
         "GameObjectTiles.tsx": {
             "dynamicWrapping": true,
             "scaleInDock": 0.03125,
-            "scaleInEditor": 0.125
+            "scaleInEditor": 0.12
         },
         "PlatformTiles.tsx": {
             "dynamicWrapping": false,
@@ -319,7 +319,7 @@
         "mothDecoratives.tsx": {
             "dynamicWrapping": true,
             "scaleInDock": 1,
-            "scaleInEditor": 1
+            "scaleInEditor": 0.12
         },
         "move_intro.tmj": {
             "scale": 0.33,
@@ -581,21 +581,23 @@
     "openFiles": [
         "GameObjectTiles.tsx",
         "BackgroundAssets.tsx",
-        "mothDecoratives.tsx"
+        "mothDecoratives.tsx",
+        "advanced_movement.tmj",
+        "rune_medium.tmj"
     ],
     "project": "tiled.tiled-project",
     "property.type": "bool",
     "recentFiles": [
-        "rune_medium.tmj",
-        "rune_hard.tmj",
         "GameObjectTiles.tsx",
         "BackgroundAssets.tsx",
         "mothDecoratives.tsx",
+        "rune_medium.tmj",
+        "advanced_movement.tmj",
+        "rune_hard.tmj",
         "jump_intro.tmj",
         "move_intro.tmj",
         "throw_intro.tmj",
         "climb_intro.tmj",
-        "advanced_movement.tmj",
         "box_intro.tmj",
         "totem_intro.tmj"
     ],

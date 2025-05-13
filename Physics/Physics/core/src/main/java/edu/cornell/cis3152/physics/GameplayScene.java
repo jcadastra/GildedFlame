@@ -588,7 +588,7 @@ public class GameplayScene implements Screen {
             for (ObstacleSprite rainDrop : weatherMachine.rainDrops) {
                 rainDrop.getObstacle().markRemoved(true);
             }
-            weatherMachine.updateWorld(null);
+            weatherMachine.updateWorld(null, bounds);
             weatherMachine.clear();
         }
 
@@ -1484,7 +1484,7 @@ public class GameplayScene implements Screen {
         supplementaryCollisionActions();
         supplementaryFireActions();
         supplementaryEventActions(dt);
-        weatherMachine.updateWorld(world);
+        weatherMachine.updateWorld(world, bounds);
         if (weatherMachine.isRainActive()) {
             supplementaryRainActions();
 //            particleEngine.ra
