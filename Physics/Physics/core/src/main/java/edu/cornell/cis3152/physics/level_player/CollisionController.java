@@ -583,6 +583,7 @@ public class CollisionController implements ContactListener {
             if (isX(bd1, bd2, Avatar.class) == 1 && isX(bd1,bd2,"goalDoor") == 1) {
                 if (Avatar.getHasTorch()) {
                     collisionFlags.push(new CollisionFlag("queueWin"));
+                    it.remove();
                 } else {
                     sustainedContacts.put(key, -1);
                 }

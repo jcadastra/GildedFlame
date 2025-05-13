@@ -177,6 +177,7 @@ public class GDXRoot extends Game implements ScreenListener {
                 // Fallback: go to level select
                 swapCreateLevelSelect();
             } else {
+                directory.dispose();
                 Gdx.app.exit();
             }
             return;
@@ -225,10 +226,8 @@ public class GDXRoot extends Game implements ScreenListener {
             } else if (exitCode == GameplayScene.EXIT_QUIT) {
                 swapCreateLevelSelect();
             } else if (exitCode == GameplayScene.EXIT_SUCCESS) {
-                currentScene.hackyForceResetFailedComplete();
                 createSwapSuccess();
             } else if (exitCode == GameplayScene.EXIT_FAILURE) {
-                currentScene.hackyForceResetFailedComplete();
                 createSwapFailure();
             }
             return;
@@ -256,7 +255,7 @@ public class GDXRoot extends Game implements ScreenListener {
     }
 
     private void swapGamePlayScene(int delta) {
-         setGamePlaySceneLevel(current +delta + levels.length);
+        createSetGamePlayScene(current +delta);
     }
 
     public void setGamePlaySceneLevel(int level) {
@@ -271,10 +270,12 @@ public class GDXRoot extends Game implements ScreenListener {
     }
 
     private void createSetGamePlayScene(int level) {
-        currentScene = new GameplayScene(directory, soundEngine, "platform");
-        currentScene.loadLevel(levels[level], "rope_test");
-        currentScene.setScreenListener(this);
-        currentScene.setSpriteBatch(batch);
+        if (currentScene == null) {
+            currentScene = new GameplayScene(directory, soundEngine, "platform");
+            currentScene.loadLevel(levels[level], "rope_test");
+            currentScene.setScreenListener(this);
+            currentScene.setSpriteBatch(batch);
+        }
         current = level;
         setGamePlaySceneLevel(level);
     }

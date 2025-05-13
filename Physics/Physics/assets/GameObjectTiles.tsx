@@ -3,13 +3,15 @@
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <properties>
+   <property name="dynamic1" type="bool" value="false"/>
+   <property name="dynamic2" type="bool" value="false"/>
    <property name="end1Material" value="rope,iron"/>
    <property name="end2Material" value="rope,iron"/>
    <property name="middleMaterial" value="rope,iron"/>
    <property name="pin1" value=""/>
    <property name="pin2" value=""/>
   </properties>
-  <image width="150" height="150" source="environment/Rope/ropeEnd.png"/>
+  <image width="150" height="150" source="environment/Rope/chainEnd.png"/>
  </tile>
  <tile id="1">
   <properties>
@@ -95,6 +97,9 @@ swing</property>
   <image width="300" height="300" source="environment/grate.png"/>
  </tile>
  <tile id="18">
+  <properties>
+   <property name="startOnFire" type="bool" value="false"/>
+  </properties>
   <image width="323" height="242" source="environment/brazier.png"/>
  </tile>
 </tileset>

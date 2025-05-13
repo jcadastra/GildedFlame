@@ -208,6 +208,9 @@ public class Avatar extends ObstacleSprite {
     private boolean reachedApex = false;
     private boolean hadTorch;
     private float deathOpacity = 0f;
+    private int jumpDeadTimer = 0;
+    public void setJumpDeadTimer() {jumpDeadTimer = 20;}
+    public boolean jumpDeadTimerAvaliable() {return jumpDeadTimer <= 0;}
 
     /**
      * Creates a new Traci avatar with the given physics data
@@ -644,7 +647,7 @@ public class Avatar extends ObstacleSprite {
             avgAngle /= (count);
             Vector2 closestPos = bodyTouchedClimbables.stream().min(
                     Comparator.comparingDouble(x -> x.getObstacle().getPosition().dst(obstacle.getPosition())))
-                    .map(x -> x.getObstacle().getPosition()).orElse(obstacle.getPosition());
+                .map(x -> x.getObstacle().getPosition()).orElse(obstacle.getPosition());
             obstacle.setAngle((float) ((Math.PI / 2) - Math.abs(avgAngle)));
 
             Vector2 ropeDir = new Vector2((float) Math.cos(avgAngle), (float) Math.sin(avgAngle));
@@ -734,6 +737,9 @@ public class Avatar extends ObstacleSprite {
     public void update(float dt) {
         Vector2 currentPosition = getLocation();
         prevFalling = getIsFalling();
+        if (jumpDeadTimer > 0) {
+            jumpDeadTimer--;
+        }
 
         if (groundState == GroundState.DEAD) {
             cdFrameCount++;
@@ -813,7 +819,9 @@ public class Avatar extends ObstacleSprite {
             case AIRBORNE:
                 if (prevFalling == -1 && (getIsFalling() == 0 || getIsFalling() == 1)) { // if it was falling before, and now is not (landed)
                     setGroundedState(GroundState.GROUNDED);
-                }
+                    } else if (prevFalling == 0 && (Math.abs(getVelocity().y) < 0.01f)) {
+                        setGroundedState(GroundState.GROUNDED);
+                    }
                 break;
             case DEAD:
             case CLIMBING:

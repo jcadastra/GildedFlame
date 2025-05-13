@@ -212,6 +212,7 @@ public class GameplayScene implements Screen {
     private Texture blackTexture;
 
 
+
     private Stage pauseStage;
     private Skin skin;
 
@@ -235,6 +236,7 @@ public class GameplayScene implements Screen {
     protected PooledList<TweenElement<Float>> tweenedMovmentObjectsFloat;
     protected PooledList<TweenElement<Vector2>> tweenedMovmentObjectsVec2;
     protected FitViewport fitViewport;
+    protected Random random;
 
     protected LightController lightController;
     protected ShapeRenderer shapeRenderer;
@@ -410,6 +412,7 @@ public class GameplayScene implements Screen {
         tweenedMovmentObjectsFloat = new PooledList<>();
         this.shapeRenderer = new ShapeRenderer();
         runeSet = new HashSet<>();
+        this.random = new Random();
 
         this.fitViewport = new FitViewport(1280, 720);
 
@@ -472,6 +475,9 @@ public class GameplayScene implements Screen {
         lightController.dispose();
         eventHandler.dispose();
         sprites.clear();
+        runeSet.clear();
+        tweenedMovmentObjectsFloat.clear();
+        tweenedMovmentObjectsVec2.clear();
         addQueue.clear();
         torchArc.clear();
         world.dispose();
@@ -574,6 +580,7 @@ public class GameplayScene implements Screen {
                     world.destroyJoint(fire.getFixtureJoint());
                 }
             }
+            fireController.clear();
             fireController.resetStorage();
         }
 
@@ -582,6 +589,7 @@ public class GameplayScene implements Screen {
                 rainDrop.getObstacle().markRemoved(true);
             }
             weatherMachine.updateWorld(null);
+            weatherMachine.clear();
         }
 
         if (eventHandler != null) {
@@ -591,12 +599,11 @@ public class GameplayScene implements Screen {
         if (lightController != null){
             lightController.dispose();}
 
-        if (floatingLights!=null && floatingLights.size()>0){
+        if (floatingLights!=null && !floatingLights.isEmpty()){
             floatingLights.get(0).reset();
         }
 
         for (ObstacleSprite sprite : sprites) {
-            Obstacle obj = sprite.getObstacle();
             sprite.getObstacle().deactivatePhysics(world);
         }
         if(particleEngine!=null){
@@ -610,13 +617,20 @@ public class GameplayScene implements Screen {
         sprites.clear();
         addQueue.clear();
         runeSet.clear();
+        tweenedMovmentObjectsFloat.clear();
+        tweenedMovmentObjectsVec2.clear();
         if (world != null) {
             world.dispose();
         }
 
         contactListener.reset();
-        setComplete(false);
-        setFailure(false);
+
+        complete = false;
+        failed = false;
+        countdown = -1;
+        isFadingOut = false;
+        fadeTime = 0;
+
         world = new World(gravity, false);
 //        world.step(1/60f, WORLD_VELOC, WORLD_POSIT);
         world.setContactListener(contactListener);
@@ -653,7 +667,6 @@ public class GameplayScene implements Screen {
         }
 
         world = new World(gravity, false);
-//        world.step(1/60f, WORLD_VELOC, WORLD_POSIT);
         world.setContactListener(contactListener);
         setComplete(false);
         setFailure(false);
@@ -940,7 +953,10 @@ public class GameplayScene implements Screen {
                                 -width/2,height/3
                             }, x,y, width, height, units);
                             materialType = "infinite";
+                            boolean startOnFire = false;
+                            if (object.hasChild("startOnFire")) object.getBoolean("startOnFire");
                             box.setTexture(directory.getEntry("brazier", Texture.class));
+                            if (startOnFire) fireController.lightAnew(box, new Vector2(box.getObstacle().getX() + (random.nextFloat()-.5f)/2, box.getObstacle().getY()));
                             box.getObstacle().setDensity(1.8f );
                         } else {
                             box = new GameObject(new float[]{
@@ -1230,6 +1246,7 @@ public class GameplayScene implements Screen {
                         int depth = 10, piecelen = 25, thickness = 14;
                         JsonValue props = end.get("properties");
                         String pin1 = null, pin2 = null, pin1Material = "rope", pin2Material = "rope", middleMaterial = "rope";
+                        Boolean dynamic1 = false, dynamic2 = false;
                         if (props != null) {
                             for (JsonValue prop : props) {
                                 String pname = prop.getString("name");
@@ -1243,6 +1260,12 @@ public class GameplayScene implements Screen {
                                         break;
                                     case "pin2":
                                         pin2 = val;
+                                        break;
+                                    case "dynamic1":
+                                        dynamic1 = Boolean.getBoolean(val);
+                                        break;
+                                    case "dynamic2":
+                                        dynamic2 = Boolean.getBoolean(val);
                                         break;
                                     case "end1Material":
                                         pin1Material = val;
@@ -1270,21 +1293,25 @@ public class GameplayScene implements Screen {
 //                        System.out.println("pin1: " + pin1 + ";; pin 2 " + pin2);
                         if (pin1 != null && !pin1.isEmpty()) {
                             rope.deactivateAnchor(0);
-//                            String finalPin1 = pin1;
-//                            ObstacleSprite target = sprites.stream().filter(os -> os.getName().equals(finalPin1)).findFirst().orElse(null);
-//                            if (target == null) {System.err.println("Target is null for pin 1, check target pin name"); }
-//                            pinJoint.initialize(rope.getAnchors().get(0).getObstacle().getBody(), target.getObstacle().getBody(), (rope.getAnchors().get(0).getObstacle().getBody()
-//                                .getWorldCenter()));
-//                            world.createJoint(pinJoint);
+                            String finalPin1 = pin1;
+                            ObstacleSprite target = sprites.stream().filter(os -> os.getName().equals(finalPin1)).findFirst().orElse(null);
+                            if (target == null) {System.err.println("Target is null for pin 1, check target pin name"); }
+                            pinJoint.initialize(rope.getAnchors().get(0).getObstacle().getBody(), target.getObstacle().getBody(), (rope.getAnchors().get(0).getObstacle().getBody()
+                                .getWorldCenter()));
+                            world.createJoint(pinJoint);
+                        } else if (dynamic1) {
+                            rope.deactivateAnchor(0);
                         }
                         if (pin2 != null && !pin2.isEmpty()) {
                             rope.deactivateAnchor(1);
-//                            String finalPin2 = pin2;
-//                            ObstacleSprite target = sprites.stream().filter(os -> os.getName().equals(finalPin2)).findFirst().orElse(null);
-//                            if (target == null) {System.err.println("Target is null for pin 2, check target pin name"); }
-//                            pinJoint.initialize(rope.getAnchors().get(1).getObstacle().getBody(), target.getObstacle().getBody(), (rope.getAnchors().get(1).getObstacle().getBody()
-//                                .getWorldCenter()));
-//                            world.createJoint(pinJoint);
+                            String finalPin2 = pin2;
+                            ObstacleSprite target = sprites.stream().filter(os -> os.getName().equals(finalPin2)).findFirst().orElse(null);
+                            if (target == null) {System.err.println("Target is null for pin 2, check target pin name"); }
+                            pinJoint.initialize(rope.getAnchors().get(1).getObstacle().getBody(), target.getObstacle().getBody(), (rope.getAnchors().get(1).getObstacle().getBody()
+                                .getWorldCenter()));
+                            world.createJoint(pinJoint);
+                        } else if (dynamic2) {
+                            rope.deactivateAnchor(1);
                         }
                     }
 
@@ -1403,19 +1430,6 @@ public class GameplayScene implements Screen {
             pause();
             listener.exitScreen(this, EXIT_PREV);
             return false;
-        } else if (countdown > 0) {
-            countdown--;
-        } else if (countdown == 0) {
-            if (failed) {
-                pause();
-                isFadingOut = true;
-                // listener.exitScreen(this, EXIT_FAILURE);
-                return true;
-            } else if (complete) {
-                pause();
-                listener.exitScreen(this, EXIT_NEXT);
-                return false;
-            }
         }
 
         contactListener.processPendingMerges();
@@ -1489,12 +1503,8 @@ public class GameplayScene implements Screen {
         avatar.setJumping(input.didPrimary());
         avatar.setShooting(input.didSecondary());
 
-        if (input.didPrimary()) {
-            world.step(dt, WORLD_VELOC, WORLD_POSIT);
-        }
-
         if (!(avatar.getBodyTouchedClimbables().isEmpty()) && !avatar.getHasTorch() && !avatar.getGroundedState().equals(GroundState.CLIMBING)
-             && input.didVertical()) {
+             && input.didVertical() && avatar.jumpDeadTimerAvaliable()) {
             avatar.setGroundedState(GroundState.CLIMBING);
             avatar.getObstacle().getBody().setLinearVelocity(Vector2.Zero);
             avatar.applyClimbingPhysics();
@@ -1516,9 +1526,10 @@ public class GameplayScene implements Screen {
         avatar.applyForce();
 
         if (avatar.isJumping()) {
+            if (avatar.getGroundedState() == GroundState.CLIMBING) {
+                avatar.setJumpDeadTimer();
+            }
             avatar.setGroundedState(GroundState.AIRBORNE);
-            SoundEffectManager sounds = SoundEffectManager.getInstance();
-//            soundEngine.jump();
         }
 
         GroundState currentGroundState = avatar.getGroundedState();
@@ -1588,6 +1599,7 @@ public class GameplayScene implements Screen {
             soundEngine.stopAllSoundEffects();
             fadeTime += dt;
             if (fadeTime >= fadeDuration) {
+                System.out.println("HELP" + fadeTime + ", " + fadeDuration);
                 listener.exitScreen(this, fadeExitCode);
             }
         }
@@ -2484,12 +2496,6 @@ public class GameplayScene implements Screen {
             counter++;
             myWriter.close();
         } catch (Exception e) {System.out.println("failed pritnout " + counter +", " + e.getMessage());}
-    }
-
-
-    public void hackyForceResetFailedComplete() {
-        failed = false;
-        complete = false;
     }
 
     //attaches light to fire

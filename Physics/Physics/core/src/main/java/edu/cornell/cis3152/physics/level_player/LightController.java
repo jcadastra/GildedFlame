@@ -36,7 +36,8 @@ public class LightController {
     private OrthographicCamera camera;
     private float cameraZoomLevel;
 
-    /** All of the active environmental Lightings that we loaded from the JSON file */
+    /** All of the active environmental Lightings that we loaded from the JSON file
+     *  */
     private Array<Lighting> lights = new Array<>();
 
     private Array<PointLight> lightings = new Array<>();
