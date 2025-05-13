@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.10.2" name="backgroundAssets" tilewidth="1000" tileheight="1000" tilecount="15" columns="0">
+<tileset version="1.10" tiledversion="1.10.2" name="backgroundAssets" tilewidth="1000" tileheight="1000" tilecount="16" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <properties>
@@ -57,12 +57,15 @@
   <image width="1000" height="1000" source="backgroundAssets/tMoreJump.png"/>
  </tile>
  <tile id="12">
-  <image width="500" height="900" source="backgroundAssets/bookshelf.png"/>
+  <image width="500" height="700" source="backgroundAssets/bookshelf.png"/>
  </tile>
  <tile id="14">
   <image width="220" height="300" source="backgroundAssets/chandelier.png"/>
  </tile>
  <tile id="15">
   <image width="150" height="210" source="backgroundAssets/holder.png"/>
+ </tile>
+ <tile id="16">
+  <image width="500" height="700" source="backgroundAssets/banner.png"/>
  </tile>
 </tileset>

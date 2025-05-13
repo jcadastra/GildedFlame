@@ -11,7 +11,7 @@
    <property name="pin1" value=""/>
    <property name="pin2" value=""/>
   </properties>
-  <image width="150" height="150" source="environment/Rope/ropeEnd.png"/>
+  <image width="150" height="150" source="environment/Rope/chainEnd.png"/>
  </tile>
  <tile id="1">
   <properties>

@@ -1,5 +1,5 @@
 {
-    "activeFile": "rune_intro.tmj",
+    "activeFile": "mothDecoratives.tsx",
     "expandedProjectPaths": [
         "."
     ],
@@ -70,7 +70,7 @@
         "GameObjectTiles.tsx": {
             "dynamicWrapping": true,
             "scaleInDock": 0.03125,
-            "scaleInEditor": 0.5
+            "scaleInEditor": 0.125
         },
         "PlatformTiles.tsx": {
             "dynamicWrapping": false,
@@ -96,30 +96,30 @@
                 5
             ],
             "scale": 0.33,
-            "selectedLayer": 6,
+            "selectedLayer": 4,
             "viewCenter": {
-                "x": 4790.90909090909,
-                "y": 2689.3939393939395
+                "x": 4778.787878787878,
+                "y": 2680.3030303030305
             }
         },
         "box_intro.tmj": {
             "expandedObjectLayers": [
-                5,
-                2
+                2,
+                5
             ],
             "scale": 0.25,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 4752,
-                "y": 2654
+                "x": 4798,
+                "y": 2698
             }
         },
         "climb_intro.tmj": {
             "scale": 0.180796875,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4795.4368680321495,
-                "y": 2690.8650937689054
+                "x": 4789.9057989802095,
+                "y": 2690.865093768905
             }
         },
         "earthtile.tsx": {
@@ -183,8 +183,8 @@
             "scale": 0.125,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 4792,
-                "y": 2692
+                "x": 4776,
+                "y": 2684
             }
         },
         "level 4 (1).tmj": {
@@ -316,12 +316,17 @@
                 "y": 2697.157894736842
             }
         },
+        "mothDecoratives.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
         "move_intro.tmj": {
             "scale": 0.33,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4800,
-                "y": 4098.484848484848
+                "x": 4796.969696969696,
+                "y": 4095.4545454545455
             }
         },
         "rain_intro.tmj": {
@@ -332,8 +337,8 @@
             "scale": 0.125,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 4784,
-                "y": 2684
+                "x": 4796,
+                "y": 2700
             }
         },
         "rain_medium.tmj": {
@@ -344,8 +349,8 @@
             "scale": 0.25,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 5388,
-                "y": 2690
+                "x": 5398,
+                "y": 2698
             }
         },
         "rope_intro.tmj": {
@@ -371,8 +376,8 @@
             "scale": 0.180796875,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 4784.3747299282695,
-                "y": 2690.8650937689054
+                "x": 4798.2024025581195,
+                "y": 2696.3961628208453
             }
         },
         "rune_medium.tmj": {
@@ -382,8 +387,8 @@
             "scale": 0.25,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 4784,
-                "y": 2686
+                "x": 4798,
+                "y": 2698
             }
         },
         "sample.tmj": {
@@ -536,8 +541,8 @@
             "scale": 0.33,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4793.939393939394,
-                "y": 2692.4242424242425
+                "x": 4790.90909090909,
+                "y": 2689.3939393939395
             }
         },
         "tileset.tsx": {
@@ -549,8 +554,8 @@
             "scale": 0.180796875,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4789.9057989802095,
-                "y": 2690.8650937689054
+                "x": 4798.2024025581195,
+                "y": 2696.3961628208453
             }
         },
         "untitled.tmj": {
@@ -563,35 +568,29 @@
         }
     },
     "last.exportedFilePath": "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/assets",
-    "last.imagePath": "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/assets/environment",
+    "last.imagePath": "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/assets/backgroundAssets/mothEggsNest",
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "openFiles": [
-        "move_intro.tmj",
-        "jump_intro.tmj",
-        "throw_intro.tmj",
-        "climb_intro.tmj",
-        "advanced_movement.tmj",
-        "box_intro.tmj",
-        "totem_intro.tmj",
-        "rune_medium.tmj",
-        "rain_intro.tmj",
-        "rain_medium.tmj",
-        "rune_intro.tmj"
+        "GameObjectTiles.tsx",
+        "BackgroundAssets.tsx",
+        "mothDecoratives.tsx"
     ],
     "project": "tiled.tiled-project",
     "property.type": "bool",
     "recentFiles": [
-        "move_intro.tmj",
+        "GameObjectTiles.tsx",
+        "BackgroundAssets.tsx",
+        "mothDecoratives.tsx",
         "jump_intro.tmj",
+        "move_intro.tmj",
         "throw_intro.tmj",
         "climb_intro.tmj",
         "advanced_movement.tmj",
         "box_intro.tmj",
         "totem_intro.tmj",
         "rune_medium.tmj",
-        "rain_intro.tmj",
-        "rain_medium.tmj",
-        "rune_intro.tmj",
-        "PlatformTiles.tsx"
-    ]
+        "rain_intro.tmj"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.type": 1
 }
