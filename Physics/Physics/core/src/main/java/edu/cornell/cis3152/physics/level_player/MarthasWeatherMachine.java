@@ -70,7 +70,7 @@ public class MarthasWeatherMachine {
         return windVel.len()!=0;
     }
 
-    public void updateWorld(World world) {this.world = world;}
+    public void updateWorld(World world) {if (this.world != null) return; this.world = world;}
 
     public void update(World world) {
         if (isRainActive()) {

@@ -2,6 +2,8 @@ package edu.cornell.cis3152.physics.level_player;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import edu.cornell.cis3152.physics.level_player.enviromentals.*;
@@ -282,6 +284,14 @@ public class FireController {
         if (s.getClass().isInstance(Torch.class)) {
             return;
         }
+
+        final Fixture[] hit = { null };
+        RayCastCallback raycastCallback = (fixture, pnt, normal, fraction) -> {
+            hit[0] = fixture;
+            return 0;
+        };
+
+
 
         Fire f = new Fire(s.getObstacle().getPhysicsUnits(), point.cpy());
         f.setID(fireID);
