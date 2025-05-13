@@ -25,7 +25,7 @@
          "visible":true,
          "x":0,
          "y":0
-        },
+        }, 
         {
          "draworder":"topdown",
          "id":4,
@@ -42,7 +42,7 @@
                  "width":1000,
                  "x":6823.51515151515,
                  "y":4931.63636363636
-                },
+                }, 
                 {
                  "gid":77,
                  "height":500,
@@ -54,7 +54,7 @@
                  "width":300,
                  "x":4794,
                  "y":3918
-                },
+                }, 
                 {
                  "gid":78,
                  "height":500,
@@ -66,7 +66,7 @@
                  "width":300,
                  "x":4794,
                  "y":3532
-                },
+                }, 
                 {
                  "gid":78,
                  "height":500,
@@ -78,7 +78,7 @@
                  "width":300,
                  "x":4794,
                  "y":3046
-                },
+                }, 
                 {
                  "gid":78,
                  "height":500,
@@ -90,7 +90,7 @@
                  "width":300,
                  "x":4792,
                  "y":2550
-                },
+                }, 
                 {
                  "gid":79,
                  "height":500,
@@ -102,7 +102,7 @@
                  "width":300,
                  "x":4792,
                  "y":2274
-                },
+                }, 
                 {
                  "gid":77,
                  "height":500,
@@ -114,7 +114,7 @@
                  "width":300,
                  "x":2695,
                  "y":3620
-                },
+                }, 
                 {
                  "gid":78,
                  "height":500,
@@ -126,7 +126,7 @@
                  "width":300,
                  "x":2691,
                  "y":3036
-                },
+                }, 
                 {
                  "gid":78,
                  "height":500,
@@ -138,7 +138,7 @@
                  "width":300,
                  "x":2689,
                  "y":2540
-                },
+                }, 
                 {
                  "gid":79,
                  "height":500,
@@ -150,7 +150,7 @@
                  "width":300,
                  "x":2689,
                  "y":2264
-                },
+                }, 
                 {
                  "gid":78,
                  "height":500,
@@ -162,7 +162,7 @@
                  "width":300,
                  "x":2694,
                  "y":3140.66666666667
-                },
+                }, 
                 {
                  "gid":78,
                  "height":500,
@@ -174,7 +174,7 @@
                  "width":300,
                  "x":817.681818181818,
                  "y":2491.05893939394
-                },
+                }, 
                 {
                  "gid":79,
                  "height":500,
@@ -186,7 +186,7 @@
                  "width":300,
                  "x":817.681818181818,
                  "y":2215.05893939394
-                },
+                }, 
                 {
                  "gid":77,
                  "height":500,
@@ -198,7 +198,7 @@
                  "width":300,
                  "x":814,
                  "y":2742
-                },
+                }, 
                 {
                  "gid":80,
                  "height":972,
@@ -210,7 +210,7 @@
                  "width":464,
                  "x":3808,
                  "y":3824
-                },
+                }, 
                 {
                  "gid":80,
                  "height":972,
@@ -222,7 +222,7 @@
                  "width":464,
                  "x":5608,
                  "y":3850
-                },
+                }, 
                 {
                  "gid":77,
                  "height":500,
@@ -234,7 +234,7 @@
                  "width":300,
                  "x":6503,
                  "y":4868.36363636364
-                },
+                }, 
                 {
                  "gid":78,
                  "height":500,
@@ -246,7 +246,7 @@
                  "width":300,
                  "x":6507,
                  "y":3558
-                },
+                }, 
                 {
                  "gid":78,
                  "height":500,
@@ -258,7 +258,7 @@
                  "width":300,
                  "x":6507,
                  "y":3072
-                },
+                }, 
                 {
                  "gid":78,
                  "height":500,
@@ -270,7 +270,7 @@
                  "width":300,
                  "x":6505,
                  "y":2576
-                },
+                }, 
                 {
                  "gid":79,
                  "height":500,
@@ -282,7 +282,7 @@
                  "width":300,
                  "x":6509,
                  "y":2260
-                },
+                }, 
                 {
                  "gid":78,
                  "height":500,
@@ -294,7 +294,7 @@
                  "width":300,
                  "x":6510,
                  "y":4046
-                },
+                }, 
                 {
                  "gid":78,
                  "height":500,
@@ -306,7 +306,7 @@
                  "width":300,
                  "x":6510,
                  "y":4367.09090909091
-                },
+                }, 
                 {
                  "gid":80,
                  "height":972,
@@ -318,7 +318,7 @@
                  "width":464,
                  "x":7868,
                  "y":3062
-                },
+                }, 
                 {
                  "gid":80,
                  "height":972,
@@ -330,7 +330,7 @@
                  "width":464,
                  "x":1552,
                  "y":3738.28
-                },
+                }, 
                 {
                  "gid":86,
                  "height":57,
@@ -342,7 +342,7 @@
                  "width":57,
                  "x":1744.16,
                  "y":3089.72
-                },
+                }, 
                 {
                  "gid":86,
                  "height":57,
@@ -360,7 +360,7 @@
          "visible":true,
          "x":0,
          "y":0
-        },
+        }, 
         {
          "data":[27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
             27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
@@ -389,7 +389,7 @@
          "width":32,
          "x":0,
          "y":0
-        },
+        }, 
         {
          "draworder":"topdown",
          "id":3,
@@ -400,7 +400,7 @@
          "visible":true,
          "x":0,
          "y":0
-        },
+        }, 
         {
          "draworder":"topdown",
          "id":5,
@@ -417,7 +417,7 @@
                  "width":346,
                  "x":351,
                  "y":2730
-                },
+                }, 
                 {
                  "gid":57,
                  "height":230,
@@ -428,12 +428,12 @@
                          "name":"end1Material",
                          "type":"string",
                          "value":"iron"
-                        },
+                        }, 
                         {
                          "name":"end2Material",
                          "type":"string",
                          "value":"iron"
-                        },
+                        }, 
                         {
                          "name":"middleMaterial",
                          "type":"string",
@@ -445,7 +445,7 @@
                  "width":242,
                  "x":1225.665,
                  "y":2080.395
-                },
+                }, 
                 {
                  "gid":57,
                  "height":222,
@@ -456,12 +456,12 @@
                          "name":"end1Material",
                          "type":"string",
                          "value":"iron"
-                        },
+                        }, 
                         {
                          "name":"end2Material",
                          "type":"string",
                          "value":"iron"
-                        },
+                        }, 
                         {
                          "name":"middleMaterial",
                          "type":"string",
@@ -473,7 +473,7 @@
                  "width":218,
                  "x":1224.335,
                  "y":4161.605
-                },
+                }, 
                 {
                  "gid":57,
                  "height":230,
@@ -485,7 +485,7 @@
                  "width":242,
                  "x":3345.67,
                  "y":3270.395
-                },
+                }, 
                 {
                  "gid":57,
                  "height":222,
@@ -496,12 +496,12 @@
                          "name":"end1Material",
                          "type":"string",
                          "value":"rope"
-                        },
+                        }, 
                         {
                          "name":"end2Material",
                          "type":"string",
                          "value":"rope"
-                        },
+                        }, 
                         {
                          "name":"middleMaterial",
                          "type":"string",
@@ -513,7 +513,7 @@
                  "width":218,
                  "x":3340.33,
                  "y":4819.605
-                },
+                }, 
                 {
                  "gid":57,
                  "height":150,
@@ -525,7 +525,7 @@
                  "width":150,
                  "x":8477,
                  "y":1707
-                },
+                }, 
                 {
                  "gid":57,
                  "height":150,
@@ -537,7 +537,7 @@
                  "width":150,
                  "x":8477,
                  "y":3511
-                },
+                }, 
                 {
                  "gid":57,
                  "height":150,
@@ -548,12 +548,12 @@
                          "name":"end1Material",
                          "type":"string",
                          "value":"iron"
-                        },
+                        }, 
                         {
                          "name":"end2Material",
                          "type":"string",
                          "value":"iron"
-                        },
+                        }, 
                         {
                          "name":"middleMaterial",
                          "type":"string",
@@ -565,7 +565,7 @@
                  "width":150,
                  "x":7861,
                  "y":3235
-                },
+                }, 
                 {
                  "gid":57,
                  "height":150,
@@ -576,12 +576,12 @@
                          "name":"end1Material",
                          "type":"string",
                          "value":"iron"
-                        },
+                        }, 
                         {
                          "name":"end2Material",
                          "type":"string",
                          "value":"iron"
-                        },
+                        }, 
                         {
                          "name":"middleMaterial",
                          "type":"string",
@@ -599,7 +599,7 @@
          "visible":true,
          "x":0,
          "y":0
-        },
+        }, 
         {
          "draworder":"topdown",
          "id":2,
@@ -616,7 +616,7 @@
                  "width":300,
                  "x":7173.0303030303,
                  "y":4798.30303030303
-                },
+                }, 
                 {
                  "gid":51,
                  "height":437,
@@ -634,7 +634,7 @@
          "visible":true,
          "x":0,
          "y":0
-        },
+        }, 
         {
          "draworder":"topdown",
          "id":6,
@@ -651,7 +651,7 @@
                  "width":57,
                  "x":4000.165,
                  "y":3175.44
-                },
+                }, 
                 {
                  "gid":86,
                  "height":57,
@@ -663,7 +663,7 @@
                  "width":57,
                  "x":4018.355,
                  "y":3666.35
-                },
+                }, 
                 {
                  "gid":86,
                  "height":57,
@@ -675,7 +675,7 @@
                  "width":57,
                  "x":5822.835,
                  "y":3179.44
-                },
+                }, 
                 {
                  "gid":86,
                  "height":57,
@@ -687,7 +687,7 @@
                  "width":57,
                  "x":5816.775,
                  "y":3679.44
-                },
+                }, 
                 {
                  "gid":86,
                  "height":57,
@@ -699,7 +699,7 @@
                  "width":57,
                  "x":8077.015,
                  "y":2877.38
-                },
+                }, 
                 {
                  "gid":86,
                  "height":57,
@@ -711,6 +711,18 @@
                  "width":57,
                  "x":8070.955,
                  "y":2380.41
+                }, 
+                {
+                 "gid":86,
+                 "height":57,
+                 "id":440,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":7292.71212121212,
+                 "y":4523.01515151515
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -719,7 +731,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":439,
+ "nextobjectid":441,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
@@ -728,19 +740,19 @@
         {
          "firstgid":1,
          "source":"PlatformTiles.tsx"
-        },
+        }, 
         {
          "firstgid":49,
          "source":"PlayerTorchTiles.tsx"
-        },
+        }, 
         {
          "firstgid":53,
          "source":"EnemyTiles.tsx"
-        },
+        }, 
         {
          "firstgid":57,
          "source":"GameObjectTiles.tsx"
-        },
+        }, 
         {
          "firstgid":76,
          "source":"BackgroundAssets.tsx"

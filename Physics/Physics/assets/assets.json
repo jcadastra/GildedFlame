@@ -53,6 +53,7 @@
     "tJump" : "backgroundAssets/tJump.png",
     "tMove" : "backgroundAssets/tMove.png",
     "tThrow" : "backgroundAssets/tThrow.png",
+    "tMoreJump" : "backgroundAssets/tMoreJump.png",
     "window": "backgroundAssets/window.png",
     "bookshelf" : "backgroundAssets/bookshelf.png",
     "holder" : "backgroundAssets/holder.png",
@@ -292,7 +293,10 @@
     "rune_intro": "rune_intro.tmj",
     "rune_medium": "rune_medium.tmj",
     "rune_hard" :  "rune_hard.tmj",
-    "example_level" : "example_level.tmj"
+    "example_level" : "example_level.tmj",
+    "harvey_test" : "harvey_test.tmj",
+    "harvey_test2" : "harvey_test2.tmj",
+    "new_1" :  "new_1.tmj"
   },
   "music": {
     "eerie": "music/eerie.wav",

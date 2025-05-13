@@ -380,7 +380,7 @@ public class LevelSelectScene implements Screen {
             float currentX = entry.image.getX();
             float newX = currentX + (entry.targetX - currentX) * lerpSpeed * delta;
             if (i == 7) {
-                System.out.println(entry.targetX);
+
 
             }
             entry.image.setX(newX);

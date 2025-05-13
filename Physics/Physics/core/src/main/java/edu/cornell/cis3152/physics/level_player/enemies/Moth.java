@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Fire;
+import edu.cornell.cis3152.physics.level_player.enviromentals.GameObject;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Lighting;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Smoke;
 import edu.cornell.cis3152.physics.level_player.player.Torch;
@@ -222,10 +223,16 @@ public class Moth extends Enemy {
         updateFrame(IN_LIGHT_FRAME_DURATION, TOTAL_IN_LIGHT_FRAMES);
         resetAttackTimer();
         if (rr != null) {
+            System.out.println("Target is of type " + rr.targetObject);
+//            if (rr.targetObject instanceof GameObject){
+//                System.out.println(((ObstacleSprite) rr.targetObject).getName().contains("infburnable"));
+//            }
             if (rr.targetObject instanceof Torch && !Avatar.getHasTorch()){
                 setState(EnemyState.TRANCE);
                 resetTranceTimer();
             } else if (rr.targetObject instanceof Avatar && Avatar.getHasTorch()) {
+                setState(EnemyState.CD);
+            } else if (rr.targetObject instanceof GameObject && ((ObstacleSprite) rr.targetObject).getName().contains("infburnable")) {
                 setState(EnemyState.CD);
             } else if (rr.targetObject instanceof Fire){
                 setState(EnemyState.TRANCE);
@@ -240,7 +247,7 @@ public class Moth extends Enemy {
 
     @Override
     public void cd() {
-        if (rr == null || !(rr.targetObject instanceof Avatar)) {
+        if (rr == null || (!(rr.targetObject instanceof Avatar) && !(rr.targetObject instanceof GameObject))) {
             setState(EnemyState.OUT_OF_LIGHT);
         } else {
             if (isAttackTimerZero()) {

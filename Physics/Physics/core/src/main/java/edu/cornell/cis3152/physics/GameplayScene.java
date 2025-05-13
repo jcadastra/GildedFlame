@@ -606,7 +606,7 @@ public class GameplayScene implements Screen {
         if (avatar!=null) {
             avatar.reset();
         }
-        
+
         sprites.clear();
         addQueue.clear();
         runeSet.clear();
@@ -863,7 +863,7 @@ public class GameplayScene implements Screen {
                         enemies.add(totem);
                     } else if (objName.contains("goaldoor")) {
                         texture = directory.getEntry("treasure", Texture.class);
-                        System.out.println("goal door texture: " + texture);
+//                        System.out.println("goal door texture: " + texture);
 
                         GameObject goalDoor = new GameObject(x, y, 1.47f, 1, units, true);
                         goalDoor.getObstacle().setSensor(true);
@@ -1256,7 +1256,7 @@ public class GameplayScene implements Screen {
                                 }
                             }
                         }
-                        System.out.println(pin1Material + " " + pin2Material + " " + middleMaterial);
+//                        System.out.println(pin1Material + " " + pin2Material + " " + middleMaterial);
                         Rope rope = new Rope(new Vector2(x1, y1), new Vector2(x2, y2), depth, thickness, piecelen, units, levelInfo.get("ropes").get(0));
                         rope.customRopeDesignation(pin1Material.equals("iron") ? directory.getEntry( "chain-end", Texture.class ) : directory.getEntry( "rope-end", Texture.class ),
                             middleMaterial.equals("iron") ? directory.getEntry( "chain-mid", Texture.class ) : directory.getEntry( "rope-mid", Texture.class ),
@@ -1267,7 +1267,7 @@ public class GameplayScene implements Screen {
                         pinJoint.frequencyHz = 0f;
                         pinJoint.dampingRatio = 0f;
                         pinJoint.collideConnected = false;
-                        System.out.println("pin1: " + pin1 + ";; pin 2 " + pin2);
+//                        System.out.println("pin1: " + pin1 + ";; pin 2 " + pin2);
                         if (pin1 != null && !pin1.isEmpty()) {
                             rope.deactivateAnchor(0);
 //                            String finalPin1 = pin1;
@@ -1425,8 +1425,8 @@ public class GameplayScene implements Screen {
             return false;
         }
         if (activeFireJoint == null || torch.getObstacle().getY() < 0|| queueFailure) {
-            System.out.println((activeFireJoint == null) +", "+ (torch.getObstacle().getY() < 0)+ ", " +queueFailure);
-            System.out.println(torch.getObstacle().getPosition());
+//            System.out.println((activeFireJoint == null) +", "+ (torch.getObstacle().getY() < 0)+ ", " +queueFailure);
+//            System.out.println(torch.getObstacle().getPosition());
             setFailure(true);
             return false;
         }

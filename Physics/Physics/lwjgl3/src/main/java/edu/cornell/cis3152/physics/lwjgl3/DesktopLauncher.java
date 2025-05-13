@@ -53,11 +53,11 @@ public class DesktopLauncher {
      */
     private static GDXAppSettings configureApplication() {
         GDXAppSettings config = new GDXAppSettings();
-        config.title = "The Gilded Flame";
+        config.title = "Gilded Flame";
 
         // Use windowed mode
-        config.fullscreen = true;
-        //config.fullscreen = false;
+//        config.fullscreen = true;
+        config.fullscreen = false;
         config.resizable = false;
         config.width = 1280;
         config.height = 720;
