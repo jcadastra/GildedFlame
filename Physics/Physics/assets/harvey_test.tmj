@@ -60,18 +60,6 @@
          "name":"Entities",
          "objects":[
                 {
-                 "gid":62,
-                 "height":453.764,
-                 "id":515,
-                 "name":"platform1",
-                 "rotation":90,
-                 "type":"",
-                 "visible":true,
-                 "width":1512,
-                 "x":4336.06,
-                 "y":4464.5
-                }, 
-                {
                  "gid":57,
                  "height":150,
                  "id":520,
@@ -126,54 +114,6 @@
                  "width":150,
                  "x":839.94,
                  "y":4723.5
-                }, 
-                {
-                 "gid":72,
-                 "height":520,
-                 "id":517,
-                 "name":"rune",
-                 "properties":[
-                        {
-                         "name":"dissipateTime",
-                         "type":"float",
-                         "value":3.5
-                        }, 
-                        {
-                         "name":"endPos",
-                         "type":"string",
-                         "value":"0,4"
-                        }, 
-                        {
-                         "name":"moveEvent",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"platformName",
-                         "type":"string",
-                         "value":"platform1"
-                        }, 
-                        {
-                         "name":"startPos",
-                         "type":"string",
-                         "value":"0,10"
-                        }, 
-                        {
-                         "name":"thresholds",
-                         "type":"string",
-                         "value":"0"
-                        }, 
-                        {
-                         "name":"timeTo",
-                         "type":"float",
-                         "value":3.5
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":400,
-                 "x":5810.94,
-                 "y":4836.5
                 }, 
                 {
                  "gid":61,
@@ -423,18 +363,6 @@
                  "width":57,
                  "x":892,
                  "y":4661
-                }, 
-                {
-                 "gid":86,
-                 "height":57,
-                 "id":529,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":5972,
-                 "y":4549
                 }, 
                 {
                  "gid":86,
