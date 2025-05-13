@@ -229,6 +229,12 @@
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
     },
+    "platform-mothJUMPANIMATION": {
+      "file": "platform/mothJumpAnimation.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
     "platform-mothCDANIMATION": {
       "file": "platform/mothCDAnimation.png",
       "mipmaps": true,

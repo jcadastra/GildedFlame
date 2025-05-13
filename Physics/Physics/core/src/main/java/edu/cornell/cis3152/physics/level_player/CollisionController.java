@@ -231,7 +231,7 @@ public class CollisionController implements ContactListener {
                 Totem totem = (Totem) idX(bd1, bd2, Totem.class);
                 Moth moth = (Moth) idX(bd1, bd2, Moth.class);
                 if (totem.getState() != Enemy.EnemyState.OUT_OF_LIGHT) {
-//                    moth.changeDirection();
+                    moth.changeDirection();
                 }
             }
 

@@ -23,7 +23,7 @@ public class Moth extends Enemy {
     public static final int TOTAL_ANGRY_FRAMES = 6;
     public static final int TOTAL_IN_LIGHT_FRAMES = 4; // same as frustrated
     public static final int TOTAL_OUT_OF_LIGHT_FRAMES = 6;
-    public static final int TOTAL_JUMP_FRAMES = 1;
+    public static final int TOTAL_JUMP_FRAMES = 6;
     private static final int TOTAL_TRANCE_FRAMES = 4;
     public static final int TOTAL_SMOTHER_FRAMES = 6;
     public static final int TOTAL_CD_FRAMES = 18;
@@ -89,7 +89,7 @@ public class Moth extends Enemy {
         outOfLightAnimationTexture = directory.getEntry("platform-mothOUTOFLIGHTANIMATION", Texture.class);
         angryAnimationTexture = directory.getEntry("platform-mothANGRYANIMATION", Texture.class);
         inLightAnimationTexture = directory.getEntry("platform-mothFRUSTRATEDANIMATION", Texture.class);
-        jumpAnimationTexture = directory.getEntry("platform-mothTRANCEANIMATION", Texture.class);
+        jumpAnimationTexture = directory.getEntry("platform-mothJUMPANIMATION", Texture.class);
         tranceAnimationTexture = directory.getEntry("platform-mothTRANCEANIMATION", Texture.class);
         smotherAnimationTexture = directory.getEntry("platform-mothSMOTHERANIMATION", Texture.class);
         dazedAnimationTexture = directory.getEntry("platform-mothDAZEDANIMATION", Texture.class);
@@ -261,6 +261,12 @@ public class Moth extends Enemy {
     }
 
     @Override
+    public void stop() {
+        float currY = obstacle.getLinearVelocity().y;
+        obstacle.getBody().setLinearVelocity(0, currY);
+    }
+
+    @Override
     public void attack() {
         resetFrames();
         setSpeed(4.5f);
@@ -327,26 +333,27 @@ public class Moth extends Enemy {
             if (rr != null && rr.targetObject instanceof Torch){
                 Torch torch = (Torch) rr.targetObject;
                 torchPos = torch.getObstacle().getPosition();
+                body.setType(BodyDef.BodyType.DynamicBody);
+                body.setAwake(true);
+                body.setGravityScale(0.5f);
+                float jumpVy  = 2.5f;
+                float gEff    = Math.abs(body.getWorld().getGravity().y * body.getGravityScale());
+                float T       = (1.5f * jumpVy) / gEff;
+                float dx      = torchPos.x - body.getPosition().x;
+                float jumpVx  = dx / T;
+                body.setLinearVelocity(jumpVx, jumpVy);
+                setHasJumped(true);
             } else {
                 if (rr == null) {
                     System.out.println("null check");
-                } else {
                 }
             }
-            body.setType(BodyDef.BodyType.DynamicBody);
-            body.setAwake(true);
-            body.setGravityScale(0.5f);
-            float jumpVy  = 2.5f;
-            float gEff    = Math.abs(body.getWorld().getGravity().y * body.getGravityScale());
-            float T       = (1.5f * jumpVy) / gEff;
-            float dx      = torchPos.x - body.getPosition().x;
-            float jumpVx  = dx / T;
-            body.setLinearVelocity(jumpVx, jumpVy);
-            setHasJumped(true);
+
     }
 
     @Override
     public void update(){
+        System.out.println(getJustCollided());
         super.update();
     }
 
