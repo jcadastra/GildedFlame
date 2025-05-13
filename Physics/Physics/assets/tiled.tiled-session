@@ -98,8 +98,8 @@
             "scale": 0.33,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 4778.787878787878,
-                "y": 2680.3030303030305
+                "x": 4766.666666666667,
+                "y": 2671.212121212121
             }
         },
         "box_intro.tmj": {
@@ -369,6 +369,14 @@
                 "y": 2696.396162820845
             }
         },
+        "rune_hard.tmj": {
+            "scale": 0.180796875,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 4800.9679370840895,
+                "y": 2701.9272318727853
+            }
+        },
         "rune_intro.tmj": {
             "expandedObjectLayers": [
                 5
@@ -385,10 +393,10 @@
                 5
             ],
             "scale": 0.25,
-            "selectedLayer": 6,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": 4798,
-                "y": 2698
+                "x": 4792,
+                "y": 2694
             }
         },
         "sample.tmj": {
@@ -578,6 +586,8 @@
     "project": "tiled.tiled-project",
     "property.type": "bool",
     "recentFiles": [
+        "rune_medium.tmj",
+        "rune_hard.tmj",
         "GameObjectTiles.tsx",
         "BackgroundAssets.tsx",
         "mothDecoratives.tsx",
@@ -587,9 +597,7 @@
         "climb_intro.tmj",
         "advanced_movement.tmj",
         "box_intro.tmj",
-        "totem_intro.tmj",
-        "rune_medium.tmj",
-        "rain_intro.tmj"
+        "totem_intro.tmj"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.type": 1

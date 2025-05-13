@@ -258,10 +258,12 @@ public class Avatar extends ObstacleSprite {
         // "inner" is the fraction of the original size for the capsule
         width = s * data.get("inner").getFloat(0);
         height = s * data.get("inner").getFloat(1);
-        obstacle = new CapsuleObstacle(x, y, width, height);
+        obstacle = new CapsuleObstacle(x, y, width/2, height );
+        System.out.println(width/2f +",aefee " + height);
         ((CapsuleObstacle) obstacle).setTolerance(debugInfo.getFloat("tolerance", 0.5f));
 
         obstacle.setDensity(data.getFloat("density", 0));
+        obstacle.setDensity(obstacle.getDensity() * (2.45f));
         obstacle.setFriction(data.getFloat("friction", 0));
         obstacle.setRestitution(data.getFloat("restitution", 0));
         obstacle.setFixedRotation(true);

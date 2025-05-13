@@ -820,6 +820,8 @@ public class GameplayScene implements Screen {
                         avatar.getObstacle().setPosition(x,y);
                         //System.out.println("position" + pos[0] + " " + pos[1]);
                         addSprite(avatar);
+                        System.out.println("avatar density: " + avatar.getObstacle().getDensity());
+                        System.out.println("avatar mass: " + avatar.getObstacle().getMass());
                         avatar.createSensor();
 
                     } else if (objName.contains("torch")) {
