@@ -588,7 +588,7 @@ public class GameplayScene implements Screen {
             for (ObstacleSprite rainDrop : weatherMachine.rainDrops) {
                 rainDrop.getObstacle().markRemoved(true);
             }
-            weatherMachine.updateWorld(null);
+            weatherMachine.updateWorld(null, bounds);
             weatherMachine.clear();
         }
 
@@ -820,6 +820,8 @@ public class GameplayScene implements Screen {
                         avatar.getObstacle().setPosition(x,y);
                         //System.out.println("position" + pos[0] + " " + pos[1]);
                         addSprite(avatar);
+                        System.out.println("avatar density: " + avatar.getObstacle().getDensity());
+                        System.out.println("avatar mass: " + avatar.getObstacle().getMass());
                         avatar.createSensor();
 
                     } else if (objName.contains("torch")) {
@@ -1493,7 +1495,7 @@ public class GameplayScene implements Screen {
         supplementaryCollisionActions();
         supplementaryFireActions();
         supplementaryEventActions(dt);
-        weatherMachine.updateWorld(world);
+        weatherMachine.updateWorld(world, bounds);
         if (weatherMachine.isRainActive()) {
             supplementaryRainActions();
 //            particleEngine.ra
@@ -1530,8 +1532,8 @@ public class GameplayScene implements Screen {
         if (!(avatar.getBodyTouchedClimbables().isEmpty()) && !avatar.getHasTorch() && !avatar.getGroundedState().equals(GroundState.CLIMBING)
              && input.didVertical() && avatar.jumpDeadTimerAvaliable()) {
             avatar.setGroundedState(GroundState.CLIMBING);
-            avatar.getObstacle().getBody().setLinearVelocity(Vector2.Zero);
             avatar.applyClimbingPhysics();
+            avatar.getObstacle().getBody().setLinearVelocity(Vector2.Zero);
         }
 
         if (avatar.getGroundedState().equals(GroundState.CLIMBING) && avatar.getBodyTouchedClimbables().isEmpty()) {

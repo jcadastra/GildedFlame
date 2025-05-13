@@ -125,6 +125,11 @@
                  "name":"8",
                  "properties":[
                         {
+                         "name":"dynamic2",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"pin2",
                          "type":"string",
                          "value":""
@@ -179,6 +184,11 @@
                  "name":"6",
                  "properties":[
                         {
+                         "name":"dynamic2",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"pin2",
                          "type":"string",
                          "value":""
@@ -196,6 +206,11 @@
                  "id":428,
                  "name":"4",
                  "properties":[
+                        {
+                         "name":"dynamic2",
+                         "type":"bool",
+                         "value":true
+                        }, 
                         {
                          "name":"pin2",
                          "type":"string",
