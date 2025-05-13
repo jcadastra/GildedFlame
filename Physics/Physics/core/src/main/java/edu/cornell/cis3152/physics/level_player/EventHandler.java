@@ -66,5 +66,6 @@ public class EventHandler {
      */
     public void dispose() {
         registeredEvents.clear();
+        eventFlags.clear();
     }
 }

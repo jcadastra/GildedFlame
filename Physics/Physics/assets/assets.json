@@ -55,6 +55,7 @@
     "tThrow" : "backgroundAssets/tThrow.png",
     "window": "backgroundAssets/window.png",
     "bookshelf" : "backgroundAssets/bookshelf.png",
+    "banner" : "backgroundAssets/banner.png",
     "holder" : "backgroundAssets/holder.png",
     "chandelier" : "backgroundAssets/chandelier.png",
     "grate" : "environment/grate.png",
@@ -70,6 +71,18 @@
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
     },
+    "centralWeb" : "backgroundAssets/mothEggsNest/centralWeb.png",
+    "centralWebEgg" : "backgroundAssets/mothEggsNest/centralWebEgg.png",
+    "centralWebOne" : "backgroundAssets/mothEggsNest/centralWebOne.png",
+    "cornerWeb" : "backgroundAssets/mothEggsNest/cornerWeb.png",
+    "cornerWebEgg" : "backgroundAssets/mothEggsNest/cornerWebEgg.png",
+    "egg" : "backgroundAssets/mothEggsNest/egg.png",
+    "eggOpen" : "backgroundAssets/mothEggsNest/eggOpen.png",
+    "eggs" : "backgroundAssets/mothEggsNest/eggs.png",
+    "eggsOpen" : "backgroundAssets/mothEggsNest/eggsOpen.png",
+    "fullWeb" : "backgroundAssets/mothEggsNest/fullWeb.png",
+    "fullWebEgg" : "backgroundAssets/mothEggsNest/fullWebEgg.png",
+
     "platform-totemLIGHTANIMATION": {
       "file": "platform/totemInLightAnimation.png",
       "mipmaps": true,
@@ -269,8 +282,8 @@
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
     },
-    "rope-end": "environment/Rope/ropeEnd.png",
-    "chain-end": "environment/Rope/ropeEnd.png",
+    "rope-end": "environment/Rope/chainEnd.png",
+    "chain-end": "environment/Rope/chainEnd.png",
     "rope-mid": "environment/Rope/ropeBody.png",
     "chain-mid": "environment/Rope/chainBody.png",
     "runeBase": "environment/runeBase.png",

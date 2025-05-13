@@ -47,12 +47,10 @@ public class MarthasWeatherMachine {
 
     public Stack<RainFlag> getRainflags() {return rainflags;}
 
-    public void clean() {
-//        rainRegion.clear();
-//        kinematicObstacles.clear();
-//        triangulator.clear();
-//        path2.clear();
-//        pathSmoother.clear();
+    public void clear() {
+        collidedObstacles.clear();
+        rainDrops.clear();
+        rainflags.clear();
     }
 
     public void activateRain(float physicsUnits, int rainFreq) {

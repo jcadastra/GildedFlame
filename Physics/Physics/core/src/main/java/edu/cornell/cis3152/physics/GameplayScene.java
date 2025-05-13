@@ -475,6 +475,9 @@ public class GameplayScene implements Screen {
         lightController.dispose();
         eventHandler.dispose();
         sprites.clear();
+        runeSet.clear();
+        tweenedMovmentObjectsFloat.clear();
+        tweenedMovmentObjectsVec2.clear();
         addQueue.clear();
         torchArc.clear();
         world.dispose();
@@ -577,6 +580,7 @@ public class GameplayScene implements Screen {
                     world.destroyJoint(fire.getFixtureJoint());
                 }
             }
+            fireController.clear();
             fireController.resetStorage();
         }
 
@@ -585,6 +589,7 @@ public class GameplayScene implements Screen {
                 rainDrop.getObstacle().markRemoved(true);
             }
             weatherMachine.updateWorld(null);
+            weatherMachine.clear();
         }
 
         if (eventHandler != null) {
@@ -594,12 +599,11 @@ public class GameplayScene implements Screen {
         if (lightController != null){
             lightController.dispose();}
 
-        if (floatingLights!=null && floatingLights.size()>0){
+        if (floatingLights!=null && !floatingLights.isEmpty()){
             floatingLights.get(0).reset();
         }
 
         for (ObstacleSprite sprite : sprites) {
-            Obstacle obj = sprite.getObstacle();
             sprite.getObstacle().deactivatePhysics(world);
         }
         if(particleEngine!=null){
@@ -613,13 +617,20 @@ public class GameplayScene implements Screen {
         sprites.clear();
         addQueue.clear();
         runeSet.clear();
+        tweenedMovmentObjectsFloat.clear();
+        tweenedMovmentObjectsVec2.clear();
         if (world != null) {
             world.dispose();
         }
 
         contactListener.reset();
-        setComplete(false);
-        setFailure(false);
+
+        complete = false;
+        failed = false;
+        countdown = -1;
+        isFadingOut = false;
+        fadeTime = 0;
+
         world = new World(gravity, false);
 //        world.step(1/60f, WORLD_VELOC, WORLD_POSIT);
         world.setContactListener(contactListener);
@@ -1419,19 +1430,6 @@ public class GameplayScene implements Screen {
             pause();
             listener.exitScreen(this, EXIT_PREV);
             return false;
-        } else if (countdown > 0) {
-            countdown--;
-        } else if (countdown == 0) {
-            if (failed) {
-                pause();
-                isFadingOut = true;
-                // listener.exitScreen(this, EXIT_FAILURE);
-                return true;
-            } else if (complete) {
-                pause();
-                listener.exitScreen(this, EXIT_NEXT);
-                return false;
-            }
         }
 
         contactListener.processPendingMerges();
@@ -1601,6 +1599,7 @@ public class GameplayScene implements Screen {
             soundEngine.stopAllSoundEffects();
             fadeTime += dt;
             if (fadeTime >= fadeDuration) {
+                System.out.println("HELP" + fadeTime + ", " + fadeDuration);
                 listener.exitScreen(this, fadeExitCode);
             }
         }
@@ -2497,12 +2496,6 @@ public class GameplayScene implements Screen {
             counter++;
             myWriter.close();
         } catch (Exception e) {System.out.println("failed pritnout " + counter +", " + e.getMessage());}
-    }
-
-
-    public void hackyForceResetFailedComplete() {
-        failed = false;
-        complete = false;
     }
 
     //attaches light to fire

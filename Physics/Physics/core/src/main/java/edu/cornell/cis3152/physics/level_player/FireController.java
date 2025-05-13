@@ -77,8 +77,6 @@ public class FireController {
         fireFlags = new Stack<>();
         allFires = new HashSet<>();
         allSmoke = new HashSet<>();
-        cutter = new EarClippingTriangulator();
-        rand = new Random();
     }
 
     /**
@@ -88,6 +86,8 @@ public class FireController {
      */
     public FireController(AssetDirectory directory) {
         resetStorage(); this.assetDirectory = directory;
+        cutter = new EarClippingTriangulator();
+        rand = new Random();
     }
 
     /**
@@ -443,5 +443,12 @@ public class FireController {
     }
     public void cleanFire (Fire fire, EnhancedObstacleSprite eos) {
         firesOnShape.get(eos).remove(fire);
+    }
+    public void clear() {
+        nFireDiagrams.clear();
+        firesOnShape.clear();
+        allFires.clear();
+        fireFlags.clear();
+        allSmoke.clear();
     }
 }
