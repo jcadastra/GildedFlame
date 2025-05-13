@@ -2360,7 +2360,7 @@ public class GameplayScene implements Screen {
             batch.begin();
             float alpha = Math.min(fadeTime / fadeDuration, 1f);
             batch.setColor(0, 0, 0, alpha);
-            batch.draw(blackTexture, 0, 0, width, height);
+            batch.draw(blackTexture, 0, 0, bounds.width*phyiscsUnits, bounds.height*phyiscsUnits);
             batch.setColor(Color.WHITE);
             batch.end();
         }

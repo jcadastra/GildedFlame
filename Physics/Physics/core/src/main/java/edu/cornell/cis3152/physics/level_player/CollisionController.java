@@ -193,14 +193,12 @@ public class CollisionController implements ContactListener {
 
 
             if (isXandY(bd1, bd2, "nonburnable", Moth.class) == 1) {
-                System.out.println("Moth contact with burnable.");
                 Moth moth = (Moth) idX(bd1, bd2, Moth.class);
                 moth.changeDirection();
                 moth.setJustCollided(true);
             }
 
             if (isXandY(bd1, bd2, "infburnable", Moth.class) == 1) {
-                System.out.println("Moth contact with infburnable.");
                 Moth moth = (Moth) idX(bd1, bd2, Moth.class);
                 Object other = (bd1.getObstacle().getUserData() instanceof Moth) ? bd2.getObstacle().getUserData() : bd1.getObstacle().getUserData();
 //                if (moth.getState() == EnemyState.ATTACK){
@@ -333,19 +331,19 @@ public class CollisionController implements ContactListener {
 
             }
 
-            if (isXandY(bd1, bd2, Moth.class, Moth.class) == 2) {
-                Moth moth1 = (Moth) bd1;
-                Moth moth2 = (Moth) bd2;
-                if (moth1.getState() != EnemyState.IN_LIGHT) {
-                    moth1.changeDirection();
-                    moth1.setJustCollided(true);
-                }
-                if (moth2.getState() != EnemyState.IN_LIGHT) {
-                    moth2.changeDirection();
-                    moth2.setJustCollided(true);
-                }
-
-            }
+//            if (isXandY(bd1, bd2, Moth.class, Moth.class) == 2) {
+//                Moth moth1 = (Moth) bd1;
+//                Moth moth2 = (Moth) bd2;
+//                if (moth1.getState() != EnemyState.IN_LIGHT) {
+//                    moth1.changeDirection();
+//                    moth1.setJustCollided(true);
+//                }
+//                if (moth2.getState() != EnemyState.IN_LIGHT) {
+//                    moth2.changeDirection();
+//                    moth2.setJustCollided(true);
+//                }
+//
+//            }
 
             /**
              * Moth and Light Collision
@@ -700,7 +698,6 @@ public class CollisionController implements ContactListener {
         if (isXandY(bd1, bd2, "burnable", Moth.class) == 1) {
             Moth moth = (Moth) idX(bd1, bd2, Moth.class);
             moth.setJustCollided(false);
-            System.out.println("end contact & set JUst collided to false");
         }
 
 
@@ -848,6 +845,12 @@ public class CollisionController implements ContactListener {
                 contact.setEnabled(false);
             }
         }
+
+                    if (isXandY(bd1, bd2, Moth.class, Moth.class) == 2) {
+                        Moth moth1 = (Moth) bd1;
+                        Moth moth2 = (Moth) bd2;
+                        contact.setEnabled(false);
+                    }
 
 //        if (isXandY(bd1, bd2, Moth.class, Torch.class) == 1) {
 //            Moth moth = (Moth) idX(bd1, bd2, Moth.class);

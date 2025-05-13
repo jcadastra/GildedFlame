@@ -316,7 +316,12 @@
     "example_level" : "example_level.tmj",
     "harvey_test" : "harvey_test.tmj",
     "harvey_test2" : "harvey_test2.tmj",
-    "new_1" :  "new_1.tmj"
+    "new_1" : "new_1.tmj",
+    "new_2" : "new_2.tmj",
+    "level1" : "level1.tmj",
+    "level2" : "level2.tmj",
+    "level3" : "level3.tmj"
+
   },
   "music": {
     "eerie": "music/eerie.wav",

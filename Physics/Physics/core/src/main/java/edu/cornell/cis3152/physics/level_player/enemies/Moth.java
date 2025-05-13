@@ -353,7 +353,6 @@ public class Moth extends Enemy {
 
     @Override
     public void update(){
-        System.out.println(getJustCollided());
         super.update();
     }
 

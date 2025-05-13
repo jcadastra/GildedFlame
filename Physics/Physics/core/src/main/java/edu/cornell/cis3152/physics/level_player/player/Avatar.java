@@ -65,7 +65,7 @@ public class Avatar extends ObstacleSprite {
     public static final short CATEGORY_LIGHT = 0x0008;  // 00001000
     public static final int TOTAL_FRAMES = 6;
     public static final int TOTAL_JUMP_UP_FRAMES = 4;
-    public static final int TOTAL_JUMP_FALL_FRAMES = 4;
+    public static final int TOTAL_JUMP_FALL_FRAMES = 2;
     public static final int TOTAL_JUMP_LAND_FRAMES = 2;
     public static final int FRAME_HEIGHT = 550;
     public static final int FRAME_WIDTH = 350;

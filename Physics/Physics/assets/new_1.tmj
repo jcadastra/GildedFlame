@@ -290,36 +290,6 @@
                  "y":3038
                 }, 
                 {
-                 "gid":75,
-                 "height":242,
-                 "id":516,
-                 "name":"infburnable",
-                 "properties":[
-                        {
-                         "name":"startOnFire",
-                         "type":"bool",
-                         "value":true
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":323,
-                 "x":7425.94,
-                 "y":1505.5
-                }, 
-                {
-                 "gid":75,
-                 "height":242,
-                 "id":572,
-                 "name":"infburnable",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":323,
-                 "x":3526.5,
-                 "y":6591
-                }, 
-                {
                  "gid":72,
                  "height":520,
                  "id":570,
@@ -364,7 +334,7 @@
                  "type":"",
                  "visible":true,
                  "width":400,
-                 "x":5170.66666666667,
+                 "x":5291.87878787879,
                  "y":6646.66666666667
                 }, 
                 {
@@ -381,7 +351,7 @@
                         {
                          "name":"endPos",
                          "type":"string",
-                         "value":"0,4"
+                         "value":"0,0"
                         }, 
                         {
                          "name":"moveEvent",
@@ -396,7 +366,7 @@
                         {
                          "name":"startPos",
                          "type":"string",
-                         "value":"0,10"
+                         "value":"0,4.5"
                         }, 
                         {
                          "name":"thresholds",
@@ -414,6 +384,36 @@
                  "width":400,
                  "x":7978.94,
                  "y":3036.5
+                }, 
+                {
+                 "gid":75,
+                 "height":242,
+                 "id":516,
+                 "name":"infburnable",
+                 "properties":[
+                        {
+                         "name":"startOnFire",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":323,
+                 "x":7425.94,
+                 "y":1505.5
+                }, 
+                {
+                 "gid":75,
+                 "height":242,
+                 "id":572,
+                 "name":"infburnable",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":323,
+                 "x":4690.13636363636,
+                 "y":6654.63636363636
                 }, 
                 {
                  "gid":57,
@@ -526,8 +526,8 @@
                  "type":"",
                  "visible":true,
                  "width":300,
-                 "x":7467.24242424242,
-                 "y":1166.31818181818
+                 "x":3355.24242424242,
+                 "y":5982.31818181818
                 }, 
                 {
                  "gid":51,
