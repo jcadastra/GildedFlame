@@ -110,11 +110,16 @@ public class GameplayScene implements Screen {
     public static final int EXIT_REPLAY = 4;
     /** Exit code for returning to the main menu */
     public static final int EXIT_MAINMENU = 5;
-    /** Exit code for going to the failure screen */
-    public static final int EXIT_FAILURE = 6;
+    /** Exit code for going to the failure screen, torch off */
+    public static final int EXIT_TORCHOFF = 6;
+    /** Exit code for going to the failure screen, falling death */
+    public static final int EXIT_FALLING = 7;
+    /** Exit code for going to the failure screen, moth attack */
+    public static final int EXIT_MOTH = 8;
     /** How many frames after winning/losing do we continue? */
     public static final int EXIT_COUNT = 180;
     private boolean queueFailure;
+    private boolean queueFailureTorchOff;
 
     /** The asset directory for retrieving textures, atlases */
     protected AssetDirectory directory;
@@ -168,6 +173,8 @@ public class GameplayScene implements Screen {
     protected boolean paused;
     /** Countdown active for winning or losing */
     protected int countdown;
+    /** 0 for torch off, 1 for falling death, 2 for contact with moth*/
+    protected int death_code = 0;
 
     private List<Enemy> enemies;
     protected Avatar avatar;
@@ -554,6 +561,9 @@ public class GameplayScene implements Screen {
         if (queueFailure) {
             queueFailure = false;
         }
+        if(queueFailureTorchOff) {
+            queueFailureTorchOff = false;
+        }
 
         if (activeTorchJoint != null) {
             world.destroyJoint(activeTorchJoint);
@@ -627,6 +637,7 @@ public class GameplayScene implements Screen {
 
         complete = false;
         failed = false;
+        death_code = 0;
         countdown = -1;
         isFadingOut = false;
         fadeTime = 0;
@@ -1436,14 +1447,21 @@ public class GameplayScene implements Screen {
 
         if (!isFailure() && avatar.getObstacle().getY() < -1) {
             setFailure(true);
+            death_code = 1;
             return false;
         }
         if (activeFireJoint == null || torch.getObstacle().getY() < 0|| queueFailure) {
-            System.out.println((activeFireJoint == null) +", "+ (torch.getObstacle().getY() < 0)+ ", " +queueFailure);
+            System.out.println((activeFireJoint == null) +", "+ (torch.getObstacle().getY() < 0)+ ", " +queueFailureTorchOff);
             System.out.println(torch.getObstacle().getPosition());
             setFailure(true);
+            death_code = 0;
             return false;
         }
+        /*if(queueFailure) {
+            setFailure(true);
+            death_code = 2;
+            return false;
+        }*/
         return true;
     }
 
@@ -1851,6 +1869,12 @@ public class GameplayScene implements Screen {
                 case "queueFailure":
                     avatar.setGroundedState(GroundState.DEAD);
                     queueFailure = true;
+                    break;
+                case "queueFailureTorchOff":
+                    avatar.setGroundedState(GroundState.DEAD);
+                    queueFailureTorchOff = true;
+                    queueFailure = true;
+                    death_code = 0;
                     break;
                 case "resetRain":
                     ObstacleSprite os = todo_action.getSubject();
@@ -2326,7 +2350,9 @@ public class GameplayScene implements Screen {
                 fadeExitCode = EXIT_SUCCESS;
             } else if (failed) {
                 isFadingOut = true;
-                fadeExitCode = EXIT_FAILURE;
+                if (death_code == 0) fadeExitCode = EXIT_TORCHOFF;
+                else if (death_code == 1) fadeExitCode = EXIT_FALLING;
+                else if (death_code == 2) fadeExitCode = EXIT_MOTH;
             }
         }
 

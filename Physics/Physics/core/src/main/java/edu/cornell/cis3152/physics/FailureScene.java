@@ -34,18 +34,21 @@ public class FailureScene implements Screen {
     protected SoundEngine soundEngine;
     /** The asset directory for retrieving textures, atlases */
     protected AssetDirectory directory;
-    private Texture maskCrumbleTexture;
+    private Texture animationTexture;
     private int currentFrameIndex = 0;
     private float frameTimer = 0f;
-    private static final int FRAME_SIZE = 500;
-    private static final int TOTAL_FRAMES = 17;
+    private int FRAME_WIDTH = 500;
+    private int FRAME_HEIGHT = 500;
+    private int TOTAL_FRAMES = 17;
     private static final float FRAME_DURATION = 0.1f;
     private boolean animationFinished = false;
+    private int death_code;
 
 
-    public FailureScene(AssetDirectory directory, SoundEngine soundEngine) {
+    public FailureScene(AssetDirectory directory, SoundEngine soundEngine, int death_code) {
         this.directory = directory;
         this.soundEngine = soundEngine;
+        this.death_code = death_code;
         stage = new Stage(new ScreenViewport());
         skin = new Skin();
         createBasicUI();
@@ -161,7 +164,23 @@ public class FailureScene implements Screen {
         // Add the image actor to the stage
         stage.addActor(topImage);
 
-        maskCrumbleTexture = directory.getEntry("maskCrumbleANIMATION", Texture.class);
+        if (death_code == 0) {
+            FRAME_WIDTH = 1000;
+            FRAME_HEIGHT = 1000;
+            TOTAL_FRAMES = 33;
+            animationTexture = directory.getEntry("torchOffANIMATION", Texture.class);
+        } else if (death_code == 1) {
+            FRAME_WIDTH = 500;
+            FRAME_HEIGHT = 823;
+            TOTAL_FRAMES = 6;
+            animationTexture = directory.getEntry("maskFallANIMATION", Texture.class);
+        } else if (death_code == 2) {
+            FRAME_WIDTH = 500;
+            FRAME_HEIGHT = 500;
+            TOTAL_FRAMES = 17;
+            animationTexture = directory.getEntry("maskCrumbleANIMATION", Texture.class);
+        }
+
     }
 
     @Override
@@ -185,17 +204,17 @@ public class FailureScene implements Screen {
                 }
             }
         }
-        int srcX = currentFrameIndex*FRAME_SIZE;
+        int srcX = currentFrameIndex*FRAME_WIDTH;
         int srcY = 0;
         stage.getBatch().begin();
         stage.getBatch().draw(
-                maskCrumbleTexture,
+                animationTexture,
                 screenWidth * 0.1f,
                 screenHeight * 0.2f,
                 screenWidth * 0.4f,
                 screenHeight * 0.5f,
                 srcX, srcY,
-                FRAME_SIZE, FRAME_SIZE,
+                FRAME_WIDTH, FRAME_HEIGHT,
                 false, false
         );
         stage.getBatch().end();

@@ -59,6 +59,12 @@
     "holder" : "backgroundAssets/holder.png",
     "chandelier" : "backgroundAssets/chandelier.png",
     "grate" : "environment/grate.png",
+    "torchOffANIMATION": {
+      "file": "ui/torchOff.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
     "maskCrumbleANIMATION": {
       "file": "ui/maskCrumble.png",
       "mipmaps": true,

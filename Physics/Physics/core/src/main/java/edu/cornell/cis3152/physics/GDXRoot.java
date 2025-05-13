@@ -226,8 +226,8 @@ public class GDXRoot extends Game implements ScreenListener {
                 swapCreateLevelSelect();
             } else if (exitCode == GameplayScene.EXIT_SUCCESS) {
                 createSwapSuccess();
-            } else if (exitCode == GameplayScene.EXIT_FAILURE) {
-                createSwapFailure();
+            } else if (exitCode == GameplayScene.EXIT_TORCHOFF || exitCode == GameplayScene.EXIT_FALLING || exitCode == GameplayScene.EXIT_MOTH) {
+                createSwapFailure(exitCode - 6);
             }
             return;
         }
@@ -287,8 +287,9 @@ public class GDXRoot extends Game implements ScreenListener {
         soundEngine.successSound();
     }
 
-    private void createSwapFailure() {
-        FailureScene failure = new FailureScene(directory, soundEngine);
+    private void createSwapFailure(int death_code) {
+
+        FailureScene failure = new FailureScene(directory, soundEngine, death_code);
         failure.setScreenListener(this);
         setScreen(failure);
         soundEngine.failureSound();
