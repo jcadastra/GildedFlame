@@ -1521,8 +1521,8 @@ public class GameplayScene implements Screen {
         if (!(avatar.getBodyTouchedClimbables().isEmpty()) && !avatar.getHasTorch() && !avatar.getGroundedState().equals(GroundState.CLIMBING)
              && input.didVertical() && avatar.jumpDeadTimerAvaliable()) {
             avatar.setGroundedState(GroundState.CLIMBING);
-            avatar.getObstacle().getBody().setLinearVelocity(Vector2.Zero);
             avatar.applyClimbingPhysics();
+            avatar.getObstacle().getBody().setLinearVelocity(Vector2.Zero);
         }
 
         if (avatar.getGroundedState().equals(GroundState.CLIMBING) && avatar.getBodyTouchedClimbables().isEmpty()) {

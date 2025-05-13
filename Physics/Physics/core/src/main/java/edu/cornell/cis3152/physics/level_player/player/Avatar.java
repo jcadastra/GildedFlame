@@ -259,12 +259,12 @@ public class Avatar extends ObstacleSprite {
         width = s * data.get("inner").getFloat(0);
         height = s * data.get("inner").getFloat(1);
         obstacle = new CapsuleObstacle(x, y, width/2, height );
-        System.out.println(width/2f +",aefee " + height);
         ((CapsuleObstacle) obstacle).setTolerance(debugInfo.getFloat("tolerance", 0.5f));
 
         obstacle.setDensity(data.getFloat("density", 0));
         obstacle.setDensity(obstacle.getDensity() * (2.45f));
         obstacle.setFriction(data.getFloat("friction", 0));
+//        obstacle.setFriction(1f);
         obstacle.setRestitution(data.getFloat("restitution", 0));
         obstacle.setFixedRotation(true);
         obstacle.setPhysicsUnits(units);
@@ -711,6 +711,12 @@ public class Avatar extends ObstacleSprite {
         getObstacle().getBody().setGravityScale(0);
         getObstacle().setFixedRotation(false);
         applyWeightToClimbable(bodyTouchedClimbables);
+        System.out.println(getVelocity() + "daw");
+        for (EnhancedObstacleSprite obj : bodyTouchedClimbables) {
+            if (!obj.getObstacle().isRemoved()) {
+                obj.getObstacle().getBody().applyForceToCenter(new Vector2(getVelocity().x / 7f,0), true);
+            }
+        }
     }
 
     public void removeClimbingPhysics() {
