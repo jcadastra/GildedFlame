@@ -255,7 +255,7 @@ public class GDXRoot extends Game implements ScreenListener {
     }
 
     private void swapGamePlayScene(int delta) {
-         setGamePlaySceneLevel(current +delta + levels.length);
+        createSetGamePlayScene(current +delta);
     }
 
     public void setGamePlaySceneLevel(int level) {

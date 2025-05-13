@@ -3,6 +3,8 @@
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <properties>
+   <property name="dynamic1" type="bool" value="false"/>
+   <property name="dynamic2" type="bool" value="false"/>
    <property name="end1Material" value="rope,iron"/>
    <property name="end2Material" value="rope,iron"/>
    <property name="middleMaterial" value="rope,iron"/>
@@ -95,6 +97,9 @@ swing</property>
   <image width="300" height="300" source="environment/grate.png"/>
  </tile>
  <tile id="18">
+  <properties>
+   <property name="startOnFire" type="bool" value="false"/>
+  </properties>
   <image width="323" height="242" source="environment/brazier.png"/>
  </tile>
 </tileset>
