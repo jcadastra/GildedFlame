@@ -390,6 +390,12 @@
                  "height":242,
                  "id":516,
                  "name":"infburnable",
+                 "properties":[
+                        {
+                         "name":"startOnFire",
+                         "type":"bool",
+                         "value":true
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -520,8 +526,8 @@
                  "type":"",
                  "visible":true,
                  "width":300,
-                 "x":5747.24242424242,
-                 "y":3638.31818181818
+                 "x":7467.24242424242,
+                 "y":1166.31818181818
                 }, 
                 {
                  "gid":51,
@@ -532,8 +538,8 @@
                  "type":"",
                  "visible":true,
                  "width":216,
-                 "x":5785.72727272727,
-                 "y":2990.28787878788
+                 "x":3049.72727272727,
+                 "y":6382.28787878788
                 }],
          "opacity":1,
          "type":"objectgroup",
