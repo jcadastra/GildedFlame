@@ -1,5 +1,6 @@
 package edu.cornell.cis3152.physics.level_player;
 
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -28,6 +29,7 @@ public class MarthasWeatherMachine {
     private Vector2 windVel = new Vector2(Vector2.Zero);
     private Random random;
     private World world;
+    private Rectangle bounds;
 
     private Stack<RainFlag> rainflags;
     private Vector2 rainRestPos = new Vector2(-2,-2);
@@ -70,7 +72,15 @@ public class MarthasWeatherMachine {
         return windVel.len()!=0;
     }
 
-    public void updateWorld(World world) {if (this.world != null) return; this.world = world;}
+    public void updateWorld(World world, Rectangle bounds) {
+        if (world == null) {
+            this.world = null;
+            return;
+        }
+        if (this.world != null) return;
+        this.world = world;
+        this.bounds = bounds;
+    }
 
     public void update(World world) {
         if (isRainActive()) {
@@ -89,7 +99,7 @@ public class MarthasWeatherMachine {
             return;
         }
 
-        newDrop.getObstacle().setPosition(random.nextInt(40) + random.nextFloat(), 18);
+        newDrop.getObstacle().setPosition(random.nextInt((int) bounds.width) + random.nextFloat(), bounds.height);
         newDrop.getObstacle().setLinearVelocity(new Vector2(0,-5));
     }
     public void blowWind(World world) {
@@ -136,7 +146,7 @@ public class MarthasWeatherMachine {
         Vector2 pos = sprite.getObstacle().getPosition();
         collidedObstacles.clear();
         if (world == null) {return false;}
-        world.rayCast(rayCastCallback, pos, new Vector2(pos.x, 18));
+        world.rayCast(rayCastCallback, pos, new Vector2(pos.x, bounds.height));
         //System.out.println("raycast in rain");
 
         for (Fixture fixture : collidedObstacles) {
