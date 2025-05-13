@@ -479,6 +479,12 @@
                  "height":242,
                  "id":102,
                  "name":"infburnable",
+                 "properties":[
+                        {
+                         "name":"startOnFire",
+                         "type":"bool",
+                         "value":false
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -795,7 +801,7 @@
          "source":"BackgroundAssets.tsx"
         }, 
         {
-         "firstgid":88,
+         "firstgid":89,
          "source":"EnemyTiles.tsx"
         }],
  "tilewidth":300,

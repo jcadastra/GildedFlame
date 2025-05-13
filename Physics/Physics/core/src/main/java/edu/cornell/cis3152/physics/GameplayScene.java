@@ -954,7 +954,18 @@ public class GameplayScene implements Screen {
                             }, x,y, width, height, units);
                             materialType = "infinite";
                             boolean startOnFire = false;
-                            if (object.hasChild("startOnFire")) object.getBoolean("startOnFire");
+                            JsonValue props = object.get("properties");
+                            if (props != null) {
+                                for (JsonValue prop : props) {
+                                    String propName = prop.getString("name");
+                                    String value = prop.getString("value");
+                                    switch (propName) {
+                                        case "startOnFire":
+                                            startOnFire = Boolean.parseBoolean(value);
+                                    }
+                                }
+                            }
+                            System.out.println("found property: startOnFire = " + startOnFire);
                             box.setTexture(directory.getEntry("brazier", Texture.class));
                             if (startOnFire) fireController.lightAnew(box, new Vector2(box.getObstacle().getX() + (random.nextFloat()-.5f)/2, box.getObstacle().getY()));
                             box.getObstacle().setDensity(1.8f );
