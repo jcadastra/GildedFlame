@@ -66,10 +66,13 @@ public class FireController {
     }
 
     public Set<Fire> getLitFires() {
+        System.out.println("a1");
         Set<Fire> returnSet = new HashSet<>();
+        System.out.println("a2");
         for (EnhancedObstacleSprite obj : nFireDiagrams.keySet()) {
             returnSet.addAll(firesOnShape.get(obj));
         }
+        System.out.println("a3");
         return returnSet;
     }
 
@@ -285,14 +288,6 @@ public class FireController {
             return;
         }
 
-        final Fixture[] hit = { null };
-        RayCastCallback raycastCallback = (fixture, pnt, normal, fraction) -> {
-            hit[0] = fixture;
-            return 0;
-        };
-
-
-
         Fire f = new Fire(s.getObstacle().getPhysicsUnits(), point.cpy());
         f.setID(fireID);
         fireID++;
@@ -460,5 +455,6 @@ public class FireController {
         allFires.clear();
         fireFlags.clear();
         allSmoke.clear();
+        fireID = 1;
     }
 }

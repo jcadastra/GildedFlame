@@ -541,6 +541,7 @@ public class GameplayScene implements Screen {
      * This method disposes of the world and creates a new one.
      */
     public void reset() {
+        System.out.println("block one");
         JsonValue values = constants.get("world");
         Vector2 gravity = new Vector2(0, values.getFloat("gravity"));
         if (queueFailure) {
@@ -561,17 +562,16 @@ public class GameplayScene implements Screen {
 //        activeLightJoints.clear();
         //TODO: improve above
 
+        System.out.println("block 11");
         if (fireController != null) {
             for (Fire fire : fireController.getLitFires()) {
-                Joint joint = fire.getFixtureJoint();
-                if (joint != null) {
-                    world.destroyJoint(fire.getFixtureJoint());
-                }
+                System.out.println("fire id " + fire.fireID);
+                fire.getObstacle().markRemoved(true);
             }
-            fireController.clear();
             fireController.resetStorage();
         }
 
+        System.out.println("block 2");
         if (weatherMachine != null) {
             for (ObstacleSprite rainDrop : weatherMachine.rainDrops) {
                 rainDrop.getObstacle().markRemoved(true);
@@ -580,6 +580,7 @@ public class GameplayScene implements Screen {
             weatherMachine.clear();
         }
 
+        System.out.println("block 3");
         if (eventHandler != null) {
             eventHandler.dispose();
         }
@@ -591,6 +592,7 @@ public class GameplayScene implements Screen {
             floatingLights.get(0).reset();
         }
 
+        System.out.println("block 4");
         for (ObstacleSprite sprite : sprites) {
             sprite.getObstacle().deactivatePhysics(world);
         }
@@ -611,6 +613,7 @@ public class GameplayScene implements Screen {
             world.dispose();
         }
 
+        System.out.println("block 5");
         contactListener.reset();
 
         complete = false;
@@ -624,7 +627,9 @@ public class GameplayScene implements Screen {
         world.setContactListener(contactListener);
         weatherMachine.update(world);
 
+        System.out.println("block 6");
         loadLevel(levelName, "rope_test");
+        System.out.println("block 7");
     };
 
     public void clearLevel() {
@@ -787,8 +792,98 @@ public class GameplayScene implements Screen {
                 for (JsonValue object : layer.get("objects")) {
                     String objName = object.getString("name", "unnamed");
                     if (objName.contains("rune") || objName.contains("button")) {
-                        runeButtonReorganizing.add(object);
-                        continue;
+                        float x = object.getFloat("x") / levelData.getInt("tilewidth");
+                        float y = (bounds.height * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
+                        float rotation = object.getFloat("rotation");
+                        boolean hasMoveEvent = false;
+                        boolean hasRotateEvent = false;
+                        Vector2 platformStartPos = null;
+                        Vector2 platformEndPos = null;
+                        float startDegree = Integer.MAX_VALUE;
+                        float endDegree = 0f;
+                        float timeTo = 1;
+                        float timeToDissipate = 1;
+                        String targetName = "";
+                        float[] thresholds = null;
+                        JsonValue runeProperties = object.get("properties");
+                        for (JsonValue prop : runeProperties) {
+                            String propName = prop.getString("name");
+                            String value = prop.getString("value");
+                            switch (propName) {
+
+                                case "rotateEvent":
+                                    hasRotateEvent = Boolean.parseBoolean(value);
+                                    break;
+                                case "moveEvent":
+                                    hasMoveEvent = Boolean.parseBoolean(value);
+                                    break;
+                                case "startPos":
+                                    platformStartPos = new Vector2(Float.parseFloat(value.split(",")[0]), Float.parseFloat(value.split(",")[1]));
+                                    break;
+                                case "endPos":
+                                    platformEndPos = new Vector2(Float.parseFloat(value.split(",")[0]), Float.parseFloat(value.split(",")[1]));
+                                    break;
+                                case "startDegree":
+                                    startDegree = Float.parseFloat(value);
+                                    break;
+                                case "endDegree":
+                                    endDegree = Float.parseFloat(value);
+                                    break;
+                                case "platformName":
+                                    targetName = value;
+                                    break;
+                                case "timeTo":
+                                    timeTo = Float.parseFloat(value);
+                                    break;
+                                case "dissipateTime":
+                                    timeToDissipate = Float.parseFloat(value);
+                                    break;
+                                case "thresholds":
+                                    String[] tokens = value.split(",");
+                                    thresholds = new float[tokens.length];
+                                    for (int i = 0; i < tokens.length; i++) {
+                                        thresholds[i] = Float.parseFloat(tokens[i].trim());
+                                    }
+                                    break;
+                            }
+                        }
+
+                        String finalTargetName = targetName;
+                        ObstacleSprite target = sprites.stream().filter(sprite -> sprite.getName().equals(finalTargetName)).findFirst().orElse(null);
+                        Texture textureRune = directory.getEntry("runeBase", Texture.class);
+                        float width = textureRune.getWidth() / 300f;
+                        float height = textureRune.getHeight() / 300f;
+                        Rune rune = new Rune(x + width/2, y + height/2, width, height, (float) (-rotation), units, thresholds, directory.getEntry("runeCharged", Texture.class));
+                        rune.setTimeTo(timeTo);
+                        rune.setDissipateTime(timeToDissipate);
+                        rune.getObstacle().setY(rune.getObstacle().getY() +  (.23f));
+                        rune.setTexture(textureRune);
+                        addSprite(rune);
+                        runeSet.add(rune);
+
+                        if (hasMoveEvent) {
+                            if (platformStartPos == null) {
+                                platformStartPos = new Vector2(target.getObstacle().getPosition());
+                            }
+                            assert (target!=null);
+                            EventAction<Vector2> moveAction = new EventAction<>(target, "move",
+                                platformStartPos, platformEndPos);
+                            rune.registerEventAction(moveAction);
+
+                        }
+
+                        if (hasRotateEvent) {
+                            if (startDegree == Integer.MAX_VALUE) {
+                                startDegree = target.getObstacle().getAngle();
+                            } else {
+                                startDegree = (float) Math.toRadians(startDegree);
+                            }
+                            float toRad = (float) Math.toRadians(endDegree);
+
+                            EventAction<Float> rotateAction = new EventAction<>(target, "rotate",
+                                startDegree, toRad);
+                            rune.registerEventAction(rotateAction);
+                        }
                     }
                     float x = object.getFloat("x") / levelData.getInt("tilewidth");
                     float y = (bounds.height * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
@@ -912,6 +1007,7 @@ public class GameplayScene implements Screen {
                         } catch (Exception e) {
                             System.err.println("failed to find material type, revert to wood");
                         }
+                        boolean startOnFire = false;
                         GameObject box;
                         if (objName.contains("non")) {
                             box = new GameObject(new float[]{
@@ -940,7 +1036,6 @@ public class GameplayScene implements Screen {
                                 -width/2,height/3
                             }, x,y, width, height, units);
                             materialType = "infinite";
-                            boolean startOnFire = false;
                             JsonValue props = object.get("properties");
                             if (props != null) {
                                 for (JsonValue prop : props) {
@@ -953,8 +1048,6 @@ public class GameplayScene implements Screen {
                                 }
                             }
                             System.out.println("found property: startOnFire = " + startOnFire);
-                            box.setTexture(directory.getEntry("brazier", Texture.class));
-                            if (startOnFire) fireController.lightAnew(box, new Vector2(box.getObstacle().getX() + (random.nextFloat()-.5f)/2, box.getObstacle().getY()));
                             box.getObstacle().setDensity(1.8f );
                         } else {
                             box = new GameObject(new float[]{
@@ -982,6 +1075,11 @@ public class GameplayScene implements Screen {
                         box.getObstacle().setPhysicsUnits(units);
                         box.getObstacle().setFriction(1f);
                         addSprite(box);
+
+                        if (objName.contains("inf")) {
+                            box.setTexture(directory.getEntry("brazier", Texture.class));
+                            if (startOnFire) fireController.lightAnew(box, new Vector2(box.getObstacle().getX(), box.getObstacle().getY()));
+                        }
                     } else if (objName.contains("rain")) {
                         for (JsonValue prop : object.get("properties")) {
                             String propName = prop.getString("name");
@@ -1030,97 +1128,7 @@ public class GameplayScene implements Screen {
                     String objName = object.getString("name", "unnamed");
                     float x = object.getFloat("x") / levelData.getInt("tilewidth");
                     float y = (bounds.height * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
-                    float rotation = object.getFloat("rotation");
                      if (objName.contains("rune")) {
-                        boolean hasMoveEvent = false;
-                        boolean hasRotateEvent = false;
-                        Vector2 platformStartPos = null;
-                        Vector2 platformEndPos = null;
-                        float startDegree = Integer.MAX_VALUE;
-                        float endDegree = 0f;
-                        float timeTo = 1;
-                        float timeToDissipate = 1;
-                        String targetName = "";
-                        float[] thresholds = null;
-                        JsonValue runeProperties = object.get("properties");
-                        for (JsonValue prop : runeProperties) {
-                            String propName = prop.getString("name");
-                            String value = prop.getString("value");
-                            switch (propName) {
-
-                                case "rotateEvent":
-                                    hasRotateEvent = Boolean.parseBoolean(value);
-                                    break;
-                                case "moveEvent":
-                                    hasMoveEvent = Boolean.parseBoolean(value);
-                                    break;
-                                case "startPos":
-                                    platformStartPos = new Vector2(Float.parseFloat(value.split(",")[0]), Float.parseFloat(value.split(",")[1]));
-                                    break;
-                                case "endPos":
-                                    platformEndPos = new Vector2(Float.parseFloat(value.split(",")[0]), Float.parseFloat(value.split(",")[1]));
-                                    break;
-                                case "startDegree":
-                                    startDegree = Float.parseFloat(value);
-                                    break;
-                                case "endDegree":
-                                    endDegree = Float.parseFloat(value);
-                                    break;
-                                case "platformName":
-                                    targetName = value;
-                                    break;
-                                case "timeTo":
-                                    timeTo = Float.parseFloat(value);
-                                    break;
-                                case "dissipateTime":
-                                    timeToDissipate = Float.parseFloat(value);
-                                    break;
-                                case "thresholds":
-                                    String[] tokens = value.split(",");
-                                    thresholds = new float[tokens.length];
-                                    for (int i = 0; i < tokens.length; i++) {
-                                        thresholds[i] = Float.parseFloat(tokens[i].trim());
-                                    }
-                                    break;
-                            }
-                        }
-
-                        String finalTargetName = targetName;
-                        ObstacleSprite target = sprites.stream().filter(sprite -> sprite.getName().equals(finalTargetName)).findFirst().orElse(null);
-                        Texture textureRune = directory.getEntry("runeBase", Texture.class);
-                        float width = textureRune.getWidth() / 300f;
-                        float height = textureRune.getHeight() / 300f;
-                        Rune rune = new Rune(x + width/2, y + height/2, width, height, (float) (-rotation), units, thresholds, directory.getEntry("runeCharged", Texture.class));
-                        rune.setTimeTo(timeTo);
-                        rune.setDissipateTime(timeToDissipate);
-                        rune.getObstacle().setY(rune.getObstacle().getY() +  (.23f));
-                        rune.setTexture(textureRune);
-                        addSprite(rune);
-                        runeSet.add(rune);
-
-                        if (hasMoveEvent) {
-                            if (platformStartPos == null) {
-                                platformStartPos = new Vector2(target.getObstacle().getPosition());
-                            }
-                            assert (target!=null);
-                            EventAction<Vector2> moveAction = new EventAction<>(target, "move",
-                                platformStartPos, platformEndPos);
-                            rune.registerEventAction(moveAction);
-
-                        }
-
-                        if (hasRotateEvent) {
-                            if (startDegree == Integer.MAX_VALUE) {
-                                startDegree = target.getObstacle().getAngle();
-                            } else {
-                                startDegree = (float) Math.toRadians(startDegree);
-                            }
-                            float toRad = (float) Math.toRadians(endDegree);
-
-                            EventAction<Float> rotateAction = new EventAction<>(target, "rotate",
-                                startDegree, toRad);
-                            rune.registerEventAction(rotateAction);
-                        }
                     } else if (objName.contains("button")) {
                         float rotationRad = 0f;
                         boolean latch = false;
@@ -2313,8 +2321,8 @@ public class GameplayScene implements Screen {
         for( Enemy enemy: enemies){
             if (enemy.getClass()== Moth.class){
                 if(enemy.getState()== Enemy.EnemyState.OUT_OF_LIGHT){
-                    Vector2 pos = enemy.getObstacle().getPosition();
-                    batch.draw(eye,(pos.x-0.5f)*phyiscsUnits,(pos.y-0.7f)*phyiscsUnits,0.1f*eye.getWidth(),0.1f*eye.getHeight());
+                    Vector2 pos = enemy.getObstacle().getCentroid();
+                    batch.draw(eye,pos.x,pos.y,0.1f*eye.getWidth(),0.1f*eye.getHeight());
                     //batch.draw(eye,enemy.getX(),enemy.getY());
                 }
             }
