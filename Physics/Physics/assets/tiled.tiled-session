@@ -92,14 +92,14 @@
         },
         "advanced_movement.tmj": {
             "expandedObjectLayers": [
-                6,
-                5
+                5,
+                6
             ],
             "scale": 0.33,
-            "selectedLayer": 4,
+            "selectedLayer": 5,
             "viewCenter": {
-                "x": 4766.666666666667,
-                "y": 2671.212121212121
+                "x": 3051.5151515151515,
+                "y": 3413.636363636364
             }
         },
         "box_intro.tmj": {
@@ -395,8 +395,8 @@
             "scale": 0.25,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 4784,
-                "y": 2686
+                "x": 4780,
+                "y": 2682
             }
         },
         "sample.tmj": {
@@ -576,7 +576,7 @@
         }
     },
     "last.exportedFilePath": "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/assets",
-    "last.imagePath": "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/assets/backgroundAssets/mothEggsNest",
+    "last.imagePath": "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/assets/environment/quarterBlocks_0513",
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "openFiles": [
         "GameObjectTiles.tsx",
@@ -586,13 +586,13 @@
         "rune_medium.tmj"
     ],
     "project": "tiled.tiled-project",
-    "property.type": "bool",
+    "property.type": "string",
     "recentFiles": [
+        "advanced_movement.tmj",
         "GameObjectTiles.tsx",
         "BackgroundAssets.tsx",
         "mothDecoratives.tsx",
         "rune_medium.tmj",
-        "advanced_movement.tmj",
         "rune_hard.tmj",
         "jump_intro.tmj",
         "move_intro.tmj",

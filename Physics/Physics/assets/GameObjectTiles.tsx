@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.10.2" name="GameObjects" tilewidth="5000" tileheight="1250" tilecount="12" columns="0">
+<tileset version="1.10" tiledversion="1.10.2" name="GameObjects" tilewidth="5000" tileheight="1250" tilecount="16" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <properties>
@@ -101,5 +101,33 @@ swing</property>
    <property name="startOnFire" type="bool" value="false"/>
   </properties>
   <image width="323" height="242" source="environment/brazier.png"/>
+ </tile>
+ <tile id="23">
+  <properties>
+   <property name="flipHorizontally" type="bool" value="false"/>
+   <property name="name" value="qb1"/>
+  </properties>
+  <image width="230" height="158" source="environment/quarterBlocks_0513/qb1.png"/>
+ </tile>
+ <tile id="24">
+  <properties>
+   <property name="flipHorizontally" type="bool" value="false"/>
+   <property name="name" value="qb2"/>
+  </properties>
+  <image width="230" height="158" source="environment/quarterBlocks_0513/qb2.png"/>
+ </tile>
+ <tile id="25">
+  <properties>
+   <property name="flipHorizontally" type="bool" value="false"/>
+   <property name="name" value="qb3"/>
+  </properties>
+  <image width="230" height="158" source="environment/quarterBlocks_0513/qb3.png"/>
+ </tile>
+ <tile id="26">
+  <properties>
+   <property name="flipHorizontally" type="bool" value="false"/>
+   <property name="name" value="qb4"/>
+  </properties>
+  <image width="230" height="158" source="environment/quarterBlocks_0513/qb4.png"/>
  </tile>
 </tileset>
