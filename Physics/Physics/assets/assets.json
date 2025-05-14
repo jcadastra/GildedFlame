@@ -12,6 +12,10 @@
     "nonburnable": "environment/statue.png",
     "tablet": "environment/tablet.png",
     "platform": "environment/platform.png",
+    "qb1": "environment/quarterBlocks_0513/qb1.png",
+    "qb2": "environment/quarterBlocks_0513/qb2.png",
+    "qb3": "environment/quarterBlocks_0513/qb3.png",
+    "qb4": "environment/quarterBlocks_0513/qb4.png",
 
     "brickBackground": {
       "file": "backgroundAssets/brickBackground.png",

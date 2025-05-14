@@ -440,6 +440,7 @@ public class GameplayScene implements Screen {
         debug  = false;
         active = false;
         countdown = -1;
+        ParticleEngine.load();
     }
 
     /**
@@ -621,7 +622,6 @@ public class GameplayScene implements Screen {
         countdown = -1;
         isFadingOut = false;
         fadeTime = 0;
-
         world = new World(gravity, false);
 //        world.step(1/60f, WORLD_VELOC, WORLD_POSIT);
         world.setContactListener(contactListener);
@@ -793,7 +793,8 @@ public class GameplayScene implements Screen {
                     String objName = object.getString("name", "unnamed");
                     if (objName.contains("rune") || objName.contains("button")) {
                         float x = object.getFloat("x") / levelData.getInt("tilewidth");
-                        float y = (bounds.height * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
+                        float y = (bounds.height * 300 - object.getFloat("y")) / levelData.getInt(
+                            "tileheight");
                         float rotation = object.getFloat("rotation");
                         boolean hasMoveEvent = false;
                         boolean hasRotateEvent = false;
@@ -818,10 +819,14 @@ public class GameplayScene implements Screen {
                                     hasMoveEvent = Boolean.parseBoolean(value);
                                     break;
                                 case "startPos":
-                                    platformStartPos = new Vector2(Float.parseFloat(value.split(",")[0]), Float.parseFloat(value.split(",")[1]));
+                                    platformStartPos = new Vector2(
+                                        Float.parseFloat(value.split(",")[0]),
+                                        Float.parseFloat(value.split(",")[1]));
                                     break;
                                 case "endPos":
-                                    platformEndPos = new Vector2(Float.parseFloat(value.split(",")[0]), Float.parseFloat(value.split(",")[1]));
+                                    platformEndPos = new Vector2(
+                                        Float.parseFloat(value.split(",")[0]),
+                                        Float.parseFloat(value.split(",")[1]));
                                     break;
                                 case "startDegree":
                                     startDegree = Float.parseFloat(value);
@@ -849,14 +854,18 @@ public class GameplayScene implements Screen {
                         }
 
                         String finalTargetName = targetName;
-                        ObstacleSprite target = sprites.stream().filter(sprite -> sprite.getName().equals(finalTargetName)).findFirst().orElse(null);
+                        ObstacleSprite target = sprites.stream()
+                            .filter(sprite -> sprite.getName().equals(finalTargetName)).findFirst()
+                            .orElse(null);
                         Texture textureRune = directory.getEntry("runeBase", Texture.class);
                         float width = textureRune.getWidth() / 300f;
                         float height = textureRune.getHeight() / 300f;
-                        Rune rune = new Rune(x + width/2, y + height/2, width, height, (float) (-rotation), units, thresholds, directory.getEntry("runeCharged", Texture.class));
+                        Rune rune = new Rune(x + width / 2, y + height / 2, width, height,
+                            (float) (-rotation), units, thresholds,
+                            directory.getEntry("runeCharged", Texture.class));
                         rune.setTimeTo(timeTo);
                         rune.setDissipateTime(timeToDissipate);
-                        rune.getObstacle().setY(rune.getObstacle().getY() +  (.23f));
+                        rune.getObstacle().setY(rune.getObstacle().getY() + (.23f));
                         rune.setTexture(textureRune);
                         addSprite(rune);
                         runeSet.add(rune);
@@ -865,7 +874,7 @@ public class GameplayScene implements Screen {
                             if (platformStartPos == null) {
                                 platformStartPos = new Vector2(target.getObstacle().getPosition());
                             }
-                            assert (target!=null);
+                            assert (target != null);
                             EventAction<Vector2> moveAction = new EventAction<>(target, "move",
                                 platformStartPos, platformEndPos);
                             rune.registerEventAction(moveAction);
@@ -886,17 +895,19 @@ public class GameplayScene implements Screen {
                         }
                     }
                     float x = object.getFloat("x") / levelData.getInt("tilewidth");
-                    float y = (bounds.height * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
+                    float y = (bounds.height * 300 - object.getFloat("y")) / levelData.getInt(
+                        "tileheight");
                     float[] pos = new float[]{x, y};
                     if (objName.contains("player")) {
-                        Texture playerTexture = directory.getEntry("platform-player", Texture.class);
+                        Texture playerTexture = directory.getEntry("platform-player",
+                            Texture.class);
                         avatar = new Avatar(directory, units, levelInfo.get("traci"));
                         avatar.setTexture(playerTexture);
                         float width = object.getFloat("width") / levelData.getInt("tilewidth");
                         float height = object.getFloat("height") / levelData.getInt("tileheight");
                         x -= width;
-                        y += height/2 - 50/units;
-                        avatar.getObstacle().setPosition(x,y);
+                        y += height / 2 - 50 / units;
+                        avatar.getObstacle().setPosition(x, y);
                         //System.out.println("position" + pos[0] + " " + pos[1]);
                         addSprite(avatar);
                         System.out.println("avatar density: " + avatar.getObstacle().getDensity());
@@ -907,7 +918,7 @@ public class GameplayScene implements Screen {
                         Lighting l = new Lighting(units, levelInfo.get("light"));
                         addSprite(l);
                         l.createSensor();
-                        torchFire = new Fire(units, new Vector2(10,10));
+                        torchFire = new Fire(units, new Vector2(10, 10));
                         addSprite(torchFire);
                         torchFire.setLighting(l);
 
@@ -916,7 +927,7 @@ public class GameplayScene implements Screen {
 
                         texture = directory.getEntry("platform-torch", Texture.class);
                         torch = new Torch(units, constants.get("torch"));
-                        torch.getObstacle().setPosition(x,y);
+                        torch.getObstacle().setPosition(x, y);
                         torch.setTexture(texture);
                         torch.setMaterial(new ObstacleMaterial("torch"));
                         addSprite(torch);
@@ -945,9 +956,9 @@ public class GameplayScene implements Screen {
                         texture = directory.getEntry("platform-totem01", Texture.class);
                         float width = object.getFloat("width") / levelData.getInt("tilewidth");
                         float height = object.getFloat("height") / levelData.getInt("tileheight");
-                        x = x + width/2;
-                        y = y + height/2;
-                        Vector2 position = new Vector2(x,y);
+                        x = x + width / 2;
+                        y = y + height / 2;
+                        Vector2 position = new Vector2(x, y);
                         Totem totem = new Totem(1, units,
                             levelInfo.get("enemies").get("totems").get("instances").get(0),
                             directory, position);
@@ -968,13 +979,13 @@ public class GameplayScene implements Screen {
                         this.goalDoor = goalDoor;
                         addSprite(goalDoor);
                     } else if (objName.contains("platform")) {
-                        float rotation = -(float)Math.toRadians(object.getInt("rotation"));
+                        float rotation = -(float) Math.toRadians(object.getInt("rotation"));
                         float width = object.getFloat("width") / levelData.getInt("tilewidth");
                         float height = object.getFloat("height") / levelData.getInt("tileheight");
-                        GameObject platform = new GameObject(x,y,width,height, units, false,0);
+                        GameObject platform = new GameObject(x, y, width, height, units, false, 0);
 
                         Vector2 oldPos = platform.getObstacle().getPosition();
-                        platform.getObstacle().setPosition(oldPos.add(width/2, height/2));
+                        platform.getObstacle().setPosition(oldPos.add(width / 2, height / 2));
 
                         platform.getObstacle().setBodyType(BodyType.KinematicBody);
                         platform.getObstacle().setName(objName);
@@ -990,12 +1001,32 @@ public class GameplayScene implements Screen {
                     } else if (objName.contains("grate")) {
                         float width = object.getFloat("width") / levelData.getInt("tilewidth");
                         float height = object.getFloat("height") / levelData.getInt("tileheight");
-                        GameObject grate = new GameObject(x,y,width,height,units,true,0);
+                        GameObject grate = new GameObject(x, y, width, height, units, true, 0);
                         grate.getObstacle().setBodyType(BodyType.StaticBody);
                         grate.getObstacle().setName("grateplatform");
                         grate.setTexture(directory.getEntry("grate", Texture.class));
                         grate.getObstacle().setPhysicsUnits(units);
                         addSprite(grate);
+                    } else if (objName.contains("qb")) {
+                        float width = object.getFloat("width") / levelData.getInt("tilewidth");
+                        float height = object.getFloat("height") / levelData.getInt("tileheight");
+                        GameObject qb = new GameObject(x +width/2, y+height/2, width, height, units, false);
+                        qb.setTexture(directory.getEntry(objName, Texture.class));
+                        qb.getObstacle().setBodyType(BodyType.StaticBody);
+                        qb.getObstacle().setName("platformwall");
+                        qb.getObstacle().setPhysicsUnits(units);
+                        qb.getObstacle().setFriction(1f);
+                        JsonValue properties = object.get("properties");
+                        for (JsonValue prop : properties) {
+                            String propName = prop.getString("name");
+                            String value = prop.getString("value");
+                            switch (propName) {
+                                case "flipHorizontally":
+                                    qb.flipX = Boolean.parseBoolean(value);
+                            }
+                        }
+                        System.out.println("flipping" + qb.flipX);
+                        addSprite(qb);
                     } else if (objName.contains("burnable")) {
                         float width = object.getFloat("width") / levelData.getInt("tilewidth");
                         float height = object.getFloat("height") / levelData.getInt("tileheight");
@@ -1047,7 +1078,6 @@ public class GameplayScene implements Screen {
                                     }
                                 }
                             }
-                            System.out.println("found property: startOnFire = " + startOnFire);
                             box.getObstacle().setDensity(1.8f );
                         } else {
                             box = new GameObject(new float[]{
@@ -1393,6 +1423,7 @@ public class GameplayScene implements Screen {
         }
         for (FloatingLight light : floatingLights) {
             lightController.attachAmbientLight(light,true);
+            //light.setWander(true);
         }
 //        debugPrintOut();
     }

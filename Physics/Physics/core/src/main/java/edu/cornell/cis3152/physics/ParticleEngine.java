@@ -18,16 +18,18 @@ import com.badlogic.gdx.math.Rectangle;
 public class ParticleEngine implements Screen {
 
     private TextureAtlas particleAtlas;
-    private ParticleEffect effect = new ParticleEffect();
+    private static ParticleEffect baseFireEffect = new ParticleEffect();
+    private static ParticleEffect effect = new ParticleEffect();
     private float physicsUnits;
 
-    private ParticleEffect rainEffect = new ParticleEffect();
-    private ParticleEffect splash = new ParticleEffect();
+    private static ParticleEffect rainEffect = new ParticleEffect();
+    private static ParticleEffect baseSplashEffect = new ParticleEffect();
+    private static ParticleEffect splash = new ParticleEffect();
 
-    public void load(){
-        effect.load(Gdx.files.internal("platform/particles/flame.p"),Gdx.files.internal("platform/particles/"));
+    public static void load(){
+        baseFireEffect.load(Gdx.files.internal("platform/particles/flame.p"),Gdx.files.internal("platform/particles/"));
         rainEffect.load(Gdx.files.internal("platform/particles/rain.p"),Gdx.files.internal("platform/particles/"));
-        splash.load(Gdx.files.internal("platform/particles/splash.p"), Gdx.files.internal("platform/particles/"));
+        baseSplashEffect.load(Gdx.files.internal("platform/particles/splash.p"), Gdx.files.internal("platform/particles/"));
         // Set the splash position
     }
     // splash pool
@@ -47,8 +49,9 @@ public class ParticleEngine implements Screen {
     * TODO: modify code structure to allow environmental lights*/
 
     public ParticleEngine (Fire fire, float physicsUnits){
-        load();
+        //load();
         this.physicsUnits = physicsUnits;
+        effect = new ParticleEffect(baseFireEffect);
         //effect.set
         effect.start();
 
@@ -62,26 +65,26 @@ public class ParticleEngine implements Screen {
     public ParticleEngine(){}
 
     public void rainEffect(Rectangle bounds){
-        load();
+        //load();
         rainEffect.start();
         rainEffect.scaleEffect(0.5f);
         rainEffect.setPosition(0,bounds.height );
     }
-
-    /*Particle effect for text effects*/
-    public ParticleEngine (TextButton button){
-        load();
-        effect.load(Gdx.files.internal("platform/particles/flame.p"),Gdx.files.internal("platform/particles/"));
-        //effect.set
-        effect.start();
-        //Setting the position of the ParticleEffect
-        float offesetX = button.getLabel().getX()+button.getLabel().getWidth()/2f;
-        float offesetY = button.getLabel().getY()+button.getLabel().getHeight()/2f;
-        effect.setPosition(button.getX()+offesetX,button.getY()+offesetY);
-        effect.getEmitters().first().getAngle().setHigh(0);
-        effect.scaleEffect(1/2f);
-        effect.start();
-    }
+//
+//    /*Particle effect for text effects*/
+//    public ParticleEngine (TextButton button){
+//        //load();
+//        effect.load(Gdx.files.internal("platform/particles/flame.p"),Gdx.files.internal("platform/particles/"));
+//        //effect.set
+//        effect.start();
+//        //Setting the position of the ParticleEffect
+//        float offesetX = button.getLabel().getX()+button.getLabel().getWidth()/2f;
+//        float offesetY = button.getLabel().getY()+button.getLabel().getHeight()/2f;
+//        effect.setPosition(button.getX()+offesetX,button.getY()+offesetY);
+//        effect.getEmitters().first().getAngle().setHigh(0);
+//        effect.scaleEffect(1/2f);
+//        effect.start();
+//    }
 
     public void unSelect(TextButton button){
         effect.dispose();
@@ -93,7 +96,7 @@ public class ParticleEngine implements Screen {
         for (Fire fire: fireController.getLitFires()){
         //effect.set
         effect.start();
-        //Setting the position of the ParticleEffect
+        //Setting the position of the ParticleEffec
             effect.setPosition(1000,100);
         effect.setPosition(fire.getObstacle().getX()*physicsUnits, fire.getObstacle().getY()*physicsUnits);
         //System.out.println("fire-pos"+fire.getObstacle().getX()*32+","+fire.getObstacle().getY()*32);
@@ -125,13 +128,14 @@ public class ParticleEngine implements Screen {
     }
 
     public void splashEffects(float x,float y,float width){
-        load();
+       // load();
         float h = 2f;
         int k = (int) width/(int)h;
         splashEffects = new Array<>(k);
         for (int i = 0; i<k; i++){
             float splashX = (x + (i * h))*physicsUnits;  // Spread the splashes across the width
             float splashY = y*physicsUnits;            // Position on the Y-axis (adjust if needed)
+            splash = new ParticleEffect(baseSplashEffect);
             splash.setPosition(splashX, splashY);
             splash.start();
             splash.scaleEffect(10f);

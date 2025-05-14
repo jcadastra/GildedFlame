@@ -7,6 +7,8 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
 import edu.cornell.gdiac.physics2.WheelObstacle;
 
+import java.util.Random;
+
 public class FloatingLight extends ObstacleSprite {
 
     private enum FloatingLightState {
@@ -27,11 +29,15 @@ public class FloatingLight extends ObstacleSprite {
         private final float travelThreshold = 0.1f;
         //WheelObstacle obstacle;
         private ShapeRenderer shapeRenderer = new ShapeRenderer();
-        private boolean debug = true;
         private boolean isWander = false;
+        private Random rand = new Random();
+        private boolean up = true;
 
         int circleCounter = 500;
         int offCounter = 500;
+        private float bobbingAmplitude;
+        private float bobbingFrequency;
+        private float bobbingTime = 0f;
 
         public FloatingLight(Float units,Vector2 start, float radius, Vector2 end) {
             this.position = new Vector2(start);
@@ -39,7 +45,7 @@ public class FloatingLight extends ObstacleSprite {
             this.start = new Vector2(start);
             this.radius = radius;
             this.angle = 0f;
-            this.speed = 2;
+            this.speed = 1;
             this.state = FloatingLightState.CIRCULATING;
             destination = end;
             obstacle = new WheelObstacle(position.x,position.y,1);
@@ -57,14 +63,18 @@ public class FloatingLight extends ObstacleSprite {
             this.ID = counter;
             counter++;
             isWander = false;
+            bobbingAmplitude = rand.nextFloat(0,3f);
+            bobbingFrequency = rand.nextFloat(3f,6f);
         }
 
         public void update(float deltaTime) {
-            if (!isWander) {//don't move
-
-            } else {
+            if (isWander) {//don't move
+//
+//            } else {
                 switch (state) {
                     case CIRCULATING:
+                        up = true;
+                        bobbingTime = 0f;
                         circleCounter--;
                         angle += speed * deltaTime;
                         position.x = centerPoint.x + radius * (float) Math.cos(angle);
@@ -75,19 +85,7 @@ public class FloatingLight extends ObstacleSprite {
                         break;
 
                     case TRAVELING:
-                        circleCounter = 1000;
-                        offCounter = 1000;
-                        Vector2 direction = destination.cpy().sub(position);
-                        float distance = direction.len();
-                        if (distance < travelThreshold) {
-                            position = new Vector2(obstacle.getX(), obstacle.getY());
-                            destination = start.cpy();
-                            start = position.cpy();
-                            state = FloatingLightState.OFF;
-                        } else {
-                            direction.nor().scl(speed * deltaTime);
-                            position.add(direction);
-                        }
+                        wander(deltaTime);
 //                    if (position.dst2(destination) < 0.01f) {//stop moving
 //                        position = obstacle.getPosition();
 //                        destination = start.cpy();
@@ -97,6 +95,8 @@ public class FloatingLight extends ObstacleSprite {
                         break;
 
                     case OFF:
+                        up = true;
+                        bobbingTime = 0f;
                         // Do nothing or flicker/dim if desired
                         offCounter--;
                         if (offCounter < 0) {
@@ -108,6 +108,45 @@ public class FloatingLight extends ObstacleSprite {
                 obstacle.setPosition(position.x, position.y); // Update visual
 
             }
+        }
+        private void wander(float deltaTime) {
+            circleCounter = 1000;
+            offCounter = 1000;
+            Vector2 direction = destination.cpy().sub(position);
+            float distance = direction.len();
+            if (distance < travelThreshold) {
+                position = new Vector2(obstacle.getX(), obstacle.getY());
+                destination = start.cpy();
+                start = position.cpy();
+                state = FloatingLightState.OFF;
+                centerPoint = position.cpy();
+            } else {
+//                up = !up;
+//                direction.nor().scl(speed * deltaTime);
+//                position.add(direction);
+//
+//                // Bobbing effect — add small vertical sine wave
+//                float bobbingAmplitude = rand.nextFloat(0,6f);       // how high it bobs
+//                float bobbingFrequency = rand.nextFloat(5f,10f);       // how fast it bobs
+//                float bobOffset = (float) Math.sin(bobbingFrequency) * bobbingAmplitude;
+//
+//                // Adjust only Y position to simulate bobbing
+//                if (up){
+//                    position.y += bobOffset * deltaTime;
+//                }else{
+//                    position.y -= bobOffset * deltaTime;
+//                }
+                up = !up;
+                bobbingTime += deltaTime;
+
+                direction.nor().scl(speed * deltaTime);
+                position.add(direction);
+
+            // Bobbing effect — smoothly moves up and down
+                float bobOffset = (float) Math.sin(bobbingTime * bobbingFrequency) * bobbingAmplitude;
+                position.y += bobOffset * deltaTime;
+            }
+
         }
 
         public void setTravelDestination(Vector2 dest) {

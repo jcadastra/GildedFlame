@@ -9,7 +9,7 @@
          "name":"BackgroundTiles",
          "objects":[
                 {
-                 "gid":76,
+                 "gid":84,
                  "height":600,
                  "id":236,
                  "name":"brickBackground",
@@ -32,7 +32,7 @@
          "name":"Background",
          "objects":[
                 {
-                 "gid":80,
+                 "gid":88,
                  "height":820,
                  "id":459,
                  "name":"window",
@@ -44,7 +44,7 @@
                  "y":2152
                 }, 
                 {
-                 "gid":80,
+                 "gid":88,
                  "height":836,
                  "id":461,
                  "name":"window",
@@ -56,7 +56,7 @@
                  "y":3954
                 }, 
                 {
-                 "gid":80,
+                 "gid":88,
                  "height":928,
                  "id":462,
                  "name":"window",
@@ -381,6 +381,24 @@
                  "width":150,
                  "x":2027.2484345913,
                  "y":4069.66187172111
+                }, 
+                {
+                 "gid":81,
+                 "height":158,
+                 "id":475,
+                 "name":"qb2",
+                 "properties":[
+                        {
+                         "name":"flipHorizontally",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":230,
+                 "x":1469.84848484848,
+                 "y":4245.66666666667
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -394,7 +412,7 @@
          "name":"Action Entities",
          "objects":[
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":448,
                  "name":"light",
@@ -406,7 +424,7 @@
                  "y":3799.31818181818
                 }, 
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":450,
                  "name":"light",
@@ -418,7 +436,7 @@
                  "y":3791.31818181818
                 }, 
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":451,
                  "name":"light",
@@ -430,7 +448,7 @@
                  "y":2339.5
                 }, 
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":452,
                  "name":"light",
@@ -442,7 +460,7 @@
                  "y":1704.10606060606
                 }, 
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":453,
                  "name":"light",
@@ -454,7 +472,7 @@
                  "y":2055.5
                 }, 
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":454,
                  "name":"light",
@@ -466,7 +484,7 @@
                  "y":1691.5
                 }, 
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":455,
                  "name":"light",
@@ -478,7 +496,7 @@
                  "y":3303.5
                 }, 
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":456,
                  "name":"light",
@@ -490,7 +508,7 @@
                  "y":2847.5
                 }, 
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":465,
                  "name":"light",
@@ -502,7 +520,7 @@
                  "y":3855.5
                 }, 
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":466,
                  "name":"light",
@@ -514,7 +532,7 @@
                  "y":3559.5
                 }, 
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":468,
                  "name":"light",
@@ -532,10 +550,10 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":471,
+ "nextobjectid":476,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.11.2",
+ "tiledversion":"1.10.2",
  "tileheight":300,
  "tilesets":[
         {
@@ -555,7 +573,7 @@
          "source":"GameObjectTiles.tsx"
         }, 
         {
-         "firstgid":76,
+         "firstgid":84,
          "source":"BackgroundAssets.tsx"
         }],
  "tilewidth":300,
