@@ -2403,6 +2403,14 @@ private int pcunt = 1;
     public void resize(int width, int height) {
 //        height = 720;
 //        width = 1280;
+        this.phyiscsUnits = 40 * Gdx.graphics.getWidth() / 1280f;
+        JsonValue layers = directory.getEntry(levelName,JsonValue.class).get("layers");
+        for (JsonValue layer : layers) {
+            System.out.println(layer.toString() + "HERE");
+            if (layer.getString("type").equals("tilelayer")) {
+                this.bounds = new Rectangle(0, 0, layer.getInt("width"), layer.getInt("height"));
+            }
+        }
         this.width  = width;
         this.height = height;
 //        cameraZoomLevel = (.6/Math,po)
