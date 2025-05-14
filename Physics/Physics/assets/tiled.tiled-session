@@ -21,7 +21,7 @@
         },
         "BackgroundAssets.tsx": {
             "dynamicWrapping": false,
-            "scaleInDock": 0.25,
+            "scaleInDock": 0.125,
             "scaleInEditor": 0.25
         },
         "BackgroundStickers.tsx": {
@@ -93,13 +93,14 @@
         "advanced_movement.tmj": {
             "expandedObjectLayers": [
                 5,
-                6
+                6,
+                2
             ],
             "scale": 0.33,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 3033.3333333333335,
-                "y": 3395.454545454546
+                "x": 3030.3030303030305,
+                "y": 3392.424242424243
             }
         },
         "box_intro.tmj": {
@@ -580,19 +581,19 @@
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "openFiles": [
         "GameObjectTiles.tsx",
-        "BackgroundAssets.tsx",
         "mothDecoratives.tsx",
+        "rune_medium.tmj",
         "advanced_movement.tmj",
-        "rune_medium.tmj"
+        "BackgroundAssets.tsx"
     ],
     "project": "tiled.tiled-project",
     "property.type": "string",
     "recentFiles": [
-        "BackgroundAssets.tsx",
-        "advanced_movement.tmj",
         "GameObjectTiles.tsx",
         "mothDecoratives.tsx",
         "rune_medium.tmj",
+        "BackgroundAssets.tsx",
+        "advanced_movement.tmj",
         "rune_hard.tmj",
         "jump_intro.tmj",
         "move_intro.tmj",
