@@ -448,6 +448,7 @@ public class GameplayScene implements Screen {
         debug  = false;
         active = false;
         countdown = -1;
+        ParticleEngine.load();
     }
 
     /**
@@ -630,7 +631,6 @@ public class GameplayScene implements Screen {
         countdown = -1;
         isFadingOut = false;
         fadeTime = 0;
-
         world = new World(gravity, false);
 //        world.step(1/60f, WORLD_VELOC, WORLD_POSIT);
         world.setContactListener(contactListener);
@@ -1400,6 +1400,7 @@ public class GameplayScene implements Screen {
         }
         for (FloatingLight light : floatingLights) {
             lightController.attachAmbientLight(light,true);
+            //light.setWander(true);
         }
 //        debugPrintOut();
     }
