@@ -66,13 +66,10 @@ public class FireController {
     }
 
     public Set<Fire> getLitFires() {
-        System.out.println("a1");
         Set<Fire> returnSet = new HashSet<>();
-        System.out.println("a2");
         for (EnhancedObstacleSprite obj : nFireDiagrams.keySet()) {
             returnSet.addAll(firesOnShape.get(obj));
         }
-        System.out.println("a3");
         return returnSet;
     }
 
