@@ -76,7 +76,7 @@ public class Totem extends Enemy {
         timerStart = false;
     }
     public Totem(int id, float units, JsonValue value, AssetDirectory directory, Vector2 position) {
-        super(id, units, value, directory, position);
+        super(id, units, value, directory, position, "totem");
         visited = false;
         setJustCollided(false);
     }

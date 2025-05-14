@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.cis3152.physics.level_player.enviromentals.EnhancedObstacleSprite;
 import edu.cornell.cis3152.physics.level_player.enviromentals.Lighting;
 import edu.cornell.gdiac.assets.ParserUtils;
+import edu.cornell.gdiac.graphics.SpriteBatch;
 import edu.cornell.gdiac.physics2.*;
 
 public class Torch extends EnhancedObstacleSprite {
@@ -18,6 +19,7 @@ public class Torch extends EnhancedObstacleSprite {
     private Lighting internal_light;
     private Lighting lightJoint;
     private Lighting fireJoint;
+    public boolean onRight;
 
     /** Json file to avoid magic numbers */
     private final JsonValue data;
@@ -147,5 +149,16 @@ public class Torch extends EnhancedObstacleSprite {
         jointDef.initialize(obstacle.getBody(), o.getObstacle().getBody(), anchor);
         jointDef.collideConnected = false;
         return jointDef;
+    }
+
+    private final Affine2 flipCache = new Affine2();
+    @Override
+    public void draw(SpriteBatch batch) {
+        if (!onRight) {
+            flipCache.setToScaling( 1,1 );
+        } else {
+            flipCache.setToScaling( -1,1 );
+        }
+        super.draw(batch,flipCache);
     }
 }

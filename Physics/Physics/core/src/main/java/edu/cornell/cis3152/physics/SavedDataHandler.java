@@ -97,6 +97,11 @@ public class SavedDataHandler {
         return savedData.get(name);
     }
 
+    public void eraseSavedData(String name) {
+        File file = new File(getUserDataDirectory() + "/" + "savedData.json");
+        file.delete();
+    }
+
     private void fileParser (File file) {
         List<String> data = new ArrayList<String>();
         savedData.clear();

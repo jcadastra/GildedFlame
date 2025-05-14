@@ -199,6 +199,7 @@ public class Avatar extends ObstacleSprite {
     private String sensorName;
     private int cdFrameCount = 0;
     private int frameIndex = 0;
+    public int getFrameIndex() {return frameIndex;}
     private Vector2 prevPosition;
     private final boolean startSwitch = true;
     private int throwFrameIndex = 0;
@@ -677,7 +678,8 @@ public class Avatar extends ObstacleSprite {
             if (isJumping()) {
                 removeClimbingPhysics();
                 obstacle.setLinearVelocity(Vector2.Zero);
-                forceCache.set(0, jump_force);
+                float modifJumpForce = jump_force * 1;
+                forceCache.set(0, modifJumpForce);
                 body.applyLinearImpulse(forceCache, pos, true);
             }
         } else {
@@ -701,7 +703,8 @@ public class Avatar extends ObstacleSprite {
             }
 
             if (isJumping()) {
-                forceCache.set(0, jump_force);
+                float modifJumpForce = jump_force * 1;
+                forceCache.set(0, modifJumpForce);
                 body.applyLinearImpulse(forceCache, pos, true);
             }
         }
@@ -727,11 +730,11 @@ public class Avatar extends ObstacleSprite {
     }
 
 
-    public JointDef attachTorchToAvatar(Torch t) {
-        WeldJointDef jointDef = new WeldJointDef();
-        jointDef.initialize(obstacle.getBody(), t.getObstacle().getBody(), t.getObstacle().getPosition());
-        jointDef.collideConnected = false;
-        return jointDef;
+    public void attachTorchToAvatar(Torch t) {
+        obstacle.setMass(obstacle.getMass() + t.getObstacle().getMass());
+    }
+    public void dropTorchPhys(Torch t) {
+        obstacle.setMass(obstacle.getMass() - t.getObstacle().getMass());
     }
 
     /**
@@ -762,7 +765,7 @@ public class Avatar extends ObstacleSprite {
 
         if (prevPosition != null) {
             float deltaY = getLocation().y - prevPosition.y;
-            final float EPSILON = 0.01f;
+            final float EPSILON = 0.05f;
 
             if (deltaY < -EPSILON) {
                 setIsFalling(-1);
@@ -939,6 +942,24 @@ public class Avatar extends ObstacleSprite {
             animationTexture = hasTorch ? animationTextureIdleTorch : animationTextureIdleNoTorch;
             batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits() * 1.5f, srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, !isFacingRight(), false);
         }
+    }
+    public String getTorchFrameAnimationName() {
+        if (getGroundedState() == GroundState.AIRBORNE) {
+            switch (isFalling) {
+                case (-1):
+                    return "JumpFall";
+                case (1):
+                    return "JumpUp";
+                case (0):
+                    return "JumpFall";
+            }
+        } else if (groundState == GroundState.GROUNDED && getMovement() != null
+            && Math.abs(getMovement().x) > 0.001f) {
+            return "Move";
+        } else {
+            return "Idle";
+        }
+        return "Idle";
     }
 
     /**
