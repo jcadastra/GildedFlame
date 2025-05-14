@@ -346,24 +346,6 @@
                  "width":150,
                  "x":6217,
                  "y":1431
-                }, 
-                {
-                 "gid":75,
-                 "height":242,
-                 "id":469,
-                 "name":"infburnable",
-                 "properties":[
-                        {
-                         "name":"startOnFire",
-                         "type":"bool",
-                         "value":false
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":323,
-                 "x":4171,
-                 "y":1817
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -550,7 +532,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":470,
+ "nextobjectid":471,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
