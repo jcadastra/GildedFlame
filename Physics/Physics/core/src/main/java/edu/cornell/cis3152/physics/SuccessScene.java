@@ -41,11 +41,11 @@ public class SuccessScene implements Screen {
     protected AssetDirectory directory;
 
     private class Entry {
-        private Image button;
+        private ImageButton button;
         private TextureRegionDrawable defaultDrawable;
         private TextureRegionDrawable selectedDrawable;
 
-        public Entry(Image button, TextureRegionDrawable defaultDrawable, TextureRegionDrawable selectedDrawable) {
+        public Entry(ImageButton button, TextureRegionDrawable defaultDrawable, TextureRegionDrawable selectedDrawable) {
             this.button = button;
             this.defaultDrawable = defaultDrawable;
             this.selectedDrawable = selectedDrawable;
@@ -103,16 +103,13 @@ public class SuccessScene implements Screen {
 
 
 
-        //ImageButton replayButton = new ImageButton(replayButt);
-        Image replayButton = new Image(replayButtUp);
+        ImageButton replayButton = new ImageButton(replayButt);;
         Entry repl = new Entry(replayButton,replayButtUp,replayButtOver);
         entries.add(repl);
-//        ImageButton contButton = new ImageButton(contButt);
-        Image contButton = new Image(contText);
+        ImageButton contButton = new ImageButton(contButt);
         Entry cont = new Entry(contButton,contButtUp,contButtOver);
         entries.add(cont);
-        //ImageButton chambersButton = new ImageButton(chambersButt);
-        Image chambersButton = new Image(chambersText);
+        ImageButton chambersButton = new ImageButton(chambersButt);
         Entry chamb = new Entry(chambersButton,chambersButtUp,chambersButtOver);
         entries.add(chamb);
 
@@ -225,7 +222,9 @@ public class SuccessScene implements Screen {
             XBoxController xbox = inputController.xbox;
             boolean start = xbox.getA();
             Entry currentEntry = entries.get(currentIndex);
-            currentEntry.button.setDrawable(currentEntry.selectedDrawable);
+            ImageButton.ImageButtonStyle style = currentEntry.button.getStyle();
+            style.up = currentEntry.selectedDrawable;
+            currentEntry.button.setStyle(style);
             if (start && !prevButtonA) {
                 int selectionIndex = scrollIndex + currentIndex;
                 if (selectionIndex >= 0 && selectionIndex < entries.size) {
@@ -254,13 +253,17 @@ public class SuccessScene implements Screen {
             if (joystickCooldown <= 0) {
                 if (vertical < -0.4f && !moved) {
 //                    particleEngine.dispose();
-                    currentEntry.button.setDrawable(currentEntry.defaultDrawable);
+                    ImageButton.ImageButtonStyle s = currentEntry.button.getStyle();
+                    s.up = currentEntry.defaultDrawable;
+                    currentEntry.button.setStyle(s);
                     //currentEntry.button.getImage().setDrawable(currentEntry.defaultDrawable);
                     currentIndex = Math.max(currentIndex - 1, 0);  // Prevent going negative
                     moved = true;
                     joystickCooldown = 0.25f;
                 } else if (vertical > 0.4f && !moved) {
-                    currentEntry.button.setDrawable(currentEntry.defaultDrawable);
+                    ImageButton.ImageButtonStyle s = currentEntry.button.getStyle();
+                    s.up = currentEntry.defaultDrawable;
+                    currentEntry.button.setStyle(s);
                     currentIndex = Math.min(currentIndex + 1, entries.size-1);  // Prevent going off right
                     moved = true;
                     joystickCooldown = 0.25f;
@@ -278,7 +281,7 @@ public class SuccessScene implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+        controllerSelect();
         stage.act(delta);
         stage.draw();
     }

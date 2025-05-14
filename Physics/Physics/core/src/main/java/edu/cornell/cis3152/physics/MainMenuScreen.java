@@ -7,6 +7,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.graphics.GL20;
@@ -19,11 +20,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.ScreenUtils;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.util.ScreenListener;
 import com.badlogic.gdx.audio.Sound;
+import edu.cornell.gdiac.util.XBoxController;
 
 
 public class MainMenuScreen implements Screen {
@@ -37,11 +40,24 @@ public class MainMenuScreen implements Screen {
     protected SoundEngine soundEngine;
     /** The asset directory for retrieving textures, atlases */
     protected AssetDirectory directory;
+    private int scrollIndex,currentIndex,currentSelect = 0;
+    private Array<Entry> entries = new Array<Entry>();
+    private float joystickCooldown = 0f;
 
     public void setScreenListener(ScreenListener listener) {
         this.listener = listener;
     }
 
+    public class Entry{
+        public ImageButton image;
+        public TextureRegionDrawable defaultDrawable;
+        public TextureRegionDrawable hoverDrawable;
+        public Entry(ImageButton image, TextureRegionDrawable defaultDrawable, TextureRegionDrawable hoverDrawable){
+            this.image = image;
+            this.defaultDrawable = defaultDrawable;
+            this.hoverDrawable = hoverDrawable;
+        }
+    }
     public MainMenuScreen(AssetDirectory directory, SoundEngine soundEngine) {
         this.directory = directory;
         this.soundEngine = soundEngine;
@@ -84,15 +100,24 @@ public class MainMenuScreen implements Screen {
         ImageButton.ImageButtonStyle newGame = new ImageButton.ImageButtonStyle();
         newGame.up = buttonUp;
         newGame.over = buttonOver;
+        ImageButton imageButton = new ImageButton(newGame);
+        Entry newButt = new Entry(imageButton,buttonUp,buttonOver);
+        entries.add(newButt);
 
         Texture contText = directory.getEntry("contButt", Texture.class);
         Texture contClickText = directory.getEntry("contButtClick", Texture.class);
         TextureRegionDrawable contButtUp = new TextureRegionDrawable(new TextureRegion(contText));
         TextureRegionDrawable contButtOver = new TextureRegionDrawable(new TextureRegion(contClickText));
 
+
         ImageButton.ImageButtonStyle contButt = new ImageButton.ImageButtonStyle();
         contButt.up = contButtUp;
         contButt.over = contButtOver;
+
+        ImageButton contButt1 = new ImageButton(contButt);
+
+        Entry conButt = new Entry(contButt1,contButtUp,contButtOver);
+        entries.add(conButt);
 
         Texture settingsText = directory.getEntry("settingsButt", Texture.class);
         Texture settingsClickText = directory.getEntry("settingsButtClick", Texture.class);
@@ -103,13 +128,9 @@ public class MainMenuScreen implements Screen {
         settingsButt.up = settingsTextUp;
         settingsButt.over = settingsTextOver;
 
-
-
-
-
-        ImageButton imageButton = new ImageButton(newGame);
-        ImageButton contButt1 = new ImageButton(contButt);
         ImageButton settingsButt1 = new ImageButton(settingsButt);
+        Entry setButt = new Entry(settingsButt1,settingsTextUp,settingsTextOver);
+        entries.add(setButt);
 
         imageButton.setSize(screenWidth * 0.2f, screenHeight * 0.06f);
         imageButton.setPosition(
@@ -218,9 +239,58 @@ public class MainMenuScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+        controllerSelect();
         stage.act(delta);
         stage.draw();
+    }
+
+    private void controllerSelect() {
+        if (inputController.isUsingController()) {
+            XBoxController xbox = inputController.xbox;
+            boolean start = xbox.getA();
+            Entry currentEntry = entries.get(currentIndex);
+            ImageButton.ImageButtonStyle style = currentEntry.image.getStyle();
+            style.up = currentEntry.hoverDrawable;
+            currentEntry.image.setStyle(style);
+            if (start && !prevButtonA) {
+                int selectionIndex = scrollIndex + currentIndex;
+                if (selectionIndex >= 0 && selectionIndex < entries.size) {
+
+                    InputEvent downEvent = new InputEvent();
+                    downEvent.setType(InputEvent.Type.touchDown);
+                    downEvent.setStage(stage);
+                    downEvent.setTarget(currentEntry.image);
+                    downEvent.setButton(0);
+                    currentEntry.image.fire(downEvent);
+                }
+            }
+            prevButtonA = start;
+
+            boolean moved = false;
+            float vertical = xbox.getLeftY();
+            if (joystickCooldown <= 0) {
+                if (vertical < -0.4f && !moved) {
+//                    particleEngine.dispose();
+                    ImageButton.ImageButtonStyle s = currentEntry.image.getStyle();
+                    s.up = currentEntry.defaultDrawable;
+                    currentEntry.image.setStyle(s);
+                    currentIndex = Math.max(currentIndex - 1, 0);  // Prevent going negative
+                    moved = true;
+                    joystickCooldown = 0.25f;
+                } else if (vertical > 0.4f && !moved) {
+                    ImageButton.ImageButtonStyle s = currentEntry.image.getStyle();
+                    s.up = currentEntry.defaultDrawable;
+                    currentEntry.image.setStyle(s);
+                    currentIndex = Math.min(currentIndex + 1, entries.size-1);  // Prevent going off right
+                    moved = true;
+                    joystickCooldown = 0.25f;
+                }
+                if (Math.abs(vertical) <= 0.01f) {
+                    moved = false;
+                }
+            }
+            joystickCooldown -= Gdx.graphics.getDeltaTime();
+        }
     }
 
     @Override
