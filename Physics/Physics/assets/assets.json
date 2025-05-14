@@ -296,6 +296,7 @@
   },
   "jsons": {
     "platform-constants": "platform/constants.json",
+    "torchHoldState": "platform/torchHoldState.json",
     "spinner_layout": "platform/spinner_layout.json",
     "rope_test": "platform/rope_test.json",
     "move_intro" : "move_intro.tmj",
