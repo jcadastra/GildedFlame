@@ -1022,7 +1022,7 @@ public class GameplayScene implements Screen {
                             materialType = "stone";
                             box.setTexture(directory.getEntry("nonburnable", Texture.class));
                             box.getObstacle().setPhysicsUnits(units);
-                            box.getObstacle().setDensity(1.5f );
+                            box.getObstacle().setDensity(1.0f);
                         } else if (objName.contains("inf")) {
                             box = new GameObject(new float[]{
                                 -width/4, -height/2.2f,
