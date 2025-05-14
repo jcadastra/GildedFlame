@@ -765,7 +765,7 @@ public class Avatar extends ObstacleSprite {
 
         if (prevPosition != null) {
             float deltaY = getLocation().y - prevPosition.y;
-            final float EPSILON = 0.01f;
+            final float EPSILON = 0.05f;
 
             if (deltaY < -EPSILON) {
                 setIsFalling(-1);

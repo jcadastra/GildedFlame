@@ -82,7 +82,7 @@ public class Moth extends Enemy {
         hasJumped = val;
     }
     public Moth(int id, float units, JsonValue value, AssetDirectory directory, Vector2 position) {
-        super(id, units, value, directory, position);
+        super(id, units, value, directory, position, "moth");
         rr = null;
 
         outOfLightAnimationTexture = directory.getEntry("platform-mothOUTOFLIGHTANIMATION", Texture.class);

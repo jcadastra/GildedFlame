@@ -1390,6 +1390,7 @@ public class GameplayScene implements Screen {
     public boolean preUpdate(float dt) {
         InputController input = InputController.getInstance();
         input.sync(bounds, scale);
+        System.out.println(avatar.getObstacle().getRestitution());
         if (listener == null) {
             return true;
         }
@@ -1606,7 +1607,7 @@ public class GameplayScene implements Screen {
             }
         }
 
-        if (avatar.getHasTorch()) {
+        if (avatar.getHasTorch() && !playerDied) {
             String animation = avatar.getTorchFrameAnimationName();
             int desiredFrame = (avatar.getFrameIndex() + 1);
             if (animation.equals("JumpFall")) {
@@ -1615,13 +1616,15 @@ public class GameplayScene implements Screen {
                 desiredFrame = Math.min(desiredFrame, 4);
             }
             JsonValue animationFrames = torchHoldState.get(animation).get(desiredFrame +"");
-            System.out.println("shit");
-            System.out.println("animation fram" + animation);
-            System.out.println("frame index" + (desiredFrame));
-            System.out.println(animationFrames);
-            Vector2 location = avatar.getObstacle().getPosition().cpy().add(avatar.getVelocity().scl(1/phyiscsUnits));
-            torch.getObstacle().setPosition(location.add(animationFrames.getFloat("x")/350 * (torch.onRight ? 1 : -1),animationFrames.getFloat("y")/350));
-            torch.getObstacle().setAngle((float) Math.toRadians(animationFrames.getFloat("ang") * (torch.onRight ? -1 : 1)));
+            if (animationFrames != null) {
+                Vector2 location = avatar.getObstacle().getPosition().cpy()
+                    .add(avatar.getVelocity().scl(1 / phyiscsUnits));
+                torch.getObstacle().setPosition(
+                    location.add(animationFrames.getFloat("x") / 350 * (torch.onRight ? 1 : -1),
+                        animationFrames.getFloat("y") / 350));
+                torch.getObstacle().setAngle((float) Math.toRadians(
+                    animationFrames.getFloat("ang") * (torch.onRight ? -1 : 1)));
+            }
         }
 
 //        for (ObstacleSprite sprite : sprites) {
@@ -1629,7 +1632,6 @@ public class GameplayScene implements Screen {
 //                sprite.getObstacle().getBody().applyForceToCenter(new Vector2(1f,0f), true);
 //            }
 //        }
-        System.out.println(torch.getObstacle().getMass());
         updateCamera();
     }
 
