@@ -573,7 +573,10 @@ public class LightController {
 
 
     public void dispose() {
-        rayHandler.dispose();
+        if (rayHandler != null) {
+            rayHandler.dispose();
+            rayHandler = null;
+        }
         if (camera != null) {
             camera = null;
         }

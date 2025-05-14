@@ -58,6 +58,16 @@
     "tMove" : "backgroundAssets/tMove.png",
     "tThrow" : "backgroundAssets/tThrow.png",
     "tMoreJump" : "backgroundAssets/tMoreJump.png",
+    "tutChest" : "backgroundAssets/tutChest.png",
+    "tutJumpPro" : "backgroundAssets/tutJumpPro.png",
+    "tutMoth" : "backgroundAssets/tutMoth.png",
+    "contClimb" : "backgroundAssets/controller/contClimb.png",
+    "contJump" : "backgroundAssets/controller/contJump.png",
+    "contJumpPro" : "backgroundAssets/controller/contJumpPro.png",
+    "contMove" : "backgroundAssets/controller/contMove.png",
+    "contThrow" : "backgroundAssets/controller/contThrow.png",
+
+
     "window": "backgroundAssets/window.png",
     "bookshelf" : "backgroundAssets/bookshelf.png",
     "banner" : "backgroundAssets/banner.png",

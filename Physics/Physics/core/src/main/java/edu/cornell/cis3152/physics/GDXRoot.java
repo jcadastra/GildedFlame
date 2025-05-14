@@ -263,15 +263,15 @@ public class GDXRoot extends Game implements ScreenListener {
         soundEngine.startMusicLoop(temp);
         currentScene.clearLevel();
         current = (level) % levels.length;
-        currentScene.loadLevel(levels[current], "rope_test");
+        System.out.println();
+        currentScene.levelName = levels[current];
         setScreen(currentScene);
-        currentScene.reset();
+        System.out.println("done loading level " + levels[current]);
     }
 
     private void createSetGamePlayScene(int level) {
         if (currentScene == null) {
             currentScene = new GameplayScene(directory, soundEngine, "platform");
-            currentScene.loadLevel(levels[level], "rope_test");
             currentScene.setScreenListener(this);
             currentScene.setSpriteBatch(batch);
         }

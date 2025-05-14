@@ -21,8 +21,8 @@
         },
         "BackgroundAssets.tsx": {
             "dynamicWrapping": false,
-            "scaleInDock": 0.25,
-            "scaleInEditor": 0.12
+            "scaleInDock": 0.125,
+            "scaleInEditor": 0.25
         },
         "BackgroundStickers.tsx": {
             "dynamicWrapping": true,
@@ -93,13 +93,14 @@
         "advanced_movement.tmj": {
             "expandedObjectLayers": [
                 5,
-                6
+                6,
+                2
             ],
             "scale": 0.33,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 3051.5151515151515,
-                "y": 3413.636363636364
+                "x": 3030.3030303030305,
+                "y": 3392.424242424243
             }
         },
         "box_intro.tmj": {
@@ -395,8 +396,8 @@
             "scale": 0.25,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 4780,
-                "y": 2682
+                "x": 4776,
+                "y": 2678
             }
         },
         "sample.tmj": {
@@ -576,23 +577,23 @@
         }
     },
     "last.exportedFilePath": "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/assets",
-    "last.imagePath": "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/assets/environment/quarterBlocks_0513",
+    "last.imagePath": "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/assets/backgroundAssets",
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "openFiles": [
         "GameObjectTiles.tsx",
-        "BackgroundAssets.tsx",
         "mothDecoratives.tsx",
+        "rune_medium.tmj",
         "advanced_movement.tmj",
-        "rune_medium.tmj"
+        "BackgroundAssets.tsx"
     ],
     "project": "tiled.tiled-project",
     "property.type": "string",
     "recentFiles": [
-        "advanced_movement.tmj",
         "GameObjectTiles.tsx",
-        "BackgroundAssets.tsx",
         "mothDecoratives.tsx",
         "rune_medium.tmj",
+        "BackgroundAssets.tsx",
+        "advanced_movement.tmj",
         "rune_hard.tmj",
         "jump_intro.tmj",
         "move_intro.tmj",

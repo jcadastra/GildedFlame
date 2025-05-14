@@ -399,6 +399,18 @@
                  "width":230,
                  "x":1469.84848484848,
                  "y":4245.66666666667
+                }, 
+                {
+                 "gid":105,
+                 "height":1000,
+                 "id":476,
+                 "name":"tutMoth",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1000,
+                 "x":1712.12121212121,
+                 "y":4330.30303030303
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -550,7 +562,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":476,
+ "nextobjectid":477,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

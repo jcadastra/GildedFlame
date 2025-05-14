@@ -179,7 +179,7 @@ public class GameplayScene implements Screen {
     //protected Totem totem;
     //protected Moth moth;
 
-    private String levelName = "example_level";
+    public String levelName = "example_level";
 
     /**
      * The jump sound. We only want to play once.
@@ -542,37 +542,56 @@ public class GameplayScene implements Screen {
      * This method disposes of the world and creates a new one.
      */
     public void reset() {
-        System.out.println("block one");
-        JsonValue values = constants.get("world");
-        Vector2 gravity = new Vector2(0, values.getFloat("gravity"));
+        clearLevel();
+
+        complete = false;
+        failed = false;
+        countdown = -1;
+        isFadingOut = false;
+        fadeTime = 0;
+
+        if (avatar != null) {
+            avatar.reset();
+        }
+
         if (queueFailure) {
             queueFailure = false;
         }
 
-        if (activeLightJoint != null) {
+        weatherMachine.update(world);
+        loadLevel("rope_test");
+    }
+
+    public void clearLevel() {
+        JsonValue values = constants.get("world");
+        Vector2 gravity = new Vector2(0, values.getFloat("gravity"));
+
+        if (activeLightJoint != null && activeLightJoint.isActive()) {
             world.destroyJoint(activeLightJoint);
             activeLightJoint = null;
         }
-        if (activeFireJoint != null) {
+        if (activeFireJoint != null && activeFireJoint.isActive()) {
             world.destroyJoint(activeFireJoint);
             activeFireJoint = null;
         }
-//        for(Joint lightJoint:activeLightJoints){
-//            world.destroyJoint(lightJoint);
-//        }
-//        activeLightJoints.clear();
-        //TODO: improve above
+        for (ObstacleSprite sprite : sprites) {
+            sprite.getObstacle().deactivatePhysics(world);
+        }
+        sprites.clear();
+        addQueue.clear();
+        runeSet.clear();
+        tweenedMovmentObjectsFloat.clear();
+        tweenedMovmentObjectsVec2.clear();
 
-        System.out.println("block 11");
+        if (particleEngine != null) {
+            particleEngine.dispose();
+        }
         if (fireController != null) {
             for (Fire fire : fireController.getLitFires()) {
-                System.out.println("fire id " + fire.fireID);
                 fire.getObstacle().markRemoved(true);
             }
             fireController.resetStorage();
         }
-
-        System.out.println("block 2");
         if (weatherMachine != null) {
             for (ObstacleSprite rainDrop : weatherMachine.rainDrops) {
                 rainDrop.getObstacle().markRemoved(true);
@@ -580,76 +599,22 @@ public class GameplayScene implements Screen {
             weatherMachine.updateWorld(null, bounds);
             weatherMachine.clear();
         }
-
-        System.out.println("block 3");
         if (eventHandler != null) {
             eventHandler.dispose();
         }
 
-        if (lightController != null){
-            lightController.dispose();}
+        if (lightController != null) {
+            lightController.dispose();
+        }
 
-        if (floatingLights!=null && !floatingLights.isEmpty()){
+        if (floatingLights != null && !floatingLights.isEmpty()) {
             floatingLights.get(0).reset();
         }
-
-        System.out.println("block 4");
-        for (ObstacleSprite sprite : sprites) {
-            sprite.getObstacle().deactivatePhysics(world);
+        for (ObstacleSprite s : torchArc) {
+            s.getObstacle().markRemoved(true);
         }
-        if(particleEngine!=null){
-            particleEngine.dispose();
-        }
+        torchArc.clear();
 
-        if (avatar!=null) {
-            avatar.reset();
-        }
-
-        sprites.clear();
-        addQueue.clear();
-        runeSet.clear();
-        tweenedMovmentObjectsFloat.clear();
-        tweenedMovmentObjectsVec2.clear();
-        if (world != null) {
-            world.dispose();
-        }
-
-        System.out.println("block 5");
-        contactListener.reset();
-
-        complete = false;
-        failed = false;
-        countdown = -1;
-        isFadingOut = false;
-        fadeTime = 0;
-        world = new World(gravity, false);
-//        world.step(1/60f, WORLD_VELOC, WORLD_POSIT);
-        world.setContactListener(contactListener);
-        weatherMachine.update(world);
-
-        System.out.println("block 6");
-        loadLevel(levelName, "rope_test");
-        System.out.println("block 7");
-    };
-
-    public void clearLevel() {
-        JsonValue values = constants.get("world");
-        Vector2 gravity = new Vector2(0, values.getFloat("gravity"));
-
-        if (activeLightJoint != null) {
-            world.destroyJoint(activeLightJoint);
-            activeLightJoint = null;
-        }
-//        for (Joint lightJoint: activeLightJoints) {
-//            world.destroyJoint(lightJoint);
-//        }
-//        activeLightJoints.clear();
-        for (ObstacleSprite sprite : sprites) {
-            Obstacle obj = sprite.getObstacle();
-            sprite.getObstacle().deactivatePhysics(world);
-        }
-        sprites.clear();
-        addQueue.clear();
         if (world != null) {
             world.clearForces();
             world.dispose();
@@ -657,18 +622,14 @@ public class GameplayScene implements Screen {
 
         world = new World(gravity, false);
         world.setContactListener(contactListener);
+
         setComplete(false);
         setFailure(false);
-
-        for (ObstacleSprite s : torchArc) {
-            s.getObstacle().markRemoved(true);
-        }
-        torchArc.clear();
-        runeSet.clear();
 
         if (this.shapeRenderer == null) {
             this.shapeRenderer = new ShapeRenderer();
         }
+        contactListener.reset();
     }
 
     private void populateLevel() {}
@@ -729,8 +690,10 @@ public class GameplayScene implements Screen {
         }
         return surfaces;
     }
-
-    public void loadLevel(String levelName, String levelInfoName) {
+private int pcunt = 1;
+    public void loadLevel(String levelInfoName) {
+        System.out.println("Count " + pcunt);
+        pcunt += 1;
         this.levelName = levelName;
         float units = 40 * Gdx.graphics.getWidth() / 1280f;
         phyiscsUnits = units;
@@ -787,6 +750,7 @@ public class GameplayScene implements Screen {
                     addSprite(tile);
                 }
             } else if (layerType.equals("objectgroup")) {
+                InputController input = InputController.getInstance();
                 Map<String, JsonValue> ropeAnchors = new HashMap<>();
                 HashSet<JsonValue> runeButtonReorganizing = new HashSet<>();
                 for (JsonValue object : layer.get("objects")) {
@@ -1147,8 +1111,61 @@ public class GameplayScene implements Screen {
                                 decoration.getObstacle().setName(objName);
 
                                 addSprite(decoration);
+                                if (input.isUsingController()) {
+                                    if (objName.equals("tClimb")) {
+                                        GameObject contInfo = new GameObject(x, y, width, height,
+                                            units, true);
+                                        contInfo.getObstacle().setSensor(true);  // set as sensor
+                                        contInfo.getObstacle().setBodyType(BodyType.StaticBody);
+                                        contInfo.setTexture(
+                                            directory.getEntry("contClimb", Texture.class));
+                                        contInfo.getObstacle().setName(objName);
+
+                                        addSprite(contInfo);
+                                    } else if (objName.equals("tJump") || objName.equals("tMoreJump")) {
+                                        GameObject contInfo = new GameObject(x, y, width, height,
+                                            units, true);
+                                        contInfo.getObstacle().setSensor(true);  // set as sensor
+                                        contInfo.getObstacle().setBodyType(BodyType.StaticBody);
+                                        contInfo.setTexture(
+                                            directory.getEntry("contJump", Texture.class));
+                                        contInfo.getObstacle().setName(objName);
+
+                                        addSprite(contInfo);
+                                    } else if (objName.equals("tJumpPro")) {
+                                        GameObject contInfo = new GameObject(x, y, width, height,
+                                            units, true);
+                                        contInfo.getObstacle().setSensor(true);  // set as sensor
+                                        contInfo.getObstacle().setBodyType(BodyType.StaticBody);
+                                        contInfo.setTexture(
+                                            directory.getEntry("contJumpPro", Texture.class));
+                                        contInfo.getObstacle().setName(objName);
+
+                                        addSprite(contInfo);
+                                    } else if (objName.equals("tMove")) {
+                                        GameObject contInfo = new GameObject(x, y, width, height,
+                                            units, true);
+                                        contInfo.getObstacle().setSensor(true);  // set as sensor
+                                        contInfo.getObstacle().setBodyType(BodyType.StaticBody);
+                                        contInfo.setTexture(
+                                            directory.getEntry("contMove", Texture.class));
+                                        contInfo.getObstacle().setName(objName);
+
+                                        addSprite(contInfo);
+                                    } else if (objName.equals("tThrow")) {
+                                        GameObject contInfo = new GameObject(x, y, width, height,
+                                            units, true);
+                                        contInfo.getObstacle().setSensor(true);  // set as sensor
+                                        contInfo.getObstacle().setBodyType(BodyType.StaticBody);
+                                        contInfo.setTexture(
+                                            directory.getEntry("contThrow", Texture.class));
+                                        contInfo.getObstacle().setName(objName);
+
+                                        addSprite(contInfo);
+                                    }
+                                }
                             } else {
-//                                System.out.println("Unknown object: " + objName);
+                                System.out.println("Unknown object: " + objName);
                             }
                         }
                     }
@@ -1440,7 +1457,6 @@ public class GameplayScene implements Screen {
     public boolean preUpdate(float dt) {
         InputController input = InputController.getInstance();
         input.sync(bounds, scale);
-        System.out.println(avatar.getObstacle().getRestitution());
         if (listener == null) {
             return true;
         }
@@ -1652,7 +1668,6 @@ public class GameplayScene implements Screen {
             soundEngine.stopAllSoundEffects();
             fadeTime += dt;
             if (fadeTime >= fadeDuration) {
-                System.out.println("HELP" + fadeTime + ", " + fadeDuration);
                 listener.exitScreen(this, fadeExitCode);
             }
         }
@@ -1888,7 +1903,6 @@ public class GameplayScene implements Screen {
                     dropTorchHelper();
                     break;
                 case "traciGrounded":
-                    System.out.println("SET GROUNDED");
                     if (avatar.getGroundedState().equals(GroundState.CLIMBING)) {
                         avatar.removeClimbingPhysics();
                     }
@@ -1898,7 +1912,6 @@ public class GameplayScene implements Screen {
                     break;
                 case "traciAirborne":
                     sensorFixtures.remove(todo_action.getFixture());
-                    System.out.println("SET AIRBORNE");
 
                     if (sensorFixtures.size == 0) {
                         if (avatar.getGroundedState().equals(GroundState.CLIMBING)) {
@@ -1984,7 +1997,6 @@ public class GameplayScene implements Screen {
                         if (!world.isLocked()) {
                             world.destroyJoint(f.getFixtureJoint());
                         }
-                        System.out.println("KILL FIRE! "+ f.fireID);
                         detachFireLightJoints(f);
                         f.setFixtureJoint(null);
                     }
@@ -2012,7 +2024,6 @@ public class GameplayScene implements Screen {
                             if (!world.isLocked()) {
                                 world.destroyJoint(killFires_fire.getFixtureJoint());
                             }
-                            System.out.println("KILL FIRES! "+ killFires_fire.fireID +" object: "+fireFlag.getSubject().getName());
                             detachFireLightJoints(killFires_fire);
                             killFires_fire.setFixtureJoint(null);
                         }
@@ -2399,7 +2410,6 @@ public class GameplayScene implements Screen {
 //        cameraZoomLevel = 1.34375f;
 //        cameraZoomLevel = cameraZoomLevel * (40 * Gdx.graphics.getWidth() / 1280f)/40;
         if (camera == null) {
-            System.out.println(width+"ll"+height);
             camera = new OrthographicCamera();
             camera.zoom = (float) ((.6/Math.pow(1280, 1.579)) * Math.pow(Gdx.graphics.getWidth(), 1.579));
         }
@@ -2408,7 +2418,6 @@ public class GameplayScene implements Screen {
         scale.y = height/bounds.height;
 //        scale.x = scale.y;
         // this works???? ^^^, no it doesnt
-        System.out.println(width + "x" + height);
 
         fitViewport.update(width, height, true);
         fitViewport.setCamera(camera);
