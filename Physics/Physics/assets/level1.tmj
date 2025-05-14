@@ -17,7 +17,7 @@
          "name":"BackgroundTiles",
          "objects":[
                 {
-                 "gid":76,
+                 "gid":84,
                  "height":600,
                  "id":115,
                  "name":"brickBackground",
@@ -40,7 +40,7 @@
          "name":"Background",
          "objects":[
                 {
-                 "gid":78,
+                 "gid":86,
                  "height":500,
                  "id":34,
                  "name":"colM",
@@ -52,7 +52,7 @@
                  "y":4382.66666666666
                 }, 
                 {
-                 "gid":78,
+                 "gid":86,
                  "height":500,
                  "id":41,
                  "name":"colM",
@@ -64,7 +64,7 @@
                  "y":4416.33333333333
                 }, 
                 {
-                 "gid":78,
+                 "gid":86,
                  "height":500,
                  "id":42,
                  "name":"colM",
@@ -76,7 +76,7 @@
                  "y":4232.30303030303
                 }, 
                 {
-                 "gid":79,
+                 "gid":87,
                  "height":500,
                  "id":43,
                  "name":"colT",
@@ -88,7 +88,7 @@
                  "y":4079.30303030303
                 }, 
                 {
-                 "gid":78,
+                 "gid":86,
                  "height":500,
                  "id":45,
                  "name":"colM",
@@ -100,7 +100,7 @@
                  "y":4401.24242424243
                 }, 
                 {
-                 "gid":78,
+                 "gid":86,
                  "height":500,
                  "id":46,
                  "name":"colM",
@@ -112,7 +112,7 @@
                  "y":3922.24242424243
                 }, 
                 {
-                 "gid":79,
+                 "gid":87,
                  "height":500,
                  "id":47,
                  "name":"colT",
@@ -124,7 +124,7 @@
                  "y":3769.24242424243
                 }, 
                 {
-                 "gid":83,
+                 "gid":91,
                  "height":1000,
                  "id":114,
                  "name":"tMove",
@@ -136,7 +136,7 @@
                  "y":4871.39393939394
                 }, 
                 {
-                 "gid":90,
+                 "gid":98,
                  "height":413.879518072289,
                  "id":126,
                  "name":"chandelier",
@@ -148,7 +148,7 @@
                  "y":3985.33406352684
                 }, 
                 {
-                 "gid":79,
+                 "gid":87,
                  "height":500,
                  "id":35,
                  "name":"colT",
@@ -160,7 +160,7 @@
                  "y":4030.0303030303
                 }, 
                 {
-                 "gid":78,
+                 "gid":86,
                  "height":500,
                  "id":146,
                  "name":"colM",
@@ -172,7 +172,7 @@
                  "y":3813.10621212121
                 }, 
                 {
-                 "gid":79,
+                 "gid":87,
                  "height":500,
                  "id":147,
                  "name":"colT",
@@ -184,7 +184,7 @@
                  "y":3471.10621212121
                 }, 
                 {
-                 "gid":80,
+                 "gid":88,
                  "height":816,
                  "id":148,
                  "name":"window",
@@ -196,7 +196,7 @@
                  "y":3656.13651515151
                 }, 
                 {
-                 "gid":80,
+                 "gid":88,
                  "height":816,
                  "id":149,
                  "name":"window",
@@ -208,7 +208,7 @@
                  "y":3356.13651515151
                 }, 
                 {
-                 "gid":96,
+                 "gid":111,
                  "height":300,
                  "id":161,
                  "name":"cornerWeb",
@@ -220,7 +220,7 @@
                  "y":2077.15151515152
                 }, 
                 {
-                 "gid":92,
+                 "gid":100,
                  "height":700,
                  "id":162,
                  "name":"banner",
@@ -232,7 +232,7 @@
                  "y":2897.15151515152
                 }, 
                 {
-                 "gid":91,
+                 "gid":99,
                  "height":210,
                  "id":173,
                  "name":"holder",
@@ -244,7 +244,7 @@
                  "y":3878.94242424242
                 }, 
                 {
-                 "gid":91,
+                 "gid":99,
                  "height":210,
                  "id":175,
                  "name":"holder",
@@ -256,7 +256,7 @@
                  "y":3900.03333333333
                 }, 
                 {
-                 "gid":97,
+                 "gid":112,
                  "height":300,
                  "id":195,
                  "name":"cornerWebEgg",
@@ -268,7 +268,7 @@
                  "y":4173.15151515152
                 }, 
                 {
-                 "gid":82,
+                 "gid":90,
                  "height":1000,
                  "id":200,
                  "name":"tJump",
@@ -280,7 +280,7 @@
                  "y":4926.54545454545
                 }, 
                 {
-                 "gid":96,
+                 "gid":111,
                  "height":300,
                  "id":191,
                  "name":"cornerWeb",
@@ -290,6 +290,30 @@
                  "width":300,
                  "x":4178.84848484848,
                  "y":3271.93939393939
+                }, 
+                {
+                 "gid":99,
+                 "height":210,
+                 "id":208,
+                 "name":"holder",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":150,
+                 "x":3253.93984848485,
+                 "y":3895.78727272727
+                }, 
+                {
+                 "gid":99,
+                 "height":210,
+                 "id":209,
+                 "name":"holder",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":150,
+                 "x":1027.21166666667,
+                 "y":4120.27333333333
                 }],
          "offsetx":-12.1212121212122,
          "offsety":-15.151515151515,
@@ -336,7 +360,7 @@
          "name":"Foreground",
          "objects":[
                 {
-                 "gid":77,
+                 "gid":85,
                  "height":500,
                  "id":32,
                  "name":"colB",
@@ -348,7 +372,7 @@
                  "y":4832.27272727272
                 }, 
                 {
-                 "gid":77,
+                 "gid":85,
                  "height":500,
                  "id":144,
                  "name":"colB",
@@ -360,7 +384,7 @@
                  "y":4231.10621212121
                 }, 
                 {
-                 "gid":77,
+                 "gid":85,
                  "height":500,
                  "id":40,
                  "name":"colB",
@@ -372,7 +396,7 @@
                  "y":4838.57575757575
                 }, 
                 {
-                 "gid":77,
+                 "gid":85,
                  "height":500,
                  "id":44,
                  "name":"colB",
@@ -384,7 +408,7 @@
                  "y":4526.27272727273
                 }, 
                 {
-                 "gid":103,
+                 "gid":118,
                  "height":300,
                  "id":190,
                  "name":"fullWebEgg",
@@ -396,7 +420,7 @@
                  "y":2346
                 }, 
                 {
-                 "gid":96,
+                 "gid":111,
                  "height":300,
                  "id":193,
                  "name":"cornerWeb",
@@ -408,7 +432,7 @@
                  "y":3874.9696969697
                 }, 
                 {
-                 "gid":102,
+                 "gid":117,
                  "height":300,
                  "id":197,
                  "name":"fullWeb",
@@ -420,7 +444,7 @@
                  "y":1982
                 }, 
                 {
-                 "gid":102,
+                 "gid":117,
                  "height":300,
                  "id":198,
                  "name":"fullWeb",
@@ -432,7 +456,7 @@
                  "y":2318
                 }, 
                 {
-                 "gid":102,
+                 "gid":117,
                  "height":300,
                  "id":199,
                  "name":"fullWeb",
@@ -562,7 +586,7 @@
          "name":"Action Entities",
          "objects":[
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":17,
                  "name":"light",
@@ -574,7 +598,7 @@
                  "y":4451.21966491792
                 }, 
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":124,
                  "name":"light",
@@ -586,7 +610,7 @@
                  "y":4697.92424242424
                 }, 
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":38.8012048192771,
                  "id":128,
                  "name":"light",
@@ -598,7 +622,7 @@
                  "y":3815.99881343556
                 }, 
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":166,
                  "name":"light",
@@ -610,7 +634,7 @@
                  "y":3118.36833333333
                 }, 
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":167,
                  "name":"light",
@@ -622,7 +646,7 @@
                  "y":3530.49833333333
                 }, 
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":168,
                  "name":"light",
@@ -634,7 +658,7 @@
                  "y":2812.06833333333
                 }, 
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":169,
                  "name":"light",
@@ -646,7 +670,7 @@
                  "y":3248.43833333333
                 }, 
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":172,
                  "name":"light",
@@ -658,7 +682,7 @@
                  "y":3808.74833333333
                 }, 
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":180,
                  "name":"light",
@@ -670,7 +694,7 @@
                  "y":3785.68333333333
                 }, 
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":181,
                  "name":"light",
@@ -682,19 +706,7 @@
                  "y":4474.28636363636
                 }, 
                 {
-                 "gid":91,
-                 "height":210,
-                 "id":204,
-                 "name":"holder",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":150,
-                 "x":1023.60606060606,
-                 "y":4135.69060606061
-                }, 
-                {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":205,
                  "name":"light",
@@ -706,19 +718,7 @@
                  "y":4042.43060606061
                 }, 
                 {
-                 "gid":91,
-                 "height":210,
-                 "id":206,
-                 "name":"holder",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":150,
-                 "x":3262.69696969697,
-                 "y":3879.56939393939
-                }, 
-                {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":207,
                  "name":"light",
@@ -736,7 +736,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":208,
+ "nextobjectid":210,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
@@ -759,11 +759,11 @@
          "source":"GameObjectTiles.tsx"
         }, 
         {
-         "firstgid":76,
+         "firstgid":84,
          "source":"BackgroundAssets.tsx"
         }, 
         {
-         "firstgid":93,
+         "firstgid":108,
          "source":"mothDecoratives.tsx"
         }],
  "tilewidth":300,

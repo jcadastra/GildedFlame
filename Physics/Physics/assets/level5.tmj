@@ -210,6 +210,42 @@
                  "width":150,
                  "x":2027,
                  "y":2803
+                }, 
+                {
+                 "gid":111,
+                 "height":300,
+                 "id":509,
+                 "name":"cornerWeb",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":300,
+                 "x":586,
+                 "y":1486
+                }, 
+                {
+                 "gid":110,
+                 "height":300,
+                 "id":510,
+                 "name":"centralWebOne",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":300,
+                 "x":4210,
+                 "y":1822
+                }, 
+                {
+                 "gid":111,
+                 "height":300,
+                 "id":511,
+                 "name":"cornerWeb",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":300,
+                 "x":4462,
+                 "y":1454
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -742,7 +778,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":509,
+ "nextobjectid":513,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
@@ -767,6 +803,10 @@
         {
          "firstgid":84,
          "source":"BackgroundAssets.tsx"
+        }, 
+        {
+         "firstgid":108,
+         "source":"mothDecoratives.tsx"
         }],
  "tilewidth":300,
  "type":"map",

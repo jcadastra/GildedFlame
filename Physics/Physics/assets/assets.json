@@ -285,6 +285,12 @@
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
     },
+    "platform-playerDUSTANIMATION": {
+      "file": "platform/playerDustAnimation.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
 
     "platform-tiles": {
       "file": "tiled_images/platform1Tiled.png",
@@ -337,6 +343,7 @@
     "level2" : "level2.tmj",
     "level3" : "level3.tmj",
     "level4" : "level4.tmj",
+    "level5" : "level5.tmj",
     "rune_advanced" : "rune_advanced.tmj"
 
   },

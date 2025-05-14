@@ -9,7 +9,7 @@
          "name":"BackgroundTiles",
          "objects":[
                 {
-                 "gid":76,
+                 "gid":84,
                  "height":600,
                  "id":472,
                  "name":"brickBackground",
@@ -32,7 +32,7 @@
          "name":"Background",
          "objects":[
                 {
-                 "gid":91,
+                 "gid":99,
                  "height":210,
                  "id":474,
                  "name":"holder",
@@ -44,7 +44,7 @@
                  "y":3105
                 }, 
                 {
-                 "gid":91,
+                 "gid":99,
                  "height":210,
                  "id":476,
                  "name":"holder",
@@ -56,7 +56,7 @@
                  "y":3107.90909090909
                 }, 
                 {
-                 "gid":91,
+                 "gid":99,
                  "height":210,
                  "id":477,
                  "name":"holder",
@@ -68,7 +68,7 @@
                  "y":3107.06060606061
                 }, 
                 {
-                 "gid":91,
+                 "gid":99,
                  "height":210,
                  "id":509,
                  "name":"holder",
@@ -80,7 +80,7 @@
                  "y":3094.33168181818
                 }, 
                 {
-                 "gid":91,
+                 "gid":99,
                  "height":210,
                  "id":510,
                  "name":"holder",
@@ -92,7 +92,7 @@
                  "y":4294.33168181818
                 }, 
                 {
-                 "gid":91,
+                 "gid":99,
                  "height":210,
                  "id":511,
                  "name":"holder",
@@ -104,7 +104,7 @@
                  "y":4297.36168181818
                 }, 
                 {
-                 "gid":91,
+                 "gid":99,
                  "height":210,
                  "id":512,
                  "name":"holder",
@@ -116,7 +116,7 @@
                  "y":4282.21168181818
                 }, 
                 {
-                 "gid":79,
+                 "gid":87,
                  "height":595.833,
                  "id":513,
                  "name":"colT",
@@ -128,7 +128,7 @@
                  "y":2627.08168181818
                 }, 
                 {
-                 "gid":77,
+                 "gid":85,
                  "height":595.833,
                  "id":514,
                  "name":"colB",
@@ -140,7 +140,7 @@
                  "y":3309.07168181818
                 }, 
                 {
-                 "gid":78,
+                 "gid":86,
                  "height":561.212,
                  "id":515,
                  "name":"colM",
@@ -152,7 +152,7 @@
                  "y":2988.01168181818
                 }, 
                 {
-                 "gid":79,
+                 "gid":87,
                  "height":595.833,
                  "id":516,
                  "name":"colT",
@@ -164,7 +164,7 @@
                  "y":2640.72168181818
                 }, 
                 {
-                 "gid":77,
+                 "gid":85,
                  "height":595.833,
                  "id":517,
                  "name":"colB",
@@ -176,7 +176,7 @@
                  "y":3322.71168181818
                 }, 
                 {
-                 "gid":78,
+                 "gid":86,
                  "height":561.212,
                  "id":518,
                  "name":"colM",
@@ -188,7 +188,7 @@
                  "y":3001.65168181818
                 }, 
                 {
-                 "gid":79,
+                 "gid":87,
                  "height":595.833,
                  "id":519,
                  "name":"colT",
@@ -200,7 +200,7 @@
                  "y":4140.72168181818
                 }, 
                 {
-                 "gid":92,
+                 "gid":100,
                  "height":700,
                  "id":520,
                  "name":"banner",
@@ -212,7 +212,7 @@
                  "y":2859.09090909091
                 }, 
                 {
-                 "gid":77,
+                 "gid":85,
                  "height":595.833,
                  "id":521,
                  "name":"colB",
@@ -224,7 +224,7 @@
                  "y":4525.23168181818
                 }, 
                 {
-                 "gid":79,
+                 "gid":87,
                  "height":595.833,
                  "id":522,
                  "name":"colT",
@@ -236,7 +236,7 @@
                  "y":4146.69168181818
                 }, 
                 {
-                 "gid":77,
+                 "gid":85,
                  "height":595.833,
                  "id":523,
                  "name":"colB",
@@ -248,7 +248,7 @@
                  "y":4528.68168181818
                 }, 
                 {
-                 "gid":79,
+                 "gid":87,
                  "height":595.833,
                  "id":524,
                  "name":"colT",
@@ -260,7 +260,7 @@
                  "y":4146.69168181818
                 }, 
                 {
-                 "gid":77,
+                 "gid":85,
                  "height":595.833,
                  "id":525,
                  "name":"colB",
@@ -272,7 +272,7 @@
                  "y":4528.68168181818
                 }, 
                 {
-                 "gid":79,
+                 "gid":87,
                  "height":595.833,
                  "id":526,
                  "name":"colT",
@@ -284,7 +284,7 @@
                  "y":2639.12168181818
                 }, 
                 {
-                 "gid":77,
+                 "gid":85,
                  "height":595.833,
                  "id":527,
                  "name":"colB",
@@ -296,7 +296,7 @@
                  "y":3321.11168181818
                 }, 
                 {
-                 "gid":78,
+                 "gid":86,
                  "height":561.212,
                  "id":528,
                  "name":"colM",
@@ -308,7 +308,7 @@
                  "y":3000.05168181818
                 }, 
                 {
-                 "gid":90,
+                 "gid":98,
                  "height":632,
                  "id":533,
                  "name":"chandelier",
@@ -370,18 +370,6 @@
                  "width":300,
                  "x":3434,
                  "y":3230
-                }, 
-                {
-                 "gid":56,
-                 "height":300,
-                 "id":529,
-                 "name":"moth",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":300,
-                 "x":6702,
-                 "y":1806
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -483,24 +471,6 @@
                  "width":323,
                  "x":6906.51515151515,
                  "y":4556.15151515152
-                }, 
-                {
-                 "gid":75,
-                 "height":242,
-                 "id":530,
-                 "name":"infburnable",
-                 "properties":[
-                        {
-                         "name":"startOnFire",
-                         "type":"bool",
-                         "value":true
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":323,
-                 "x":4838.5,
-                 "y":1839
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -549,7 +519,7 @@
          "name":"Action Entities",
          "objects":[
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":456,
                  "name":"light",
@@ -561,7 +531,7 @@
                  "y":3021
                 }, 
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":458,
                  "name":"light",
@@ -573,7 +543,7 @@
                  "y":3019.90909090909
                 }, 
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":459,
                  "name":"light",
@@ -585,7 +555,7 @@
                  "y":3019.06060606061
                 }, 
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":460,
                  "name":"light",
@@ -597,7 +567,7 @@
                  "y":3205
                 }, 
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":479,
                  "name":"light",
@@ -609,7 +579,7 @@
                  "y":3022.69696969697
                 }, 
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":481,
                  "name":"light",
@@ -621,7 +591,7 @@
                  "y":4228.75757575758
                 }, 
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":483,
                  "name":"light",
@@ -633,7 +603,7 @@
                  "y":4225.72727272727
                 }, 
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":485,
                  "name":"light",
@@ -645,7 +615,7 @@
                  "y":4210.57575757576
                 }, 
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":487,
                  "name":"light",
@@ -657,7 +627,7 @@
                  "y":4243.90909090909
                 }, 
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":57,
                  "id":532,
                  "name":"light",
@@ -667,54 +637,6 @@
                  "width":57,
                  "x":4207.5,
                  "y":2451.5
-                }, 
-                {
-                 "gid":86,
-                 "height":57,
-                 "id":538,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":6837.5,
-                 "y":1647.5
-                }, 
-                {
-                 "gid":86,
-                 "height":57,
-                 "id":539,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":6361.5,
-                 "y":1651.5
-                }, 
-                {
-                 "gid":86,
-                 "height":57,
-                 "id":540,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":5901.5,
-                 "y":1655.5
-                }, 
-                {
-                 "gid":86,
-                 "height":57,
-                 "id":541,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":5441.5,
-                 "y":1655.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -746,7 +668,7 @@
          "source":"GameObjectTiles.tsx"
         }, 
         {
-         "firstgid":76,
+         "firstgid":84,
          "source":"BackgroundAssets.tsx"
         }],
  "tilewidth":300,
