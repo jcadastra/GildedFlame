@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.10.2" name="backgroundAssets" tilewidth="1000" tileheight="1000" tilecount="16" columns="0">
+<tileset version="1.10" tiledversion="1.10.2" name="backgroundAssets" tilewidth="1000" tileheight="1000" tilecount="19" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <properties>
@@ -67,5 +67,14 @@
  </tile>
  <tile id="16">
   <image width="500" height="700" source="backgroundAssets/banner.png"/>
+ </tile>
+ <tile id="21">
+  <image width="1000" height="1000" source="backgroundAssets/tutChest.png"/>
+ </tile>
+ <tile id="22">
+  <image width="1000" height="1000" source="backgroundAssets/tutJumpPro.png"/>
+ </tile>
+ <tile id="23">
+  <image width="1000" height="1000" source="backgroundAssets/tutMoth.png"/>
  </tile>
 </tileset>

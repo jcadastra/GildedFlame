@@ -787,6 +787,7 @@ public class GameplayScene implements Screen {
                     addSprite(tile);
                 }
             } else if (layerType.equals("objectgroup")) {
+                InputController input = InputController.getInstance();
                 Map<String, JsonValue> ropeAnchors = new HashMap<>();
                 HashSet<JsonValue> runeButtonReorganizing = new HashSet<>();
                 for (JsonValue object : layer.get("objects")) {
@@ -1147,8 +1148,61 @@ public class GameplayScene implements Screen {
                                 decoration.getObstacle().setName(objName);
 
                                 addSprite(decoration);
+                                if (input.isUsingController()) {
+                                    if (objName.equals("tClimb")) {
+                                        GameObject contInfo = new GameObject(x, y, width, height,
+                                            units, true);
+                                        contInfo.getObstacle().setSensor(true);  // set as sensor
+                                        contInfo.getObstacle().setBodyType(BodyType.StaticBody);
+                                        contInfo.setTexture(
+                                            directory.getEntry("contClimb", Texture.class));
+                                        contInfo.getObstacle().setName(objName);
+
+                                        addSprite(contInfo);
+                                    } else if (objName.equals("tJump")) {
+                                        GameObject contInfo = new GameObject(x, y, width, height,
+                                            units, true);
+                                        contInfo.getObstacle().setSensor(true);  // set as sensor
+                                        contInfo.getObstacle().setBodyType(BodyType.StaticBody);
+                                        contInfo.setTexture(
+                                            directory.getEntry("contJump", Texture.class));
+                                        contInfo.getObstacle().setName(objName);
+
+                                        addSprite(contInfo);
+                                    } else if (objName.equals("tJumpPro")) {
+                                        GameObject contInfo = new GameObject(x, y, width, height,
+                                            units, true);
+                                        contInfo.getObstacle().setSensor(true);  // set as sensor
+                                        contInfo.getObstacle().setBodyType(BodyType.StaticBody);
+                                        contInfo.setTexture(
+                                            directory.getEntry("contJumpPro", Texture.class));
+                                        contInfo.getObstacle().setName(objName);
+
+                                        addSprite(contInfo);
+                                    } else if (objName.equals("tMove")) {
+                                        GameObject contInfo = new GameObject(x, y, width, height,
+                                            units, true);
+                                        contInfo.getObstacle().setSensor(true);  // set as sensor
+                                        contInfo.getObstacle().setBodyType(BodyType.StaticBody);
+                                        contInfo.setTexture(
+                                            directory.getEntry("contMove", Texture.class));
+                                        contInfo.getObstacle().setName(objName);
+
+                                        addSprite(contInfo);
+                                    } else if (objName.equals("tThrow")) {
+                                        GameObject contInfo = new GameObject(x, y, width, height,
+                                            units, true);
+                                        contInfo.getObstacle().setSensor(true);  // set as sensor
+                                        contInfo.getObstacle().setBodyType(BodyType.StaticBody);
+                                        contInfo.setTexture(
+                                            directory.getEntry("contThrow", Texture.class));
+                                        contInfo.getObstacle().setName(objName);
+
+                                        addSprite(contInfo);
+                                    }
+                                }
                             } else {
-//                                System.out.println("Unknown object: " + objName);
+                                System.out.println("Unknown object: " + objName);
                             }
                         }
                     }

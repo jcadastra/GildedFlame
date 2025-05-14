@@ -154,7 +154,7 @@ public class Torch extends EnhancedObstacleSprite {
     private final Affine2 flipCache = new Affine2();
     @Override
     public void draw(SpriteBatch batch) {
-        if (!onRight) {
+        if (!onRight && obstacle.getGravityScale() != 0) {
             flipCache.setToScaling( 1,1 );
         } else {
             flipCache.setToScaling( -1,1 );
