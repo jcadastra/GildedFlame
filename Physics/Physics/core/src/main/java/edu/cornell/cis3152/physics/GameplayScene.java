@@ -941,7 +941,7 @@ public class GameplayScene implements Screen {
                             materialType = "stone";
                             box.setTexture(directory.getEntry("nonburnable", Texture.class));
                             box.getObstacle().setPhysicsUnits(units);
-                            box.getObstacle().setDensity(1.5f );
+                            box.getObstacle().setDensity(1.25f );
                         } else if (objName.contains("inf")) {
                             box = new GameObject(new float[]{
                                 -width/4, -height/2.2f,
@@ -969,7 +969,7 @@ public class GameplayScene implements Screen {
                             }
                             System.out.println("found property: startOnFire = " + startOnFire);
                             box.setTexture(directory.getEntry("brazier", Texture.class));
-                            if (startOnFire) fireController.lightAnew(box, new Vector2(box.getObstacle().getX() + (random.nextFloat()-.5f)/2, box.getObstacle().getY()));
+                            if (startOnFire) fireController.lightAnew(box, new Vector2(box.getObstacle().getX(), box.getObstacle().getY()));
                             box.getObstacle().setDensity(1.8f );
                         } else {
                             box = new GameObject(new float[]{
