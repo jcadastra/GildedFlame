@@ -81,7 +81,7 @@ public class Torch extends EnhancedObstacleSprite {
 //        ((CapsuleObstacle)obstacle).setTolerance( debugInfo.getFloat("tolerance", 0.5f) );
 
         obstacle.setDensity( data.getFloat( "density", 0 ) );
-        System.out.println("-->"+obstacle.getDensity());
+//        System.out.println("-->"+obstacle.getDensity());
         obstacle.setFriction( data.getFloat( "friction", 0 ) );
         obstacle.setRestitution( data.getFloat( "restitution", 0 ) );
 //        obstacle.setFixedRotation(true);
@@ -118,7 +118,7 @@ public class Torch extends EnhancedObstacleSprite {
         float tmp = (av * timeTillGround);
         float x = (float) (180*(Math.round((tmp)/180)));
         float spinNum = x % 90 == 0 ?  x : x-(45 * direc);
-        System.out.println(timeTillGround+","+ av +", " +tmp + ", " +x+ ", " + spinNum);
+//        System.out.println(timeTillGround+","+ av +", " +tmp + ", " +x+ ", " + spinNum);
         body.setAngularVelocity((spinNum) * (float) ((Math.PI)/180));
     }
 

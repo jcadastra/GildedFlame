@@ -53,6 +53,7 @@
     "tJump" : "backgroundAssets/tJump.png",
     "tMove" : "backgroundAssets/tMove.png",
     "tThrow" : "backgroundAssets/tThrow.png",
+    "tMoreJump" : "backgroundAssets/tMoreJump.png",
     "window": "backgroundAssets/window.png",
     "bookshelf" : "backgroundAssets/bookshelf.png",
     "banner" : "backgroundAssets/banner.png",
@@ -228,6 +229,12 @@
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
     },
+    "platform-mothJUMPANIMATION": {
+      "file": "platform/mothJumpAnimation.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
     "platform-mothCDANIMATION": {
       "file": "platform/mothCDAnimation.png",
       "mipmaps": true,
@@ -307,7 +314,15 @@
     "rune_intro": "rune_intro.tmj",
     "rune_medium": "rune_medium.tmj",
     "rune_hard" :  "rune_hard.tmj",
-    "example_level" : "example_level.tmj"
+    "example_level" : "example_level.tmj",
+    "harvey_test" : "harvey_test.tmj",
+    "harvey_test2" : "harvey_test2.tmj",
+    "new_1" : "new_1.tmj",
+    "new_2" : "new_2.tmj",
+    "level1" : "level1.tmj",
+    "level2" : "level2.tmj",
+    "level3" : "level3.tmj"
+
   },
   "music": {
     "eerie": "music/eerie.wav",

@@ -862,7 +862,7 @@ public class GameplayScene implements Screen {
                         enemies.add(totem);
                     } else if (objName.contains("goaldoor")) {
                         texture = directory.getEntry("treasure", Texture.class);
-                        System.out.println("goal door texture: " + texture);
+//                        System.out.println("goal door texture: " + texture);
 
                         GameObject goalDoor = new GameObject(x, y, 1.47f, 1, units, true);
                         goalDoor.getObstacle().setSensor(true);
@@ -941,7 +941,18 @@ public class GameplayScene implements Screen {
                             }, x,y, width, height, units);
                             materialType = "infinite";
                             boolean startOnFire = false;
-                            if (object.hasChild("startOnFire")) object.getBoolean("startOnFire");
+                            JsonValue props = object.get("properties");
+                            if (props != null) {
+                                for (JsonValue prop : props) {
+                                    String propName = prop.getString("name");
+                                    String value = prop.getString("value");
+                                    switch (propName) {
+                                        case "startOnFire":
+                                            startOnFire = Boolean.parseBoolean(value);
+                                    }
+                                }
+                            }
+                            System.out.println("found property: startOnFire = " + startOnFire);
                             box.setTexture(directory.getEntry("brazier", Texture.class));
                             if (startOnFire) fireController.lightAnew(box, new Vector2(box.getObstacle().getX() + (random.nextFloat()-.5f)/2, box.getObstacle().getY()));
                             box.getObstacle().setDensity(1.8f );
@@ -1266,7 +1277,7 @@ public class GameplayScene implements Screen {
                                 }
                             }
                         }
-                        System.out.println(pin1Material + " " + pin2Material + " " + middleMaterial);
+//                        System.out.println(pin1Material + " " + pin2Material + " " + middleMaterial);
                         Rope rope = new Rope(new Vector2(x1, y1), new Vector2(x2, y2), depth, thickness, piecelen, units, levelInfo.get("ropes").get(0));
                         rope.customRopeDesignation(pin1Material.equals("iron") ? directory.getEntry( "chain-end", Texture.class ) : directory.getEntry( "rope-end", Texture.class ),
                             middleMaterial.equals("iron") ? directory.getEntry( "chain-mid", Texture.class ) : directory.getEntry( "rope-mid", Texture.class ),
@@ -1277,7 +1288,7 @@ public class GameplayScene implements Screen {
                         pinJoint.frequencyHz = 0f;
                         pinJoint.dampingRatio = 0f;
                         pinJoint.collideConnected = false;
-                        System.out.println("pin1: " + pin1 + ";; pin 2 " + pin2);
+//                        System.out.println("pin1: " + pin1 + ";; pin 2 " + pin2);
                         if (pin1 != null && !pin1.isEmpty()) {
                             rope.deactivateAnchor(0);
                             String finalPin1 = pin1;
@@ -1440,8 +1451,8 @@ public class GameplayScene implements Screen {
             return false;
         }
         if (activeFireJoint == null || torch.getObstacle().getY() < 0|| queueFailure) {
-            System.out.println((activeFireJoint == null) +", "+ (torch.getObstacle().getY() < 0)+ ", " +queueFailure);
-            System.out.println(torch.getObstacle().getPosition());
+//            System.out.println((activeFireJoint == null) +", "+ (torch.getObstacle().getY() < 0)+ ", " +queueFailure);
+//            System.out.println(torch.getObstacle().getPosition());
             setFailure(true);
             return false;
         }
@@ -2325,7 +2336,7 @@ public class GameplayScene implements Screen {
             batch.begin();
             float alpha = Math.min(fadeTime / fadeDuration, 1f);
             batch.setColor(0, 0, 0, alpha);
-            batch.draw(blackTexture, 0, 0, width, height);
+            batch.draw(blackTexture, 0, 0, bounds.width*phyiscsUnits, bounds.height*phyiscsUnits);
             batch.setColor(Color.WHITE);
             batch.end();
         }
