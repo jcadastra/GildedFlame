@@ -92,15 +92,15 @@
         },
         "advanced_movement.tmj": {
             "expandedObjectLayers": [
-                2,
+                5,
                 6,
-                5
+                2
             ],
             "scale": 0.33,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 4798.484848484848,
-                "y": 2698.484848484848
+                "x": 4793.939393939394,
+                "y": 2692.4242424242425
             }
         },
         "box_intro.tmj": {
@@ -211,8 +211,8 @@
             "scale": 0.125,
             "selectedLayer": 7,
             "viewCenter": {
-                "x": 2872,
-                "y": 2356
+                "x": 6300,
+                "y": 3004
             }
         },
         "level10.tmj": {
@@ -255,14 +255,14 @@
         },
         "level4.tmj": {
             "expandedObjectLayers": [
-                7,
-                5
+                5,
+                7
             ],
             "scale": 0.33,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 5609.090909090908,
-                "y": 2668.181818181818
+                "x": 5398.484848484848,
+                "y": 2698.484848484848
             }
         },
         "level5.tmj": {

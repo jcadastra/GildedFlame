@@ -53,6 +53,7 @@ public class MarthasWeatherMachine {
         collidedObstacles.clear();
         rainDrops.clear();
         rainflags.clear();
+        this.rainFreq = this.rainTimer = 0;
     }
 
     public void activateRain(float physicsUnits, int rainFreq) {

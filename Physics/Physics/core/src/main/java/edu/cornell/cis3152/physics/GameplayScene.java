@@ -1310,7 +1310,7 @@ private int pcunt = 1;
                         int depth = 10, piecelen = 25, thickness = 14;
                         JsonValue props = end.get("properties");
                         String pin1 = null, pin2 = null, pin1Material = "rope", pin2Material = "rope", middleMaterial = "rope";
-                        Boolean dynamic1 = false, dynamic2 = false;
+                        boolean dynamic1 = false, dynamic2 = false;
                         if (props != null) {
                             for (JsonValue prop : props) {
                                 String pname = prop.getString("name");
@@ -1548,6 +1548,8 @@ private int pcunt = 1;
 
         soundEngine.tendToMusicLoop();
         torch.onRight = avatar.isFacingRight();
+        System.out.println("pos: " +avatar.getObstacle().getPosition());
+        System.out.println("rhs: " +(avatar.getObstacle().getPosition().x + avatar.getWidth()/2f));
 //        System.out.println(Gdx.graphics.getFramesPerSecond());
 //        SavedDataHandler temp = new SavedDataHandler();
 //        temp.setDataVal("test" + Gdx.graphics.getFrameId(), Gdx.graphics.getFramesPerSecond());

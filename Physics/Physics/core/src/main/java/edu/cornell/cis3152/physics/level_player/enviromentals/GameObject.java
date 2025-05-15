@@ -128,9 +128,36 @@ public class GameObject extends EnhancedObstacleSprite {
         }
         float physCentreX = x - (direction* (width - width * widthFactor)) / 2f;
 
-        BoxObstacle temp = new BoxObstacle(physCentreX,physCentreY,width * widthFactor,physHeight);
+        float[] points = new float[] {};
+        if (name.equals("platform")) {
+            points = new float[] {
+                -(width * widthFactor)/2,-(physHeight/2),
+                (width * widthFactor)/2,-(physHeight/2),
 
-        obstacle = new ObstacleSprite(temp).getObstacle();
+                (width * widthFactor)/2,physHeight/2,
+                -(width * widthFactor)/2,physHeight/2
+            };
+        } else {
+            points = new float[]{
+                -(width * widthFactor)/2,-(physHeight/2),
+                (width * widthFactor)/2,-(physHeight/2),
+
+                (width * widthFactor)/2,physHeight/2.5f,
+                (width * widthFactor)/2.05f,physHeight/2,
+
+                -(width * widthFactor)/2.05f,physHeight/2,
+                -(width * widthFactor)/2,physHeight/2.5f
+            };
+        }
+
+        Poly2 poly = new Poly2();
+        PolyTriangulator triangulator = new PolyTriangulator();
+        triangulator.set(points);
+        triangulator.calculate();
+        triangulator.getPolygon(poly);
+
+        obstacle = new PolygonObstacle(points,x,(y-height/2)+(height * (name.equals("platform") ? .85f : 1))/2);
+//        BoxObstacle temp = new BoxObstacle(physCentreX,physCentreY,width * widthFactor,physHeight);
         obstacle.setUserData(this);
         obstacle.setDensity(0.5f);
         obstacle.setFriction(1f);
@@ -139,7 +166,7 @@ public class GameObject extends EnhancedObstacleSprite {
         obstacle.setFixedRotation(true);
         obstacle.setName(name);
         //if platform ie walk on shrink height by .15 to walk on better
-        mesh.set(-(width * units)/2, -(height * (name.equals("platform") ? .85f : 1) * units)/2, width * widthFactor * units, (height ) * units);
+        mesh.set(-(width * units)/2, (height)/2-(height * (name.equals("platform") ? .85f : 1) * units)/2, width * widthFactor * units, (height ) * units);
 //        mesh.set(-(width * units)/2, -(height * (name.equals("platform") ? 1f : 1f) * units)/2, width * widthFactor * units, (height ) * units);
     }
 

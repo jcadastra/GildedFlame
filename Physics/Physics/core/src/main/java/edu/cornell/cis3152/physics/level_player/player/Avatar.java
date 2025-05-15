@@ -755,6 +755,10 @@ public class Avatar extends ObstacleSprite {
      */
     @Override
     public void update(float dt) {
+//        float roundedX = Math.round(getObstacle().getPosition().x * 100f)/100f;
+//        float roundedY = Math.round(getObstacle().getPosition().y * 100f)/100f;
+//        obstacle.setPosition(roundedX, roundedY);
+
         Vector2 currentPosition = getLocation();
         prevFalling = getIsFalling();
         if (jumpDeadTimer > 0) {
