@@ -1099,7 +1099,7 @@ private int pcunt = 1;
                                 -width/2, -(height) * (3f/10)
                             }, x,y, width, height, units);
                             box.setTexture(directory.getEntry("burnable", Texture.class));
-                            box.getObstacle().setDensity(1.5f );
+                            box.getObstacle().setDensity(1.25f );
                         }
                         box.setMaterial(new ObstacleMaterial(materialType));
                         box.getObstacle().setBodyType(BodyType.DynamicBody);
