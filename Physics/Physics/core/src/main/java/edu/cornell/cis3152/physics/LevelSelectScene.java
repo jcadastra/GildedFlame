@@ -49,6 +49,7 @@ public class LevelSelectScene implements Screen {
     private BitmapFont unicaFont;
     private Array<Label> doorLabels = new Array<>();
     private ArrowEntry leftArrowEntry, rightArrowEntry;
+    private SoundEngine soundEngine;
 
 
     private class Entry{
@@ -80,7 +81,8 @@ public class LevelSelectScene implements Screen {
         }
     }
 
-    public LevelSelectScene() {
+    public LevelSelectScene(SoundEngine soundEngine) {
+        this.soundEngine = soundEngine;
         stage = new Stage(new ScreenViewport());
         skin = new Skin();
         bgTexture = new Texture(Gdx.files.internal("ui/plain_back.png"));
@@ -459,17 +461,19 @@ public class LevelSelectScene implements Screen {
 
     @Override
     public void render(float delta) {
+        soundEngine.tendToMusicLoop();
         if (doorDisplayDirty) {
             updateDoorDisplay();
             doorDisplayDirty = false;
         }
         updateDoorAnimation(delta);
-        Gdx.gl.glClearColor(0.9f, 0.2f, 0.2f, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         controllerSelect();
         stage.act(delta);
         updateDoorAnimation(delta);
         stage.draw();
+
     }
 
     @Override

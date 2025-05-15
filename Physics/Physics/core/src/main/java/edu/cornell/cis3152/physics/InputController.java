@@ -81,6 +81,7 @@ public class InputController {
     /** How much did we move vertically? */
     private float vertical;
     private float verticalPrevious;
+    private boolean throwPrevious;
     /** Are we throwing? */
     private boolean throwing;
     /** Do we want assist parabola? */
@@ -130,7 +131,7 @@ public class InputController {
      * Returns if the throw button was pressed
      */
     public boolean getThrowing() {
-        return throwing;
+        return throwing && !throwPrevious;
     }
 
     /**
@@ -273,6 +274,7 @@ public class InputController {
         nextPrevious = nextPressed;
         prevPrevious = prevPressed;
         verticalPrevious = vertical;
+        throwPrevious = throwPressed;
 
         // Check to see if a GamePad is connected
         if (xbox != null && xbox.isConnected()) {

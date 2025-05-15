@@ -1,5 +1,5 @@
 {
-    "activeFile": "level1.tmj",
+    "activeFile": "level4.tmj",
     "expandedProjectPaths": [
         "."
     ],
@@ -211,8 +211,8 @@
             "scale": 0.125,
             "selectedLayer": 7,
             "viewCenter": {
-                "x": 6300,
-                "y": 3004
+                "x": 8224,
+                "y": 2300
             }
         },
         "level10.tmj": {
@@ -241,8 +241,8 @@
             "scale": 0.180796875,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 298.6777288047706,
-                "y": 5390.026791115721
+                "x": 4629.504796473944,
+                "y": 3531.587589663815
             }
         },
         "level3.tmj": {
@@ -261,8 +261,8 @@
             "scale": 0.33,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 5398.484848484848,
-                "y": 2698.484848484848
+                "x": 6936.363636363636,
+                "y": 2022.7272727272727
             }
         },
         "level5.tmj": {
@@ -586,7 +586,8 @@
         "advanced_movement.tmj",
         "BackgroundAssets.tsx",
         "level4.tmj",
-        "level1.tmj"
+        "level1.tmj",
+        "level2.tmj"
     ],
     "project": "tiled.tiled-project",
     "property.type": "string",
@@ -596,13 +597,13 @@
         "rune_medium.tmj",
         "advanced_movement.tmj",
         "BackgroundAssets.tsx",
-        "level4.tmj",
+        "level2.tmj",
         "level1.tmj",
+        "level4.tmj",
         "rune_hard.tmj",
         "jump_intro.tmj",
         "move_intro.tmj",
-        "throw_intro.tmj",
-        "climb_intro.tmj"
+        "throw_intro.tmj"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.type": 1

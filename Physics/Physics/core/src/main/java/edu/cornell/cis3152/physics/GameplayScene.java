@@ -398,6 +398,8 @@ public class GameplayScene implements Screen {
      */
     protected GameplayScene(AssetDirectory directory, SoundEngine soundEngine, String  prefix) {
         this.directory = directory;
+        introFading = true;
+        fadeTime = 0f;
         constants = directory.getEntry(prefix+"-constants",JsonValue.class);
         JsonValue defaults = constants.get("world");
         torchHoldState = directory.getEntry("torchHoldState",JsonValue.class);
@@ -1804,7 +1806,7 @@ private int pcunt = 1;
 
     // Camera player not light camera (light camera updated internally) but movements
     // here are for the camera that follows player (?)
-    private void updateCamera() {
+    public void updateCamera() {
 //        System.out.println();
 
         float prevX = camera.position.x;
@@ -1911,7 +1913,7 @@ private int pcunt = 1;
             CollisionFlag todo_action = todos.pop();
             switch (todo_action.getName()) {
                 case "addTorch":
-                    if (!avatar.getHasTorch()) {
+                    if (!avatar.getHasTorch() && torch.canBePickedUp()) {
                         avatar.attachTorchToAvatar(torch);
                         avatar.setHasTorch(true);
                         torch.getObstacle().setGravityScale(0);
@@ -2339,6 +2341,7 @@ private int pcunt = 1;
         // Clear the screen (color is homage to the XNA years)
 //        ScreenUtils.clear(0.17f, 0.28f, 0.35f, 1.0f);
         ScreenUtils.clear(0,0,0,1);
+
         // This shows off how powerful our new SpriteBatch is
         fitViewport.apply();
         batch.begin(camera);
@@ -2466,15 +2469,26 @@ private int pcunt = 1;
      *
      * @param delta Number of seconds since last animation frame
      */
+    @Override
     public void render(float delta) {
+        ScreenUtils.clear(0, 0, 0, 1);
         if (active) {
             if (preUpdate(delta)) {
-                update(delta); // This is the one that must be defined.
+                update(delta);
                 postUpdate(delta);
             }
-            draw(delta);
         }
+        if (introFading) {
+            draw(delta);
+            updateCamera();
+            if (renderFadeInOverlay(batch, delta)) {
+                introFading = false;
+            }
+            return;
+        }
+        draw(delta);
     }
+
 
     /**
      * Called when the Screen is paused.
@@ -2632,6 +2646,37 @@ private int pcunt = 1;
                 fire.setLightJoint(null);
                 fire.setLighting(null);
         }
+    }
+
+    public void forceNWorldStep(int n) {
+        world.step(1/60f * n,WORLD_VELOC,WORLD_POSIT);
+        updateCamera();
+    }
+
+    private boolean introFading = false;
+    private float introFadeTime = 0f;
+    private final float introfadeDuration = 1f;
+
+    public boolean renderFadeInOverlay(SpriteBatch batch, float dt) {
+        fadeTime += dt;
+        float alpha = 1f - Math.min(fadeTime / fadeDuration, 1f);
+
+        // Black overlay
+        batch.begin();
+        batch.setColor(1f,1f,1f, alpha);
+        batch.draw(blackTexture,
+            0, 0,
+            bounds.width * phyiscsUnits,
+            bounds.height * phyiscsUnits);
+
+        batch.setColor(Color.WHITE);
+        batch.end();
+
+        if (fadeTime >= fadeDuration) {
+            introFading = false;
+            return true;
+        }
+        return false;
     }
 
 }

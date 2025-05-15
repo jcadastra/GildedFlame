@@ -244,7 +244,7 @@ public class GDXRoot extends Game implements ScreenListener {
 
     public void swapCreateLevelSelect() {
         if (levelSelectScene == null) {
-            levelSelectScene = new LevelSelectScene();
+            levelSelectScene = new LevelSelectScene(soundEngine);
             levelSelectScene.setScreenListener(this);
         }
         setScreen(levelSelectScene);
@@ -263,9 +263,8 @@ public class GDXRoot extends Game implements ScreenListener {
         soundEngine.startMusicLoop(temp);
         currentScene.clearLevel();
         current = (level) % levels.length;
-        System.out.println();
         currentScene.levelName = levels[current];
-        setScreen(currentScene);
+        setScreenWithTransition(currentScene, "First Steps");
         System.out.println("done loading level " + levels[current]);
     }
 
@@ -293,5 +292,14 @@ public class GDXRoot extends Game implements ScreenListener {
         failure.setScreenListener(this);
         setScreen(failure);
         soundEngine.failureSound();
+    }
+
+    public void setScreenWithTransition(Screen next, String transitionText) {
+        Screen current = getScreen();
+        if (current != null && !(current instanceof TransitionScreen)) {
+            setScreen(new TransitionScreen(current, next, this, transitionText));
+        } else {
+            setScreen(next);
+        }
     }
 }

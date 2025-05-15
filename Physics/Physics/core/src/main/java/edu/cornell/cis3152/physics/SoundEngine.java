@@ -79,7 +79,7 @@ public class SoundEngine {
     }
 
     public void tendToMusicLoop() {
-        if (activeMusic.size() == 0) return;
+        if (activeMusic.isEmpty()) return;
         if (!activeMusic.get(activeMusicIndex).isPlaying()) {
             activeMusicIndex = (activeMusicIndex + 1) % activeMusic.size();
             activeMusic.get(activeMusicIndex).play();
