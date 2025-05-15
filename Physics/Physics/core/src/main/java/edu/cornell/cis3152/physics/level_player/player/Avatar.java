@@ -930,7 +930,7 @@ public class Avatar extends ObstacleSprite {
                     sndSrcIndex = effectsFrameIndex * EFFECTS_FRAME_WIDTH;
                     animationTexture = hasTorch ? animationTextureJumpTorchUp : animationTextureJumpNoTorchUp;
                     batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits() * 1.5f, srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, !isFacingRight(), false);
-                    batch.draw(secondAnimationTexture, initialJumpLocation.x, initialJumpLocation.y, getUnits(), getUnits() * 1.5f, sndSrcIndex, 0, EFFECTS_FRAME_WIDTH, EFFECTS_FRAME_HEIGHT, !isFacingRight(), false);
+                    batch.draw(secondAnimationTexture, initialJumpLocation.x, initialJumpLocation.y, getUnits(), getUnits() * 2f, sndSrcIndex, 0, EFFECTS_FRAME_WIDTH, EFFECTS_FRAME_HEIGHT, !isFacingRight(), false);
                     break;
                 case (0):
                     doOnce2 = false;
