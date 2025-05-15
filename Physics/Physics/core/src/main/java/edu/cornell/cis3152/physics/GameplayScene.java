@@ -985,23 +985,50 @@ private int pcunt = 1;
                     } else if (objName.contains("qb")) {
                         float width = object.getFloat("width") / levelData.getInt("tilewidth");
                         float height = object.getFloat("height") / levelData.getInt("tileheight");
-                        GameObject qb = new GameObject(x +width/2, y+height/2, width, height, units, false);
+                        float[] hitbox;
+                        if (objName.equals("qb1") || objName.equals("qb2")) {
+                            hitbox = new float[]{
+                                -(width) / 2.2f, -(height) / 2f,
+                                (width) / 2.2f, -(height) / 2f,
+
+                                (width) / 2.2f, (height * .5f) / 2f,
+                                -(width) / 2.2f, (height * .5f) / 2f
+                            };
+                        } else {
+                            hitbox = new float[]{
+                                -(width) / 2.2f, -(height) / 2f,
+                                (width) / 2.2f, -(height) / 2f,
+
+                                (width) / 2.2f, (height * .11f) / 2f,
+                                -(width) / 2.2f, (height * .11f) / 2f
+                            };
+                        }
+                        GameObject qb = new GameObject(hitbox, x + width/2,y + height/2, width, height, units);
+                        JsonValue properties = object.get("properties");
+                        float rotation = 0;
+                        if (properties != null) {
+                            for (JsonValue prop : properties) {
+                                String propName = prop.getString("name");
+                                String value = prop.getString("value");
+                                switch (propName) {
+                                    case "flipHorizontally":
+                                        qb.flipX = Boolean.parseBoolean(value);
+                                        break;
+                                    case "rotation":
+                                        if (value != null) {
+                                            rotation = Float.parseFloat(value);
+                                        }
+                                }
+                            }
+                        }
                         qb.setTexture(directory.getEntry(objName, Texture.class));
                         qb.getObstacle().setBodyType(BodyType.StaticBody);
                         qb.getObstacle().setName("platformwall");
                         qb.getObstacle().setPhysicsUnits(units);
                         qb.getObstacle().setFriction(1f);
-                        JsonValue properties = object.get("properties");
-                        for (JsonValue prop : properties) {
-                            String propName = prop.getString("name");
-                            String value = prop.getString("value");
-                            switch (propName) {
-                                case "flipHorizontally":
-                                    qb.flipX = Boolean.parseBoolean(value);
-                            }
-                        }
                         System.out.println("flipping" + qb.flipX);
                         addSprite(qb);
+                        qb.getObstacle().setAngle((float) Math.toRadians(rotation));
                     } else if (objName.contains("burnable")) {
                         float width = object.getFloat("width") / levelData.getInt("tilewidth");
                         float height = object.getFloat("height") / levelData.getInt("tileheight");
