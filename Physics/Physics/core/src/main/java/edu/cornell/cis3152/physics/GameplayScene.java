@@ -1376,6 +1376,7 @@ private int pcunt = 1;
                             world.createJoint(pinJoint);
                         } else if (dynamic2) {
                             rope.deactivateAnchor(1);
+                            System.out.println("ENDING");
                         }
                     }
 

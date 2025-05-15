@@ -1,5 +1,5 @@
 {
-    "activeFile": "advanced_movement.tmj",
+    "activeFile": "level1.tmj",
     "expandedProjectPaths": [
         "."
     ],
@@ -92,15 +92,15 @@
         },
         "advanced_movement.tmj": {
             "expandedObjectLayers": [
-                5,
+                2,
                 6,
-                2
+                5
             ],
             "scale": 0.33,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 3030.3030303030305,
-                "y": 3392.424242424243
+                "x": 4798.484848484848,
+                "y": 2698.484848484848
             }
         },
         "box_intro.tmj": {
@@ -208,11 +208,11 @@
             "expandedObjectLayers": [
                 7
             ],
-            "scale": 0.2789,
-            "selectedLayer": 5,
+            "scale": 0.125,
+            "selectedLayer": 7,
             "viewCenter": {
-                "x": 5353.173180351381,
-                "y": 4849.408390103979
+                "x": 2872,
+                "y": 2356
             }
         },
         "level10.tmj": {
@@ -258,11 +258,11 @@
                 7,
                 5
             ],
-            "scale": 0.1914,
-            "selectedLayer": 5,
+            "scale": 0.33,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": 9294.670846394984,
-                "y": 3665.099268547545
+                "x": 5609.090909090908,
+                "y": 2668.181818181818
             }
         },
         "level5.tmj": {
@@ -396,8 +396,8 @@
             "scale": 0.25,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 4776,
-                "y": 2678
+                "x": 4806,
+                "y": 4550
             }
         },
         "sample.tmj": {
@@ -584,7 +584,9 @@
         "mothDecoratives.tsx",
         "rune_medium.tmj",
         "advanced_movement.tmj",
-        "BackgroundAssets.tsx"
+        "BackgroundAssets.tsx",
+        "level4.tmj",
+        "level1.tmj"
     ],
     "project": "tiled.tiled-project",
     "property.type": "string",
@@ -592,15 +594,15 @@
         "GameObjectTiles.tsx",
         "mothDecoratives.tsx",
         "rune_medium.tmj",
-        "BackgroundAssets.tsx",
         "advanced_movement.tmj",
+        "BackgroundAssets.tsx",
+        "level4.tmj",
+        "level1.tmj",
         "rune_hard.tmj",
         "jump_intro.tmj",
         "move_intro.tmj",
         "throw_intro.tmj",
-        "climb_intro.tmj",
-        "box_intro.tmj",
-        "totem_intro.tmj"
+        "climb_intro.tmj"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.type": 1

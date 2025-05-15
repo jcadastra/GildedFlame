@@ -247,7 +247,7 @@ public class Rope extends ObstacleGroup {
 
     public void customRopeDesignation(Texture end1Texture, Texture ropeCoreTexture, Texture end2Texture, String end1Material, String ropeCoreMaterial, String end2Material) {
         anchors.get(0).setMaterial(new ObstacleMaterial(end1Material));
-        anchors.get(1).setTexture(end1Texture);
+        anchors.get(0).setTexture(end1Texture);
 
         for (EnhancedObstacleSprite sprite : nodes) {
             sprite.setTexture(ropeCoreTexture);
