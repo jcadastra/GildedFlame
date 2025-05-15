@@ -198,25 +198,63 @@ public class FailureScene implements Screen {
             if(frameTimer >= FRAME_DURATION) {
                 frameTimer = 0f;
                 currentFrameIndex++;
-                if(currentFrameIndex >= TOTAL_FRAMES) {
+                if(currentFrameIndex >= TOTAL_FRAMES && death_code != 1) {
                     currentFrameIndex = TOTAL_FRAMES - 1;
                     animationFinished = true;
+                }
+                else if(currentFrameIndex >= TOTAL_FRAMES) {
+                    currentFrameIndex = 0;
                 }
             }
         }
         int srcX = currentFrameIndex*FRAME_WIDTH;
         int srcY = 0;
+        if (death_code == 0) {
+            int framesPerRow = 5;
+            int row = currentFrameIndex / framesPerRow;
+            int col = currentFrameIndex % framesPerRow;
+
+            srcX = col * FRAME_WIDTH;
+            srcY = row * FRAME_HEIGHT;
+        }
+
         stage.getBatch().begin();
-        stage.getBatch().draw(
-                animationTexture,
-                screenWidth * 0.1f,
-                screenHeight * 0.2f,
-                screenWidth * 0.4f,
-                screenHeight * 0.5f,
-                srcX, srcY,
-                FRAME_WIDTH, FRAME_HEIGHT,
-                false, false
-        );
+        if (death_code == 1) {
+            stage.getBatch().draw(
+                    animationTexture,
+                    screenWidth * 0.25f,
+                    screenHeight * 0.2f,
+                    screenWidth * 0.204f,
+                    screenHeight * 0.6f,
+                    srcX, srcY,
+                    FRAME_WIDTH, FRAME_HEIGHT,
+                    false, false
+            );
+        }
+        else if (death_code == 0) {
+            stage.getBatch().draw(
+                    animationTexture,
+                    screenWidth * 0.2f,
+                    screenHeight * 0.2f,
+                    screenWidth * 0.4f,
+                    screenHeight * 0.5f,
+                    srcX, srcY,
+                    FRAME_WIDTH, FRAME_HEIGHT,
+                    false, false
+            );
+        }
+        else {
+            stage.getBatch().draw(
+                    animationTexture,
+                    screenWidth * 0.1f,
+                    screenHeight * 0.2f,
+                    screenWidth * 0.4f,
+                    screenHeight * 0.5f,
+                    srcX, srcY,
+                    FRAME_WIDTH, FRAME_HEIGHT,
+                    false, false
+            );
+        }
         stage.getBatch().end();
     }
 
