@@ -262,6 +262,7 @@ public boolean locked = false;
                     srcIndex = Math.min(frameIndex, FREEZE_TOTAL_FRAMES - 1) * FRAME_SIZE;
                     if (freezeRight && isFacingRight()){
                         batch.draw(freezeLeftAnimationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits(), srcIndex, 0, FRAME_SIZE, FRAME_SIZE, false, false);
+
                     } else if (freezeRight && !isFacingRight()){
                         batch.draw(freezeRightAnimationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits(), srcIndex, 0, FRAME_SIZE, FRAME_SIZE, true, false);
                     } else if (!freezeRight && isFacingRight()){
@@ -270,10 +271,12 @@ public boolean locked = false;
                         batch.draw(freezeLeftAnimationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits(), srcIndex, 0, FRAME_SIZE, FRAME_SIZE, true, false);
 
                     }
+
                 }
                 break;
 
             case OUT_OF_LIGHT:
+
                 srcIndex = idleFrameIndex * FRAME_SIZE;
                 batch.draw(idleAnimationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits(), srcIndex, 0, FRAME_SIZE, FRAME_SIZE, !isFacingRight(), false);
                 break;
