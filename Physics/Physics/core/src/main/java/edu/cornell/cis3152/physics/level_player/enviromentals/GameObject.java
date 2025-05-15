@@ -145,11 +145,9 @@ public class GameObject extends EnhancedObstacleSprite {
                 -(width * widthFactor)/2,-(physHeight/2),
                 (width * widthFactor)/2,-(physHeight/2),
 
-                (width * widthFactor)/2,physHeight/2.5f,
                 (width * widthFactor)/2.05f,physHeight/2,
 
                 -(width * widthFactor)/2.05f,physHeight/2,
-                -(width * widthFactor)/2,physHeight/2.5f
             };
         }
 
