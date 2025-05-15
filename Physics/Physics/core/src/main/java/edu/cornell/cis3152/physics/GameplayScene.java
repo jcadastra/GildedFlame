@@ -1098,6 +1098,9 @@ private int pcunt = 1;
                             switch (propName) {
                                 case "destinations":
                                     destinations.addAll(Arrays.asList(value.split(",")));
+                                    for (int i = 0 ; i < destinations.size() ; i++) {
+                                        if (destinations.get(i).equals("player")) destinations.set(i, "traci");
+                                    }
                                     break;
                                 case "secondsToHover":
                                     cameraHoverVals.addAll(Arrays.asList(value.split(",")));
@@ -1107,9 +1110,11 @@ private int pcunt = 1;
                                     break;
                             }
                         }
+                        System.out.println(travel +", camera added ,"+ destinations + cameraHoverVals);
                         Vector2 prevLocation = new Vector2(camera.position.x, camera.position.y);
                         for (int i = 0 ; i < destinations.size() ; i++) {
                             int finalI = i;
+                            System.out.println(destinations.get(finalI));
                             ObstacleSprite target = sprites.stream().filter(sprite -> sprite.getName().equals(destinations.get(finalI))).findFirst().orElse(null);
                             EventAction<Vector2> moveAction = new EventAction<Vector2>(camera, "moveCamera", prevLocation, target.getObstacle().getPosition(), Float.parseFloat(travel.get(i)), Interpolation.smoother::apply);
                             Vector2 finalPrevLocation = prevLocation;
@@ -1118,7 +1123,6 @@ private int pcunt = 1;
 
                             prevLocation = target.getObstacle().getPosition();
                         }
-                        System.out.println(travel +", camera added ,"+ destinations + travel);
                     } else if (objName.contains("Background")) {
                         GameObject background = new GameObject(0, 0, width, height, units, true);
                         background.getObstacle().setSensor(true);
@@ -1562,16 +1566,19 @@ private int pcunt = 1;
      */
     public void update(float dt) {
         soundEngine.tendToMusicLoop();
+        eventHandler.update();
+        updateCamera();
         if (!cameraArrived) {
             updateTweenedMovementObjectsVec2(dt);
+            System.out.println("inner");
         }
-        updateTweenedMovementObjectsFloat(dt);
 
         if (!cameraHoverVals.isEmpty()) {
             beginningCameraMovement();
             return;
         }
 
+        updateTweenedMovementObjectsFloat(dt);
         torch.onRight = avatar.isFacingRight();
 //        System.out.println(Gdx.graphics.getFramesPerSecond());
 //        SavedDataHandler temp = new SavedDataHandler();
@@ -1600,7 +1607,6 @@ private int pcunt = 1;
 //        weatherMachine.activateWind(new Vector2(0f,0));
         weatherMachine.update(world);
         fireController.update(weatherMachine);
-        eventHandler.update();
         contactListener.sustainedContact();
         //TODO:Attach light joints
         lightController.update(fireController,true);
@@ -1739,7 +1745,6 @@ private int pcunt = 1;
 //                sprite.getObstacle().getBody().applyForceToCenter(new Vector2(1f,0f), true);
 //            }
 //        }
-        updateCamera();
     }
 
     private void beginningCameraMovement() {

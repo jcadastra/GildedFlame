@@ -58,6 +58,7 @@ public class EventHandler {
         return testEventHelper(event);
     }
     private static <T> boolean testEventHelper(Event<T,?> event) {
+        System.out.println(event.getter.get());
         return  event.conditional.test(event.getter.get());
     }
 
