@@ -1548,8 +1548,6 @@ private int pcunt = 1;
 
         soundEngine.tendToMusicLoop();
         torch.onRight = avatar.isFacingRight();
-        System.out.println("pos: " +avatar.getObstacle().getPosition());
-        System.out.println("rhs: " +(avatar.getObstacle().getPosition().x + avatar.getWidth()/2f));
 //        System.out.println(Gdx.graphics.getFramesPerSecond());
 //        SavedDataHandler temp = new SavedDataHandler();
 //        temp.setDataVal("test" + Gdx.graphics.getFrameId(), Gdx.graphics.getFramesPerSecond());
