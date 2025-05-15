@@ -136,7 +136,7 @@ public class MainMenuScreen implements Screen {
             @Override
             public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
                                      float x, float y, int pointer, int button) {
-                System.out.println("ImageButton pressed");
+//                System.out.println("ImageButton pressed");
                 soundEngine.playSoundEffect("clickSound");
                 startClicked = true;
                 if (listener != null) {
@@ -150,12 +150,12 @@ public class MainMenuScreen implements Screen {
             public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
                                      float x, float y, int pointer, int button) {
                 soundEngine.playSoundEffect("clickSound");
-                System.out.println("ImageButton pressed");
+//                System.out.println("ImageButton pressed");
                 startClicked = true;
                 if (listener != null) {
                     SavedDataHandler handler = new SavedDataHandler();
                     String lastCompleted = handler.getDataVal("lastLevel");
-                    System.out.println("last completed" +lastCompleted);
+//                    System.out.println("last completed" +lastCompleted);
                     int nextLevel = 1;
                     try {
                         if (lastCompleted != null) {
@@ -182,7 +182,7 @@ public class MainMenuScreen implements Screen {
             public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
                                      float x, float y, int pointer, int button) {
                 soundEngine.playSoundEffect("clickSound");
-                System.out.println("ImageButton pressed");
+//                System.out.println("ImageButton pressed");
                 startClicked = true;
                 if (listener != null) {
                     listener.exitScreen(MainMenuScreen.this, 2);

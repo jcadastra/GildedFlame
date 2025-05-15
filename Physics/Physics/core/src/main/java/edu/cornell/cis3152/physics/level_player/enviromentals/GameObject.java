@@ -1,6 +1,7 @@
 package edu.cornell.cis3152.physics.level_player.enviromentals;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -29,6 +30,7 @@ public class GameObject extends EnhancedObstacleSprite {
     private float width;
     private float units;
     private Path2 sensorOutline;
+    public boolean flipX;
 
     /**
      * Creates a GameObject with a hardcoded shape, generic object that is enhanced
@@ -161,6 +163,17 @@ public class GameObject extends EnhancedObstacleSprite {
         PathFactory factory = new PathFactory();
 
         factory.makeRect(-halfW * u, -halfH * u, 2*halfW  * u, 2*halfH * u, sensorOutline);
+    }
+
+    private final Affine2 flipCache = new Affine2();
+    @Override
+    public void draw(SpriteBatch batch) {
+        if (!flipX) {
+            flipCache.setToScaling( 1,1 );
+        } else {
+            flipCache.setToScaling( -1,1 );
+        }
+        super.draw(batch,flipCache);
     }
 
     @Override

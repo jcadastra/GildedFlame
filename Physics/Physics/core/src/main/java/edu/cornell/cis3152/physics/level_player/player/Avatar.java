@@ -65,11 +65,15 @@ public class Avatar extends ObstacleSprite {
     public static final short CATEGORY_LIGHT = 0x0008;  // 00001000
     public static final int TOTAL_FRAMES = 6;
     public static final int TOTAL_JUMP_UP_FRAMES = 4;
-    public static final int TOTAL_JUMP_FALL_FRAMES = 4;
+    public static final int TOTAL_JUMP_FALL_FRAMES = 2;
+    public static final int TOTAL_DUST_FRAMES = 10;
     public static final int TOTAL_JUMP_LAND_FRAMES = 2;
     public static final int FRAME_HEIGHT = 550;
     public static final int FRAME_WIDTH = 350;
 
+    public static final int EFFECTS_FRAME_HEIGHT = 300;
+    public static final int EFFECTS_FRAME_WIDTH = 400;
+    private static final int EFFECTS_FRAME_DURATION = 8;
     public static final int MOVEMENT_FRAME_DURATION = 16;
     public static final int THROW_TOTAL_FRAMES = 3;
     public static final int THROW_FRAME_DURATION = 6;
@@ -99,6 +103,7 @@ public class Avatar extends ObstacleSprite {
     private static Texture animationTextureClimbUp;
     private static Texture animationTextureClimbDown;
     private static Texture animationTextureDeath;
+    private static Texture animationTextureDust;
     /**
      * Whether the player has torch in hand
      */
@@ -189,6 +194,7 @@ public class Avatar extends ObstacleSprite {
      */
     private boolean isShooting;
     private boolean doOnce;
+    private boolean doOnce2;
     /**
      * The outline of the sensor obstacle
      */
@@ -199,6 +205,8 @@ public class Avatar extends ObstacleSprite {
     private String sensorName;
     private int cdFrameCount = 0;
     private int frameIndex = 0;
+    private int effectsFrameIndex = 0;
+    public int getFrameIndex() {return frameIndex;}
     private Vector2 prevPosition;
     private final boolean startSwitch = true;
     private int throwFrameIndex = 0;
@@ -209,6 +217,7 @@ public class Avatar extends ObstacleSprite {
     private boolean hadTorch;
     private float deathOpacity = 0f;
     private int jumpDeadTimer = 0;
+    private Vector2 initialJumpLocation;
     public void setJumpDeadTimer() {jumpDeadTimer = 20;}
     public boolean jumpDeadTimerAvaliable() {return jumpDeadTimer <= 0;}
 
@@ -252,17 +261,20 @@ public class Avatar extends ObstacleSprite {
         animationTextureClimbUp = directory.getEntry("platform-playerCLIMBUP", Texture.class);
         animationTextureClimbDown = directory.getEntry("platform-playerCLIMBDOWN", Texture.class);
         animationTextureDeath = directory.getEntry("platform-playerDEATH", Texture.class);
+        animationTextureDust = directory.getEntry("platform-playerDUSTANIMATION", Texture.class);
 
 
         // The capsule is smaller than the image
         // "inner" is the fraction of the original size for the capsule
         width = s * data.get("inner").getFloat(0);
         height = s * data.get("inner").getFloat(1);
-        obstacle = new CapsuleObstacle(x, y, width, height);
+        obstacle = new CapsuleObstacle(x, y, width/2, height );
         ((CapsuleObstacle) obstacle).setTolerance(debugInfo.getFloat("tolerance", 0.5f));
 
         obstacle.setDensity(data.getFloat("density", 0));
+        obstacle.setDensity(obstacle.getDensity() * (2.45f));
         obstacle.setFriction(data.getFloat("friction", 0));
+//        obstacle.setFriction(1f);
         obstacle.setRestitution(data.getFloat("restitution", 0));
         obstacle.setFixedRotation(true);
         obstacle.setPhysicsUnits(units);
@@ -675,7 +687,8 @@ public class Avatar extends ObstacleSprite {
             if (isJumping()) {
                 removeClimbingPhysics();
                 obstacle.setLinearVelocity(Vector2.Zero);
-                forceCache.set(0, jump_force);
+                float modifJumpForce = jump_force * 1;
+                forceCache.set(0, modifJumpForce);
                 body.applyLinearImpulse(forceCache, pos, true);
             }
         } else {
@@ -699,7 +712,8 @@ public class Avatar extends ObstacleSprite {
             }
 
             if (isJumping()) {
-                forceCache.set(0, jump_force);
+                float modifJumpForce = jump_force * 1;
+                forceCache.set(0, modifJumpForce);
                 body.applyLinearImpulse(forceCache, pos, true);
             }
         }
@@ -709,6 +723,12 @@ public class Avatar extends ObstacleSprite {
         getObstacle().getBody().setGravityScale(0);
         getObstacle().setFixedRotation(false);
         applyWeightToClimbable(bodyTouchedClimbables);
+        System.out.println(getVelocity() + "daw");
+        for (EnhancedObstacleSprite obj : bodyTouchedClimbables) {
+            if (!obj.getObstacle().isRemoved()) {
+                obj.getObstacle().getBody().applyForceToCenter(new Vector2(getVelocity().x / 7f,0), true);
+            }
+        }
     }
 
     public void removeClimbingPhysics() {
@@ -719,11 +739,11 @@ public class Avatar extends ObstacleSprite {
     }
 
 
-    public JointDef attachTorchToAvatar(Torch t) {
-        WeldJointDef jointDef = new WeldJointDef();
-        jointDef.initialize(obstacle.getBody(), t.getObstacle().getBody(), t.getObstacle().getPosition());
-        jointDef.collideConnected = false;
-        return jointDef;
+    public void attachTorchToAvatar(Torch t) {
+        obstacle.setMass(obstacle.getMass() + t.getObstacle().getMass());
+    }
+    public void dropTorchPhys(Torch t) {
+        obstacle.setMass(obstacle.getMass() - t.getObstacle().getMass());
     }
 
     /**
@@ -754,7 +774,7 @@ public class Avatar extends ObstacleSprite {
 
         if (prevPosition != null) {
             float deltaY = getLocation().y - prevPosition.y;
-            final float EPSILON = 0.01f;
+            final float EPSILON = 0.05f;
 
             if (deltaY < -EPSILON) {
                 setIsFalling(-1);
@@ -843,7 +863,9 @@ public class Avatar extends ObstacleSprite {
         float drawX = obstacle.getX() - getWidth() / 2f;
         float drawY = obstacle.getY() - getHeight() / 2f;
         Texture animationTexture;
+        Texture secondAnimationTexture;
         int srcIndex;
+        int sndSrcIndex;
         if (groundState == GroundState.DEAD) {
             cdFrameCount++;
             frameIndex = Math.min((cdFrameCount / DEATH_FRAME_DURATION), DEATH_TOTAL_FRAMES - 1);
@@ -876,25 +898,38 @@ public class Avatar extends ObstacleSprite {
                     if (reachedApex) {
                         resetJumpFrames();
                     }
+
                     jumpFrameCount++;
                     frameIndex = (jumpFrameCount / JUMP_FRAME_DURATION) % TOTAL_JUMP_FALL_FRAMES;
                     srcIndex = frameIndex * FRAME_WIDTH;
                     animationTexture = hasTorch ? animationTextureJumpTorchFall : animationTextureJumpNoTorchFall;
+
                     justLanded = true;
                     doOnce = true;
+                    doOnce2 = false;
                     batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits() * 1.5f, srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, !isFacingRight(), false);
                     break;
                 case (1):
+
                     jumpFrameCount++;
                     frameIndex = Math.min((jumpFrameCount / JUMP_FRAME_DURATION), TOTAL_JUMP_UP_FRAMES - 1);
+                    effectsFrameIndex = (jumpFrameCount / EFFECTS_FRAME_DURATION) % TOTAL_DUST_FRAMES;
+                    secondAnimationTexture = animationTextureDust;
+                    if (!doOnce2){
+                        initialJumpLocation = new Vector2(drawX * getUnits(), drawY * getUnits() - 24f);
+                    }
                     if (frameIndex == TOTAL_JUMP_UP_FRAMES - 1) {
                         reachedApex = true;
                     }
+                    doOnce2 = true;
                     srcIndex = frameIndex * FRAME_WIDTH;
+                    sndSrcIndex = effectsFrameIndex * EFFECTS_FRAME_WIDTH;
                     animationTexture = hasTorch ? animationTextureJumpTorchUp : animationTextureJumpNoTorchUp;
                     batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits() * 1.5f, srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, !isFacingRight(), false);
+                    batch.draw(secondAnimationTexture, initialJumpLocation.x, initialJumpLocation.y, getUnits(), getUnits() * 1.5f, sndSrcIndex, 0, EFFECTS_FRAME_WIDTH, EFFECTS_FRAME_HEIGHT, !isFacingRight(), false);
                     break;
                 case (0):
+                    doOnce2 = false;
                     if (prevFalling != -1) {
                         frameIndex = TOTAL_JUMP_UP_FRAMES - 1;
                         srcIndex = frameIndex * FRAME_WIDTH;
@@ -931,6 +966,24 @@ public class Avatar extends ObstacleSprite {
             animationTexture = hasTorch ? animationTextureIdleTorch : animationTextureIdleNoTorch;
             batch.draw(animationTexture, drawX * getUnits(), drawY * getUnits(), getUnits(), getUnits() * 1.5f, srcIndex, 0, FRAME_WIDTH, FRAME_HEIGHT, !isFacingRight(), false);
         }
+    }
+    public String getTorchFrameAnimationName() {
+        if (getGroundedState() == GroundState.AIRBORNE) {
+            switch (isFalling) {
+                case (-1):
+                    return "JumpFall";
+                case (1):
+                    return "JumpUp";
+                case (0):
+                    return "JumpFall";
+            }
+        } else if (groundState == GroundState.GROUNDED && getMovement() != null
+            && Math.abs(getMovement().x) > 0.001f) {
+            return "Move";
+        } else {
+            return "Idle";
+        }
+        return "Idle";
     }
 
     /**

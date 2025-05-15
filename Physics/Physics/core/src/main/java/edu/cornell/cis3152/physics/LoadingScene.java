@@ -340,12 +340,10 @@ public class LoadingScene implements Screen, InputProcessor {
                 boolean pressA = inputController.xbox.getA();
                 if (pressA && !prevButtonA) {//simulate push down
                     pressState = 1;
-                    //System.out.println("pressed");
                 }
                 if (!pressA && prevButtonA && pressState == 1) {//simulate push up
                     // A was just released
                     pressState = 2;
-                    //System.out.println("released");
                 }
                 prevButtonA = pressA;
             }

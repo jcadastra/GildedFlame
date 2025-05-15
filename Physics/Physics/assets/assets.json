@@ -12,6 +12,10 @@
     "nonburnable": "environment/statue.png",
     "tablet": "environment/tablet.png",
     "platform": "environment/platform.png",
+    "qb1": "environment/quarterBlocks_0513/qb1.png",
+    "qb2": "environment/quarterBlocks_0513/qb2.png",
+    "qb3": "environment/quarterBlocks_0513/qb3.png",
+    "qb4": "environment/quarterBlocks_0513/qb4.png",
 
     "brickBackground": {
       "file": "backgroundAssets/brickBackground.png",
@@ -53,6 +57,17 @@
     "tJump" : "backgroundAssets/tJump.png",
     "tMove" : "backgroundAssets/tMove.png",
     "tThrow" : "backgroundAssets/tThrow.png",
+    "tMoreJump" : "backgroundAssets/tMoreJump.png",
+    "tutChest" : "backgroundAssets/tutChest.png",
+    "tutJumpPro" : "backgroundAssets/tutJumpPro.png",
+    "tutMoth" : "backgroundAssets/tutMoth.png",
+    "contClimb" : "backgroundAssets/controller/contClimb.png",
+    "contJump" : "backgroundAssets/controller/contJump.png",
+    "contJumpPro" : "backgroundAssets/controller/contJumpPro.png",
+    "contMove" : "backgroundAssets/controller/contMove.png",
+    "contThrow" : "backgroundAssets/controller/contThrow.png",
+
+
     "window": "backgroundAssets/window.png",
     "bookshelf" : "backgroundAssets/bookshelf.png",
     "banner" : "backgroundAssets/banner.png",
@@ -251,6 +266,12 @@
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
     },
+    "platform-mothJUMPANIMATION": {
+      "file": "platform/mothJumpAnimation.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
     "platform-mothCDANIMATION": {
       "file": "platform/mothCDAnimation.png",
       "mipmaps": true,
@@ -287,6 +308,12 @@
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
     },
+    "platform-playerDUSTANIMATION": {
+      "file": "platform/playerDustAnimation.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
 
     "platform-tiles": {
       "file": "tiled_images/platform1Tiled.png",
@@ -312,6 +339,7 @@
   },
   "jsons": {
     "platform-constants": "platform/constants.json",
+    "torchHoldState": "platform/torchHoldState.json",
     "spinner_layout": "platform/spinner_layout.json",
     "rope_test": "platform/rope_test.json",
     "move_intro" : "move_intro.tmj",
@@ -329,7 +357,18 @@
     "rune_intro": "rune_intro.tmj",
     "rune_medium": "rune_medium.tmj",
     "rune_hard" :  "rune_hard.tmj",
-    "example_level" : "example_level.tmj"
+    "example_level" : "example_level.tmj",
+    "harvey_test" : "harvey_test.tmj",
+    "harvey_test2" : "harvey_test2.tmj",
+    "new_1" : "new_1.tmj",
+    "new_2" : "new_2.tmj",
+    "level1" : "level1.tmj",
+    "level2" : "level2.tmj",
+    "level3" : "level3.tmj",
+    "level4" : "level4.tmj",
+    "level5" : "level5.tmj",
+    "rune_advanced" : "rune_advanced.tmj"
+
   },
   "music": {
     "eerie": "music/eerie.wav",

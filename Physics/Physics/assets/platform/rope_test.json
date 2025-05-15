@@ -133,8 +133,8 @@
           "friction": 1,
           "attackTimer": 75,
           "attackAnimationTimer": 20,
-          "smotherTimer": 300,
-          "dazedTimer": 200,
+          "smotherTimer": 600,
+          "dazedTimer": 400,
           "sensor": {
             "shrink": 0.6,
             "height": 0.05

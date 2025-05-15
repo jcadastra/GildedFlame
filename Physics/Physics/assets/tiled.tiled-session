@@ -1,5 +1,5 @@
 {
-    "activeFile": "mothDecoratives.tsx",
+    "activeFile": "advanced_movement.tmj",
     "expandedProjectPaths": [
         "."
     ],
@@ -21,8 +21,8 @@
         },
         "BackgroundAssets.tsx": {
             "dynamicWrapping": false,
-            "scaleInDock": 0.25,
-            "scaleInEditor": 0.33
+            "scaleInDock": 0.125,
+            "scaleInEditor": 0.25
         },
         "BackgroundStickers.tsx": {
             "dynamicWrapping": true,
@@ -70,7 +70,7 @@
         "GameObjectTiles.tsx": {
             "dynamicWrapping": true,
             "scaleInDock": 0.03125,
-            "scaleInEditor": 0.125
+            "scaleInEditor": 0.12
         },
         "PlatformTiles.tsx": {
             "dynamicWrapping": false,
@@ -92,14 +92,15 @@
         },
         "advanced_movement.tmj": {
             "expandedObjectLayers": [
+                5,
                 6,
-                5
+                2
             ],
             "scale": 0.33,
-            "selectedLayer": 4,
+            "selectedLayer": 5,
             "viewCenter": {
-                "x": 4778.787878787878,
-                "y": 2680.3030303030305
+                "x": 3030.3030303030305,
+                "y": 3392.424242424243
             }
         },
         "box_intro.tmj": {
@@ -319,7 +320,7 @@
         "mothDecoratives.tsx": {
             "dynamicWrapping": true,
             "scaleInDock": 1,
-            "scaleInEditor": 1
+            "scaleInEditor": 0.12
         },
         "move_intro.tmj": {
             "scale": 0.33,
@@ -369,6 +370,14 @@
                 "y": 2696.396162820845
             }
         },
+        "rune_hard.tmj": {
+            "scale": 0.180796875,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 4800.9679370840895,
+                "y": 2701.9272318727853
+            }
+        },
         "rune_intro.tmj": {
             "expandedObjectLayers": [
                 5
@@ -385,10 +394,10 @@
                 5
             ],
             "scale": 0.25,
-            "selectedLayer": 6,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": 4798,
-                "y": 2698
+                "x": 4776,
+                "y": 2678
             }
         },
         "sample.tmj": {
@@ -568,28 +577,30 @@
         }
     },
     "last.exportedFilePath": "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/assets",
-    "last.imagePath": "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/assets/backgroundAssets/mothEggsNest",
+    "last.imagePath": "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/assets/backgroundAssets",
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "openFiles": [
         "GameObjectTiles.tsx",
-        "BackgroundAssets.tsx",
-        "mothDecoratives.tsx"
+        "mothDecoratives.tsx",
+        "rune_medium.tmj",
+        "advanced_movement.tmj",
+        "BackgroundAssets.tsx"
     ],
     "project": "tiled.tiled-project",
-    "property.type": "bool",
+    "property.type": "string",
     "recentFiles": [
         "GameObjectTiles.tsx",
-        "BackgroundAssets.tsx",
         "mothDecoratives.tsx",
+        "rune_medium.tmj",
+        "BackgroundAssets.tsx",
+        "advanced_movement.tmj",
+        "rune_hard.tmj",
         "jump_intro.tmj",
         "move_intro.tmj",
         "throw_intro.tmj",
         "climb_intro.tmj",
-        "advanced_movement.tmj",
         "box_intro.tmj",
-        "totem_intro.tmj",
-        "rune_medium.tmj",
-        "rain_intro.tmj"
+        "totem_intro.tmj"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.type": 1

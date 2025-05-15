@@ -46,7 +46,7 @@ public class Enemy extends ObstacleSprite {
     private final float units;
     private final float hitboxScale;
 
-    public Enemy(int id, float units, JsonValue data, AssetDirectory directory, Vector2 position) {
+    public Enemy(int id, float units, JsonValue data, AssetDirectory directory, Vector2 position, String name) {
         Enemy.directory = directory;
         this.units = units;
         this.id = id;
@@ -68,14 +68,25 @@ public class Enemy extends ObstacleSprite {
         // helpers
         float half = size/units * 0.5f;
         float cut  = size/units * 0.05f;
-        float[] verts = {
-            half, half,
-            -half, half, //top vertices
-            -half, (-half + cut),
-            0, (-half), //bottom left slice
-            half, (-half + cut) //bottom right
+        float[] verts ;
+        if (name.equals("totem")) {
+            verts = new float[] {
+                half, half,
+                -half, half, //top vertices
+                -half, (-half + cut),
+                0, (-half), //bottom left slice
+                half, (-half + cut) //bottom right
 
-        };
+            };
+        } else {
+            verts = new float[] {
+                -0, half, //top vertices
+                -half, (-half + cut),
+                0, (-half), //bottom left slice
+                half, (-half + cut) //bottom right
+
+            };
+        }
 
         obstacle = new PolygonObstacle(verts, x, y);
         obstacle.setBodyType(BodyDef.BodyType.DynamicBody);
