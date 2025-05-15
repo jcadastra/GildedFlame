@@ -28,6 +28,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -233,6 +234,9 @@ public class GameplayScene implements Screen {
     protected FitViewport fitViewport;
     protected Random random;
     protected JsonValue torchHoldState;
+    private float internalCameraHoverVal;
+    private ArrayList<String> cameraHoverVals = new ArrayList<>();
+    private boolean cameraArrived;
 
     protected LightController lightController;
     protected ShapeRenderer shapeRenderer;
@@ -1084,6 +1088,37 @@ private int pcunt = 1;
                                     break;
                             }
                         }
+                    } else if (objName.contains("camera")) {
+                        ArrayList<String> destinations = new ArrayList<>();
+                        ArrayList<String> travel = new ArrayList<>();
+                        JsonValue properties = object.get("properties");
+                        for (JsonValue prop : properties) {
+                            String propName = prop.getString("name");
+                            String value = prop.getString("value");
+                            switch (propName) {
+                                case "destinations":
+                                    destinations.addAll(Arrays.asList(value.split(",")));
+                                    break;
+                                case "secondsToHover":
+                                    cameraHoverVals.addAll(Arrays.asList(value.split(",")));
+                                    break;
+                                case "secondsToReach":
+                                    travel.addAll(Arrays.asList(value.split(",")));
+                                    break;
+                            }
+                        }
+                        Vector2 prevLocation = new Vector2(camera.position.x, camera.position.y);
+                        for (int i = 0 ; i < destinations.size() ; i++) {
+                            int finalI = i;
+                            ObstacleSprite target = sprites.stream().filter(sprite -> sprite.getName().equals(destinations.get(finalI))).findFirst().orElse(null);
+                            EventAction<Vector2> moveAction = new EventAction<Vector2>(camera, "moveCamera", prevLocation, target.getObstacle().getPosition(), Float.parseFloat(travel.get(i)), Interpolation.smoother::apply);
+                            Vector2 finalPrevLocation = prevLocation;
+                            Event<Vector3, Vector2> moveEvent = new Event<>(camera,() -> camera.position,vec3 -> vec3.x == finalPrevLocation.x && vec3.y == finalPrevLocation.y, moveAction);
+                            eventHandler.registerEvent(moveEvent);
+
+                            prevLocation = target.getObstacle().getPosition();
+                        }
+                        System.out.println(travel +", camera added ,"+ destinations + travel);
                     } else if (objName.contains("Background")) {
                         GameObject background = new GameObject(0, 0, width, height, units, true);
                         background.getObstacle().setSensor(true);
@@ -1526,8 +1561,17 @@ private int pcunt = 1;
      * @param dt    Number of seconds since last animation frame
      */
     public void update(float dt) {
-
         soundEngine.tendToMusicLoop();
+        if (!cameraArrived) {
+            updateTweenedMovementObjectsVec2(dt);
+        }
+        updateTweenedMovementObjectsFloat(dt);
+
+        if (!cameraHoverVals.isEmpty()) {
+            beginningCameraMovement();
+            return;
+        }
+
         torch.onRight = avatar.isFacingRight();
 //        System.out.println(Gdx.graphics.getFramesPerSecond());
 //        SavedDataHandler temp = new SavedDataHandler();
@@ -1544,8 +1588,6 @@ private int pcunt = 1;
         }
         updateTorchLight();
         //updateFireLights();
-        updateTweenedMovementObjectsVec2(dt);
-        updateTweenedMovementObjectsFloat(dt);
 
         if (enemies != null) {
             for (Enemy e : enemies) {
@@ -1700,6 +1742,18 @@ private int pcunt = 1;
         updateCamera();
     }
 
+    private void beginningCameraMovement() {
+        System.out.println("beignaiwoeg");
+        if (cameraArrived && internalCameraHoverVal <= 0) {
+            internalCameraHoverVal = Float.parseFloat(cameraHoverVals.get(0));
+            cameraHoverVals.remove(0);
+        } else {
+            internalCameraHoverVal--;
+        }
+        if (internalCameraHoverVal <= 0) {
+            cameraArrived = false;
+        }
+    }
 
     public void dropTorchHelper() {
         avatar.setHasTorch(false);
@@ -2163,6 +2217,19 @@ private int pcunt = 1;
                         initialStateFloat, (Float) action.getFinalValue(), timeTill,action.getInterpolator(), supplierFloat, consumerFloat);
                     tweenedMovmentObjectsFloat.add(tweenElementFloat);
                     break;
+                case "cameraMove":
+                    System.out.println("runsupactions");
+                    float timeTillcam = action.getTime();
+
+                    Vector2 initialCamPos = new Vector2(camera.position.x,camera.position.y);
+                    Vector2 targetCamPos  = (Vector2) action.getFinalValue();
+                    Supplier<Vector2> supplierCam = () -> new Vector2(camera.position.x,camera.position.y);
+                    Consumer<Vector2> consumerCam = value -> camera.position.set(new Vector3(value.x,value.y,0));
+
+                    TweenElement<Vector2> camTween = new TweenElement<>(camera, action.getName(), initialCamPos, targetCamPos, timeTillcam,
+                        action.getInterpolator(), supplierCam, consumerCam);
+                    tweenedMovmentObjectsVec2.add(camTween);
+                    break;
             }
         }
 
@@ -2212,6 +2279,7 @@ private int pcunt = 1;
             Vector2 delta = ( (endPointZeroed.cpy()).scl(factor) ).sub( ((endPointZeroed.cpy()).scl(oldFactor)) );
             delta.scl(1/dt);
             setter.accept(delta);
+            System.out.println(delta + tweenElement.name);
 
             timer.x += dt;
 
@@ -2223,6 +2291,11 @@ private int pcunt = 1;
                 if (tweenElement.name.equals("move")) {
                     setter.accept(Vector2.Zero);
                     tweenElement.target.getObstacle().setPosition(tweenElement.finalState);
+                }
+                if (tweenElement.name.equals("moveCamera")) {
+                    setter.accept(Vector2.Zero);
+                    tweenElement.target.getObstacle().setPosition(tweenElement.finalState);
+                    cameraArrived = true;
                 }
             }
         }
@@ -2281,7 +2354,9 @@ private int pcunt = 1;
         // Turn the physics engine crank.
         // NORMALLY we would use a fixed step, not dt
         // But that is harder and a topic of the advanced class
-        world.step(1/60f,WORLD_VELOC,WORLD_POSIT);
+        if (cameraHoverVals.isEmpty()) {
+            world.step(1/60f,WORLD_VELOC,WORLD_POSIT);
+        }
 
         // Garbage collect the deleted objects.
         // Note how we use the linked list nodes to delete O(1) in place.

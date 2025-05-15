@@ -9,6 +9,7 @@ public class EventAction<T> {
      * The target which the action will apply to
      */
     private ObstacleSprite target;
+    private Object targetobj;
 
     public ObstacleSprite getTarget() {
         return target;
@@ -81,6 +82,14 @@ public class EventAction<T> {
      */
     public EventAction (ObstacleSprite target, String name, T initialValue, T finalValue, float time, Function<Float,Float> interpolator) {
         this.target = target;
+        this.name = name;
+        this.initialValue = initialValue;
+        this.finalValue = finalValue;
+        this.time = time;
+        this.interpolator = interpolator;
+    }
+    public EventAction (Object targetobj, String name, T initialValue, T finalValue, float time, Function<Float,Float> interpolator) {
+        this.targetobj = targetobj;
         this.name = name;
         this.initialValue = initialValue;
         this.finalValue = finalValue;

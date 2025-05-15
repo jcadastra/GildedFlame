@@ -292,7 +292,7 @@
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
     },
-    "rope-end": "environment/Rope/chainEnd.png",
+    "rope-end": "environment/Rope/ropeEnd.png",
     "chain-end": "environment/Rope/chainEnd.png",
     "rope-mid": "environment/Rope/ropeBody.png",
     "chain-mid": "environment/Rope/chainBody.png",

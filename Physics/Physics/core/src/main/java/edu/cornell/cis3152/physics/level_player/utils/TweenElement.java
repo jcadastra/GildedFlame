@@ -1,5 +1,6 @@
 package edu.cornell.cis3152.physics.level_player.utils;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
 import java.util.function.Consumer;
@@ -86,6 +87,20 @@ public class TweenElement <T> {
         float maxTimeSec, Function<Float, Float> interpolator, Supplier<T> supplier,
         Consumer<T> updater) {
         this.target = target;
+        this.name = name;
+        this.initalState = initialState;
+        this.finalState = finalState;
+        this.timerVector = new Vector2(0, maxTimeSec);
+        this.interpolator = interpolator;
+        this.supplier = supplier;
+        this.updater = updater;
+    }
+
+    public OrthographicCamera cam;
+    public TweenElement(OrthographicCamera cam, String name, T initialState, T finalState,
+        float maxTimeSec, Function<Float, Float> interpolator, Supplier<T> supplier,
+        Consumer<T> updater) {
+        this.cam = cam;
         this.name = name;
         this.initalState = initialState;
         this.finalState = finalState;

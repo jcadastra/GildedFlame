@@ -63,8 +63,8 @@ public class FloatingLight extends ObstacleSprite {
             this.ID = counter;
             counter++;
             isWander = false;
-            bobbingAmplitude = rand.nextFloat(0,3f);
-            bobbingFrequency = rand.nextFloat(3f,6f);
+            bobbingAmplitude = rand.nextFloat() * 3.0f;
+            bobbingFrequency = 3.0f + rand.nextFloat() * 3.0f;
         }
 
         public void update(float deltaTime) {
