@@ -1,5 +1,5 @@
 {
-    "activeFile": "level1.tmj",
+    "activeFile": "level5.tmj",
     "expandedProjectPaths": [
         "."
     ],
@@ -92,15 +92,15 @@
         },
         "advanced_movement.tmj": {
             "expandedObjectLayers": [
+                2,
                 5,
-                6,
-                2
+                6
             ],
             "scale": 0.33,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 4793.939393939394,
-                "y": 2692.4242424242425
+                "x": 4798.484848484848,
+                "y": 2698.484848484848
             }
         },
         "box_intro.tmj": {
@@ -255,8 +255,8 @@
         },
         "level4.tmj": {
             "expandedObjectLayers": [
-                5,
-                7
+                7,
+                5
             ],
             "scale": 0.33,
             "selectedLayer": 3,
@@ -266,11 +266,11 @@
             }
         },
         "level5.tmj": {
-            "scale": 0.180796875,
-            "selectedLayer": 0,
+            "scale": 0.75,
+            "selectedLayer": 4,
             "viewCenter": {
-                "x": 298.6777288047706,
-                "y": 2995.0738916256164
+                "x": 1130.6666666666665,
+                "y": 3784.666666666666
             }
         },
         "level6.tmj": {
@@ -586,7 +586,8 @@
         "advanced_movement.tmj",
         "BackgroundAssets.tsx",
         "level4.tmj",
-        "level1.tmj"
+        "level1.tmj",
+        "level5.tmj"
     ],
     "project": "tiled.tiled-project",
     "property.type": "string",
@@ -598,11 +599,11 @@
         "BackgroundAssets.tsx",
         "level4.tmj",
         "level1.tmj",
+        "level5.tmj",
         "rune_hard.tmj",
         "jump_intro.tmj",
         "move_intro.tmj",
-        "throw_intro.tmj",
-        "climb_intro.tmj"
+        "throw_intro.tmj"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.type": 1
