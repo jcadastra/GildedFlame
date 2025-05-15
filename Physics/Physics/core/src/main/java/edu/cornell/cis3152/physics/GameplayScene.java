@@ -1441,6 +1441,19 @@ public class GameplayScene implements Screen {
             pause();
             listener.exitScreen(this, EXIT_PREV);
             return false;
+        } else if (countdown > 0) {
+            countdown--;
+        } else if (countdown == 0) {
+            if (failed) {
+                pause();
+                isFadingOut = true;
+                // listener.exitScreen(this, EXIT_FAILURE);
+                return true;
+            } else if (complete) {
+                pause();
+                listener.exitScreen(this, EXIT_NEXT);
+                return false;
+            }
         }
 
         contactListener.processPendingMerges();
@@ -1450,18 +1463,18 @@ public class GameplayScene implements Screen {
             death_code = 1;
             return false;
         }
-        if (activeFireJoint == null || torch.getObstacle().getY() < 0|| queueFailure) {
+        if (!isFailure() && (activeFireJoint == null || (torch.getObstacle().getY() < -1 && avatar.getObstacle().getY() >= -1)|| queueFailureTorchOff)) {
             System.out.println((activeFireJoint == null) +", "+ (torch.getObstacle().getY() < 0)+ ", " +queueFailureTorchOff);
             System.out.println(torch.getObstacle().getPosition());
             setFailure(true);
             death_code = 0;
             return false;
         }
-        /*if(queueFailure) {
+        if(queueFailure) {
             setFailure(true);
             death_code = 2;
             return false;
-        }*/
+        }
         return true;
     }
 
@@ -1873,7 +1886,6 @@ public class GameplayScene implements Screen {
                 case "queueFailureTorchOff":
                     avatar.setGroundedState(GroundState.DEAD);
                     queueFailureTorchOff = true;
-                    queueFailure = true;
                     death_code = 0;
                     break;
                 case "resetRain":

@@ -552,7 +552,7 @@ public class CollisionController implements ContactListener {
                         } else if (torchX > mothX && !moth.isFacingRight()) {
                             moth.changeDirection();
                         }
-                        collisionFlags.push(new CollisionFlag("queueFailure"));
+                        collisionFlags.push(new CollisionFlag("queueFailureTorchOff"));
                     } else {
                         sustainedContacts.put(key, contactTime - 1);
                     }
