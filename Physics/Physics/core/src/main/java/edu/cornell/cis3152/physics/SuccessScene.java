@@ -39,6 +39,13 @@ public class SuccessScene implements Screen {
     protected SoundEngine soundEngine;
     /** The asset directory for retrieving textures, atlases */
     protected AssetDirectory directory;
+    private Texture animationTexture;
+    private int currentFrameIndex = 0;
+    private float frameTimer = 0f;
+    private int FRAME_WIDTH = 350;
+    private int FRAME_HEIGHT = 250;
+    private int TOTAL_FRAMES = 3;
+    private static final float FRAME_DURATION = 0.1f;
 
     private class Entry {
         private Image button;
@@ -118,20 +125,20 @@ public class SuccessScene implements Screen {
 
         contButton.setSize(screenWidth * 0.2f, screenHeight * 0.06f);
         contButton.setPosition(
-                screenWidth * 0.40f,
-                screenHeight * 0.4f
+                screenWidth * 0.52f,
+                screenHeight * 0.5f
         );
 
         replayButton.setSize(screenWidth * 0.2f, screenHeight * 0.06f);
         replayButton.setPosition(
-                screenWidth * 0.40f,
-                screenHeight * 0.3f
+                screenWidth * 0.52f,
+                screenHeight * 0.4f
         );
 
         chambersButton.setSize(screenWidth * 0.2f, screenHeight * 0.06f);
         chambersButton.setPosition(
-                screenWidth * 0.40f,
-                screenHeight * 0.2f
+                screenWidth * 0.52f,
+                screenHeight * 0.3f
         );
 
         contButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
@@ -200,24 +207,13 @@ public class SuccessScene implements Screen {
 
         topImage.setPosition(
                 screenWidth * 0.17f,
-                screenHeight * 0.65f
+                screenHeight * 0.78f
         );
 
         // Add the image actor to the stage
         stage.addActor(topImage);
 
-        Texture treasureTexture = directory.getEntry("treasureGlow", Texture.class);
-        Image treasureImage = new Image(treasureTexture);
-
-        treasureImage.setSize(screenWidth * 0.08f, screenHeight * 0.1f);
-
-        treasureImage.setPosition(
-                screenWidth * 0.46f,
-                screenHeight * 0.5f
-        );
-
-        // Add the image actor to the stage
-        stage.addActor(treasureImage);
+        animationTexture = directory.getEntry("successANIMATION", Texture.class);
     }
 
     private void controllerSelect() {
@@ -281,6 +277,33 @@ public class SuccessScene implements Screen {
 
         stage.act(delta);
         stage.draw();
+
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
+
+        frameTimer += delta;
+        if(frameTimer >= FRAME_DURATION) {
+            frameTimer = 0f;
+            currentFrameIndex++;
+            if(currentFrameIndex >= TOTAL_FRAMES) {
+                currentFrameIndex = 0;
+            }
+        }
+
+        int srcX = currentFrameIndex*FRAME_WIDTH;
+        int srcY = 0;
+        stage.getBatch().begin();
+        stage.getBatch().draw(
+                animationTexture,
+                screenWidth * 0.2f,
+                screenHeight * 0.29f,
+                screenWidth * 0.24f,
+                screenHeight * 0.3f,
+                srcX, srcY,
+                FRAME_WIDTH, FRAME_HEIGHT,
+                false, false
+        );
+        stage.getBatch().end();
     }
 
     @Override
