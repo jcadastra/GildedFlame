@@ -987,23 +987,50 @@ private int pcunt = 1;
                     } else if (objName.contains("qb")) {
                         float width = object.getFloat("width") / levelData.getInt("tilewidth");
                         float height = object.getFloat("height") / levelData.getInt("tileheight");
-                        GameObject qb = new GameObject(x +width/2, y+height/2, width, height, units, false);
+                        float[] hitbox;
+                        if (objName.equals("qb1") || objName.equals("qb2")) {
+                            hitbox = new float[]{
+                                -(width) / 2.2f, -(height) / 2f,
+                                (width) / 2.2f, -(height) / 2f,
+
+                                (width) / 2.2f, (height * .5f) / 2f,
+                                -(width) / 2.2f, (height * .5f) / 2f
+                            };
+                        } else {
+                            hitbox = new float[]{
+                                -(width) / 2.2f, -(height) / 2f,
+                                (width) / 2.2f, -(height) / 2f,
+
+                                (width) / 2.2f, (height * .11f) / 2f,
+                                -(width) / 2.2f, (height * .11f) / 2f
+                            };
+                        }
+                        GameObject qb = new GameObject(hitbox, x + width/2,y + height/2, width, height, units);
+                        JsonValue properties = object.get("properties");
+                        float rotation = 0;
+                        if (properties != null) {
+                            for (JsonValue prop : properties) {
+                                String propName = prop.getString("name");
+                                String value = prop.getString("value");
+                                switch (propName) {
+                                    case "flipHorizontally":
+                                        qb.flipX = Boolean.parseBoolean(value);
+                                        break;
+                                    case "rotation":
+                                        if (value != null) {
+                                            rotation = Float.parseFloat(value);
+                                        }
+                                }
+                            }
+                        }
                         qb.setTexture(directory.getEntry(objName, Texture.class));
                         qb.getObstacle().setBodyType(BodyType.StaticBody);
                         qb.getObstacle().setName("platformwall");
                         qb.getObstacle().setPhysicsUnits(units);
                         qb.getObstacle().setFriction(1f);
-                        JsonValue properties = object.get("properties");
-                        for (JsonValue prop : properties) {
-                            String propName = prop.getString("name");
-                            String value = prop.getString("value");
-                            switch (propName) {
-                                case "flipHorizontally":
-                                    qb.flipX = Boolean.parseBoolean(value);
-                            }
-                        }
                         System.out.println("flipping" + qb.flipX);
                         addSprite(qb);
+                        qb.getObstacle().setAngle((float) Math.toRadians(rotation));
                     } else if (objName.contains("burnable")) {
                         float width = object.getFloat("width") / levelData.getInt("tilewidth");
                         float height = object.getFloat("height") / levelData.getInt("tileheight");
@@ -1019,11 +1046,12 @@ private int pcunt = 1;
                         GameObject box;
                         if (objName.contains("non")) {
                             box = new GameObject(new float[]{
-                                -(width)/2, -(height)/2.1f,
+                                -width/2, -height/2.2f,
+                                -width/8,-height/2.1f,
+                                0,-height/2,
+                                width/8,-height/2.1f,
+                                width/2, -height/2.2f,
 
-                                0,-(height)/2,
-
-                                (width)/2, -(height)/2.1f,
                                 (width)/3, (height)/2 * .8f,
                                 -(width)/3, (height)/2 * .8f
                             }, x,y, width, height, units);
@@ -1058,6 +1086,7 @@ private int pcunt = 1;
                             box.getObstacle().setDensity(1.8f );
                         } else {
                             box = new GameObject(new float[]{
+                                -width/2, -(height) * (3f/10),
                                 -(width) * (3f/10f), -(height)/2.1f,
 
                                 0,-(height)/2,
@@ -1070,11 +1099,10 @@ private int pcunt = 1;
                                 (width) * (3f/10f), (height)/2 * .80f,
                                 -(width) * (3f/10f), (height)/2 * .80f,
 
-                               -width/2, (height) * (3f/10),
-                                -width/2, -(height) * (3f/10)
+                               -width/2, (height) * (3f/10)
                             }, x,y, width, height, units);
                             box.setTexture(directory.getEntry("burnable", Texture.class));
-                            box.getObstacle().setDensity(1.5f );
+                            box.getObstacle().setDensity(1.25f );
                         }
                         box.setMaterial(new ObstacleMaterial(materialType));
                         box.getObstacle().setBodyType(BodyType.DynamicBody);
@@ -1508,7 +1536,8 @@ private int pcunt = 1;
                 return true;
             } else if (complete) {
                 pause();
-                listener.exitScreen(this, EXIT_NEXT);
+                isFadingOut = true;
+//                listener.exitScreen(this, EXIT_NEXT);
                 return false;
             }
         }
@@ -1685,10 +1714,12 @@ private int pcunt = 1;
         if (mothSmother) soundEngine.playSoundEffect("mothSmother");
 
 
+        System.out.println(fadeTime);
         if (isFadingOut) {
             soundEngine.stopAllSoundEffects();
             fadeTime += dt;
             if (fadeTime >= fadeDuration) {
+                System.out.println("did exit");
                 listener.exitScreen(this, fadeExitCode);
             }
         }
