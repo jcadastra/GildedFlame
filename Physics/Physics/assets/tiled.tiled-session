@@ -92,9 +92,9 @@
         },
         "advanced_movement.tmj": {
             "expandedObjectLayers": [
-                2,
+                6,
                 5,
-                6
+                2
             ],
             "scale": 0.33,
             "selectedLayer": 5,
@@ -255,9 +255,9 @@
         },
         "level4.tmj": {
             "expandedObjectLayers": [
-                2,
                 7,
-                5
+                5,
+                2
             ],
             "scale": 0.33,
             "selectedLayer": 6,
@@ -287,8 +287,8 @@
         },
         "level7.tmj": {
             "expandedObjectLayers": [
-                2,
-                5
+                5,
+                2
             ],
             "scale": 0.33,
             "selectedLayer": 6,
