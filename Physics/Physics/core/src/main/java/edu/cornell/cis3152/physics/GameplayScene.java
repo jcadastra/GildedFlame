@@ -578,6 +578,7 @@ public class GameplayScene implements Screen {
 
         weatherMachine.update(world);
         loadLevel("rope_test");
+        soundEngine.rainingBackground(false);
     }
 
     public void clearLevel() {
@@ -615,6 +616,7 @@ public class GameplayScene implements Screen {
             }
             weatherMachine.updateWorld(null, bounds);
             weatherMachine.clear();
+            soundEngine.rainingBackground(false);
         }
         System.out.println("postmachine");
         if (eventHandler != null) {
@@ -1599,6 +1601,7 @@ private int pcunt = 1;
         weatherMachine.updateWorld(world, bounds);
         if (weatherMachine.isRainActive()) {
             supplementaryRainActions();
+            soundEngine.rainingBackground(true);
 //            particleEngine.ra
         }
         updateTorchLight();
