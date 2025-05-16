@@ -585,11 +585,9 @@ public class GameplayScene implements Screen {
         Vector2 gravity = new Vector2(0, values.getFloat("gravity"));
 
         if (activeLightJoint != null && activeLightJoint.isActive()) {
-            world.destroyJoint(activeLightJoint);
             activeLightJoint = null;
         }
         if (activeFireJoint != null && activeFireJoint.isActive()) {
-            world.destroyJoint(activeFireJoint);
             activeFireJoint = null;
         }
         for (ObstacleSprite sprite : sprites) {
@@ -610,6 +608,7 @@ public class GameplayScene implements Screen {
             }
             fireController.resetStorage();
         }
+        System.out.println("premachine");
         if (weatherMachine != null) {
             for (ObstacleSprite rainDrop : weatherMachine.rainDrops) {
                 rainDrop.getObstacle().markRemoved(true);
@@ -617,6 +616,7 @@ public class GameplayScene implements Screen {
             weatherMachine.updateWorld(null, bounds);
             weatherMachine.clear();
         }
+        System.out.println("postmachine");
         if (eventHandler != null) {
             eventHandler.dispose();
         }
