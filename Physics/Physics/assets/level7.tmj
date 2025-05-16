@@ -764,8 +764,8 @@
                  "type":"",
                  "visible":true,
                  "width":230,
-                 "x":5743.18181818182,
-                 "y":4883.12121212121
+                 "x":5749.24242424243,
+                 "y":4855.84848484848
                 }, 
                 {
                  "gid":83,
@@ -782,8 +782,8 @@
                  "type":"",
                  "visible":true,
                  "width":230,
-                 "x":6517,
-                 "y":4861
+                 "x":6504.87878787879,
+                 "y":4857.9696969697
                 }, 
                 {
                  "gid":57,
@@ -946,6 +946,18 @@
                  "width":230,
                  "x":2763.66666666667,
                  "y":3348.0303030303
+                }, 
+                {
+                 "gid":81,
+                 "height":158,
+                 "id":543,
+                 "name":"gb2",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":230,
+                 "x":6978.93939393939,
+                 "y":1536.57575757576
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -967,8 +979,8 @@
                  "type":"",
                  "visible":true,
                  "width":300,
-                 "x":1160,
-                 "y":4442
+                 "x":811.515151515152,
+                 "y":4772.30303030303
                 }, 
                 {
                  "gid":51,
@@ -979,7 +991,7 @@
                  "type":"",
                  "visible":true,
                  "width":150,
-                 "x":5692.43605344625,
+                 "x":5742.43605344625,
                  "y":2559.20792914383
                 }],
          "opacity":1,
@@ -1264,10 +1276,10 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":543,
+ "nextobjectid":544,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.11.2",
+ "tiledversion":"1.10.2",
  "tileheight":300,
  "tilesets":[
         {

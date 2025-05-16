@@ -134,19 +134,20 @@ public class GameObject extends EnhancedObstacleSprite {
                 -(width * widthFactor)/2,-(physHeight/2),
                 (width * widthFactor)/2,-(physHeight/2),
 
-                (width * widthFactor)/2,physHeight/2,
-                -(width * widthFactor)/2,physHeight/2
+                (width * widthFactor)/2.1f,physHeight/2,
+                (width * widthFactor)/2,physHeight/2.1f,
+
+                -(width * widthFactor)/2.1f,physHeight/2,
+                -(width * widthFactor)/2f,physHeight/2.1f
             };
         } else {
             points = new float[]{
                 -(width * widthFactor)/2,-(physHeight/2),
                 (width * widthFactor)/2,-(physHeight/2),
 
-                (width * widthFactor)/2,physHeight/2.5f,
                 (width * widthFactor)/2.05f,physHeight/2,
 
                 -(width * widthFactor)/2.05f,physHeight/2,
-                -(width * widthFactor)/2,physHeight/2.5f
             };
         }
 

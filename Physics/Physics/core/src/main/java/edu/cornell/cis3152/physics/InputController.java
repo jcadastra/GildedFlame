@@ -81,6 +81,7 @@ public class InputController {
     /** How much did we move vertically? */
     private float vertical;
     private float verticalPrevious;
+    private boolean throwPrevious;
     /** Are we throwing? */
     private boolean throwing;
     /** Do we want assist parabola? */
@@ -130,7 +131,7 @@ public class InputController {
      * Returns if the throw button was pressed
      */
     public boolean getThrowing() {
-        return throwing;
+        return throwing && !throwPrevious;
     }
 
     /**
@@ -273,6 +274,7 @@ public class InputController {
         nextPrevious = nextPressed;
         prevPrevious = prevPressed;
         verticalPrevious = vertical;
+        throwPrevious = throwPressed;
 
         // Check to see if a GamePad is connected
         if (xbox != null && xbox.isConnected()) {
@@ -346,8 +348,8 @@ public class InputController {
         // Give priority to gamepad results
         resetPressed = (secondary && resetPressed) || (Gdx.input.isKeyPressed(Input.Keys.R));
         debugPressed = (secondary && debugPressed) || (Gdx.input.isKeyPressed(Input.Keys.F));
-        primePressed = (secondary && primePressed) || (Gdx.input.isKeyPressed(Keys.SPACE));
-        secondPressed = (secondary && secondPressed) || (Gdx.input.isKeyPressed(Keys.L));
+        primePressed = (secondary && primePressed) || (Gdx.input.isKeyPressed(Keys.L));
+//        secondPressed = (secondary && secondPressed) || (Gdx.input.isKeyPressed(Keys.L));
         prevPressed = (secondary && prevPressed) || (Gdx.input.isKeyPressed(Input.Keys.P));
         nextPressed = (secondary && nextPressed) || (Gdx.input.isKeyPressed(Input.Keys.N));
         exitPressed  = (secondary && exitPressed) || (Gdx.input.isKeyPressed(Input.Keys.ESCAPE));
@@ -370,7 +372,7 @@ public class InputController {
         }
 
         throwing = secondary && throwing;
-        if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
+        if (Gdx.input.isKeyPressed(Keys.K)) {
             throwing = true;
         }
 

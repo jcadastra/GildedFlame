@@ -216,6 +216,9 @@ public class GameplayScene implements Screen {
     private float fadeTime = 0f;
     private float fadeDuration = 1f; // seconds
     private int fadeExitCode = -1;
+    private boolean introFading = false;
+    private float introFadeTime = 0f;
+    private final float introfadeDuration = 1f;
     private Texture blackTexture;
 
 
@@ -398,6 +401,8 @@ public class GameplayScene implements Screen {
      */
     protected GameplayScene(AssetDirectory directory, SoundEngine soundEngine, String  prefix) {
         this.directory = directory;
+        introFading = true;
+        fadeTime = 0f;
         constants = directory.getEntry(prefix+"-constants",JsonValue.class);
         JsonValue defaults = constants.get("world");
         torchHoldState = directory.getEntry("torchHoldState",JsonValue.class);
@@ -557,6 +562,8 @@ public class GameplayScene implements Screen {
         countdown = -1;
         isFadingOut = false;
         fadeTime = 0;
+        introFading = true;
+        introFadeTime = 0f;
 
         if (avatar != null) {
             avatar.reset();
@@ -1044,11 +1051,12 @@ private int pcunt = 1;
                         GameObject box;
                         if (objName.contains("non")) {
                             box = new GameObject(new float[]{
-                                -(width)/2, -(height)/2.1f,
+                                -width/2, -height/2.2f,
+                                -width/8,-height/2.1f,
+                                0,-height/2,
+                                width/8,-height/2.1f,
+                                width/2, -height/2.2f,
 
-                                0,-(height)/2,
-
-                                (width)/2, -(height)/2.1f,
                                 (width)/3, (height)/2 * .8f,
                                 -(width)/3, (height)/2 * .8f
                             }, x,y, width, height, units);
@@ -1083,6 +1091,7 @@ private int pcunt = 1;
                             box.getObstacle().setDensity(1.8f );
                         } else {
                             box = new GameObject(new float[]{
+                                -width/2, -(height) * (3f/10),
                                 -(width) * (3f/10f), -(height)/2.1f,
 
                                 0,-(height)/2,
@@ -1095,8 +1104,7 @@ private int pcunt = 1;
                                 (width) * (3f/10f), (height)/2 * .80f,
                                 -(width) * (3f/10f), (height)/2 * .80f,
 
-                               -width/2, (height) * (3f/10),
-                                -width/2, -(height) * (3f/10)
+                               -width/2, (height) * (3f/10)
                             }, x,y, width, height, units);
                             box.setTexture(directory.getEntry("burnable", Texture.class));
                             box.getObstacle().setDensity(1.25f );
@@ -1533,7 +1541,8 @@ private int pcunt = 1;
                 return true;
             } else if (complete) {
                 pause();
-                listener.exitScreen(this, EXIT_NEXT);
+                isFadingOut = true;
+//                listener.exitScreen(this, EXIT_NEXT);
                 return false;
             }
         }
@@ -1714,6 +1723,7 @@ private int pcunt = 1;
             soundEngine.stopAllSoundEffects();
             fadeTime += dt;
             if (fadeTime >= fadeDuration) {
+                System.out.println("did exit");
                 listener.exitScreen(this, fadeExitCode);
             }
         }
@@ -1831,7 +1841,7 @@ private int pcunt = 1;
 
     // Camera player not light camera (light camera updated internally) but movements
     // here are for the camera that follows player (?)
-    private void updateCamera() {
+    public void updateCamera() {
 //        System.out.println();
 
         float prevX = camera.position.x;
@@ -1938,7 +1948,7 @@ private int pcunt = 1;
             CollisionFlag todo_action = todos.pop();
             switch (todo_action.getName()) {
                 case "addTorch":
-                    if (!avatar.getHasTorch()) {
+                    if (!avatar.getHasTorch() && torch.canBePickedUp()) {
                         avatar.attachTorchToAvatar(torch);
                         avatar.setHasTorch(true);
                         torch.getObstacle().setGravityScale(0);
@@ -2366,6 +2376,7 @@ private int pcunt = 1;
         // Clear the screen (color is homage to the XNA years)
 //        ScreenUtils.clear(0.17f, 0.28f, 0.35f, 1.0f);
         ScreenUtils.clear(0,0,0,1);
+
         // This shows off how powerful our new SpriteBatch is
         fitViewport.apply();
         batch.begin(camera);
@@ -2409,13 +2420,15 @@ private int pcunt = 1;
         lightController.update(contactListener.beginSmother(),fireController);
         lightController.render();
 
+        fitViewport.apply();
+        batch.setProjectionMatrix(camera.combined);
         batch.begin();
         //Draw enemy eyes in the dark
         for( Enemy enemy: enemies){
             if (enemy.getClass()== Moth.class){
                 if(enemy.getState()== Enemy.EnemyState.OUT_OF_LIGHT){
-                    Vector2 pos = enemy.getObstacle().getCentroid();
-                    batch.draw(eye,pos.x,pos.y,0.1f*eye.getWidth(),0.1f*eye.getHeight());
+                    Vector2 pos = enemy.getObstacle().getPosition();
+                    batch.draw(eye,(pos.x - enemy.getWidth()/4) * phyiscsUnits,(pos.y - enemy.getWidth()/4) * phyiscsUnits,0.1f*eye.getWidth(),0.1f*eye.getHeight());
                     //batch.draw(eye,enemy.getX(),enemy.getY());
                 }
             }
@@ -2493,15 +2506,26 @@ private int pcunt = 1;
      *
      * @param delta Number of seconds since last animation frame
      */
+    @Override
     public void render(float delta) {
+        ScreenUtils.clear(0, 0, 0, 1);
         if (active) {
             if (preUpdate(delta)) {
-                update(delta); // This is the one that must be defined.
+                update(delta);
                 postUpdate(delta);
             }
-            draw(delta);
         }
+        if (introFading) {
+            draw(delta);
+            updateCamera();
+            if (renderFadeInOverlay(batch, delta)) {
+                introFading = false;
+            }
+            return;
+        }
+        draw(delta);
     }
+
 
     /**
      * Called when the Screen is paused.
@@ -2659,6 +2683,33 @@ private int pcunt = 1;
                 fire.setLightJoint(null);
                 fire.setLighting(null);
         }
+    }
+
+    public void forceNWorldStep(int n) {
+        world.step(1/60f * n,WORLD_VELOC,WORLD_POSIT);
+        updateCamera();
+    }
+
+    public boolean renderFadeInOverlay(SpriteBatch batch, float dt) {
+        introFadeTime += dt;
+        float alpha = 1f - Math.min(introFadeTime / introfadeDuration, 1f);
+
+        // Black overlay
+        batch.begin();
+        batch.setColor(1f,1f,1f, alpha);
+        batch.draw(blackTexture,
+            0, 0,
+            bounds.width * phyiscsUnits,
+            bounds.height * phyiscsUnits);
+
+        batch.setColor(Color.WHITE);
+        batch.end();
+
+        if (introFadeTime >= introfadeDuration) {
+            introFading = false;
+            return true;
+        }
+        return false;
     }
 
 }
