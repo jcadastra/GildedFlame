@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import edu.cornell.cis3152.physics.level_player.enemies.Enemy;
+import edu.cornell.cis3152.physics.level_player.enviromentals.Fire;
 import edu.cornell.cis3152.physics.level_player.player.Avatar;
 import edu.cornell.cis3152.physics.level_player.utils.CollisionFlag;
 import edu.cornell.cis3152.physics.level_player.utils.RainFlag;
@@ -158,7 +159,17 @@ public class MarthasWeatherMachine {
                     && !target.getObstacle().isSensor() && !target.getName().contains("grate") ) {
                     return false;
 
-                } else if ((target instanceof Enemy || target instanceof Avatar || target.getName().contains("platform") || target.getName().contains("burnable"))&& !target.getName().contains("grate")) {
+                } else if (
+                    (target instanceof Enemy
+                        || target instanceof Avatar
+                        || target.getName().contains("platform")
+                        || target.getName().contains("burnable"))
+                        && !target.getName().contains("grate")
+                        && !(
+                        sprite instanceof Fire
+                            && ((Fire)sprite).getBurntObstacle().hashCode() == target.hashCode()
+                    )
+                ) {
                     return false;
                 }
             }
