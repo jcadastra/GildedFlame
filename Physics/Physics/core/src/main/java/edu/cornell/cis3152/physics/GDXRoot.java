@@ -19,6 +19,7 @@ import edu.cornell.gdiac.util.*;
 import edu.cornell.gdiac.assets.*;
 import edu.cornell.gdiac.graphics.*;
 import java.util.ArrayList;
+import java.util.function.Supplier;
 //import edu.cornell.cis3152.physics.ragdoll.*;
 
 /**
@@ -228,6 +229,7 @@ public class GDXRoot extends Game implements ScreenListener {
 
         // Handle exit codes from any GameplayScene.
         if (screen instanceof GameplayScene) {
+            soundEngine.rainingBackground(false);
             prevScreen = "GameplayScene";
             if (exitCode == GameplayScene.EXIT_NEXT) {
                 swapGamePlayScene(1);
@@ -245,9 +247,11 @@ public class GDXRoot extends Game implements ScreenListener {
     }
 
     private void swapCreateMainMenuScene() {
-        mainMenu = new MainMenuScreen(directory, soundEngine);
-        mainMenu.setScreenListener(this);
-        setScreenWithTransition(mainMenu, null, true, true);
+        setScreenWithTransition(() -> {
+            mainMenu = new MainMenuScreen(directory, soundEngine);
+            mainMenu.setScreenListener(this);
+            return mainMenu;
+        }, null, true, true);
         ArrayList<String> temp = new ArrayList<>();
         temp.add("menu_music");
         soundEngine.startMusicLoop(temp);
@@ -255,10 +259,14 @@ public class GDXRoot extends Game implements ScreenListener {
 
     public void swapCreateLevelSelect() {
         if (levelSelectScene == null) {
-            levelSelectScene = new LevelSelectScene(soundEngine);
-            levelSelectScene.setScreenListener(this);
+            setScreenWithTransition(() -> {
+                levelSelectScene = new LevelSelectScene(soundEngine);
+                levelSelectScene.setScreenListener(this);
+                return levelSelectScene;
+            }, null, true, true);
+        } else {
+            setScreenWithTransition(() -> levelSelectScene, null, true, true);
         }
-        setScreenWithTransition(levelSelectScene, null, true, true);
         ArrayList<String> temp = new ArrayList<>();
         temp.add("menu_music");
         soundEngine.startMusicLoop(temp);
@@ -276,11 +284,11 @@ public class GDXRoot extends Game implements ScreenListener {
         current = (level) % levels.length;
         currentScene.levelName = levels[current];
         if (prevScreen.equals("FailureScene") || prevScreen.equals("SuccssScene")) {
-            setScreenWithTransition(currentScene, null, true, false);
+            setScreenWithTransition(() -> currentScene, null, true, false);
         } else if (prevScreen.equals("GameplayScene")) {
             setScreen(currentScene);
         } else {
-            setScreenWithTransition(currentScene, levels[current], true, false);
+            setScreenWithTransition(() -> currentScene, levels[current], true, false);
         }
         System.out.println("done loading level " + levels[current]);
     }
@@ -299,7 +307,7 @@ public class GDXRoot extends Game implements ScreenListener {
         SuccessScene success = new SuccessScene(directory, soundEngine);
         success.setScreenListener(this);
         success.setCurrentLevel(current+1);
-        setScreenWithTransition(success, null, false, true);
+        setScreenWithTransition(() -> success, null, false, true);
         soundEngine.successSound();
     }
 
@@ -307,16 +315,23 @@ public class GDXRoot extends Game implements ScreenListener {
 
         FailureScene failure = new FailureScene(directory, soundEngine, death_code);
         failure.setScreenListener(this);
-        setScreenWithTransition(failure, null, false, true);
+        setScreenWithTransition(() ->failure, null, false, true);
         soundEngine.failureSound();
     }
 
-    public void setScreenWithTransition(Screen next, String transitionText, Boolean fadein, Boolean fadeout) {
+    public void setScreenWithTransition(
+        Supplier<Screen> nextFactory,
+        String transitionText,
+        boolean fadeIn,
+        boolean fadeOut) {
         Screen current = getScreen();
         if (current != null && !(current instanceof TransitionScreen)) {
-            setScreen(new TransitionScreen(current, next, this, transitionText,fadein, fadeout));
+            setScreen(new TransitionScreen(
+                current, nextFactory, this,
+                transitionText, fadeIn, fadeOut
+            ));
         } else {
-            setScreen(next);
+            setScreen(nextFactory.get());
         }
     }
 }

@@ -22,8 +22,10 @@ public class Enemy extends ObstacleSprite {
     protected static AssetDirectory directory;
     protected final JsonValue data;
     private final int id;
+    public float texWidth;
     private final float width;
     private final float height;
+    public float texHeight;
     private final float size;
     private final float friction;
     public SpriteBatch batch;

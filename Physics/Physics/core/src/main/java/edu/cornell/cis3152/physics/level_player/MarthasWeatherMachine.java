@@ -167,6 +167,7 @@ public class MarthasWeatherMachine {
                         && !target.getName().contains("grate")
                         && !(
                         sprite instanceof Fire
+                            && ((Fire) sprite).getBurntObstacle() != null
                             && ((Fire)sprite).getBurntObstacle().hashCode() == target.hashCode()
                     )
                 ) {

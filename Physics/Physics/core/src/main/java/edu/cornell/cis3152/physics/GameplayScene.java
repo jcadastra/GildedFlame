@@ -578,6 +578,7 @@ public class GameplayScene implements Screen {
 
         weatherMachine.update(world);
         loadLevel("rope_test");
+        soundEngine.rainingBackground(false);
     }
 
     public void clearLevel() {
@@ -615,6 +616,7 @@ public class GameplayScene implements Screen {
             }
             weatherMachine.updateWorld(null, bounds);
             weatherMachine.clear();
+            soundEngine.rainingBackground(false);
         }
         System.out.println("postmachine");
         if (eventHandler != null) {
@@ -887,8 +889,8 @@ private int pcunt = 1;
                         avatar.setTexture(playerTexture);
                         float width = object.getFloat("width") / levelData.getInt("tilewidth");
                         float height = object.getFloat("height") / levelData.getInt("tileheight");
-                        x -= width;
-                        y += height / 2 - 50 / units;
+                        x -= width/2;
+                        y += height / 4;
                         avatar.getObstacle().setPosition(x, y);
                         //System.out.println("position" + pos[0] + " " + pos[1]);
                         addSprite(avatar);
@@ -931,6 +933,8 @@ private int pcunt = 1;
                             levelInfo.get("enemies").get("moths").get("instances").get(0),
                             directory, position);
                         moth.setTexture(texture);
+                        moth.texWidth = 1;
+                        moth.texHeight = 1;
                         addSprite(moth);
                         moth.createSensor();
                         enemies.add(moth);
@@ -945,6 +949,8 @@ private int pcunt = 1;
                             levelInfo.get("enemies").get("totems").get("instances").get(0),
                             directory, position);
                         totem.setTexture(texture);
+                        totem.texWidth = 1;
+                        totem.texHeight = 1;
                         addSprite(totem);
                         totem.createSensor();
                         enemies.add(totem);
@@ -1595,6 +1601,7 @@ private int pcunt = 1;
         weatherMachine.updateWorld(world, bounds);
         if (weatherMachine.isRainActive()) {
             supplementaryRainActions();
+            soundEngine.rainingBackground(true);
 //            particleEngine.ra
         }
         updateTorchLight();
@@ -1642,6 +1649,7 @@ private int pcunt = 1;
             dropTorchHelper();
             torch.applyThrowForce(avatar.isFacingRight() ? 1 : -1, expectedDTForTorchToHitGround);
             avatar.dropTorchPhys(torch);
+            torch.setBeingHeld(false);
             soundEngine.playSoundEffect("torchThrow");
         }
 
@@ -1970,6 +1978,7 @@ private int pcunt = 1;
                     if (!avatar.getHasTorch() && torch.canBePickedUp()) {
                         avatar.attachTorchToAvatar(torch);
                         avatar.setHasTorch(true);
+                        torch.setBeingHeld(true);
                         torch.getObstacle().setGravityScale(0);
                         torch.getObstacle().setSensor(true);
                     }
@@ -2447,7 +2456,7 @@ private int pcunt = 1;
             if (enemy.getClass()== Moth.class){
                 if(enemy.getState()== Enemy.EnemyState.OUT_OF_LIGHT){
                     Vector2 pos = enemy.getObstacle().getPosition();
-                    batch.draw(eye,(pos.x - enemy.getWidth()/4) * phyiscsUnits,(pos.y - enemy.getWidth()/4) * phyiscsUnits,0.1f*eye.getWidth(),0.1f*eye.getHeight());
+                    batch.draw(eye,(pos.x) * phyiscsUnits - (phyiscsUnits/2) / (phyiscsUnits/40),(pos.y) * phyiscsUnits - (phyiscsUnits/2)/ (phyiscsUnits/40),0.1f*eye.getWidth(),0.1f*eye.getHeight());
                     //batch.draw(eye,enemy.getX(),enemy.getY());
                 }
             }

@@ -56,6 +56,7 @@ public class SoundEngine {
             registerSoundEffect("mothSmother", directory.getEntry("moth_fluttering", SoundEffect.class));
             registerSoundEffect("successSound", directory.getEntry("success_sound", SoundEffect.class));
             registerSoundEffect("failureSound", directory.getEntry("fire_extinguished", SoundEffect.class));
+            registerSoundEffect("raining_background", directory.getEntry("raining_background", SoundEffect.class));
             registerMusic("menu_music", directory.getEntry("menu_music", Music.class));
             registerMusic("in_game", directory.getEntry("in_game_music", Music.class));
         }
@@ -214,6 +215,23 @@ public class SoundEngine {
             if (!activeLoopingSounds.containsKey("platformMoving")) {
                 long id = platformMoving.loop();
                 activeLoopingSounds.put("platformMoving", id);
+            }
+        }
+    }
+
+    public void rainingBackground(boolean raining) {
+        SoundEffect rainingBackground = registeredSoundEffects.get("raining_background");
+        if (rainingBackground == null) return;
+        if (!raining) {
+            if (activeLoopingSounds.containsKey("raining_background")) {
+                long id = activeLoopingSounds.get("raining_background");
+                rainingBackground.stop(id);
+                activeLoopingSounds.remove("raining_background");
+            }
+        } else {
+            if (!activeLoopingSounds.containsKey("raining_background")) {
+                long id = rainingBackground.loop();
+                activeLoopingSounds.put("raining_background", id);
             }
         }
     }
