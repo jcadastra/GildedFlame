@@ -577,9 +577,7 @@ public class LightController {
             rayHandler.dispose();
             rayHandler = null;
         }
-        if (camera != null) {
-            camera = null;
-        }
+        camera = null;
         lightPool.clear();
         fireLightPool.clear();
         lightingAssignments.clear();

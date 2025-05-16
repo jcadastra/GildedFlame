@@ -119,7 +119,9 @@ public class Torch extends EnhancedObstacleSprite {
         float x = (float) (180*(Math.round((tmp)/180)));
         float spinNum = x % 90 == 0 ?  x : x-(45 * direc);
 //        System.out.println(timeTillGround+","+ av +", " +tmp + ", " +x+ ", " + spinNum);
-        body.setAngularVelocity((spinNum) * (float) ((Math.PI)/180));
+        float newVel = (spinNum) * (float) ((Math.PI)/180);
+        System.out.println("newVel = " + newVel);
+        body.setAngularVelocity(newVel == 0 ? 12 * -direc: newVel);
     }
 
     public Vector2 getThrowForce(int direc) {

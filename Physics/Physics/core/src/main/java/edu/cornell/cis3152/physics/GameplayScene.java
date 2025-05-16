@@ -216,6 +216,9 @@ public class GameplayScene implements Screen {
     private float fadeTime = 0f;
     private float fadeDuration = 1f; // seconds
     private int fadeExitCode = -1;
+    private boolean introFading = false;
+    private float introFadeTime = 0f;
+    private final float introfadeDuration = 1f;
     private Texture blackTexture;
 
 
@@ -559,6 +562,8 @@ public class GameplayScene implements Screen {
         countdown = -1;
         isFadingOut = false;
         fadeTime = 0;
+        introFading = true;
+        introFadeTime = 0f;
 
         if (avatar != null) {
             avatar.reset();
@@ -1714,7 +1719,6 @@ private int pcunt = 1;
         if (mothSmother) soundEngine.playSoundEffect("mothSmother");
 
 
-        System.out.println(fadeTime);
         if (isFadingOut) {
             soundEngine.stopAllSoundEffects();
             fadeTime += dt;
@@ -2684,13 +2688,9 @@ private int pcunt = 1;
         updateCamera();
     }
 
-    private boolean introFading = false;
-    private float introFadeTime = 0f;
-    private final float introfadeDuration = 1f;
-
     public boolean renderFadeInOverlay(SpriteBatch batch, float dt) {
-        fadeTime += dt;
-        float alpha = 1f - Math.min(fadeTime / fadeDuration, 1f);
+        introFadeTime += dt;
+        float alpha = 1f - Math.min(introFadeTime / introfadeDuration, 1f);
 
         // Black overlay
         batch.begin();
@@ -2703,7 +2703,7 @@ private int pcunt = 1;
         batch.setColor(Color.WHITE);
         batch.end();
 
-        if (fadeTime >= fadeDuration) {
+        if (introFadeTime >= introfadeDuration) {
             introFading = false;
             return true;
         }

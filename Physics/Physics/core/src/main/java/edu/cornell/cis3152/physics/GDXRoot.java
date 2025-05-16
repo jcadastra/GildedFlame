@@ -45,6 +45,10 @@ public class GDXRoot extends Game implements ScreenListener {
      */
     private LoadingScene loading;
     /**
+     * Scene for the mainmenu (CONTROLLER CLASS)
+     */
+    private  MainMenuScreen mainMenu;
+    /**
      * Player mode for the the game proper (CONTROLLER CLASS)
      */
     private int current;
@@ -56,6 +60,7 @@ public class GDXRoot extends Game implements ScreenListener {
 //    private String[] levels = new String[]{"move_intro","jump_intro","throw_intro","climb_intro","advanced_movement","box_intro","totem_intro","moth_intro","moth_medium","moth_medium_2", "rune_intro", "rune_medium", "rain_intro", "rain_medium", "rune_hard", "new_1", "new_2"};
     private String[] levels = new String[]{"level1","level2","level3","level5","level4","level7","rune_advanced","moth_intro","moth_medium","moth_medium_2", "advanced_movement", "rune_medium", "rain_intro", "rain_medium", "rune_hard"};
     private GameplayScene currentScene;
+    private String prevScreen;
     private LevelSelectScene levelSelectScene;
 
     private SoundEngine soundEngine;
@@ -149,6 +154,7 @@ public class GDXRoot extends Game implements ScreenListener {
     public void exitScreen(Screen screen, int exitCode) {
         // Handle exit from the loading screen.
         if (screen == loading) {
+            prevScreen = "loading";
             directory = loading.getAssets();
             loading.dispose();
             loading = null;
@@ -159,6 +165,7 @@ public class GDXRoot extends Game implements ScreenListener {
         }
         // Handle exit from the main menu.
         else if (screen instanceof MainMenuScreen) {
+            prevScreen = "MainMenuScreen";
             if (exitCode == -1) {
                 SavedDataHandler handler = new SavedDataHandler();
                 String lastCompleted = handler.getDataVal("lastLevel");
@@ -184,6 +191,7 @@ public class GDXRoot extends Game implements ScreenListener {
 
         // Handle exit from the level selection screen.
         else if (screen instanceof LevelSelectScene) {
+            prevScreen = "LevelSelectScene";
             if (exitCode == 0) {
                 swapCreateMainMenuScene();
                 return;
@@ -194,6 +202,7 @@ public class GDXRoot extends Game implements ScreenListener {
         }
 
         else if (screen instanceof SuccessScene) {
+            prevScreen = "SuccessScene";
             if (exitCode == GameplayScene.EXIT_NEXT) {
                 current = (current + 1) % levels.length;
             } else if (exitCode == GameplayScene.EXIT_QUIT) {
@@ -204,6 +213,7 @@ public class GDXRoot extends Game implements ScreenListener {
             return;
         }
         else if (screen instanceof FailureScene) {
+            prevScreen = "FailureScene";
             if (exitCode == GameplayScene.EXIT_MAINMENU) {
                 swapCreateMainMenuScene();
                 return;
@@ -218,6 +228,7 @@ public class GDXRoot extends Game implements ScreenListener {
 
         // Handle exit codes from any GameplayScene.
         if (screen instanceof GameplayScene) {
+            prevScreen = "GameplayScene";
             if (exitCode == GameplayScene.EXIT_NEXT) {
                 swapGamePlayScene(1);
             } else if (exitCode == GameplayScene.EXIT_PREV) {
@@ -234,9 +245,9 @@ public class GDXRoot extends Game implements ScreenListener {
     }
 
     private void swapCreateMainMenuScene() {
-        MainMenuScreen mainMenu = new MainMenuScreen(directory, soundEngine);
+        mainMenu = new MainMenuScreen(directory, soundEngine);
         mainMenu.setScreenListener(this);
-        setScreen(mainMenu);
+        setScreenWithTransition(mainMenu, null, true, true);
         ArrayList<String> temp = new ArrayList<>();
         temp.add("menu_music");
         soundEngine.startMusicLoop(temp);
@@ -247,7 +258,7 @@ public class GDXRoot extends Game implements ScreenListener {
             levelSelectScene = new LevelSelectScene(soundEngine);
             levelSelectScene.setScreenListener(this);
         }
-        setScreen(levelSelectScene);
+        setScreenWithTransition(levelSelectScene, null, true, true);
         ArrayList<String> temp = new ArrayList<>();
         temp.add("menu_music");
         soundEngine.startMusicLoop(temp);
@@ -264,7 +275,13 @@ public class GDXRoot extends Game implements ScreenListener {
         currentScene.clearLevel();
         current = (level) % levels.length;
         currentScene.levelName = levels[current];
-        setScreenWithTransition(currentScene, "First Steps");
+        if (prevScreen.equals("FailureScene") || prevScreen.equals("SuccssScene")) {
+            setScreenWithTransition(currentScene, null, true, false);
+        } else if (prevScreen.equals("GameplayScene")) {
+            setScreen(currentScene);
+        } else {
+            setScreenWithTransition(currentScene, levels[current], true, false);
+        }
         System.out.println("done loading level " + levels[current]);
     }
 
@@ -282,7 +299,7 @@ public class GDXRoot extends Game implements ScreenListener {
         SuccessScene success = new SuccessScene(directory, soundEngine);
         success.setScreenListener(this);
         success.setCurrentLevel(current+1);
-        setScreen(success);
+        setScreenWithTransition(success, null, false, true);
         soundEngine.successSound();
     }
 
@@ -290,14 +307,14 @@ public class GDXRoot extends Game implements ScreenListener {
 
         FailureScene failure = new FailureScene(directory, soundEngine, death_code);
         failure.setScreenListener(this);
-        setScreen(failure);
+        setScreenWithTransition(failure, null, false, true);
         soundEngine.failureSound();
     }
 
-    public void setScreenWithTransition(Screen next, String transitionText) {
+    public void setScreenWithTransition(Screen next, String transitionText, Boolean fadein, Boolean fadeout) {
         Screen current = getScreen();
         if (current != null && !(current instanceof TransitionScreen)) {
-            setScreen(new TransitionScreen(current, next, this, transitionText));
+            setScreen(new TransitionScreen(current, next, this, transitionText,fadein, fadeout));
         } else {
             setScreen(next);
         }
