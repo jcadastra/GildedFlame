@@ -8,7 +8,7 @@
          "name":"Background Tiles",
          "objects":[
                 {
-                 "gid":68,
+                 "gid":76,
                  "height":600,
                  "id":1,
                  "name":"brickBackground",
@@ -31,7 +31,7 @@
          "name":"Background",
          "objects":[
                 {
-                 "gid":72,
+                 "gid":80,
                  "height":500,
                  "id":53,
                  "name":"window",
@@ -43,7 +43,7 @@
                  "y":3183.15151515152
                 }, 
                 {
-                 "gid":72,
+                 "gid":80,
                  "height":500,
                  "id":54,
                  "name":"window",
@@ -360,7 +360,7 @@
          "name":"Players",
          "objects":[
                 {
-                 "gid":87,
+                 "gid":103,
                  "height":600,
                  "id":51,
                  "name":"player",
@@ -369,10 +369,10 @@
                  "visible":true,
                  "width":300,
                  "x":849,
-                 "y":4426.5
+                 "y":4518.5
                 }, 
                 {
-                 "gid":86,
+                 "gid":102,
                  "height":437,
                  "id":52,
                  "name":"torch",
@@ -395,7 +395,7 @@
          "name":"Action Entities",
          "objects":[
                 {
-                 "gid":78,
+                 "gid":86,
                  "height":57,
                  "id":36,
                  "name":"light",
@@ -407,7 +407,7 @@
                  "y":4178.6706539075
                 }, 
                 {
-                 "gid":78,
+                 "gid":86,
                  "height":57,
                  "id":38,
                  "name":"light",
@@ -419,7 +419,7 @@
                  "y":2820.12519936204
                 }, 
                 {
-                 "gid":78,
+                 "gid":86,
                  "height":57,
                  "id":39,
                  "name":"light",
@@ -437,7 +437,7 @@
                  "y":4632
                 }, 
                 {
-                 "gid":78,
+                 "gid":86,
                  "height":57,
                  "id":40,
                  "name":"light",
@@ -449,7 +449,7 @@
                  "y":4429.33732057416
                 }, 
                 {
-                 "gid":78,
+                 "gid":86,
                  "height":57,
                  "id":41,
                  "name":"light",
@@ -461,7 +461,7 @@
                  "y":3060.24519936204
                 }, 
                 {
-                 "gid":78,
+                 "gid":86,
                  "height":57,
                  "id":43,
                  "name":"light",
@@ -473,7 +473,7 @@
                  "y":2692.65216905901
                 }, 
                 {
-                 "gid":78,
+                 "gid":86,
                  "height":57,
                  "id":44,
                  "name":"light",
@@ -485,7 +485,7 @@
                  "y":2932.77216905901
                 }, 
                 {
-                 "gid":78,
+                 "gid":86,
                  "height":57,
                  "id":45,
                  "name":"light",
@@ -497,7 +497,7 @@
                  "y":3188.12368421053
                 }, 
                 {
-                 "gid":78,
+                 "gid":86,
                  "height":57,
                  "id":46,
                  "name":"light",
@@ -509,7 +509,7 @@
                  "y":3192.12368421053
                 }, 
                 {
-                 "gid":78,
+                 "gid":86,
                  "height":57,
                  "id":47,
                  "name":"light",
@@ -521,7 +521,7 @@
                  "y":3184.12368421053
                 }, 
                 {
-                 "gid":78,
+                 "gid":86,
                  "height":57,
                  "id":49,
                  "name":"light",
@@ -533,7 +533,7 @@
                  "y":4324.8509569378
                 }, 
                 {
-                 "gid":78,
+                 "gid":86,
                  "height":57,
                  "id":50,
                  "name":"light",
@@ -545,7 +545,7 @@
                  "y":3184.8509569378
                 }, 
                 {
-                 "gid":78,
+                 "gid":86,
                  "height":57,
                  "id":70,
                  "name":"light",
@@ -584,11 +584,11 @@
          "source":"GameObjectTiles.tsx"
         }, 
         {
-         "firstgid":68,
+         "firstgid":76,
          "source":"BackgroundAssets.tsx"
         }, 
         {
-         "firstgid":84,
+         "firstgid":100,
          "source":"PlayerTorchTiles.tsx"
         }],
  "tilewidth":300,

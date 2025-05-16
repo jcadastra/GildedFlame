@@ -12,13 +12,14 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import java.util.function.Supplier;
 
 public class TransitionScreen implements Screen {
     private enum State { FADE_IN, HOLD, FADE_OUT, DONE }
     private State state = State.FADE_IN;
 
     private final Screen oldScreen;
-    private final Screen nextScreen;
+    private Screen nextScreen;
     private final GDXRoot game;
     private final Stage stage;
     private boolean fadein = false;
@@ -27,6 +28,7 @@ public class TransitionScreen implements Screen {
     private final Image black;
     private final Label label;
     private boolean message = true;
+    private final Supplier<Screen> nextFactory;
 
     private float timer = 0f;
 
@@ -35,9 +37,11 @@ public class TransitionScreen implements Screen {
     private static final float FADE_OUTDURATION = .4f;
     private static final float HOLD_DURATION = 1.5f;
 
-    public TransitionScreen(Screen oldScreen, Screen nextScreen, GDXRoot game, String text, Boolean fadein, Boolean fadeout) {
-        this.oldScreen  = oldScreen;
-        this.nextScreen = nextScreen;
+    public TransitionScreen(Screen old, Supplier<Screen> factory,
+        GDXRoot game, String text, boolean fadein, boolean fadeout) {
+        this.oldScreen = old;
+        this.nextFactory = factory;
+        this.nextScreen = null;
         this.game = game;
         this.stage = new Stage(new ScreenViewport());
         this.fadein = fadein;
@@ -73,21 +77,31 @@ public class TransitionScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        delta = 1/60f;
+        float dt = 1/60f;
         if (state == State.FADE_IN && !fadein) {
             state = State.HOLD;
         }
         if (state == State.HOLD && !message) {
+            if (nextScreen == null) {
+                nextScreen = nextFactory.get();
+                if (nextScreen instanceof LevelSelectScene) {
+                    ((LevelSelectScene)nextScreen).setScreenListener(game);
+                }
+            }
             state = State.FADE_OUT;
         }
         if (state == State.FADE_OUT && !fadeout) {
             state = State.DONE;
         }
-        timer += delta;
+        if (state ==State.HOLD) {
+            timer += delta;
+        } else {
+            timer += dt;
+        }
         switch (state) {
             case FADE_IN:
-                oldScreen.render(delta);
-                if (timer == delta) {
+                oldScreen.render(dt);
+                if (timer == dt) {
                     black.addAction(Actions.fadeIn(FADE_DURATION));
                     label.addAction(Actions.fadeIn(FADE_DURATION));
                 }
@@ -98,6 +112,12 @@ public class TransitionScreen implements Screen {
                 break;
 
             case HOLD:
+                if (nextScreen == null) {
+                    nextScreen = nextFactory.get();
+                    if (nextScreen instanceof LevelSelectScene) {
+                        ((LevelSelectScene)nextScreen).setScreenListener(game);
+                    }
+                }
                 if (timer >= HOLD_DURATION) {
                     state = State.FADE_OUT;
                     timer = 0f;
@@ -105,8 +125,8 @@ public class TransitionScreen implements Screen {
                 break;
 
             case FADE_OUT:
-                nextScreen.render(delta);
-                if (timer == delta) {
+                nextScreen.render(dt);
+                if (timer == dt) {
                     black.addAction(Actions.fadeOut(FADE_OUTDURATION));
                     label.addAction(Actions.fadeOut(FADE_OUTDURATION));
                 }
@@ -125,7 +145,7 @@ public class TransitionScreen implements Screen {
         }
 
         Gdx.gl.glEnable(GL20.GL_BLEND);
-        stage.act(delta);
+        stage.act(dt);
         stage.draw();
         Gdx.gl.glDisable(GL20.GL_BLEND);
     }
