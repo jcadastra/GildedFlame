@@ -2420,13 +2420,15 @@ private int pcunt = 1;
         lightController.update(contactListener.beginSmother(),fireController);
         lightController.render();
 
+        fitViewport.apply();
+        batch.setProjectionMatrix(camera.combined);
         batch.begin();
         //Draw enemy eyes in the dark
         for( Enemy enemy: enemies){
             if (enemy.getClass()== Moth.class){
                 if(enemy.getState()== Enemy.EnemyState.OUT_OF_LIGHT){
-                    Vector2 pos = enemy.getObstacle().getCentroid();
-                    batch.draw(eye,pos.x,pos.y,0.1f*eye.getWidth(),0.1f*eye.getHeight());
+                    Vector2 pos = enemy.getObstacle().getPosition();
+                    batch.draw(eye,(pos.x - enemy.getWidth()/4) * phyiscsUnits,(pos.y - enemy.getWidth()/4) * phyiscsUnits,0.1f*eye.getWidth(),0.1f*eye.getHeight());
                     //batch.draw(eye,enemy.getX(),enemy.getY());
                 }
             }
