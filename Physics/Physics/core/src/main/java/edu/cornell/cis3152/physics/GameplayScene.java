@@ -1646,6 +1646,7 @@ private int pcunt = 1;
             dropTorchHelper();
             torch.applyThrowForce(avatar.isFacingRight() ? 1 : -1, expectedDTForTorchToHitGround);
             avatar.dropTorchPhys(torch);
+            torch.setBeingHeld(false);
             soundEngine.playSoundEffect("torchThrow");
         }
 
@@ -1974,6 +1975,7 @@ private int pcunt = 1;
                     if (!avatar.getHasTorch() && torch.canBePickedUp()) {
                         avatar.attachTorchToAvatar(torch);
                         avatar.setHasTorch(true);
+                        torch.setBeingHeld(true);
                         torch.getObstacle().setGravityScale(0);
                         torch.getObstacle().setSensor(true);
                     }
