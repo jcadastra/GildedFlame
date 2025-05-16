@@ -555,8 +555,6 @@ public class LightController {
 
         camera.position.x += dx / BOX_TO_WORLD;
         camera.position.y += dy / BOX_TO_WORLD;
-        currentDx = dx;
-        currentDy = dy;
         // --- UPDATE CAMERA MATRIX ---
         camera.update();
         // --- UPDATE RAYHANDLER ---

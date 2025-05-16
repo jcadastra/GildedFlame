@@ -312,11 +312,11 @@ public class GDXRoot extends Game implements ScreenListener {
     }
 
     public void setScreenWithTransition(Screen next, String transitionText, Boolean fadein, Boolean fadeout) {
-//        Screen current = getScreen();
-//        if (current != null && !(current instanceof TransitionScreen)) {
-//            setScreen(new TransitionScreen(current, next, this, transitionText,fadein, fadeout));
-//        } else {
+        Screen current = getScreen();
+        if (current != null && !(current instanceof TransitionScreen)) {
+            setScreen(new TransitionScreen(current, next, this, transitionText,fadein, fadeout));
+        } else {
             setScreen(next);
-//        }
+        }
     }
 }
