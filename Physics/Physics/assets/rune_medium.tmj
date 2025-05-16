@@ -841,13 +841,13 @@
                 }, 
                 {
                  "gid":67,
-                 "height":242,
+                 "height":225,
                  "id":192,
                  "name":"infburnable",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":323,
+                 "width":285,
                  "x":1681.5303030303,
                  "y":1528.93939393939
                 }, 
@@ -1176,7 +1176,7 @@
  "nextobjectid":227,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.11.2",
+ "tiledversion":"1.10.2",
  "tileheight":300,
  "tilesets":[
         {

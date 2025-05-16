@@ -1,5 +1,5 @@
 {
-    "activeFile": "level4.tmj",
+    "activeFile": "rune_medium.tmj",
     "expandedProjectPaths": [
         "."
     ],
@@ -92,8 +92,8 @@
         },
         "advanced_movement.tmj": {
             "expandedObjectLayers": [
-                6,
                 5,
+                6,
                 2
             ],
             "scale": 0.33,
@@ -255,8 +255,8 @@
         },
         "level4.tmj": {
             "expandedObjectLayers": [
-                7,
                 5,
+                7,
                 2
             ],
             "scale": 0.33,
@@ -293,8 +293,8 @@
             "scale": 0.33,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 3898.484848484848,
-                "y": 2998.484848484848
+                "x": 5109.090909090908,
+                "y": 1459.090909090909
             }
         },
         "level8.tmj": {
@@ -346,8 +346,8 @@
             "scale": 0.125,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 4796,
-                "y": 2700
+                "x": 4792,
+                "y": 2692
             }
         },
         "rain_medium.tmj": {
@@ -402,10 +402,10 @@
                 5
             ],
             "scale": 0.25,
-            "selectedLayer": 3,
+            "selectedLayer": 4,
             "viewCenter": {
-                "x": 4806,
-                "y": 4550
+                "x": 2688,
+                "y": 1070
             }
         },
         "sample.tmj": {
@@ -596,23 +596,24 @@
         "level4.tmj",
         "level1.tmj",
         "level5.tmj",
-        "level7.tmj"
+        "level7.tmj",
+        "rain_intro.tmj"
     ],
     "project": "tiled.tiled-project",
     "property.type": "string",
     "recentFiles": [
         "GameObjectTiles.tsx",
         "mothDecoratives.tsx",
-        "rune_medium.tmj",
-        "advanced_movement.tmj",
-        "BackgroundAssets.tsx",
+        "rain_intro.tmj",
         "level7.tmj",
         "level5.tmj",
         "level1.tmj",
         "level4.tmj",
+        "BackgroundAssets.tsx",
+        "advanced_movement.tmj",
+        "rune_medium.tmj",
         "rune_hard.tmj",
-        "jump_intro.tmj",
-        "move_intro.tmj"
+        "jump_intro.tmj"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.type": 1
