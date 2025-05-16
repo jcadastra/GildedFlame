@@ -1,5 +1,5 @@
 {
-    "activeFile": "advanced_movement.tmj",
+    "activeFile": "rune_medium.tmj",
     "expandedProjectPaths": [
         "."
     ],
@@ -21,8 +21,8 @@
         },
         "BackgroundAssets.tsx": {
             "dynamicWrapping": false,
-            "scaleInDock": 0.25,
-            "scaleInEditor": 0.12
+            "scaleInDock": 0.125,
+            "scaleInEditor": 0.25
         },
         "BackgroundStickers.tsx": {
             "dynamicWrapping": true,
@@ -93,13 +93,14 @@
         "advanced_movement.tmj": {
             "expandedObjectLayers": [
                 5,
-                6
+                6,
+                2
             ],
             "scale": 0.33,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 3051.5151515151515,
-                "y": 3413.636363636364
+                "x": 4798.484848484848,
+                "y": 2698.484848484848
             }
         },
         "box_intro.tmj": {
@@ -207,11 +208,11 @@
             "expandedObjectLayers": [
                 7
             ],
-            "scale": 0.2789,
-            "selectedLayer": 5,
+            "scale": 0.75,
+            "selectedLayer": 7,
             "viewCenter": {
-                "x": 5353.173180351381,
-                "y": 4849.408390103979
+                "x": 6299.333333333333,
+                "y": 2999.333333333333
             }
         },
         "level10.tmj": {
@@ -254,22 +255,26 @@
         },
         "level4.tmj": {
             "expandedObjectLayers": [
+                5,
                 7,
-                5
+                2
             ],
-            "scale": 0.1914,
-            "selectedLayer": 5,
+            "scale": 0.33,
+            "selectedLayer": 6,
             "viewCenter": {
-                "x": 9294.670846394984,
-                "y": 3665.099268547545
+                "x": 5395.454545454546,
+                "y": 2695.454545454545
             }
         },
         "level5.tmj": {
-            "scale": 0.180796875,
-            "selectedLayer": 0,
+            "expandedObjectLayers": [
+                2
+            ],
+            "scale": 0.25,
+            "selectedLayer": 5,
             "viewCenter": {
-                "x": 298.6777288047706,
-                "y": 2995.0738916256164
+                "x": 4798,
+                "y": 2698
             }
         },
         "level6.tmj": {
@@ -281,11 +286,15 @@
             }
         },
         "level7.tmj": {
-            "scale": 1.5,
-            "selectedLayer": 0,
+            "expandedObjectLayers": [
+                5,
+                2
+            ],
+            "scale": 0.33,
+            "selectedLayer": 6,
             "viewCenter": {
-                "x": 2072.6666666666665,
-                "y": 1623
+                "x": 5109.090909090908,
+                "y": 1459.090909090909
             }
         },
         "level8.tmj": {
@@ -337,8 +346,8 @@
             "scale": 0.125,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 4796,
-                "y": 2700
+                "x": 4792,
+                "y": 2692
             }
         },
         "rain_medium.tmj": {
@@ -393,10 +402,10 @@
                 5
             ],
             "scale": 0.25,
-            "selectedLayer": 3,
+            "selectedLayer": 4,
             "viewCenter": {
-                "x": 4780,
-                "y": 2682
+                "x": 2688,
+                "y": 1070
             }
         },
         "sample.tmj": {
@@ -576,30 +585,35 @@
         }
     },
     "last.exportedFilePath": "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/assets",
-    "last.imagePath": "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/assets/environment/quarterBlocks_0513",
+    "last.imagePath": "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/assets/backgroundAssets",
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "openFiles": [
         "GameObjectTiles.tsx",
-        "BackgroundAssets.tsx",
         "mothDecoratives.tsx",
+        "rune_medium.tmj",
         "advanced_movement.tmj",
-        "rune_medium.tmj"
+        "BackgroundAssets.tsx",
+        "level4.tmj",
+        "level1.tmj",
+        "level5.tmj",
+        "level7.tmj",
+        "rain_intro.tmj"
     ],
     "project": "tiled.tiled-project",
     "property.type": "string",
     "recentFiles": [
-        "advanced_movement.tmj",
         "GameObjectTiles.tsx",
-        "BackgroundAssets.tsx",
         "mothDecoratives.tsx",
+        "rain_intro.tmj",
+        "level7.tmj",
+        "level5.tmj",
+        "level1.tmj",
+        "level4.tmj",
+        "BackgroundAssets.tsx",
+        "advanced_movement.tmj",
         "rune_medium.tmj",
         "rune_hard.tmj",
-        "jump_intro.tmj",
-        "move_intro.tmj",
-        "throw_intro.tmj",
-        "climb_intro.tmj",
-        "box_intro.tmj",
-        "totem_intro.tmj"
+        "jump_intro.tmj"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.type": 1

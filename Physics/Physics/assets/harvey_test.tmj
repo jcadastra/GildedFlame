@@ -7,7 +7,19 @@
          "draworder":"topdown",
          "id":7,
          "name":"BackgroundTiles",
-         "objects":[],
+         "objects":[
+                {
+                 "gid":76,
+                 "height":600,
+                 "id":629,
+                 "name":"brickBackground",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":600,
+                 "x":1892,
+                 "y":3972
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -18,7 +30,175 @@
          "draworder":"topdown",
          "id":4,
          "name":"Background",
-         "objects":[],
+         "objects":[
+                {
+                 "gid":92,
+                 "height":700,
+                 "id":604,
+                 "name":"banner",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":500,
+                 "x":6690,
+                 "y":1434
+                }, 
+                {
+                 "gid":96,
+                 "height":300,
+                 "id":632,
+                 "name":"cornerWeb",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":300,
+                 "x":5074,
+                 "y":870
+                }, 
+                {
+                 "gid":97,
+                 "height":300,
+                 "id":633,
+                 "name":"cornerWebEgg",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":300,
+                 "x":8678,
+                 "y":2358
+                }, 
+                {
+                 "gid":96,
+                 "height":300,
+                 "id":634,
+                 "name":"cornerWeb",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":300,
+                 "x":582,
+                 "y":2970
+                }, 
+                {
+                 "gid":91,
+                 "height":210,
+                 "id":636,
+                 "name":"holder",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":150,
+                 "x":2181,
+                 "y":4469
+                }, 
+                {
+                 "gid":91,
+                 "height":210,
+                 "id":637,
+                 "name":"holder",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":150,
+                 "x":3393,
+                 "y":4473
+                }, 
+                {
+                 "gid":91,
+                 "height":210,
+                 "id":638,
+                 "name":"holder",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":150,
+                 "x":4589,
+                 "y":4461
+                }, 
+                {
+                 "gid":91,
+                 "height":210,
+                 "id":639,
+                 "name":"holder",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":150,
+                 "x":973,
+                 "y":4457
+                }, 
+                {
+                 "gid":88,
+                 "height":700,
+                 "id":640,
+                 "name":"bookshelf",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":500,
+                 "x":1410.60606060606,
+                 "y":4819.69696969697
+                }, 
+                {
+                 "gid":88,
+                 "height":700,
+                 "id":641,
+                 "name":"bookshelf",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":500,
+                 "x":2592.42424242424,
+                 "y":4819.69696969697
+                }, 
+                {
+                 "gid":88,
+                 "height":700,
+                 "id":642,
+                 "name":"bookshelf",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":500,
+                 "x":3816.66666666667,
+                 "y":4825.75757575758
+                }, 
+                {
+                 "gid":91,
+                 "height":210,
+                 "id":643,
+                 "name":"holder",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":150,
+                 "x":6369,
+                 "y":3561
+                }, 
+                {
+                 "gid":91,
+                 "height":210,
+                 "id":644,
+                 "name":"holder",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":150,
+                 "x":8781,
+                 "y":3561
+                }, 
+                {
+                 "gid":90,
+                 "height":468,
+                 "id":646,
+                 "name":"chandelier",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":512,
+                 "x":9728,
+                 "y":2534
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -26,31 +206,31 @@
          "y":0
         }, 
         {
-         "data":[27, 33, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 27, 33, 39, 34, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
-            27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 28, 0, 26, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
-            27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 28, 0, 26, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
-            27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 28, 0, 26, 27, 33, 39, 39, 39, 39, 39, 39, 39, 39, 34, 27, 27, 27, 27,
-            27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 31, 40, 0, 38, 34, 28, 0, 0, 0, 0, 0, 0, 0, 0, 26, 27, 27, 27, 27,
-            27, 45, 15, 16, 0, 0, 14, 15, 15, 15, 15, 15, 15, 44, 0, 0, 0, 26, 28, 0, 0, 0, 0, 0, 0, 0, 0, 26, 27, 27, 27, 27,
-            27, 27, 27, 28, 0, 0, 26, 27, 27, 27, 27, 27, 27, 28, 0, 0, 0, 26, 28, 0, 0, 0, 0, 0, 0, 0, 0, 26, 27, 27, 27, 27,
-            27, 27, 27, 28, 0, 0, 26, 27, 27, 27, 27, 27, 27, 45, 16, 0, 14, 46, 28, 0, 0, 0, 0, 0, 0, 0, 0, 26, 27, 27, 27, 27,
-            27, 27, 27, 28, 0, 0, 26, 27, 27, 27, 27, 27, 27, 27, 28, 0, 26, 27, 28, 0, 0, 0, 0, 14, 15, 15, 15, 46, 27, 27, 27, 27,
-            33, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 40, 0, 38, 39, 40, 0, 0, 0, 0, 26, 27, 27, 27, 27, 27, 27, 27, 27,
-            28, 0, 0, 0, 0, 0, 38, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 27, 27, 27, 27, 27, 27, 27, 27,
-            28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 27, 27, 27, 27, 27, 27, 27, 27,
-            28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 27, 27, 27, 27, 27, 27, 27, 27,
-            28, 0, 0, 16, 0, 0, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 46, 27, 27, 27, 27, 27, 27, 27, 27,
-            28, 0, 27, 45, 15, 15, 46, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
-            28, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
-            45, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
-            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27],
+         "data":[27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
+            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 33, 39, 39, 34, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
+            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 28, 0, 0, 38, 39, 39, 39, 39, 39, 39, 39, 34, 27, 27, 27, 27, 27, 27, 27, 27,
+            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 27, 27, 27, 27, 27, 27, 27, 27,
+            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 27, 27, 27, 27, 27, 27, 27, 27,
+            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 28, 0, 0, 13, 0, 0, 0, 0, 0, 13, 0, 26, 27, 27, 27, 27, 27, 27, 27, 27,
+            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 28, 0, 0, 17, 3, 3, 3, 3, 8, 18, 0, 38, 12, 39, 39, 39, 39, 39, 39, 34,
+            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 28, 0, 0, 0, 0, 0, 0, 0, 25, 0, 0, 0, 25, 0, 0, 0, 0, 0, 0, 26,
+            27, 33, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 42, 0, 0, 0, 0, 0, 0, 0, 25, 0, 0, 0, 25, 0, 0, 0, 0, 0, 0, 26,
+            27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 0, 0, 5, 3, 3, 4, 0, 17, 4, 0, 2, 18, 0, 0, 0, 0, 0, 0, 26,
+            27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 0, 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 15, 15, 15, 46,
+            27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 0, 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 27, 27, 27, 27,
+            27, 28, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 25, 0, 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 27, 27, 27, 27,
+            27, 45, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 37, 0, 0, 37, 0, 0, 14, 15, 15, 15, 15, 15, 15, 15, 15, 46, 27, 27, 27, 27,
+            27, 27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
+            27, 27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
+            27, 27, 45, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 46, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
+            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27],
          "height":18,
          "id":1,
          "name":"Tile Layer 1",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
-         "width":32,
+         "width":36,
          "x":0,
          "y":0
         }, 
@@ -60,57 +240,9 @@
          "name":"Entities",
          "objects":[
                 {
-                 "gid":58,
-                 "height":548.484848484848,
-                 "id":557,
-                 "name":"burnable",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":521.636363636363,
-                 "x":4395.9696969697,
-                 "y":2089.75757575758
-                }, 
-                {
-                 "gid":59,
-                 "height":372,
-                 "id":558,
-                 "name":"nonburnable",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":292,
-                 "x":4500,
-                 "y":1466
-                }, 
-                {
-                 "gid":57,
-                 "height":150,
-                 "id":562,
-                 "name":"2",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":150,
-                 "x":4576.03,
-                 "y":3907.305
-                }, 
-                {
-                 "gid":57,
-                 "height":150,
-                 "id":563,
-                 "name":"1",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":150,
-                 "x":4569.97,
-                 "y":2046.695
-                }, 
-                {
                  "gid":75,
                  "height":242,
-                 "id":571,
+                 "id":593,
                  "name":"infburnable",
                  "properties":[
                         {
@@ -122,110 +254,202 @@
                  "type":"",
                  "visible":true,
                  "width":323,
-                 "x":783,
-                 "y":1493
+                 "x":1493.54545454545,
+                 "y":3605.84848484848
+                }, 
+                {
+                 "gid":75,
+                 "height":242,
+                 "id":594,
+                 "name":"infburnable",
+                 "properties":[
+                        {
+                         "name":"startOnFire",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":323,
+                 "x":2693.54545454545,
+                 "y":3602.81818181818
+                }, 
+                {
+                 "gid":75,
+                 "height":242,
+                 "id":595,
+                 "name":"infburnable",
+                 "properties":[
+                        {
+                         "name":"startOnFire",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":323,
+                 "x":3890.51515151515,
+                 "y":3596.75757575758
+                }, 
+                {
+                 "gid":59,
+                 "height":360,
+                 "id":596,
+                 "name":"nonburnable",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":300,
+                 "x":1496,
+                 "y":4810
+                }, 
+                {
+                 "gid":75,
+                 "height":242,
+                 "id":597,
+                 "name":"infburnable",
+                 "properties":[
+                        {
+                         "name":"startOnFire",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":275,
+                 "x":6279,
+                 "y":2697
+                }, 
+                {
+                 "gid":57,
+                 "height":150,
+                 "id":599,
+                 "name":"2",
+                 "properties":[
+                        {
+                         "name":"end1Material",
+                         "type":"string",
+                         "value":"iron"
+                        }, 
+                        {
+                         "name":"end2Material",
+                         "type":"string",
+                         "value":"iron"
+                        }, 
+                        {
+                         "name":"middleMaterial",
+                         "type":"string",
+                         "value":"iron"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":150,
+                 "x":5333,
+                 "y":4611
+                }, 
+                {
+                 "gid":57,
+                 "height":150,
+                 "id":598,
+                 "name":"1",
+                 "properties":[
+                        {
+                         "name":"end1Material",
+                         "type":"string",
+                         "value":"iron"
+                        }, 
+                        {
+                         "name":"end2Material",
+                         "type":"string",
+                         "value":"iron"
+                        }, 
+                        {
+                         "name":"middleMaterial",
+                         "type":"string",
+                         "value":"iron"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":150,
+                 "x":5324.15151515152,
+                 "y":879.848484848485
+                }, 
+                {
+                 "gid":57,
+                 "height":150,
+                 "id":608,
+                 "name":"4",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":150,
+                 "x":7881,
+                 "y":3823
+                }, 
+                {
+                 "gid":57,
+                 "height":150,
+                 "id":607,
+                 "name":"3",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":150,
+                 "x":7877,
+                 "y":2347
                 }, 
                 {
                  "gid":61,
                  "height":235,
-                 "id":572,
+                 "id":611,
                  "name":"goaldoor",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":346,
-                 "x":7649,
-                 "y":2356
-                }, 
-                {
-                 "gid":58,
-                 "height":600,
-                 "id":573,
-                 "name":"burnable",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":600,
-                 "x":2836,
-                 "y":1472
-                }, 
-                {
-                 "gid":75,
-                 "height":242,
-                 "id":575,
-                 "name":"infburnable",
-                 "properties":[
-                        {
-                         "name":"startOnFire",
-                         "type":"bool",
-                         "value":true
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":323,
-                 "x":5083,
-                 "y":3809
-                }, 
-                {
-                 "gid":58,
-                 "height":600,
-                 "id":578,
-                 "name":"burnable",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":600,
-                 "x":6280,
-                 "y":3888
+                 "x":9811,
+                 "y":3014
                 }, 
                 {
                  "gid":59,
-                 "height":600,
-                 "id":583,
+                 "height":330,
+                 "id":601,
                  "name":"nonburnable",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":500,
-                 "x":6277,
-                 "y":3196
+                 "width":275,
+                 "x":7813.33333333333,
+                 "y":2102.66666666667
                 }, 
                 {
                  "gid":58,
                  "height":600,
-                 "id":587,
+                 "id":600,
                  "name":"burnable",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":600,
-                 "x":1200,
-                 "y":3000
+                 "x":7654,
+                 "y":2722
                 }, 
                 {
                  "gid":58,
                  "height":600,
-                 "id":588,
+                 "id":592,
                  "name":"burnable",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":600,
-                 "x":1200,
-                 "y":3600
-                }, 
-                {
-                 "gid":58,
-                 "height":600,
-                 "id":589,
-                 "name":"burnable",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":600,
-                 "x":1200,
-                 "y":4200
+                 "width":580,
+                 "x":5109.09090909091,
+                 "y":1206.06060606061
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -237,7 +461,31 @@
          "draworder":"topdown",
          "id":3,
          "name":"Enemies",
-         "objects":[],
+         "objects":[
+                {
+                 "gid":55,
+                 "height":300,
+                 "id":602,
+                 "name":"totem",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":300,
+                 "x":5701.51515151515,
+                 "y":1510.60606060606
+                }, 
+                {
+                 "gid":55,
+                 "height":300,
+                 "id":603,
+                 "name":"totem",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":300,
+                 "x":5701.51515151515,
+                 "y":1204.54545454545
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -250,28 +498,28 @@
          "name":"Player",
          "objects":[
                 {
-                 "gid":52,
-                 "height":600,
-                 "id":555,
-                 "name":"player",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":300,
-                 "x":5530,
-                 "y":3768
-                }, 
-                {
                  "gid":51,
                  "height":437,
-                 "id":559,
+                 "id":606,
                  "name":"torch",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":216,
-                 "x":4552.60606060606,
-                 "y":1019
+                 "x":6904,
+                 "y":1865.5
+                }, 
+                {
+                 "gid":52,
+                 "height":600,
+                 "id":630,
+                 "name":"player",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":300,
+                 "x":3476.30303030303,
+                 "y":4837.21212121212
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -283,7 +531,181 @@
          "draworder":"topdown",
          "id":6,
          "name":"Action Entities",
-         "objects":[],
+         "objects":[
+                {
+                 "gid":86,
+                 "height":57,
+                 "id":613,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":5376,
+                 "y":4577
+                }, 
+                {
+                 "gid":86,
+                 "height":57,
+                 "id":614,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":7936,
+                 "y":2433
+                }, 
+                {
+                 "gid":86,
+                 "height":57,
+                 "id":615,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":7928,
+                 "y":3777
+                }, 
+                {
+                 "gid":86,
+                 "height":57,
+                 "id":616,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":9960,
+                 "y":2909
+                }, 
+                {
+                 "gid":86,
+                 "height":57,
+                 "id":617,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":716,
+                 "y":3777
+                }, 
+                {
+                 "gid":86,
+                 "height":57,
+                 "id":618,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":1018.78787878788,
+                 "y":4388.87878787879
+                }, 
+                {
+                 "gid":86,
+                 "height":57,
+                 "id":620,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":2248,
+                 "y":4413
+                }, 
+                {
+                 "gid":86,
+                 "height":57,
+                 "id":621,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":3456,
+                 "y":4381
+                }, 
+                {
+                 "gid":86,
+                 "height":57,
+                 "id":622,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":4630.66666666667,
+                 "y":4387.66666666667
+                }, 
+                {
+                 "gid":86,
+                 "height":57,
+                 "id":623,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":6408,
+                 "y":3477
+                }, 
+                {
+                 "gid":86,
+                 "height":57,
+                 "id":624,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":8820,
+                 "y":3485
+                }, 
+                {
+                 "gid":86,
+                 "height":57,
+                 "id":625,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":5832,
+                 "y":1249
+                }, 
+                {
+                 "gid":86,
+                 "height":57,
+                 "id":631,
+                 "name":"light",
+                 "properties":[
+                        {
+                         "name":"pinTarget",
+                         "type":"string",
+                         "value":"burnable"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":5380.59090909091,
+                 "y":926.045454545454
+                }, 
+                {
+                 "gid":86,
+                 "height":57,
+                 "id":648,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":9947.5,
+                 "y":2267.5
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -291,7 +713,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":592,
+ "nextobjectid":649,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
@@ -316,9 +738,13 @@
         {
          "firstgid":76,
          "source":"BackgroundAssets.tsx"
+        }, 
+        {
+         "firstgid":93,
+         "source":"mothDecoratives.tsx"
         }],
  "tilewidth":300,
  "type":"map",
  "version":"1.10",
- "width":32
+ "width":36
 }

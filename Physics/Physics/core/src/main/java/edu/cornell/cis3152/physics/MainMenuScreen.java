@@ -318,6 +318,5 @@ public class MainMenuScreen implements Screen {
     public void dispose() {
         stage.dispose();
         skin.dispose();
-        bgTexture.dispose();
     }
 }

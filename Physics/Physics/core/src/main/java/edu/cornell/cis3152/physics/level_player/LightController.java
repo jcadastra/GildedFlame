@@ -87,6 +87,8 @@ public class LightController {
     private int maxLights = 20;
     private int maxFireLights = 30;
     Map<Body, PointLight> lightAssignments = new HashMap<>();
+    public float currentDx = 0;
+    public float currentDy = 0;
 
     private Map<Integer,PointLight> fireAssignments = new HashMap<>();
 
@@ -573,10 +575,11 @@ public class LightController {
 
 
     public void dispose() {
-        rayHandler.dispose();
-        if (camera != null) {
-            camera = null;
+        if (rayHandler != null) {
+            rayHandler.dispose();
+            rayHandler = null;
         }
+        camera = null;
         lightPool.clear();
         fireLightPool.clear();
         lightingAssignments.clear();

@@ -8,7 +8,7 @@
          "name":"Background Tiles",
          "objects":[
                 {
-                 "gid":72,
+                 "gid":80,
                  "height":600,
                  "id":104,
                  "name":"brickBackground",
@@ -21,7 +21,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -31,7 +31,7 @@
          "name":"Background",
          "objects":[
                 {
-                 "gid":87,
+                 "gid":95,
                  "height":210,
                  "id":128,
                  "name":"holder",
@@ -43,7 +43,7 @@
                  "y":4609
                 }, 
                 {
-                 "gid":87,
+                 "gid":95,
                  "height":210,
                  "id":129,
                  "name":"holder",
@@ -55,7 +55,7 @@
                  "y":3729
                 }, 
                 {
-                 "gid":87,
+                 "gid":95,
                  "height":210,
                  "id":130,
                  "name":"holder",
@@ -67,7 +67,7 @@
                  "y":2497
                 }, 
                 {
-                 "gid":87,
+                 "gid":95,
                  "height":210,
                  "id":131,
                  "name":"holder",
@@ -79,7 +79,7 @@
                  "y":1305
                 }, 
                 {
-                 "gid":86,
+                 "gid":94,
                  "height":657.575757575758,
                  "id":137,
                  "name":"chandelier",
@@ -87,44 +87,200 @@
                  "type":"",
                  "visible":true,
                  "width":729.090909090909,
-                 "x":6520.30303030303,
-                 "y":898.484848484848
+                 "x":6272.30303030303,
+                 "y":1214.48484848485
                 }, 
                 {
-                 "gid":76,
-                 "height":500,
-                 "id":150,
-                 "name":"window",
+                 "gid":54,
+                 "height":208.936024571764,
+                 "id":158,
+                 "name":"platform3",
+                 "rotation":270.458,
+                 "type":"",
+                 "visible":true,
+                 "width":664.872582200457,
+                 "x":7400.80261314418,
+                 "y":4604.74863636364
+                }, 
+                {
+                 "gid":54,
+                 "height":208.936024571764,
+                 "id":159,
+                 "name":"platform2",
+                 "rotation":270.458,
+                 "type":"",
+                 "visible":true,
+                 "width":664.872582200457,
+                 "x":7177.10330958359,
+                 "y":4603.41106578632
+                }, 
+                {
+                 "gid":54,
+                 "height":208.936024571764,
+                 "id":160,
+                 "name":"platform1",
+                 "rotation":270.458,
+                 "type":"",
+                 "visible":true,
+                 "width":664.872582200457,
+                 "x":6958.15425667139,
+                 "y":4597.84202193406
+                }, 
+                {
+                 "gid":54,
+                 "height":315.065885950128,
+                 "id":173,
+                 "name":"platform5",
+                 "rotation":270.458,
+                 "type":"",
+                 "visible":true,
+                 "width":910.198589514941,
+                 "x":4236.35666190341,
+                 "y":1533.59247288005
+                }, 
+                {
+                 "gid":96,
+                 "height":584,
+                 "id":195,
+                 "name":"banner",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":328,
+                 "x":5690,
+                 "y":4332
+                }, 
+                {
+                 "gid":92,
+                 "height":896.969696969697,
+                 "id":196,
+                 "name":"bookshelf",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":672.727272727273,
+                 "x":1559.09090909091,
+                 "y":1543.93939393939
+                }, 
+                {
+                 "gid":95,
+                 "height":210,
+                 "id":204,
+                 "name":"holder",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":150,
+                 "x":3665,
+                 "y":2389
+                }, 
+                {
+                 "gid":95,
+                 "height":210,
+                 "id":206,
+                 "name":"holder",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":150,
+                 "x":5780.75757575758,
+                 "y":4592.39393939394
+                }, 
+                {
+                 "gid":111,
+                 "height":300,
+                 "id":207,
+                 "name":"cornerWeb",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":300,
-                 "x":4350,
-                 "y":2314
+                 "x":1170,
+                 "y":866
                 }, 
                 {
-                 "gid":76,
-                 "height":500,
-                 "id":151,
-                 "name":"window",
+                 "gid":110,
+                 "height":300,
+                 "id":208,
+                 "name":"centralWebOne",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":300,
-                 "x":4318,
-                 "y":1074
+                 "x":878,
+                 "y":1214
                 }, 
                 {
-                 "gid":76,
-                 "height":500,
-                 "id":152,
-                 "name":"window",
+                 "gid":110,
+                 "height":300,
+                 "id":209,
+                 "name":"centralWebOne",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":300,
-                 "x":4342,
-                 "y":3522
+                 "x":2858,
+                 "y":802
+                }, 
+                {
+                 "gid":112,
+                 "height":300,
+                 "id":219,
+                 "name":"cornerWebEgg",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":300,
+                 "x":872,
+                 "y":2924
+                }, 
+                {
+                 "gid":112,
+                 "height":300,
+                 "id":220,
+                 "name":"cornerWebEgg",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":300,
+                 "x":572,
+                 "y":3224
+                }, 
+                {
+                 "gid":108,
+                 "height":300,
+                 "id":221,
+                 "name":"centralWeb",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":300,
+                 "x":1578,
+                 "y":4110
+                }, 
+                {
+                 "gid":111,
+                 "height":300,
+                 "id":222,
+                 "name":"cornerWeb",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":300,
+                 "x":5982,
+                 "y":1158
+                }, 
+                {
+                 "gid":111,
+                 "height":300,
+                 "id":223,
+                 "name":"cornerWeb",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":300,
+                 "x":6262,
+                 "y":846
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -133,23 +289,23 @@
          "y":0
         }, 
         {
-         "data":[27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 33, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 34,
-            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26,
-            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26,
-            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26,
-            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 28, 0, 0, 2, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26,
-            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 3, 3, 3, 3, 3, 24,
-            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26,
-            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26,
-            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 28, 0, 0, 2, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26,
-            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 3, 3, 3, 3, 3, 26,
-            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26,
-            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26,
-            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 28, 0, 0, 2, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26,
-            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 3, 3, 3, 3, 3, 24,
-            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26,
-            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 45, 15, 15, 15, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26,
-            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 45, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 46,
+         "data":[27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
+            27, 27, 27, 33, 39, 39, 39, 39, 39, 39, 39, 39, 27, 27, 27, 27, 27, 27, 27, 27, 33, 39, 39, 39, 39, 39, 39, 39, 39, 39, 34, 27,
+            33, 39, 39, 40, 0, 0, 0, 0, 0, 0, 0, 0, 38, 39, 39, 39, 27, 27, 27, 33, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 27,
+            28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 38, 39, 39, 42, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 27,
+            45, 15, 15, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 27,
+            27, 27, 27, 45, 15, 15, 15, 15, 15, 15, 16, 0, 0, 0, 0, 0, 0, 0, 0, 25, 0, 0, 0, 0, 2, 3, 3, 3, 3, 3, 24, 27,
+            27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 28, 0, 0, 0, 0, 2, 3, 4, 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 27,
+            27, 27, 27, 27, 27, 33, 39, 39, 39, 34, 45, 16, 0, 0, 0, 0, 0, 0, 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 27,
+            27, 27, 33, 39, 39, 40, 0, 0, 0, 26, 27, 28, 0, 0, 0, 0, 0, 0, 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 27,
+            27, 33, 40, 0, 0, 0, 0, 0, 0, 26, 27, 11, 4, 0, 0, 0, 0, 0, 0, 25, 0, 0, 0, 0, 2, 3, 3, 3, 3, 3, 24, 27,
+            27, 28, 0, 0, 0, 13, 0, 0, 0, 26, 27, 28, 0, 0, 0, 0, 0, 0, 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 27,
+            27, 28, 0, 0, 0, 29, 15, 15, 15, 46, 27, 28, 0, 0, 0, 2, 3, 4, 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 27,
+            27, 28, 0, 0, 0, 38, 34, 27, 27, 27, 27, 28, 0, 0, 0, 0, 0, 0, 0, 37, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 27,
+            27, 45, 16, 0, 0, 0, 38, 39, 39, 39, 39, 43, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 3, 3, 3, 3, 24, 27,
+            27, 27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 27,
+            27, 27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 27,
+            27, 27, 45, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 46, 27,
             27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27],
          "height":18,
          "id":1,
@@ -163,41 +319,318 @@
         }, 
         {
          "draworder":"topdown",
+         "id":8,
+         "name":"Foreground",
+         "objects":[
+                {
+                 "gid":118,
+                 "height":300,
+                 "id":211,
+                 "name":"fullWebEgg",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":300,
+                 "x":3162,
+                 "y":830
+                }, 
+                {
+                 "gid":108,
+                 "height":300,
+                 "id":212,
+                 "name":"centralWeb",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":300,
+                 "x":5510,
+                 "y":1394
+                }, 
+                {
+                 "gid":112,
+                 "height":300,
+                 "id":213,
+                 "name":"cornerWebEgg",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":300,
+                 "x":3570,
+                 "y":3222
+                }, 
+                {
+                 "gid":111,
+                 "height":300,
+                 "id":214,
+                 "name":"cornerWeb",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":300,
+                 "x":1770,
+                 "y":2670
+                }, 
+                {
+                 "gid":108,
+                 "height":300,
+                 "id":215,
+                 "name":"centralWeb",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":300,
+                 "x":2538,
+                 "y":2582
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
          "id":2,
          "name":"Entities",
          "objects":[
                 {
-                 "gid":49,
-                 "height":150,
-                 "id":66,
-                 "name":"2",
+                 "gid":54,
+                 "height":298,
+                 "id":144,
+                 "name":"platform4",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":872,
+                 "x":6338.17666666667,
+                 "y":5150.07
+                }, 
+                {
+                 "gid":64,
+                 "height":520,
+                 "id":71,
+                 "name":"rune",
                  "properties":[
                         {
-                         "name":"end1Material",
-                         "type":"string",
-                         "value":"iron"
+                         "name":"dissipateTime",
+                         "type":"float",
+                         "value":10
                         }, 
                         {
-                         "name":"end2Material",
+                         "name":"endPos",
                          "type":"string",
-                         "value":"iron"
+                         "value":"0,0"
                         }, 
                         {
-                         "name":"middleMaterial",
+                         "name":"moveEvent",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"platformName",
                          "type":"string",
-                         "value":"iron"
+                         "value":"platform3"
+                        }, 
+                        {
+                         "name":"startPos",
+                         "type":"string",
+                         "value":"0,3"
+                        }, 
+                        {
+                         "name":"thresholds",
+                         "type":"string",
+                         "value":"0"
+                        }, 
+                        {
+                         "name":"timeTo",
+                         "type":"float",
+                         "value":10
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":150,
-                 "x":3830.89473684211,
-                 "y":4446.78947368421
+                 "width":400,
+                 "x":8300.21052631579,
+                 "y":3937.43540669856
+                }, 
+                {
+                 "gid":64,
+                 "height":520,
+                 "id":72,
+                 "name":"rune",
+                 "properties":[
+                        {
+                         "name":"dissipateTime",
+                         "type":"float",
+                         "value":10
+                        }, 
+                        {
+                         "name":"endPos",
+                         "type":"string",
+                         "value":"0,0"
+                        }, 
+                        {
+                         "name":"moveEvent",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"platformName",
+                         "type":"string",
+                         "value":"platform2"
+                        }, 
+                        {
+                         "name":"startPos",
+                         "type":"string",
+                         "value":"0,3"
+                        }, 
+                        {
+                         "name":"thresholds",
+                         "type":"string",
+                         "value":"0"
+                        }, 
+                        {
+                         "name":"timeTo",
+                         "type":"float",
+                         "value":10
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":400,
+                 "x":8309.18022328549,
+                 "y":2760.8293460925
+                }, 
+                {
+                 "gid":64,
+                 "height":520,
+                 "id":73,
+                 "name":"rune",
+                 "properties":[
+                        {
+                         "name":"dissipateTime",
+                         "type":"float",
+                         "value":10
+                        }, 
+                        {
+                         "name":"endPos",
+                         "type":"string",
+                         "value":"0,0"
+                        }, 
+                        {
+                         "name":"moveEvent",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"platformName",
+                         "type":"string",
+                         "value":"platform1"
+                        }, 
+                        {
+                         "name":"startPos",
+                         "type":"string",
+                         "value":"0,3"
+                        }, 
+                        {
+                         "name":"thresholds",
+                         "type":"string",
+                         "value":"0"
+                        }, 
+                        {
+                         "name":"timeTo",
+                         "type":"float",
+                         "value":10
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":400,
+                 "x":8322.23285486444,
+                 "y":1531.35566188198
+                }, 
+                {
+                 "gid":64,
+                 "height":520,
+                 "id":74,
+                 "name":"rune",
+                 "properties":[
+                        {
+                         "name":"dissipateTime",
+                         "type":"float",
+                         "value":5
+                        }, 
+                        {
+                         "name":"endPos",
+                         "type":"string",
+                         "value":"0,11"
+                        }, 
+                        {
+                         "name":"moveEvent",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"platformName",
+                         "type":"string",
+                         "value":"platform4"
+                        }, 
+                        {
+                         "name":"startPos",
+                         "type":"string",
+                         "value":"0,0"
+                        }, 
+                        {
+                         "name":"thresholds",
+                         "type":"string",
+                         "value":"0"
+                        }, 
+                        {
+                         "name":"timeTo",
+                         "type":"float",
+                         "value":10
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":400,
+                 "x":4592.42743221691,
+                 "y":4821.33333333333
+                }, 
+                {
+                 "gid":53,
+                 "height":235,
+                 "id":75,
+                 "name":"goaldoor",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":346,
+                 "x":8426.0749601276,
+                 "y":4834.67145135566
+                }, 
+                {
+                 "gid":67,
+                 "height":242,
+                 "id":153,
+                 "name":"infburnable",
+                 "properties":[
+                        {
+                         "name":"startOnFire",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":323,
+                 "x":7945.90909090909,
+                 "y":3906.09090909091
                 }, 
                 {
                  "gid":49,
                  "height":150,
-                 "id":67,
+                 "id":167,
                  "name":"1",
                  "properties":[
                         {
@@ -219,290 +652,222 @@
                  "type":"",
                  "visible":true,
                  "width":150,
-                 "x":3854.89473684211,
-                 "y":674.578947368422
+                 "x":4225,
+                 "y":3591
                 }, 
                 {
-                 "gid":54,
-                 "height":334.28,
-                 "id":141,
-                 "name":"platform3",
-                 "rotation":270.458,
-                 "type":"",
-                 "visible":true,
-                 "width":1063.74,
-                 "x":7875.41666666667,
-                 "y":4603.0403030303
-                }, 
-                {
-                 "gid":54,
-                 "height":334.28,
-                 "id":142,
-                 "name":"platform2",
-                 "rotation":270.458,
-                 "type":"",
-                 "visible":true,
-                 "width":1063.74,
-                 "x":7517.51666666667,
-                 "y":4600.9003030303
-                }, 
-                {
-                 "gid":54,
-                 "height":334.28,
-                 "id":143,
-                 "name":"platform1",
-                 "rotation":270.458,
-                 "type":"",
-                 "visible":true,
-                 "width":1063.74,
-                 "x":7167.21666666667,
-                 "y":4591.9903030303
-                }, 
-                {
-                 "gid":54,
-                 "height":298,
-                 "id":144,
-                 "name":"platform4",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":872,
-                 "x":6338.17666666667,
-                 "y":5324.0703030303
-                }, 
-                {
-                 "gid":64,
-                 "height":520,
-                 "id":71,
-                 "name":"rune",
+                 "gid":49,
+                 "height":150,
+                 "id":168,
+                 "name":"2",
                  "properties":[
                         {
-                         "name":"dissipateTime",
-                         "type":"float",
-                         "value":3
-                        }, 
-                        {
-                         "name":"endPos",
+                         "name":"end1Material",
                          "type":"string",
-                         "value":"0,0"
+                         "value":"iron"
                         }, 
                         {
-                         "name":"moveEvent",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"platformName",
+                         "name":"end2Material",
                          "type":"string",
-                         "value":"platform1"
+                         "value":"iron"
                         }, 
                         {
-                         "name":"startPos",
+                         "name":"middleMaterial",
                          "type":"string",
-                         "value":"0,12"
-                        }, 
-                        {
-                         "name":"thresholds",
-                         "type":"string",
-                         "value":"0"
-                        }, 
-                        {
-                         "name":"timeTo",
-                         "type":"float",
-                         "value":3
+                         "value":"iron"
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":400,
-                 "x":8687.24082934609,
-                 "y":3931.13237639553
+                 "width":150,
+                 "x":4229,
+                 "y":4423
                 }, 
                 {
-                 "gid":64,
-                 "height":520,
-                 "id":72,
-                 "name":"rune",
-                 "properties":[
-                        {
-                         "name":"dissipateTime",
-                         "type":"float",
-                         "value":3
-                        }, 
-                        {
-                         "name":"endPos",
-                         "type":"string",
-                         "value":"0,0"
-                        }, 
-                        {
-                         "name":"moveEvent",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"platformName",
-                         "type":"string",
-                         "value":"platform2"
-                        }, 
-                        {
-                         "name":"startPos",
-                         "type":"string",
-                         "value":"0,12"
-                        }, 
-                        {
-                         "name":"thresholds",
-                         "type":"string",
-                         "value":"0"
-                        }, 
-                        {
-                         "name":"timeTo",
-                         "type":"float",
-                         "value":3
-                        }],
+                 "gid":51,
+                 "height":350,
+                 "id":170,
+                 "name":"nonburnable",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":400,
-                 "x":8696.21052631579,
-                 "y":2754.52631578947
-                }, 
-                {
-                 "gid":64,
-                 "height":520,
-                 "id":73,
-                 "name":"rune",
-                 "properties":[
-                        {
-                         "name":"dissipateTime",
-                         "type":"float",
-                         "value":3
-                        }, 
-                        {
-                         "name":"endPos",
-                         "type":"string",
-                         "value":"0,0"
-                        }, 
-                        {
-                         "name":"moveEvent",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"platformName",
-                         "type":"string",
-                         "value":"platform3"
-                        }, 
-                        {
-                         "name":"startPos",
-                         "type":"string",
-                         "value":"0,12"
-                        }, 
-                        {
-                         "name":"thresholds",
-                         "type":"string",
-                         "value":"0"
-                        }, 
-                        {
-                         "name":"timeTo",
-                         "type":"float",
-                         "value":3
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":400,
-                 "x":8709.26315789474,
-                 "y":1525.05263157895
-                }, 
-                {
-                 "gid":64,
-                 "height":520,
-                 "id":74,
-                 "name":"rune",
-                 "properties":[
-                        {
-                         "name":"dissipateTime",
-                         "type":"float",
-                         "value":5
-                        }, 
-                        {
-                         "name":"endPos",
-                         "type":"string",
-                         "value":"0,12"
-                        }, 
-                        {
-                         "name":"moveEvent",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"platformName",
-                         "type":"string",
-                         "value":"platform4"
-                        }, 
-                        {
-                         "name":"startPos",
-                         "type":"string",
-                         "value":"0,0"
-                        }, 
-                        {
-                         "name":"thresholds",
-                         "type":"string",
-                         "value":"0"
-                        }, 
-                        {
-                         "name":"timeTo",
-                         "type":"float",
-                         "value":5
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":400,
-                 "x":5100.42743221691,
-                 "y":4837.33333333333
-                }, 
-                {
-                 "gid":53,
-                 "height":235,
-                 "id":75,
-                 "name":"goaldoor",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":346,
-                 "x":8813.1052631579,
-                 "y":4828.36842105263
+                 "width":285,
+                 "x":4816,
+                 "y":3298
                 }, 
                 {
                  "gid":67,
-                 "height":242,
-                 "id":102,
+                 "height":225,
+                 "id":171,
                  "name":"infburnable",
                  "properties":[
                         {
                          "name":"startOnFire",
                          "type":"bool",
-                         "value":false
+                         "value":true
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":323,
-                 "x":4348.80303030303,
-                 "y":3591.12121212121
+                 "width":285,
+                 "x":4811,
+                 "y":1833
                 }, 
                 {
                  "gid":67,
                  "height":242,
-                 "id":103,
+                 "id":172,
                  "name":"infburnable",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":323,
-                 "x":4354.86363636364,
-                 "y":2387.9696969697
+                 "x":1462.81818181818,
+                 "y":3040.27272727273
+                }, 
+                {
+                 "gid":64,
+                 "height":520,
+                 "id":174,
+                 "name":"rune",
+                 "properties":[
+                        {
+                         "name":"dissipateTime",
+                         "type":"float",
+                         "value":10
+                        }, 
+                        {
+                         "name":"endPos",
+                         "type":"string",
+                         "value":"0,5"
+                        }, 
+                        {
+                         "name":"moveEvent",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"platformName",
+                         "type":"string",
+                         "value":"platform5"
+                        }, 
+                        {
+                         "name":"startPos",
+                         "type":"string",
+                         "value":"0,0"
+                        }, 
+                        {
+                         "name":"thresholds",
+                         "type":"string",
+                         "value":"0"
+                        }, 
+                        {
+                         "name":"timeTo",
+                         "type":"float",
+                         "value":10
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":400,
+                 "x":2061.0303030303,
+                 "y":3326.30303030303
+                }, 
+                {
+                 "gid":74,
+                 "height":158,
+                 "id":175,
+                 "name":"qb3",
+                 "properties":[
+                        {
+                         "name":"flipHorizontally",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":230,
+                 "x":1533.9696969697,
+                 "y":2744.54545454545
+                }, 
+                {
+                 "gid":74,
+                 "height":158,
+                 "id":179,
+                 "name":"qb3",
+                 "properties":[
+                        {
+                         "name":"flipHorizontally",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":230,
+                 "x":1356.75757575758,
+                 "y":2718.39393939394
+                }, 
+                {
+                 "gid":75,
+                 "height":158,
+                 "id":182,
+                 "name":"qb4",
+                 "properties":[
+                        {
+                         "name":"flipHorizontally",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":230,
+                 "x":961,
+                 "y":1263
+                }, 
+                {
+                 "gid":50,
+                 "height":300,
+                 "id":183,
+                 "name":"burnable",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":300,
+                 "x":3300,
+                 "y":1800
+                }, 
+                {
+                 "gid":67,
+                 "height":225,
+                 "id":192,
+                 "name":"infburnable",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":285,
+                 "x":1681.5303030303,
+                 "y":1528.93939393939
+                }, 
+                {
+                 "gid":73,
+                 "height":158,
+                 "id":225,
+                 "name":"qb2",
+                 "properties":[
+                        {
+                         "name":"flipHorizontally",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":230,
+                 "x":1253,
+                 "y":1553
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -516,28 +881,16 @@
          "name":"Enemies",
          "objects":[
                 {
-                 "gid":67,
-                 "height":242,
-                 "id":145,
-                 "name":"infburnable",
+                 "gid":107,
+                 "height":300,
+                 "id":161,
+                 "name":"moth",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":323,
-                 "x":4322.5,
-                 "y":1200.75
-                }, 
-                {
-                 "gid":82,
-                 "height":57,
-                 "id":146,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":4425.99,
-                 "y":1101.25
+                 "width":300,
+                 "x":506,
+                 "y":1190
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -551,7 +904,7 @@
          "name":"Player",
          "objects":[
                 {
-                 "gid":71,
+                 "gid":79,
                  "height":600,
                  "id":106,
                  "name":"player",
@@ -559,11 +912,11 @@
                  "type":"",
                  "visible":true,
                  "width":300,
-                 "x":7247,
-                 "y":4790.5
+                 "x":6434.57575757576,
+                 "y":4526.80303030303
                 }, 
                 {
-                 "gid":70,
+                 "gid":78,
                  "height":437,
                  "id":107,
                  "name":"torch",
@@ -571,8 +924,26 @@
                  "type":"",
                  "visible":true,
                  "width":216,
-                 "x":7541,
-                 "y":4769.5
+                 "x":6473.72727272727,
+                 "y":4528.22727272727
+                }, 
+                {
+                 "gid":75,
+                 "height":158,
+                 "id":226,
+                 "name":"qb4",
+                 "properties":[
+                        {
+                         "name":"flipHorizontally",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":230,
+                 "x":885,
+                 "y":4859
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -586,31 +957,7 @@
          "name":"Action Entities",
          "objects":[
                 {
-                 "gid":82,
-                 "height":57,
-                 "id":114,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":4458.34924242424,
-                 "y":2288.46560606061
-                }, 
-                {
-                 "gid":82,
-                 "height":57,
-                 "id":115,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":4465.49924242424,
-                 "y":3474.65560606061
-                }, 
-                {
-                 "gid":82,
+                 "gid":90,
                  "height":57,
                  "id":116,
                  "name":"light",
@@ -618,35 +965,11 @@
                  "type":"",
                  "visible":true,
                  "width":57,
-                 "x":5279.0303030303,
-                 "y":4520.27272727273
+                 "x":4755.0303030303,
+                 "y":4516.27272727273
                 }, 
                 {
-                 "gid":82,
-                 "height":57,
-                 "id":117,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":3872,
-                 "y":4389
-                }, 
-                {
-                 "gid":82,
-                 "height":57,
-                 "id":118,
-                 "name":"light",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":57,
-                 "x":3908,
-                 "y":637
-                }, 
-                {
-                 "gid":82,
+                 "gid":90,
                  "height":57,
                  "id":119,
                  "name":"light",
@@ -654,11 +977,11 @@
                  "type":"",
                  "visible":true,
                  "width":57,
-                 "x":8876,
-                 "y":2445
+                 "x":8488.9696969697,
+                 "y":2451.30303030303
                 }, 
                 {
-                 "gid":82,
+                 "gid":90,
                  "height":57,
                  "id":120,
                  "name":"light",
@@ -666,11 +989,11 @@
                  "type":"",
                  "visible":true,
                  "width":57,
-                 "x":8900,
-                 "y":1229
+                 "x":8512.9696969697,
+                 "y":1235.30303030303
                 }, 
                 {
-                 "gid":82,
+                 "gid":90,
                  "height":57,
                  "id":121,
                  "name":"light",
@@ -678,11 +1001,11 @@
                  "type":"",
                  "visible":true,
                  "width":57,
-                 "x":8868,
-                 "y":3637
+                 "x":8480.9696969697,
+                 "y":3643.30303030303
                 }, 
                 {
-                 "gid":82,
+                 "gid":90,
                  "height":57,
                  "id":122,
                  "name":"light",
@@ -690,11 +1013,11 @@
                  "type":"",
                  "visible":true,
                  "width":57,
-                 "x":8944,
-                 "y":4705
+                 "x":8556.9696969697,
+                 "y":4711.30303030303
                 }, 
                 {
-                 "gid":82,
+                 "gid":90,
                  "height":57,
                  "id":124,
                  "name":"light",
@@ -706,7 +1029,7 @@
                  "y":2417
                 }, 
                 {
-                 "gid":82,
+                 "gid":90,
                  "height":57,
                  "id":125,
                  "name":"light",
@@ -718,7 +1041,7 @@
                  "y":1225
                 }, 
                 {
-                 "gid":82,
+                 "gid":90,
                  "height":57,
                  "id":126,
                  "name":"light",
@@ -730,7 +1053,7 @@
                  "y":4517
                 }, 
                 {
-                 "gid":82,
+                 "gid":90,
                  "height":57,
                  "id":127,
                  "name":"light",
@@ -742,7 +1065,7 @@
                  "y":3633
                 }, 
                 {
-                 "gid":82,
+                 "gid":90,
                  "height":57,
                  "id":136,
                  "name":"light",
@@ -760,7 +1083,7 @@
                  "y":5201.80303030303
                 }, 
                 {
-                 "gid":82,
+                 "gid":90,
                  "height":57,
                  "id":139,
                  "name":"light",
@@ -768,8 +1091,80 @@
                  "type":"",
                  "visible":true,
                  "width":57,
-                 "x":6862.40909090909,
-                 "y":638.170606060606
+                 "x":6614.40909090909,
+                 "y":954.170606060606
+                }, 
+                {
+                 "gid":90,
+                 "height":57,
+                 "id":184,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":2232,
+                 "y":3029
+                }, 
+                {
+                 "gid":90,
+                 "height":57,
+                 "id":185,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":1812,
+                 "y":1453
+                }, 
+                {
+                 "gid":90,
+                 "height":57,
+                 "id":187,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":4276,
+                 "y":4373
+                }, 
+                {
+                 "gid":90,
+                 "height":57,
+                 "id":188,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":3720,
+                 "y":2309
+                }, 
+                {
+                 "gid":90,
+                 "height":57,
+                 "id":189,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":4932,
+                 "y":3145
+                }, 
+                {
+                 "gid":90,
+                 "height":57,
+                 "id":203,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":5816,
+                 "y":4513
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -777,8 +1172,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":8,
- "nextobjectid":153,
+ "nextlayerid":9,
+ "nextobjectid":227,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
@@ -793,16 +1188,20 @@
          "source":"GameObjectTiles.tsx"
         }, 
         {
-         "firstgid":68,
+         "firstgid":76,
          "source":"PlayerTorchTiles.tsx"
         }, 
         {
-         "firstgid":72,
+         "firstgid":80,
          "source":"BackgroundAssets.tsx"
         }, 
         {
-         "firstgid":89,
+         "firstgid":104,
          "source":"EnemyTiles.tsx"
+        }, 
+        {
+         "firstgid":108,
+         "source":"mothDecoratives.tsx"
         }],
  "tilewidth":300,
  "type":"map",

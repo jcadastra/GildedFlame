@@ -15,22 +15,25 @@ import edu.cornell.gdiac.physics2.BoxObstacle;
 import edu.cornell.gdiac.physics2.ObstacleSprite;
 import edu.cornell.gdiac.physics2.WheelObstacle;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
 
 public class Rune extends ObstacleSprite {
 
     private float powerLevel = 0;
+    public void setPowerLevel(float powerLevel) { this.powerLevel = powerLevel; }
     private float prevPowerLevel = 0;
     private float r = 1.5f;
     private float secondsToFullDissipation = 15;
     private float dispersalRate = 1/(60f * secondsToFullDissipation);
     private float chargeRate;
 
-    private int inLight = 0;
+    public int inLight = 0;
     private float currentLatchThreshold = 0;
     private float[] thresholds;
     private HashSet<EventAction<?>> eventActions;
+    private HashMap<Integer, Lighting> lightRefer;
     public String setTargetName;
     private TextureRegion[][] runeSigilSet;
     private float rotationDeg;
@@ -54,6 +57,7 @@ public class Rune extends ObstacleSprite {
         getObstacle().setSensor(true);
         getObstacle().setName("rune");
         getObstacle().setAngle((float) Math.toRadians(rotationDeg));
+        lightRefer = new HashMap<>();
         this.units = units;
         this.yOffsetForRuneCenter = (.23f * units);
         mesh.set(
@@ -134,11 +138,29 @@ public class Rune extends ObstacleSprite {
 
     public float getRadius () {return r;}
 
-    public void addInLight() {inLight++;}
-    public void subInLight() {inLight--;}
+
+    public void addInLight(Lighting l) {
+        inLight++;
+        lightRefer.put(l.hashCode(), l);
+    }
+    public void subInLight(Lighting l) {
+        inLight--;
+        lightRefer.remove(l.hashCode());
+    }
     public void setTimeTo(float val) {chargeRate = 1/(60f * val);}
     public void setDissipateTime (float val) {secondsToFullDissipation = val; dispersalRate = 1/(60f * secondsToFullDissipation);}
-    public boolean returnInLight() {return inLight > 0;}
+    public boolean returnInLight() {
+        for (Lighting l : lightRefer.values()) {
+            System.out.println(l.getRadius() + sigilRadius);
+            System.out.println(l.getObstacle().getPosition().add(obstacle.getPosition()).len() +  " alen");
+            if (l.getRadius() + sigilRadius > l.getObstacle().getPosition().add(obstacle.getPosition()).len()) {
+                inLight--;
+                lightRefer.remove(l.hashCode());
+            }
+        }
+        inLight = Math.max(0,inLight);
+        return inLight > 0;
+    }
     public void registerEventAction(EventAction<?> eventAction) {eventActions.add(eventAction);}
     public HashSet<EventAction<?>> getEventAction() {return eventActions;}
 

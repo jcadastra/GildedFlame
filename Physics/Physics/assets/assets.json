@@ -58,13 +58,46 @@
     "tMove" : "backgroundAssets/tMove.png",
     "tThrow" : "backgroundAssets/tThrow.png",
     "tMoreJump" : "backgroundAssets/tMoreJump.png",
+    "tutChest" : "backgroundAssets/tutChest.png",
+    "tutJumpPro" : "backgroundAssets/tutJumpPro.png",
+    "tutMoth" : "backgroundAssets/tutMoth.png",
+    "contClimb" : "backgroundAssets/controller/contClimb.png",
+    "contJump" : "backgroundAssets/controller/contJump.png",
+    "contJumpPro" : "backgroundAssets/controller/contJumpPro.png",
+    "contMove" : "backgroundAssets/controller/contMove.png",
+    "contThrow" : "backgroundAssets/controller/contThrow.png",
+
+
     "window": "backgroundAssets/window.png",
     "bookshelf" : "backgroundAssets/bookshelf.png",
     "banner" : "backgroundAssets/banner.png",
     "holder" : "backgroundAssets/holder.png",
     "chandelier" : "backgroundAssets/chandelier.png",
     "grate" : "environment/grate.png",
-
+    "successANIMATION": {
+      "file": "ui/success.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "torchOffANIMATION": {
+      "file": "ui/torchOff.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "maskCrumbleANIMATION": {
+      "file": "ui/maskCrumble.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
+    "maskFallANIMATION": {
+      "file": "ui/maskFall.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
     "centralWeb" : "backgroundAssets/mothEggsNest/centralWeb.png",
     "centralWebEgg" : "backgroundAssets/mothEggsNest/centralWebEgg.png",
     "centralWebOne" : "backgroundAssets/mothEggsNest/centralWebOne.png",
@@ -275,6 +308,12 @@
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
     },
+    "platform-playerDUSTANIMATION": {
+      "file": "platform/playerDustAnimation.png",
+      "mipmaps": true,
+      "minfilter": "linear mipmap linear",
+      "magfilter": "linear mipmap linear"
+    },
 
     "platform-tiles": {
       "file": "tiled_images/platform1Tiled.png",
@@ -282,7 +321,7 @@
       "minfilter": "linear mipmap linear",
       "magfilter": "linear mipmap linear"
     },
-    "rope-end": "environment/Rope/chainEnd.png",
+    "rope-end": "environment/Rope/ropeEnd.png",
     "chain-end": "environment/Rope/chainEnd.png",
     "rope-mid": "environment/Rope/ropeBody.png",
     "chain-mid": "environment/Rope/chainBody.png",
@@ -325,7 +364,11 @@
     "new_2" : "new_2.tmj",
     "level1" : "level1.tmj",
     "level2" : "level2.tmj",
-    "level3" : "level3.tmj"
+    "level3" : "level3.tmj",
+    "level4" : "level4.tmj",
+    "level5" : "level5.tmj",
+    "level7" : "level7.tmj",
+    "rune_advanced" : "rune_advanced.tmj"
 
   },
   "music": {
