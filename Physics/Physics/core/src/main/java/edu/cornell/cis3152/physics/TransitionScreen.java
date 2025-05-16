@@ -38,10 +38,10 @@ public class TransitionScreen implements Screen {
     public TransitionScreen(Screen oldScreen, Screen nextScreen, GDXRoot game, String text, Boolean fadein, Boolean fadeout) {
         this.oldScreen  = oldScreen;
         this.nextScreen = nextScreen;
-        this.game       = game;
-        this.stage      = new Stage(new ScreenViewport());
-        this.fadein   = fadein;
-        this.fadeout   = fadeout;
+        this.game = game;
+        this.stage = new Stage(new ScreenViewport());
+        this.fadein = fadein;
+        this.fadeout = fadeout;
 
         // create 1×1 black texture
         Pixmap pm = new Pixmap(1,1, Pixmap.Format.RGBA8888);
@@ -52,10 +52,10 @@ public class TransitionScreen implements Screen {
         // full-screen black image
         black = new Image(blackTex);
         black.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        black.getColor().a = 0f; // start transparent
+        black.getColor().a = 0f;
         stage.addActor(black);
 
-        // centered label
+        // may use picture instead
         if (text == null) {
             message = false;
         }
@@ -74,7 +74,6 @@ public class TransitionScreen implements Screen {
     @Override
     public void render(float delta) {
         delta = 1/60f;
-        // 1. Draw the old screen beneath
         if (state == State.FADE_IN && !fadein) {
             state = State.HOLD;
         }
@@ -84,14 +83,11 @@ public class TransitionScreen implements Screen {
         if (state == State.FADE_OUT && !fadeout) {
             state = State.DONE;
         }
-        // 2. Update our state machine
-    System.out.println(state + "<--");
         timer += delta;
         switch (state) {
             case FADE_IN:
                 oldScreen.render(delta);
                 if (timer == delta) {
-                    // on first frame in FADE_IN, trigger fadeIn actions
                     black.addAction(Actions.fadeIn(FADE_DURATION));
                     label.addAction(Actions.fadeIn(FADE_DURATION));
                 }
@@ -102,7 +98,6 @@ public class TransitionScreen implements Screen {
                 break;
 
             case HOLD:
-                // nothing to trigger on enter except timer reset
                 if (timer >= HOLD_DURATION) {
                     state = State.FADE_OUT;
                     timer = 0f;
@@ -112,7 +107,6 @@ public class TransitionScreen implements Screen {
             case FADE_OUT:
                 nextScreen.render(delta);
                 if (timer == delta) {
-                    // trigger fadeOut exactly once
                     black.addAction(Actions.fadeOut(FADE_OUTDURATION));
                     label.addAction(Actions.fadeOut(FADE_OUTDURATION));
                 }
@@ -122,9 +116,7 @@ public class TransitionScreen implements Screen {
                 break;
 
             case DONE:
-                // immediately swap
                 if (oldScreen instanceof MainMenuScreen || oldScreen instanceof FailureScene || oldScreen instanceof SuccessScene) {
-                    System.out.println("disposed");
                     oldScreen.dispose();
                 }
                 dispose();
@@ -132,19 +124,17 @@ public class TransitionScreen implements Screen {
                 return;
         }
 
-        // 3. Draw our overlay stage on top
         Gdx.gl.glEnable(GL20.GL_BLEND);
         stage.act(delta);
         stage.draw();
         Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
-    @Override public void show()        { Gdx.input.setInputProcessor(stage); }
+    @Override public void show() { Gdx.input.setInputProcessor(stage); }
     @Override public void resize(int w, int h) { stage.getViewport().update(w,h,true); }
-    @Override public void pause()       {}
-    @Override public void resume()      {}
-    @Override public void hide()        { Gdx.input.setInputProcessor(null); }
-
+    @Override public void pause() {}
+    @Override public void resume() {}
+    @Override public void hide() { Gdx.input.setInputProcessor(null); }
     @Override
     public void dispose() {
         stage.dispose();
