@@ -348,10 +348,10 @@ public class InputController {
         // Give priority to gamepad results
         resetPressed = (secondary && resetPressed) || (Gdx.input.isKeyPressed(Input.Keys.R));
         debugPressed = (secondary && debugPressed) || (Gdx.input.isKeyPressed(Input.Keys.F));
-        primePressed = (secondary && primePressed) || (Gdx.input.isKeyPressed(Keys.K));
+        primePressed = (secondary && primePressed) || (Gdx.input.isKeyPressed(Keys.O));
 //        secondPressed = (secondary && secondPressed) || (Gdx.input.isKeyPressed(Keys.L));
-        prevPressed = (secondary && prevPressed) || (Gdx.input.isKeyPressed(Input.Keys.P));
-        nextPressed = (secondary && nextPressed) || (Gdx.input.isKeyPressed(Input.Keys.N));
+        prevPressed = (secondary && prevPressed) || (Gdx.input.isKeyPressed(Keys.N));
+        nextPressed = (secondary && nextPressed) || (Gdx.input.isKeyPressed(Keys.M));
         exitPressed  = (secondary && exitPressed) || (Gdx.input.isKeyPressed(Input.Keys.ESCAPE));
 
         // Directional controls
@@ -372,7 +372,7 @@ public class InputController {
         }
 
         throwing = secondary && throwing;
-        if (Gdx.input.isKeyPressed(Keys.L)) {
+        if (Gdx.input.isKeyPressed(Keys.P)) {
             throwing = true;
         }
 
