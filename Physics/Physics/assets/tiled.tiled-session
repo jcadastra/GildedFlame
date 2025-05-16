@@ -176,6 +176,18 @@
                 "y": 2690.217391304348
             }
         },
+        "interMove.tmj": {
+            "expandedObjectLayers": [
+                8,
+                10
+            ],
+            "scale": 0.25,
+            "selectedLayer": 6,
+            "viewCenter": {
+                "x": 4318,
+                "y": 2082
+            }
+        },
         "jump_intro.tmj": {
             "expandedObjectLayers": [
                 7,
@@ -211,8 +223,8 @@
             "scale": 0.1582,
             "selectedLayer": 7,
             "viewCenter": {
-                "x": 4911.504424778762,
-                "y": 3903.286978508217
+                "x": 6295.82806573957,
+                "y": 2999.36788874842
             }
         },
         "level10.tmj": {
@@ -242,28 +254,28 @@
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 5248.984530291245,
-                "y": 2701.9272318727853
+                "y": 2696.3961628208453
             }
         },
         "level3.tmj": {
             "scale": 0.5,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 9292,
-                "y": 2991
+                "x": 4800,
+                "y": 2699
             }
         },
         "level4.tmj": {
             "expandedObjectLayers": [
                 5,
-                2,
-                7
+                7,
+                2
             ],
             "scale": 0.33,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 8003.030303030303,
-                "y": 3256.060606060606
+                "x": 5400,
+                "y": 2698.4848484848485
             }
         },
         "level5.tmj": {
@@ -293,8 +305,8 @@
             "scale": 0.33,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 6503.030303030302,
-                "y": 3556.060606060606
+                "x": 3900,
+                "y": 2998.4848484848485
             }
         },
         "level8.tmj": {
@@ -345,34 +357,34 @@
             "scale": 0.180796875,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 4800.9679370840895,
-                "y": 2701.9272318727853
+                "x": 4795.4368680321495,
+                "y": 2696.3961628208453
             }
         },
         "rain_intro.tmj": {
             "expandedObjectLayers": [
+                3,
                 6,
-                2,
-                3
+                2
             ],
             "scale": 0.125,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": -996,
-                "y": 3884
+                "x": -1004,
+                "y": 3876
             }
         },
         "rain_medium.tmj": {
             "expandedObjectLayers": [
+                3,
                 6,
-                2,
-                3
+                2
             ],
             "scale": 0.25,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 2222,
-                "y": 2686
+                "x": 5400,
+                "y": 2698
             }
         },
         "rope_intro.tmj": {
@@ -395,16 +407,16 @@
             "scale": 0.10916037735849056,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 7951.603145795525,
-                "y": 2102.4112004148305
+                "x": 7947.022729236886,
+                "y": 2093.250367297554
             }
         },
         "rune_hard.tmj": {
             "scale": 0.180796875,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4789.9057989802095,
-                "y": 2696.396162820846
+                "x": 4795.4368680321495,
+                "y": 2696.3961628208453
             }
         },
         "rune_intro.tmj": {
@@ -414,7 +426,7 @@
             "scale": 0.180796875,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 4795.4368680321495,
+                "x": 4792.6713335061795,
                 "y": 2690.8650937689054
             }
         },
@@ -426,8 +438,8 @@
             "scale": 0.25,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 4792,
-                "y": 4538
+                "x": 4800,
+                "y": 2698
             }
         },
         "sample.tmj": {

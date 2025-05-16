@@ -1458,6 +1458,7 @@ private int pcunt = 1;
                     float x = object.getFloat("x") / levelData.getInt("tilewidth");
                     float y = (bounds.height * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
                     boolean wander = false;
+                    Vector2 endPos = goalPos;
                     String pinTarget = "";
                     if (objName.contains("light")) {
                         JsonValue props = object.get("properties");
@@ -1472,10 +1473,21 @@ private int pcunt = 1;
                                     case "pinTarget":
                                         pinTarget = val;
                                         break;
+                                    case "destination":
+                                        if (!val.contains(",")) {
+                                            ObstacleSprite target = sprites.stream().filter(os -> os.getName().equals(
+                                                val)).findFirst().orElse(null);
+                                            endPos = target.getObstacle().getPosition();
+                                        } else {
+                                            endPos = new Vector2(
+                                                Float.parseFloat(val.split(",")[0]),
+                                                Float.parseFloat(val.split(",")[1]));
+                                        }
+                                        break;
                                 }
                             }
                         }
-                        FloatingLight light = new FloatingLight(units,new Vector2(x,y),1,goalPos);
+                        FloatingLight light = new FloatingLight(units,new Vector2(x,y),1,endPos);
                         light.setWander(wander);
 //                        System.out.println("floating light: " + (int)x+","+ (int)y);
                         light.getObstacle().setPosition(x,y);
