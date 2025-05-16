@@ -456,9 +456,8 @@ public class CollisionController implements ContactListener {
             }
 
             if (isXandY(bd1,bd2, Lighting.class, Rune.class) == 1) {
-                ((Rune) idX(bd1,bd2,Rune.class)).addInLight();
-                ContactKey key = new ContactKey(fix1, fix2);
-                sustainedContacts.put(key, -1);
+                ((Rune) idX(bd1,bd2,Rune.class)).addInLight((Lighting) idX(bd1,bd2,Lighting.class));
+                System.out.println("added a light source");
             }
 
             if (isX(bd1, bd2, Torch.class) == 1) {
@@ -586,16 +585,6 @@ public class CollisionController implements ContactListener {
                     sustainedContacts.put(key, -1);
                 }
             }
-
-            if (isXandY(bd1,bd2, Lighting.class, Rune.class) == 1) {
-                Rune rune = (Rune) idX(bd1,bd2,Rune.class);
-                Lighting lighting = (Lighting) idX(bd1,bd2,Lighting.class);
-                float distance = Math.abs((new Vector2(lighting.getObstacle().getPosition()).sub(rune.getObstacle().getPosition())).len());
-                if (rune.getPowerLevel() < 1) {
-                    rune.addPowerLevel();
-                }
-                sustainedContacts.put(key, -1);
-            }
         }
     }
 
@@ -669,9 +658,8 @@ public class CollisionController implements ContactListener {
         }
 
         if (isXandY(bd1,bd2, Lighting.class, Rune.class) == 1) {
-            ((Rune) idX(bd1,bd2,Rune.class)).subInLight();
-            ContactKey key = new ContactKey(fix1, fix2);
-            sustainedContacts.remove(key);
+            ((Rune) idX(bd1,bd2,Rune.class)).subInLight((Lighting) idX(bd1,bd2,Lighting.class));
+            System.out.println("removed a light source");
         }
 
         /**

@@ -1887,14 +1887,27 @@ private int pcunt = 1;
     private void updateRunes(float dt) {
         for (Rune rune : runeSet) {
 //            System.out.println(rune.getPowerLevel());
-            if (!rune.returnInLight()) {
+            if (rune.returnInLight()) {
+                rune.addPowerLevel();
+            } else {
                 rune.dissapatePowerLevel();
             }
             float factor = rune.getPowerLevel();
             float prevFactor = rune.getPrevPowerLevel();
-            factor = Math.max(factor,0);
-            factor = Math.min(factor,1);
+            factor = MathUtils.clamp(factor, 0, 1f);
+            rune.setPowerLevel(factor);
             if (factor == 0 || factor == 1) {
+                for (EventAction<?> undefEventAction : rune.getEventAction()) {
+                    if (undefEventAction.getInitialValue() instanceof Vector2) {
+                        EventAction<Vector2> eventAction = (EventAction<Vector2>) undefEventAction;
+                        Vector2 initial = eventAction.getInitialValue().cpy();
+                        Vector2 fin = eventAction.getFinalValue().cpy();
+                        switch (eventAction.getName()) {
+                            case "move":
+                                eventAction.getTarget().getObstacle().setLinearVelocity(Vector2.Zero);
+                        }
+                    }
+                }
                 continue;
             }
 
@@ -1909,11 +1922,17 @@ private int pcunt = 1;
                             Vector2 endPointZeroed = rune.returnInLight() ? (fin.cpy()).sub(initial) : (initial.cpy()).sub(fin);
                             Vector2 delta = endPointZeroed.cpy().scl(factor).sub(endPointZeroed.cpy().scl(prevFactor));
                             delta.scl(1/dt) ;
-                            eventAction.getTarget().getObstacle().setLinearVelocity(delta.scl(rune.returnInLight() ? 1 : -1));
+                            ObstacleSprite target = eventAction.getTarget();
+                            target.getObstacle().setLinearVelocity(delta.scl(rune.returnInLight() ? 1 : -1));
                             boolean isMoving = delta.len2() > 0.01f;
                             soundEngine.platformMoving(isMoving);
                             if (2*factor - prevFactor >= 1 || 2*factor - prevFactor <= 0) {
-                                eventAction.getTarget().getObstacle().setLinearVelocity(Vector2.Zero);
+                                target.getObstacle().setLinearVelocity(Vector2.Zero);
+                                if (2*factor - prevFactor >= 1) {
+                                    target.getObstacle().setPosition(eventAction.getFinalValue().cpy().add(((GameObject) target).startPosition).scl(new Vector2((float) 1, (float) Math.cos(target.getObstacle().getAngle()))));
+                                } else {
+                                    target.getObstacle().setPosition(eventAction.getInitialValue().cpy().add(((GameObject) target).startPosition));
+                                }
                                 soundEngine.platformMoving(false);
                             }
                             break;

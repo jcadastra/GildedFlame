@@ -667,7 +667,7 @@ public class Avatar extends ObstacleSprite {
 
             Predicate<EnhancedObstacleSprite> testLadder = (item) -> item instanceof Ladder;
             int topProtector = 1;
-            if (!bodyTouchedClimbables.stream().allMatch(testLadder) && closestPos.y < (pos.y - height / 4) && getMovement().y > 0) {
+            if (!bodyTouchedClimbables.stream().allMatch(testLadder) && closestPos.y < (pos.y - getHeight()/2) && getMovement().y > 0) {
                 topProtector = 0;
             }
             if (closestPos.y > pos.y) {
@@ -681,6 +681,8 @@ public class Avatar extends ObstacleSprite {
 
             if (playerMovement.len() == 0 && bodyTouchedClimbables.size() > 1) {
                 playerMovement = closestPos.cpy().sub(getObstacle().getPosition());
+                //better player hanging on rope:
+//                playerMovement = (closestPos.cpy().sub(getObstacle().getPosition()).add(getWidth()/4f * (faceRight ? -1 : 1),0));
             }
             obstacle.setLinearVelocity(avgVel.add(playerMovement));
 

@@ -31,6 +31,7 @@ public class GameObject extends EnhancedObstacleSprite {
     private float units;
     private Path2 sensorOutline;
     public boolean flipX;
+    public Vector2 startPosition;
 
     /**
      * Creates a GameObject with a hardcoded shape, generic object that is enhanced
@@ -62,6 +63,7 @@ public class GameObject extends EnhancedObstacleSprite {
             width  * units,
             height * units
         );
+        startPosition = new Vector2(centerInBottomLeft ? x + width / 2f : x, centerInBottomLeft ? y + height / 2f : y);
     }
 
     public GameObject(float[] points, float x, float y, float width, float height,  float units) {
@@ -86,6 +88,7 @@ public class GameObject extends EnhancedObstacleSprite {
         obstacle.setUserData(this);
 
         mesh.set(-(width * units)/2, -(height * units)/2, width * units, height * units);
+        startPosition = new Vector2(-(width * units)/2, -(height * units)/2);
     }
 
     public GameObject(float x, float y, float width, float height, float units, Boolean centerInBottomLeft, int tileId) {
@@ -145,9 +148,9 @@ public class GameObject extends EnhancedObstacleSprite {
                 -(width * widthFactor)/2,-(physHeight/2),
                 (width * widthFactor)/2,-(physHeight/2),
 
-                (width * widthFactor)/2.05f,physHeight/2,
+                (width * widthFactor)/2.07f,physHeight/2,
 
-                -(width * widthFactor)/2.05f,physHeight/2,
+                -(width * widthFactor)/2.07f,physHeight/2,
             };
         }
 
@@ -169,6 +172,7 @@ public class GameObject extends EnhancedObstacleSprite {
         //if platform ie walk on shrink height by .15 to walk on better
         mesh.set(-(width * units)/2, (height)/2-(height * (name.equals("platform") ? .85f : 1) * units)/2, width * widthFactor * units, (height ) * units);
 //        mesh.set(-(width * units)/2, -(height * (name.equals("platform") ? 1f : 1f) * units)/2, width * widthFactor * units, (height ) * units);
+        startPosition = obstacle.getPosition();
     }
 
     public void generateInternalCrushSensor() {
