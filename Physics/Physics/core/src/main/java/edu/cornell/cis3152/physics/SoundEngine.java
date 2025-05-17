@@ -128,7 +128,7 @@ public class SoundEngine {
         }
     }
 
-    private void stopMusicLoop() {
+    public void stopMusicLoop() {
         for (Music music : activeMusic) {
             music.stop();
         }

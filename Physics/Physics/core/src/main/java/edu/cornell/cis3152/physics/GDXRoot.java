@@ -232,6 +232,7 @@ public class GDXRoot extends Game implements ScreenListener {
         if (screen instanceof GameplayScene) {
             soundEngine.rainingBackground(false);
             soundEngine.stopAllSoundEffects();
+            soundEngine.stopMusicLoop();
             prevScreen = "GameplayScene";
             if (exitCode == GameplayScene.EXIT_NEXT) {
                 swapGamePlayScene(1);
