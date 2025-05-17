@@ -1847,7 +1847,7 @@ public class GameplayScene implements Screen {
         if (isFadingOut) {
             soundEngine.stopAllSoundEffects();
             fadeTime += dt;
-            if (fadeTime >= fadeDuration) {
+            if (fadeTime >= fadeDuration-.1f) {
                 System.out.println("did exit");
                 listener.exitScreen(this, fadeExitCode);
             }
@@ -2601,7 +2601,7 @@ public class GameplayScene implements Screen {
             batch.begin();
             float alpha = Math.min(fadeTime / fadeDuration, 1f);
             batch.setColor(0, 0, 0, alpha);
-            batch.draw(blackTexture, 0, 0, bounds.width*phyiscsUnits, bounds.height*phyiscsUnits);
+            batch.draw(blackTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             batch.setColor(Color.WHITE);
             batch.end();
         }
