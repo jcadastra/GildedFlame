@@ -1,5 +1,5 @@
 {
-    "activeFile": "rune_medium.tmj",
+    "activeFile": "moth_intro.tmj",
     "expandedProjectPaths": [
         "."
     ],
@@ -33,6 +33,7 @@
             "scaleInDock": 1
         },
         "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/lwjgl3/build/resources/main/GameObjectTiles.tsx": {
+            "dynamicWrapping": false,
             "scaleInDock": 1
         },
         "C:/Users/ericj/Downloads/EnemyTiles.tsx": {
@@ -184,8 +185,8 @@
         },
         "interMove.tmj": {
             "expandedObjectLayers": [
-                8,
-                10
+                10,
+                8
             ],
             "scale": 0.25,
             "selectedLayer": 6,
@@ -273,9 +274,9 @@
         },
         "level4.tmj": {
             "expandedObjectLayers": [
-                5,
+                7,
                 2,
-                7
+                5
             ],
             "scale": 0.33,
             "selectedLayer": 6,
@@ -305,8 +306,8 @@
         },
         "level7.tmj": {
             "expandedObjectLayers": [
-                5,
-                2
+                2,
+                5
             ],
             "scale": 0.33,
             "selectedLayer": 6,
@@ -348,6 +349,22 @@
             "scaleInDock": 1,
             "scaleInEditor": 0.12
         },
+        "moth_intro.tmj": {
+            "scale": 0.1844583333333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 4795.120849333635,
+                "y": 2697.0860627964767
+            }
+        },
+        "moth_medium.tmj": {
+            "scale": 0.1844583333333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 4800.54212785182,
+                "y": 2702.50734131466
+            }
+        },
         "move_intro.tmj": {
             "scale": 0.33,
             "selectedLayer": 0,
@@ -369,9 +386,9 @@
         },
         "rain_intro.tmj": {
             "expandedObjectLayers": [
-                3,
+                2,
                 6,
-                2
+                3
             ],
             "scale": 0.125,
             "selectedLayer": 4,
@@ -382,9 +399,9 @@
         },
         "rain_medium.tmj": {
             "expandedObjectLayers": [
-                3,
+                2,
                 6,
-                2
+                3
             ],
             "scale": 0.25,
             "selectedLayer": 4,
@@ -438,14 +455,14 @@
         },
         "rune_medium.tmj": {
             "expandedObjectLayers": [
-                3,
-                5
+                5,
+                3
             ],
             "scale": 0.125,
             "selectedLayer": 7,
             "viewCenter": {
-                "x": 4452,
-                "y": 2604
+                "x": 4796,
+                "y": 2700
             }
         },
         "sample.tmj": {
@@ -642,7 +659,8 @@
         "rain_intro.tmj",
         "rune_advanced.tmj",
         "interMove.tmj",
-        "BackgroundAssets.tsx"
+        "BackgroundAssets.tsx",
+        "moth_intro.tmj"
     ],
     "project": "tiled.tiled-project",
     "property.type": "string",
@@ -655,9 +673,9 @@
         "new_2.tmj",
         "rain_medium.tmj",
         "rune_hard.tmj",
-        "BackgroundAssets.tsx",
-        "interMove.tmj",
-        "rune_advanced.tmj",
+        "rune_medium.tmj",
+        "level2.tmj",
+        "level5.tmj",
         "rain_intro.tmj"
     ],
     "tileset.lastUsedFormat": "tsx",
