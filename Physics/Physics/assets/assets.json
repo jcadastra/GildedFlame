@@ -66,6 +66,7 @@
     "contJumpPro" : "backgroundAssets/controller/contJumpPro.png",
     "contMove" : "backgroundAssets/controller/contMove.png",
     "contThrow" : "backgroundAssets/controller/contThrow.png",
+    "mainFont" : "ui/Unica_One/UnicaOne-Regular.ttf",
 
 
     "window": "backgroundAssets/window.png",
@@ -368,7 +369,8 @@
     "level4" : "level4.tmj",
     "level5" : "level5.tmj",
     "level7" : "level7.tmj",
-    "rune_advanced" : "rune_advanced.tmj"
+    "rune_advanced" : "rune_advanced.tmj",
+    "interMove" : "interMove.tmj"
 
   },
   "music": {
