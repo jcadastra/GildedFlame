@@ -2057,9 +2057,11 @@ public class GameplayScene implements Screen {
                             if (2*factor - prevFactor >= 1 || 2*factor - prevFactor <= 0) {
                                 target.getObstacle().setLinearVelocity(Vector2.Zero);
                                 if (2*factor - prevFactor >= 1) {
-                                    target.getObstacle().setPosition(eventAction.getFinalValue().cpy().add(((GameObject) target).startPosition).scl(new Vector2((float) 1, (float) Math.cos(target.getObstacle().getAngle()))));
+                                        target.getObstacle().setPosition(eventAction.getFinalValue().cpy().add(((GameObject) target).startPosition).scl(new Vector2((float) 1, (float) Math.cos(target.getObstacle().getAngle()))));
                                 } else {
-                                    target.getObstacle().setPosition(eventAction.getInitialValue().cpy().add(((GameObject) target).startPosition));
+                                    if (((GameObject) target).getObstacle().getAngle() == 0) {
+                                        target.getObstacle().setPosition(eventAction.getInitialValue().cpy().add(((GameObject) target).startPosition));
+                                    }
                                 }
                                 soundEngine.platformMoving(false);
                             }
