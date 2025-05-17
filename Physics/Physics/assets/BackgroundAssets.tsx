@@ -48,6 +48,7 @@
  </tile>
  <tile id="10">
   <properties>
+   <property name="destination" value=""/>
    <property name="pinTarget" value=""/>
    <property name="wander" type="bool" value="false"/>
   </properties>

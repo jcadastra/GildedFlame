@@ -368,7 +368,8 @@
     "level4" : "level4.tmj",
     "level5" : "level5.tmj",
     "level7" : "level7.tmj",
-    "rune_advanced" : "rune_advanced.tmj"
+    "rune_advanced" : "rune_advanced.tmj",
+    "interMove" : "interMove.tmj"
 
   },
   "music": {
@@ -391,7 +392,13 @@
     "burnable_object": "soundEffects/burnable_object.mp3",
     "fire_extinguished": "soundEffects/fire_extinguished.mp3",
     "moving_platform": "soundEffects/moving_platform_2.mp3",
-    "raining_background": "soundEffects/raining_background.mp3"
+    "raining_background": "soundEffects/raining_background.mp3",
+    "success_sound": "soundEffects/success_2.mp3",
+    "moth_attack": "soundEffects/moth_attack.mp3",
+    "moth_charging": "soundEffects/moth_charging_1.mp3",
+    "moth_fluttering": "soundEffects/moth_fluttering.mp3",
+    "totem_walking": "soundEffects/totem_walking_1.mp3",
+    "moth_walking": "soundEffects/moth_walking.mp3"
   },
   "fonts": {
     "shared-unica": {

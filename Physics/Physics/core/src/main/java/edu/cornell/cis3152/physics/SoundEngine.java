@@ -57,6 +57,8 @@ public class SoundEngine {
             registerSoundEffect("successSound", directory.getEntry("success_sound", SoundEffect.class));
             registerSoundEffect("failureSound", directory.getEntry("fire_extinguished", SoundEffect.class));
             registerSoundEffect("raining_background", directory.getEntry("raining_background", SoundEffect.class));
+            registerSoundEffect("totem_walking", directory.getEntry("totem_walking", SoundEffect.class));
+            registerSoundEffect("moth_walking", directory.getEntry("moth_walking", SoundEffect.class));
             registerMusic("menu_music", directory.getEntry("menu_music", Music.class));
             registerMusic("in_game", directory.getEntry("in_game_music", Music.class));
         }
@@ -76,6 +78,28 @@ public class SoundEngine {
         if (music != null) {
             activeMusic.add(music);
             music.play();
+        }
+    }
+
+    public void enemyWalking(String key, float distance, float maxDistance) {
+        SoundEffect soundEffect = registeredSoundEffects.get(key);
+        if(soundEffect == null) return;
+
+        float volume = Math.max(0f, 1f-(distance/maxDistance));
+        if(distance >= maxDistance) {
+            if(activeLoopingSounds.containsKey(key)) {
+                long id = activeLoopingSounds.get(key);
+                soundEffect.stop(id);
+                activeLoopingSounds.remove(key);
+            }
+        } else {
+            if(!activeLoopingSounds.containsKey(key)) {
+                long id = soundEffect.loop(volume);
+                activeLoopingSounds.put(key, id);
+            } else {
+                long id = activeLoopingSounds.get(key);
+                soundEffect.setVolume(id, volume);
+            }
         }
     }
 
@@ -164,9 +188,10 @@ public class SoundEngine {
     }
 
     public void playSoundEffect(String key) {
+
         SoundEffect sound = registeredSoundEffects.get(key);
         if (sound != null) {
-//            System.out.println("Playing sound: " + key);
+            System.out.println("Playing sound: " + key);
             sound.play();
         } else {
             System.out.println("Sound not found: " + key);

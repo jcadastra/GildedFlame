@@ -110,7 +110,6 @@ public class FireController {
                             }
                         }
 
-                        System.out.println("name: " + object.getName());
                         fire.setInRain(weatherMachine.inRain(fire));
 
                         if (fire.getInRain()) {

@@ -2,16 +2,20 @@ package edu.cornell.cis3152.physics;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import edu.cornell.gdiac.assets.AssetDirectory;
+import java.awt.Font;
 import java.util.function.Supplier;
 
 public class TransitionScreen implements Screen {
@@ -36,9 +40,11 @@ public class TransitionScreen implements Screen {
     private static final float FADE_DURATION = .5f;
     private static final float FADE_OUTDURATION = .4f;
     private static final float HOLD_DURATION = 1.5f;
+    private AssetDirectory directory;
 
     public TransitionScreen(Screen old, Supplier<Screen> factory,
-        GDXRoot game, String text, boolean fadein, boolean fadeout) {
+        GDXRoot game, String text, boolean fadein, boolean fadeout, AssetDirectory directory) {
+        this.directory = directory;
         this.oldScreen = old;
         this.nextFactory = factory;
         this.nextScreen = null;
@@ -63,10 +69,18 @@ public class TransitionScreen implements Screen {
         if (text == null) {
             message = false;
         }
-        BitmapFont font = new BitmapFont();
-        Label.LabelStyle style = new Label.LabelStyle(font, Color.WHITE);
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("ui/Unica_One/UnicaOne-Regular.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
+
+        param.size = 55;
+        param.characters = FreeTypeFontGenerator.DEFAULT_CHARS;
+        BitmapFont bitmapFont = generator.generateFont(param);
+        generator.dispose();
+
+        Label.LabelStyle style = new Label.LabelStyle();
+        style.font = bitmapFont;
+        style.fontColor = Color.WHITE;
         label = new Label(text, style);
-        label.setFontScale(2f);
         label.setPosition(
             (Gdx.graphics.getWidth() - label.getWidth()) / 2f,
             (Gdx.graphics.getHeight() - label.getHeight()) / 2f
