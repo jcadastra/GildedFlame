@@ -1,5 +1,5 @@
 {
-    "activeFile": "moth_intro.tmj",
+    "activeFile": "level1.tmj",
     "expandedProjectPaths": [
         "."
     ],
@@ -30,7 +30,8 @@
             "scaleInEditor": 1
         },
         "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/lwjgl3/build/resources/main/BackgroundAssets.tsx": {
-            "scaleInDock": 1
+            "dynamicWrapping": true,
+            "scaleInDock": 0.12
         },
         "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/lwjgl3/build/resources/main/GameObjectTiles.tsx": {
             "dynamicWrapping": false,
@@ -228,10 +229,10 @@
                 7
             ],
             "scale": 0.1582,
-            "selectedLayer": 7,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 6298.9886219974715,
-                "y": 2999.36788874842
+                "x": 6355.878634639697,
+                "y": 3068.9001264222507
             }
         },
         "level10.tmj": {
@@ -274,9 +275,9 @@
         },
         "level4.tmj": {
             "expandedObjectLayers": [
-                7,
                 2,
-                5
+                5,
+                7
             ],
             "scale": 0.33,
             "selectedLayer": 6,
@@ -666,17 +667,17 @@
     "property.type": "string",
     "recentFiles": [
         "rune_intro.tmj",
-        "level1.tmj",
-        "level3.tmj",
-        "level4.tmj",
-        "level7.tmj",
-        "new_2.tmj",
-        "rain_medium.tmj",
-        "rune_hard.tmj",
-        "rune_medium.tmj",
-        "level2.tmj",
+        "moth_intro.tmj",
+        "BackgroundAssets.tsx",
+        "interMove.tmj",
+        "rune_advanced.tmj",
+        "rain_intro.tmj",
         "level5.tmj",
-        "rain_intro.tmj"
+        "level2.tmj",
+        "rune_medium.tmj",
+        "rune_hard.tmj",
+        "rain_medium.tmj",
+        "new_2.tmj"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.type": 1

@@ -228,8 +228,8 @@
                  "type":"",
                  "visible":true,
                  "width":500,
-                 "x":9846.1212121212,
-                 "y":2897.15151515152
+                 "x":9865.08454966861,
+                 "y":2832.94038999349
                 }, 
                 {
                  "gid":99,
@@ -314,6 +314,18 @@
                  "width":150,
                  "x":1027.21166666667,
                  "y":4120.27333333333
+                }, 
+                {
+                 "gid":140,
+                 "height":1000,
+                 "id":211,
+                 "name":"tutChest",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1000,
+                 "x":9708.0757001111,
+                 "y":3430.99348733862
                 }],
          "offsetx":-12.1212121212122,
          "offsety":-15.151515151515,
@@ -736,10 +748,10 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":210,
+ "nextobjectid":212,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.11.2",
+ "tiledversion":"1.10.2",
  "tileheight":300,
  "tilesets":[
         {
@@ -765,6 +777,10 @@
         {
          "firstgid":108,
          "source":"mothDecoratives.tsx"
+        }, 
+        {
+         "firstgid":119,
+         "source":"..\/lwjgl3\/build\/resources\/main\/BackgroundAssets.tsx"
         }],
  "tilewidth":300,
  "type":"map",
