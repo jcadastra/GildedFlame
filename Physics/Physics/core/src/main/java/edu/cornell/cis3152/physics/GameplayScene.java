@@ -719,6 +719,10 @@ public class GameplayScene implements Screen {
         }
         torchArc.clear();
 
+        if (pauseOverlay != null){
+            pauseOverlay.remove();
+        }
+
         if (world != null) {
             world.clearForces();
             world.dispose();
@@ -734,6 +738,7 @@ public class GameplayScene implements Screen {
             this.shapeRenderer = new ShapeRenderer();
         }
         contactListener.reset();
+        pauseOverlay = new PauseOverlay(directory,listener,this,InputController.getInstance());
     }
 
     private void populateLevel() {
@@ -2723,7 +2728,7 @@ public class GameplayScene implements Screen {
      */
     public void setScreenListener(ScreenListener listener) {
         this.listener = listener;
-        pauseOverlay = new PauseOverlay(directory,listener,this);
+        pauseOverlay = new PauseOverlay(directory,listener,this, InputController.getInstance());
     }
 
     int counter = 0;
@@ -2869,6 +2874,11 @@ public class GameplayScene implements Screen {
         private boolean startClicked = false;
         private GameplayScene gamePlayScene;
         private boolean visible = false;
+        private boolean prevButtonA = false;
+        private float joystickCooldown = 0f;
+        private InputController inputController;
+        private int currentIndex = 0;
+        private int scrollIndex = 0 ;
 
         private class Entry {
             private ImageButton button;
@@ -2882,11 +2892,12 @@ public class GameplayScene implements Screen {
             }
         }
 
-        public PauseOverlay(AssetDirectory directory, ScreenListener listener, GameplayScene gamePlayScene) {
+        public PauseOverlay(AssetDirectory directory, ScreenListener listener, GameplayScene gamePlayScene, InputController inputController) {
             this.gamePlayScene = gamePlayScene;
             this.stage = new Stage();
             this.listener = listener;
             this.directory = directory;
+            this.inputController = inputController;
             createPauseUI();
             stage.getRoot().setTouchable(Touchable.enabled);
         }
@@ -2937,14 +2948,12 @@ public class GameplayScene implements Screen {
             chambersButt.up = chambersButtUp;
             chambersButt.over = chambersButtOver;
 
-
-            ImageButton replayButton = new ImageButton(replayButt);
-            ;
-            Entry repl = new Entry(replayButton, replayButtUp, replayButtOver);
-            entries.add(repl);
             ImageButton contButton = new ImageButton(contButt);
             Entry cont = new Entry(contButton, contButtUp, contButtOver);
             entries.add(cont);
+            ImageButton replayButton = new ImageButton(replayButt);
+            Entry repl = new Entry(replayButton, replayButtUp, replayButtOver);
+            entries.add(repl);
             ImageButton chambersButton = new ImageButton(chambersButt);
             Entry chamb = new Entry(chambersButton, chambersButtUp, chambersButtOver);
             entries.add(chamb);
@@ -3032,16 +3041,83 @@ public class GameplayScene implements Screen {
 
         }
 
+        private void controllerSelect() {
+            if (inputController.isUsingController()) {
+                XBoxController xbox = inputController.xbox;
+                boolean start = xbox.getA();
+                Entry currentEntry = entries.get(currentIndex);
+                ImageButton.ImageButtonStyle style = currentEntry.button.getStyle();
+                style.up = currentEntry.selectedDrawable;
+                currentEntry.button.setStyle(style);
+                if (start && !prevButtonA) {
+                    int selectionIndex = scrollIndex + currentIndex;
+                    if (selectionIndex >= 0 && selectionIndex < entries.size) {
+                        // Simulate touch down
+                        InputEvent downEvent = new InputEvent();
+                        downEvent.setType(InputEvent.Type.touchDown);
+                        downEvent.setStage(stage);
+                        downEvent.setTarget(currentEntry.button);
+                        downEvent.setButton(0);
+                        currentEntry.button.fire(downEvent);
+
+                        // Simulate touch up
+                        InputEvent upEvent = new InputEvent();
+                        upEvent.setType(InputEvent.Type.touchUp);
+                        upEvent.setStage(stage);
+                        upEvent.setTarget(currentEntry.button);
+                        upEvent.setButton(0);
+                        currentEntry.button.fire(upEvent);
+
+                    }
+                }
+                prevButtonA = start;
+
+                boolean moved = false;
+                float vertical = xbox.getLeftY();
+                if (joystickCooldown <= 0) {
+                    if (vertical < -0.4f && !moved) {
+//                    particleEngine.dispose();
+                        ImageButton.ImageButtonStyle s = currentEntry.button.getStyle();
+                        s.up = currentEntry.defaultDrawable;
+                        currentEntry.button.setStyle(s);
+                        //currentEntry.button.getImage().setDrawable(currentEntry.defaultDrawable);
+                        currentIndex = Math.max(currentIndex - 1, 0);  // Prevent going negative
+                        moved = true;
+                        joystickCooldown = 0.25f;
+                    } else if (vertical > 0.4f && !moved) {
+                        ImageButton.ImageButtonStyle s = currentEntry.button.getStyle();
+                        s.up = currentEntry.defaultDrawable;
+                        currentEntry.button.setStyle(s);
+                        currentIndex = Math.min(currentIndex + 1, entries.size-1);  // Prevent going off right
+                        moved = true;
+                        joystickCooldown = 0.25f;
+                    }
+                    if (Math.abs(vertical) <= 0.01f) {
+                        moved = false;
+                    }
+                }
+                joystickCooldown -= Gdx.graphics.getDeltaTime();
+            }
+        }
+
         public void setVisible(boolean visible) {this.visible = visible;}
 
         public void draw(float delta) {
             if (visible){
                 Gdx.input.setInputProcessor(stage);
+                controllerSelect();
                 stage.act(delta);
                 stage.draw();}
 //            stage.setDebugAll(true);
         }
 
+        public void reset(){
+            for (Entry currentEntry : entries) {
+                currentEntry.button.setChecked(false);
+                currentEntry.button.getStyle().imageUp = currentEntry.defaultDrawable;
+                currentEntry.button.getStyle().imageDown = currentEntry.defaultDrawable;
+            }
+        }
 
         public void remove(){
             stage.clear();
