@@ -52,13 +52,14 @@ public class SoundEngine {
             registerSoundEffect("platformMoving",
                 directory.getEntry("moving_platform", SoundEffect.class));
             registerSoundEffect("mothAttack", directory.getEntry("moth_attack", SoundEffect.class));
-            registerSoundEffect("mothCharging", directory.getEntry("moth_charging", SoundEffect.class));
+            registerSoundEffect("mothCharging", directory.getEntry("scratching_ground", SoundEffect.class));
             registerSoundEffect("mothSmother", directory.getEntry("moth_fluttering", SoundEffect.class));
             registerSoundEffect("successSound", directory.getEntry("success_sound", SoundEffect.class));
             registerSoundEffect("failureSound", directory.getEntry("fire_extinguished", SoundEffect.class));
             registerSoundEffect("raining_background", directory.getEntry("raining_background", SoundEffect.class));
             registerSoundEffect("totem_walking", directory.getEntry("totem_walking", SoundEffect.class));
             registerSoundEffect("moth_walking", directory.getEntry("moth_walking", SoundEffect.class));
+            registerSoundEffect("fire_sound", directory.getEntry("fire_sound", SoundEffect.class));
             registerMusic("menu_music", directory.getEntry("menu_music", Music.class));
             registerMusic("in_game", directory.getEntry("in_game_music", Music.class));
         }
@@ -257,6 +258,23 @@ public class SoundEngine {
             if (!activeLoopingSounds.containsKey("raining_background")) {
                 long id = rainingBackground.loop();
                 activeLoopingSounds.put("raining_background", id);
+            }
+        }
+    }
+
+    public void torchFireSound(boolean fire) {
+        SoundEffect fireSound = registeredSoundEffects.get("fire_sound");
+        if (fireSound == null) return;
+        if (!fire) {
+            if (activeLoopingSounds.containsKey("fire_sound")) {
+                long id = activeLoopingSounds.get("fire_sound");
+                fireSound.stop(id);
+                activeLoopingSounds.remove("fire_sound");
+            }
+        } else {
+            if (!activeLoopingSounds.containsKey("fire_sound")) {
+                long id = fireSound.loop();
+                activeLoopingSounds.put("fire_sound", id);
             }
         }
     }

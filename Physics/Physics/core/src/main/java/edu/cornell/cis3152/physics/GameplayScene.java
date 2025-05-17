@@ -1749,7 +1749,10 @@ public class GameplayScene implements Screen {
             avatar.dropTorchPhys(torch);
             torch.setBeingHeld(false);
             soundEngine.playSoundEffect("torchThrow");
+            soundEngine.torchFireSound(false);
         }
+
+        if (torch.isBeingHeld()) soundEngine.torchFireSound(true);
 
         generateTorchArc(input.assistParabola());
 

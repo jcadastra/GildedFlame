@@ -399,7 +399,9 @@
     "moth_charging": "soundEffects/moth_charging_1.mp3",
     "moth_fluttering": "soundEffects/moth_fluttering.mp3",
     "totem_walking": "soundEffects/totem_walking_1.mp3",
-    "moth_walking": "soundEffects/moth_walking.mp3"
+    "moth_walking": "soundEffects/moth_walking.mp3",
+    "scratching_ground": "soundEffects/scratching_ground_1.mp3",
+    "fire_sound": "soundEffects/fire_sound.mp3"
   },
   "fonts": {
     "shared-unica": {
