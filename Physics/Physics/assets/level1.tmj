@@ -314,6 +314,42 @@
                  "width":150,
                  "x":1027.21166666667,
                  "y":4120.27333333333
+                }, 
+                {
+                 "gid":82,
+                 "height":158,
+                 "id":215,
+                 "name":"qb3",
+                 "properties":[
+                        {
+                         "name":"flipHorizontally",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":230,
+                 "x":515.305318181818,
+                 "y":3046.75803030303
+                }, 
+                {
+                 "gid":82,
+                 "height":158,
+                 "id":216,
+                 "name":"qb3",
+                 "properties":[
+                        {
+                         "name":"flipHorizontally",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":230,
+                 "x":2291.05831818182,
+                 "y":3055.84803030303
                 }],
          "offsetx":-12.1212121212122,
          "offsety":-15.151515151515,
@@ -536,6 +572,42 @@
                  "width":346,
                  "x":2094.27272727273,
                  "y":4837.0303030303
+                }, 
+                {
+                 "gid":82,
+                 "height":158,
+                 "id":211,
+                 "name":"qb3",
+                 "properties":[
+                        {
+                         "name":"flipHorizontally",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":230,
+                 "x":4169,
+                 "y":5465
+                }, 
+                {
+                 "gid":82,
+                 "height":158,
+                 "id":212,
+                 "name":"qb3",
+                 "properties":[
+                        {
+                         "name":"flipHorizontally",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":230,
+                 "x":10625,
+                 "y":4567
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -736,7 +808,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":210,
+ "nextobjectid":217,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

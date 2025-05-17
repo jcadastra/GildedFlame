@@ -563,7 +563,7 @@
                         {
                          "name":"endPos",
                          "type":"string",
-                         "value":"0,11"
+                         "value":"0,11.5"
                         }, 
                         {
                          "name":"moveEvent",
@@ -1176,7 +1176,7 @@
  "nextobjectid":227,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.10.2",
+ "tiledversion":"1.11.2",
  "tileheight":300,
  "tilesets":[
         {

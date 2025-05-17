@@ -318,6 +318,18 @@
                  "width":712,
                  "x":3884,
                  "y":2728
+                }, 
+                {
+                 "gid":82,
+                 "height":158,
+                 "id":543,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":230,
+                 "x":3681,
+                 "y":4537
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -645,10 +657,10 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":542,
+ "nextobjectid":544,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.10.2",
+ "tiledversion":"1.11.2",
  "tileheight":300,
  "tilesets":[
         {
