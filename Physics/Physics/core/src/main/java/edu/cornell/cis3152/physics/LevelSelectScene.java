@@ -437,6 +437,8 @@ public class LevelSelectScene implements Screen {
             }
         }
         float scrollOffset = (scrollIndex % bgTiles.size) * tileWidth;
+        leftArrowEntry.image.setVisible(scrollIndex != 0);
+        rightArrowEntry.image.setVisible(!(scrollIndex + DOORS_VISIBLE >= doorEntries.size));
 
 
 // Calculate the offset based on scrollIndex
