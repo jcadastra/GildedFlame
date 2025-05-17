@@ -52,7 +52,7 @@ public class Fire extends ObstacleSprite {
     public Fire(Float units, Vector2 point) {
         super();
 //        this.radius = data.getFloat("radius");
-        radius = .8f;
+        radius = .7f;
         strength = 1f;
         timeToSmoke = 0;
         obstacle = new WheelObstacle(point.x, point.y, radius);

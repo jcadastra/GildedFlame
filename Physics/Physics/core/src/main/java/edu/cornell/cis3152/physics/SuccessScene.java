@@ -109,13 +109,12 @@ public class SuccessScene implements Screen {
         chambersButt.over = chambersButtOver;
 
 
-
-        ImageButton replayButton = new ImageButton(replayButt);;
-        Entry repl = new Entry(replayButton,replayButtUp,replayButtOver);
-        entries.add(repl);
         ImageButton contButton = new ImageButton(contButt);
         Entry cont = new Entry(contButton,contButtUp,contButtOver);
         entries.add(cont);
+        ImageButton replayButton = new ImageButton(replayButt);;
+        Entry repl = new Entry(replayButton,replayButtUp,replayButtOver);
+        entries.add(repl);
         ImageButton chambersButton = new ImageButton(chambersButt);
         Entry chamb = new Entry(chambersButton,chambersButtUp,chambersButtOver);
         entries.add(chamb);

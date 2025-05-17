@@ -22,6 +22,7 @@
       "wrapU": "repeated",
       "wrapV": "repeated"
     },
+    "title": "ui/title.png",
     "menuScreen": "loading/menuScreen.png",
     "newGameButt": "ui/newGameButt.png",
     "newGameButtClick": "ui/newGameButtClick.png",

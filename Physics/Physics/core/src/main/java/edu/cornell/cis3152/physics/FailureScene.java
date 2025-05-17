@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.graphics.GL20;
@@ -16,11 +17,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.ScreenUtils;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.util.ScreenListener;
 import com.badlogic.gdx.audio.Sound;
+import edu.cornell.gdiac.util.XBoxController;
 
 public class FailureScene implements Screen {
     private Stage stage;
@@ -30,7 +33,6 @@ public class FailureScene implements Screen {
     private boolean startClicked = false;
     private ScreenListener listener;
     private InputController inputController = InputController.getInstance();
-    private boolean prevButtonA = false;
     protected SoundEngine soundEngine;
     /** The asset directory for retrieving textures, atlases */
     protected AssetDirectory directory;
@@ -43,6 +45,23 @@ public class FailureScene implements Screen {
     private static final float FRAME_DURATION = 0.1f;
     private boolean animationFinished = false;
     private int death_code;
+    private Array<Entry> entries = new Array<>();
+    private boolean prevButtonA = false;
+    private float joystickCooldown = 0f;
+    private int currentIndex = 0;
+    private int scrollIndex = 0 ;
+
+    private class Entry {
+        private ImageButton button;
+        private TextureRegionDrawable defaultDrawable;
+        private TextureRegionDrawable selectedDrawable;
+
+        public Entry(ImageButton button, TextureRegionDrawable defaultDrawable, TextureRegionDrawable selectedDrawable) {
+            this.button = button;
+            this.defaultDrawable = defaultDrawable;
+            this.selectedDrawable = selectedDrawable;
+        }
+    }
 
 
     public FailureScene(AssetDirectory directory, SoundEngine soundEngine, int death_code) {
@@ -147,9 +166,15 @@ public class FailureScene implements Screen {
             }
         });
 
+        Entry retry = new Entry(retryButton,retryButtUp,retryButtOver);
+        entries.add(retry);
         stage.addActor(retryButton);
-        stage.addActor(mainMenuButton);
+        Entry chambers = new Entry(chambersButton,chambersButtUp,chambersButtOver);
         stage.addActor(chambersButton);
+        entries.add(chambers);
+        Entry mainMenu = new Entry(mainMenuButton,mainMenuButtUp,mainMenuButtOver);
+        stage.addActor(mainMenuButton);
+        entries.add(mainMenu);
 
         Texture topTexture = directory.getEntry("failed_text", Texture.class);
         Image topImage = new Image(topTexture);
@@ -183,14 +208,74 @@ public class FailureScene implements Screen {
 
     }
 
+
+    private void controllerSelect() {
+        if (inputController.isUsingController()) {
+            XBoxController xbox = inputController.xbox;
+            boolean start = xbox.getA();
+            Entry currentEntry = entries.get(currentIndex);
+            ImageButton.ImageButtonStyle style = currentEntry.button.getStyle();
+            style.up = currentEntry.selectedDrawable;
+            currentEntry.button.setStyle(style);
+            if (start && !prevButtonA) {
+                int selectionIndex = scrollIndex + currentIndex;
+                if (selectionIndex >= 0 && selectionIndex < entries.size) {
+                    // Simulate touch down
+                    InputEvent downEvent = new InputEvent();
+                    downEvent.setType(InputEvent.Type.touchDown);
+                    downEvent.setStage(stage);
+                    downEvent.setTarget(currentEntry.button);
+                    downEvent.setButton(0);
+                    currentEntry.button.fire(downEvent);
+
+                    // Simulate touch up
+                    InputEvent upEvent = new InputEvent();
+                    upEvent.setType(InputEvent.Type.touchUp);
+                    upEvent.setStage(stage);
+                    upEvent.setTarget(currentEntry.button);
+                    upEvent.setButton(0);
+                    currentEntry.button.fire(upEvent);
+
+                }
+            }
+            prevButtonA = start;
+
+            boolean moved = false;
+            float vertical = xbox.getLeftY();
+            System.out.println("joystick cool down"+joystickCooldown);
+            if (joystickCooldown <= 0) {
+                if (vertical < -0.4f && !moved) {
+//                    particleEngine.dispose();
+                    ImageButton.ImageButtonStyle s = currentEntry.button.getStyle();
+                    s.up = currentEntry.defaultDrawable;
+                    currentEntry.button.setStyle(s);
+                    //currentEntry.button.getImage().setDrawable(currentEntry.defaultDrawable);
+                    currentIndex = Math.max(currentIndex - 1, 0);  // Prevent going negative
+                    moved = true;
+                    joystickCooldown = 0.25f;
+                } else if (vertical > 0.4f && !moved) {
+                    ImageButton.ImageButtonStyle s = currentEntry.button.getStyle();
+                    s.up = currentEntry.defaultDrawable;
+                    currentEntry.button.setStyle(s);
+                    currentIndex = Math.min(currentIndex + 1, entries.size-1);  // Prevent going off right
+                    moved = true;
+                    joystickCooldown = 0.25f;
+                }
+                if (Math.abs(vertical) <= 0.01f) {
+                    moved = false;
+                }
+            }
+            joystickCooldown -= Gdx.graphics.getDeltaTime();
+        }
+    }
+
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+        controllerSelect();
         stage.act(delta);
         stage.draw();
-
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
         if(!animationFinished){

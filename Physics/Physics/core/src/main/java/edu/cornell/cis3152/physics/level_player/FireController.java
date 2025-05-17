@@ -316,7 +316,7 @@ public class FireController {
      */
     private void genFirePinPoints(EnhancedObstacleSprite b, Vector2 ignitionPoint) {
 //        if (b.getName().contains("rope")) {nFireDiagrams.put(b, (new Vector2[]{ignitionPoint})); return;}
-        float meshScale = 1f;
+        float meshScale = .7f;
         SpriteMesh mesh = b.getMesh();
         mesh.scl(meshScale);
         FloatArray releventVertecies = new FloatArray();

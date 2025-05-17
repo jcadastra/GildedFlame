@@ -22,12 +22,12 @@
             }
         },
       "textButt": {
-        "file": "ui/textButt.png",
+        "file": "ui/title.png",
         "minfilter" : "linear",
         "magfilter" : "linear"
       },
       "logo": {
-        "file": "loading/logo.png",
+        "file": "ui/wlogo.png",
         "minfilter": "linear",
         "magfilter": "linear"
       }
