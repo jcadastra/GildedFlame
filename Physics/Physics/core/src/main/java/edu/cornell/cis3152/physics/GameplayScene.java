@@ -2891,6 +2891,21 @@ public class GameplayScene implements Screen {
         public void createPauseUI() {
             float screenWidth = Gdx.graphics.getWidth();
             float screenHeight = Gdx.graphics.getHeight();
+
+            //gray overlay
+            Pixmap pixmap = new Pixmap(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
+            pixmap.setColor(0, 0, 0, 0.5f);  // RGBA: gray with 50% opacity
+            pixmap.fill();
+
+            Texture overlayTexture = new Texture(pixmap);
+            pixmap.dispose();
+
+            Image overlay = new Image(new TextureRegionDrawable(new TextureRegion(overlayTexture)));
+            overlay.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            overlay.setTouchable(Touchable.disabled); //disabled
+
+            stage.addActor(overlay);
+
             Texture contText = directory.getEntry("contButt", Texture.class);
             Texture contClickText = directory.getEntry("contButtClick", Texture.class);
             TextureRegionDrawable contButtUp = new TextureRegionDrawable(new TextureRegion(contText));
@@ -2932,19 +2947,19 @@ public class GameplayScene implements Screen {
 
             contButton.setSize(screenWidth * 0.2f, screenHeight * 0.06f);
             contButton.setPosition(
-                screenWidth * 0.45f,
+                screenWidth * 0.4f,
                 screenHeight * 0.5f
             );
 
             replayButton.setSize(screenWidth * 0.2f, screenHeight * 0.06f);
             replayButton.setPosition(
-                screenWidth * 0.45f,
+                screenWidth * 0.4f,
                 screenHeight * 0.4f
             );
 
             chambersButton.setSize(screenWidth * 0.2f, screenHeight * 0.06f);
             chambersButton.setPosition(
-                screenWidth * 0.45f,
+                screenWidth * 0.4f,
                 screenHeight * 0.3f
             );
 
