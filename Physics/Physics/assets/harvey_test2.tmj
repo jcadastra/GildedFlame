@@ -30,7 +30,115 @@
          "draworder":"topdown",
          "id":4,
          "name":"Background",
-         "objects":[],
+         "objects":[
+                {
+                 "gid":100,
+                 "height":700,
+                 "id":625,
+                 "name":"banner",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":500,
+                 "x":7044.3302462164,
+                 "y":2765.17957985091
+                }, 
+                {
+                 "gid":99,
+                 "height":210,
+                 "id":626,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":150,
+                 "x":2185,
+                 "y":3211
+                }, 
+                {
+                 "gid":99,
+                 "height":210,
+                 "id":627,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":150,
+                 "x":4571,
+                 "y":3515
+                }, 
+                {
+                 "gid":99,
+                 "height":210,
+                 "id":630,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":150,
+                 "x":6995,
+                 "y":3727
+                }, 
+                {
+                 "gid":99,
+                 "height":210,
+                 "id":631,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":150,
+                 "x":7535,
+                 "y":4713
+                }, 
+                {
+                 "gid":99,
+                 "height":210,
+                 "id":632,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":150,
+                 "x":8047,
+                 "y":2943
+                }, 
+                {
+                 "gid":88,
+                 "height":684,
+                 "id":633,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":456,
+                 "x":1366,
+                 "y":2838
+                }, 
+                {
+                 "gid":108,
+                 "height":300,
+                 "id":636,
+                 "name":"centralWeb",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":300,
+                 "x":9846,
+                 "y":2318
+                }, 
+                {
+                 "gid":108,
+                 "height":300,
+                 "id":638,
+                 "name":"centralWeb",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":300,
+                 "x":9352,
+                 "y":3190
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -365,8 +473,8 @@
                  "type":"",
                  "visible":true,
                  "width":57,
-                 "x":4610.18181818182,
-                 "y":3647.18181818182
+                 "x":4638.18181818182,
+                 "y":3427.18181818182
                 }, 
                 {
                  "gid":94,
@@ -403,6 +511,30 @@
                  "width":57,
                  "x":7590.18181818182,
                  "y":4643.18181818182
+                }, 
+                {
+                 "gid":94,
+                 "height":57,
+                 "id":634,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":1579.5,
+                 "y":2367.5
+                }, 
+                {
+                 "gid":94,
+                 "height":57,
+                 "id":635,
+                 "name":"light",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57,
+                 "x":1573.5,
+                 "y":2621.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -411,10 +543,10 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":625,
+ "nextobjectid":639,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.11.2",
+ "tiledversion":"1.10.2",
  "tileheight":300,
  "tilesets":[
         {
@@ -436,6 +568,10 @@
         {
          "firstgid":84,
          "source":"BackgroundAssets.tsx"
+        }, 
+        {
+         "firstgid":108,
+         "source":"mothDecoratives.tsx"
         }],
  "tilewidth":300,
  "type":"map",

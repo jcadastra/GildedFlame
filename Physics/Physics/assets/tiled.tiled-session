@@ -184,10 +184,23 @@
                 "y": 2690.217391304348
             }
         },
+        "harvey_test2.tmj": {
+            "expandedObjectLayers": [
+                4,
+                7,
+                6
+            ],
+            "scale": 0.5,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 4703,
+                "y": 2553
+            }
+        },
         "interMove.tmj": {
             "expandedObjectLayers": [
-                10,
-                8
+                8,
+                10
             ],
             "scale": 0.25,
             "selectedLayer": 6,
@@ -231,8 +244,8 @@
             "scale": 0.1582,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 6355.878634639697,
-                "y": 3068.9001264222507
+                "x": 6298.9886219974715,
+                "y": 2999.36788874842
             }
         },
         "level10.tmj": {
@@ -275,9 +288,9 @@
         },
         "level4.tmj": {
             "expandedObjectLayers": [
+                7,
                 2,
-                5,
-                7
+                5
             ],
             "scale": 0.33,
             "selectedLayer": 6,
@@ -354,8 +367,8 @@
             "scale": 0.1844583333333333,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4795.120849333635,
-                "y": 2697.0860627964767
+                "x": 4789.699570815451,
+                "y": 2691.664784278293
             }
         },
         "moth_medium.tmj": {
@@ -374,6 +387,14 @@
                 "y": 4095.4545454545455
             }
         },
+        "new_1.tmj": {
+            "scale": 0.1541111111111111,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 4804.974765681327,
+                "y": 3604.542177361212
+            }
+        },
         "new_2.tmj": {
             "expandedObjectLayers": [
                 2
@@ -381,8 +402,8 @@
             "scale": 0.180796875,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 4798.2024025581195,
-                "y": 2696.3961628208453
+                "x": 3448.621553884712,
+                "y": 2845.7350272232306
             }
         },
         "rain_intro.tmj": {
@@ -394,7 +415,7 @@
             "scale": 0.125,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 4948,
+                "x": 5396,
                 "y": 2404
             }
         },
@@ -456,8 +477,8 @@
         },
         "rune_medium.tmj": {
             "expandedObjectLayers": [
-                5,
-                3
+                3,
+                5
             ],
             "scale": 0.125,
             "selectedLayer": 7,
@@ -666,8 +687,9 @@
     "project": "tiled.tiled-project",
     "property.type": "string",
     "recentFiles": [
-        "rune_intro.tmj",
         "moth_intro.tmj",
+        "new_1.tmj",
+        "rune_intro.tmj",
         "BackgroundAssets.tsx",
         "interMove.tmj",
         "rune_advanced.tmj",
@@ -676,8 +698,7 @@
         "level2.tmj",
         "rune_medium.tmj",
         "rune_hard.tmj",
-        "rain_medium.tmj",
-        "new_2.tmj"
+        "rain_medium.tmj"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.type": 1
