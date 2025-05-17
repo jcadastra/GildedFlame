@@ -66,6 +66,7 @@
     "contJumpPro" : "backgroundAssets/controller/contJumpPro.png",
     "contMove" : "backgroundAssets/controller/contMove.png",
     "contThrow" : "backgroundAssets/controller/contThrow.png",
+    "mainFont" : "ui/Unica_One/UnicaOne-Regular.ttf",
 
 
     "window": "backgroundAssets/window.png",

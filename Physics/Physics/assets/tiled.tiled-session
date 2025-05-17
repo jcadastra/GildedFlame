@@ -1,5 +1,5 @@
 {
-    "activeFile": "rain_medium.tmj",
+    "activeFile": "rune_medium.tmj",
     "expandedProjectPaths": [
         "."
     ],
@@ -28,6 +28,12 @@
             "dynamicWrapping": true,
             "scaleInDock": 1,
             "scaleInEditor": 1
+        },
+        "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/lwjgl3/build/resources/main/BackgroundAssets.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/ericj/Desktop/bode/cs3152/The-Gilded-Flame/Physics/Physics/lwjgl3/build/resources/main/GameObjectTiles.tsx": {
+            "scaleInDock": 1
         },
         "C:/Users/ericj/Downloads/EnemyTiles.tsx": {
             "dynamicWrapping": true,
@@ -184,8 +190,8 @@
             "scale": 0.25,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 4318,
-                "y": 2082
+                "x": 4798,
+                "y": 2698
             }
         },
         "jump_intro.tmj": {
@@ -223,7 +229,7 @@
             "scale": 0.1582,
             "selectedLayer": 7,
             "viewCenter": {
-                "x": 6295.82806573957,
+                "x": 6298.9886219974715,
                 "y": 2999.36788874842
             }
         },
@@ -253,7 +259,7 @@
             "scale": 0.180796875,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 5248.984530291245,
+                "x": 5246.218995765275,
                 "y": 2696.3961628208453
             }
         },
@@ -261,20 +267,20 @@
             "scale": 0.5,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4800,
+                "x": 4799,
                 "y": 2699
             }
         },
         "level4.tmj": {
             "expandedObjectLayers": [
                 5,
-                7,
-                2
+                2,
+                7
             ],
             "scale": 0.33,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 5400,
+                "x": 5398.484848484848,
                 "y": 2698.4848484848485
             }
         },
@@ -285,7 +291,7 @@
             "scale": 0.25,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 4800,
+                "x": 4798,
                 "y": 2698
             }
         },
@@ -305,7 +311,7 @@
             "scale": 0.33,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 3900,
+                "x": 3898.484848484848,
                 "y": 2998.4848484848485
             }
         },
@@ -357,7 +363,7 @@
             "scale": 0.180796875,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 4795.4368680321495,
+                "x": 4798.2024025581195,
                 "y": 2696.3961628208453
             }
         },
@@ -370,8 +376,8 @@
             "scale": 0.125,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": -1004,
-                "y": 3876
+                "x": 4948,
+                "y": 2404
             }
         },
         "rain_medium.tmj": {
@@ -383,7 +389,7 @@
             "scale": 0.25,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 5400,
+                "x": 5398,
                 "y": 2698
             }
         },
@@ -408,14 +414,14 @@
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 7947.022729236886,
-                "y": 2093.250367297554
+                "y": 2102.4112004148305
             }
         },
         "rune_hard.tmj": {
             "scale": 0.180796875,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4795.4368680321495,
+                "x": 4798.2024025581195,
                 "y": 2696.3961628208453
             }
         },
@@ -426,20 +432,20 @@
             "scale": 0.180796875,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 4792.6713335061795,
-                "y": 2690.8650937689054
+                "x": 5406.619998271542,
+                "y": 4593.552847636332
             }
         },
         "rune_medium.tmj": {
             "expandedObjectLayers": [
-                5,
-                3
+                3,
+                5
             ],
-            "scale": 0.25,
-            "selectedLayer": 6,
+            "scale": 0.125,
+            "selectedLayer": 7,
             "viewCenter": {
-                "x": 4800,
-                "y": 2698
+                "x": 4452,
+                "y": 2604
             }
         },
         "sample.tmj": {
@@ -634,7 +640,9 @@
         "level2.tmj",
         "level5.tmj",
         "rain_intro.tmj",
-        "rune_advanced.tmj"
+        "rune_advanced.tmj",
+        "interMove.tmj",
+        "BackgroundAssets.tsx"
     ],
     "project": "tiled.tiled-project",
     "property.type": "string",
@@ -645,12 +653,12 @@
         "level4.tmj",
         "level7.tmj",
         "new_2.tmj",
+        "rain_medium.tmj",
+        "rune_hard.tmj",
+        "BackgroundAssets.tsx",
+        "interMove.tmj",
         "rune_advanced.tmj",
-        "rain_intro.tmj",
-        "level5.tmj",
-        "level2.tmj",
-        "rune_medium.tmj",
-        "rune_hard.tmj"
+        "rain_intro.tmj"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.type": 1
