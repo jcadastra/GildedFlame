@@ -59,8 +59,8 @@ public class GDXRoot extends Game implements ScreenListener {
     private GameplayScene[] controllers;
 
 //    private String[] levels = new String[]{"move_intro","jump_intro","throw_intro","climb_intro","advanced_movement","box_intro","totem_intro","moth_intro","moth_medium","moth_medium_2", "rune_intro", "rune_medium", "rain_intro", "rain_medium", "rune_hard", "new_1", "new_2"};
-    private String[] levels = new String[]{"first steps","don't look down","catch!","parkour!","i wonder where this goes","let me out!","freeze!","delivery!","ur not passing this one","psshhh","new_2", "1", "harvey_test2", "rain_intro", "1" };
-    private String[] levelNames = new String[]{"first steps","don't look down","catch!","parkour!","i wonder where this goes","let me out!","freeze!","delivery!","ur not passing this one","psshhh","new_2", "1", "harvey_test2", "rain_intro", "1" };
+    private String[] levels = new String[]{"first steps","don't look down","catch!","parkour!","i wonder where this goes","let me out!","freeze!","delivery!","ur not passing this one","psshhh","new_2", "1", "harvey_test2", "new_1", "moth_intro" };
+        private String[] levelNames = new String[]{"first steps","don't look down","catch!","parkour!","i wonder where this goes","let me out!","freeze!","delivery!","ur not passing this one","psshhh","new_2", "1", "harvey_test2", "new_1", "moth_intro" };
     private GameplayScene currentScene;
     private String prevScreen;
     private LevelSelectScene levelSelectScene;
