@@ -28,6 +28,7 @@ public class LevelSelectScene implements Screen {
     private Stage stage;
     private Skin skin;
     private Texture bgTexture;
+    Texture selectBgTexture;
 
     private Array<DoorEntry> doorEntries;
 
@@ -48,6 +49,7 @@ public class LevelSelectScene implements Screen {
     private boolean doorDisplayDirty = true;
     private BitmapFont unicaFont;
     private Array<Label> doorLabels = new Array<>();
+    private Array<BackgroundTile> bgTiles = new Array<>();
     private ArrowEntry leftArrowEntry, rightArrowEntry;
     private SoundEngine soundEngine;
 
@@ -71,6 +73,19 @@ public class LevelSelectScene implements Screen {
         }
     }
 
+    private class BackgroundTile {
+        public Image image;
+        public float targetX;
+
+        public BackgroundTile(Image image) {
+            this.image = image;
+            this.targetX = image.getX();
+        }
+    }
+
+
+
+
     private class ArrowEntry extends Entry{
         public int direction;
         public ArrowEntry(Image arrow, TextureRegionDrawable defaultDrawable, TextureRegionDrawable hoverDrawable,int direction) {
@@ -85,10 +100,6 @@ public class LevelSelectScene implements Screen {
         this.soundEngine = soundEngine;
         stage = new Stage(new ScreenViewport());
         skin = new Skin();
-        bgTexture = new Texture(Gdx.files.internal("ui/plain_back.png"));
-        Image bgImage = new Image(bgTexture);
-        bgImage.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        stage.addActor(bgImage);
         createBasicUI();
     }
     private Texture loadDoorTexture(String statePrefix, boolean hover) {
@@ -97,12 +108,31 @@ public class LevelSelectScene implements Screen {
         return new Texture(Gdx.files.internal(path));
     }
 
+    private String toRoman(int number) {
+        String[] numerals = {
+            "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"
+        };
+        int[] values = {
+            1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1
+        };
+
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < values.length; i++) {
+            while (number >= values[i]) {
+                number -= values[i];
+                result.append(numerals[i]);
+            }
+        }
+        return result.toString();
+    }
+
+
     private void createBasicUI() {
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
-        doorWidth = screenWidth * 0.18f;
-        doorHeight = screenHeight * 0.35f;
-        spacing = screenWidth * 0.001f;
+        doorWidth = screenWidth * 0.18f *0.8f;
+        doorHeight = screenHeight * 0.35f * 0.8f;
+        spacing = screenWidth * 0.00005f;
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("ui/Unica_One/UnicaOne-Regular.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -111,6 +141,19 @@ public class LevelSelectScene implements Screen {
 
         unicaFont = generator.generateFont(parameter);
         generator.dispose();
+
+        Texture selectBgTexture = new Texture(Gdx.files.internal("ui/selectBackground.png"));
+
+        float tileWidth = screenWidth / 5f;
+
+        for (int i = 0; i < 5; i++) {
+            Image bgTileImage = new Image(selectBgTexture);
+            bgTileImage.setSize(tileWidth, screenHeight);  // Each tile now covers 1/5 of the width
+            bgTileImage.setPosition(i * tileWidth, 0);
+            stage.addActor(bgTileImage);
+            bgTiles.add(new BackgroundTile(bgTileImage));
+        }
+
 
 
         Texture chamberLabelTexture = new Texture(Gdx.files.internal("ui/chamber_sel.png"));
@@ -142,8 +185,8 @@ public class LevelSelectScene implements Screen {
             Texture baseTex, hoverTex;
 
 //            if ("true".equals(completed)) {
-                baseTex = loadDoorTexture("complete", false);
-                hoverTex = loadDoorTexture("complete", true);
+            baseTex = loadDoorTexture("complete", false);
+            hoverTex = loadDoorTexture("complete", true);
 //            } else if (!foundFirstIncomplete) {
 //                baseTex = loadDoorTexture("incomplete", false);
 //                hoverTex = loadDoorTexture("incomplete", true);
@@ -157,12 +200,12 @@ public class LevelSelectScene implements Screen {
             door.setSize(doorWidth, doorHeight);
 
             Label.LabelStyle labelStyle = new Label.LabelStyle(unicaFont, com.badlogic.gdx.graphics.Color.WHITE);
-            Label label = new Label(String.valueOf(levelNumber), labelStyle);
+            Label label = new Label(toRoman(levelNumber), labelStyle);
             label.setTouchable(Touchable.disabled);
             label.setFontScale(1.0f);
             label.setSize(doorWidth, doorHeight);
             label.setAlignment(com.badlogic.gdx.utils.Align.center);
-            label.setPosition(door.getX(), door.getY());
+            label.setPosition(door.getX(), door.getY()*3.25f);
 
             final int labelIndex = i;
 
@@ -209,7 +252,6 @@ public class LevelSelectScene implements Screen {
         updateDoorDisplay();
     }
 
-    // ... rest of code unchanged ...
 
 
     private void addArrowButtons() {
@@ -221,7 +263,7 @@ public class LevelSelectScene implements Screen {
         Texture l_arrow_hov_text = new Texture(Gdx.files.internal("ui/l_arrow_click.png"));
         Image l_arrow = new Image(l_arrow_text);
         l_arrow.setSize(screenWidth * 0.05f, screenHeight * 0.05f);
-        l_arrow.setPosition(screenWidth * 0.01f, screenHeight * 0.30f);
+        l_arrow.setPosition(screenWidth * 0.01f, screenHeight * 0.8f);
         stage.addActor(l_arrow);
         leftArrowEntry = new ArrowEntry(l_arrow,
             new TextureRegionDrawable(l_arrow_text), new TextureRegionDrawable(l_arrow_hov_text),-1);
@@ -232,7 +274,7 @@ public class LevelSelectScene implements Screen {
         Texture r_arrow_hov_text = new Texture(Gdx.files.internal("ui/r_arrow_click.png"));
         Image r_arrow = new Image(r_arrow_text);
         r_arrow.setSize(screenWidth * 0.05f, screenHeight * 0.05f);
-        r_arrow.setPosition(screenWidth * 0.94f, screenHeight * 0.30f);
+        r_arrow.setPosition(screenWidth * 0.94f, screenHeight * 0.8f);
         stage.addActor(r_arrow);
         rightArrowEntry = new ArrowEntry(r_arrow,new TextureRegionDrawable(r_arrow_text),
             new TextureRegionDrawable(r_arrow_hov_text),1);
@@ -252,6 +294,9 @@ public class LevelSelectScene implements Screen {
                     int maxVisible = Math.min(DOORS_VISIBLE, doorEntries.size - scrollIndex);
                     currentIndex = Math.min(currentIndex, maxVisible - 1);
                     doorDisplayDirty = true;
+                    for (BackgroundTile tile : bgTiles) {
+                        tile.targetX -= Gdx.graphics.getWidth() / 6f;  // Move right by one tile
+                    }
                     //updateDoorDisplay();
 
                     // Title update
@@ -291,6 +336,9 @@ public class LevelSelectScene implements Screen {
                     int maxVisible = Math.min(DOORS_VISIBLE, doorEntries.size - scrollIndex);
                     currentIndex = Math.min(currentIndex, maxVisible - 1);
                     doorDisplayDirty = true;
+                    for (BackgroundTile tile : bgTiles) {
+                        tile.targetX += Gdx.graphics.getWidth() / 6f;  // Move right by one tile
+                    }
 
                     //updateDoorDisplay();
 
@@ -326,20 +374,13 @@ public class LevelSelectScene implements Screen {
         float screenHeight = Gdx.graphics.getHeight();
 
         Texture backButtText = new Texture(Gdx.files.internal("ui/back_butt.png"));
-        Texture settButtText = new Texture(Gdx.files.internal("ui/setting.png"));
-        Image backButt = new Image(backButtText);
+        Texture backButtHoverText = new Texture(Gdx.files.internal("ui/back_butt_hover.png"));
+
+        final Image backButt = new Image(backButtText);
         backButt.setSize(screenWidth * 0.075f, screenHeight * 0.075f);
         backButt.setPosition(screenWidth * 0.01f, screenHeight * 0.9f);
         stage.addActor(backButt);
 
-        Image settButt = new Image(settButtText);
-        settButt.setSize(screenWidth * 0.075f, screenHeight * 0.075f);
-        settButt.setPosition(screenWidth * 0.915f, screenHeight * 0.9f);
-        stage.addActor(settButt);
-
-        // Create drawables for hover effects
-
-        // Left arrow listener
         backButt.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -348,33 +389,72 @@ public class LevelSelectScene implements Screen {
                 }
                 return true;
             }
-        });
-    }
 
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, com.badlogic.gdx.scenes.scene2d.Actor fromActor) {
+                ((Image) event.getListenerActor()).setDrawable(new TextureRegionDrawable(new TextureRegion(backButtHoverText)));
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, com.badlogic.gdx.scenes.scene2d.Actor toActor) {
+                ((Image) event.getListenerActor()).setDrawable(new TextureRegionDrawable(new TextureRegion(backButtText)));
+            }
+        });
+
+        // Leave settings button unchanged
+        Texture settButtText = new Texture(Gdx.files.internal("ui/setting.png"));
+        Image settButt = new Image(settButtText);
+        settButt.setSize(screenWidth * 0.075f, screenHeight * 0.075f);
+        settButt.setPosition(screenWidth * 0.915f, screenHeight * 0.9f);
+        stage.addActor(settButt);
+    }
 
     private void updateDoorDisplay() {
         float screenWidth = Gdx.graphics.getWidth();
-        float yPos = Gdx.graphics.getHeight() * 0.185f;
+        float yPos = Gdx.graphics.getHeight() * 0.274f;
 
         int doorsToShow = Math.min(DOORS_VISIBLE, doorEntries.size - scrollIndex);
-        float totalWidth = doorsToShow * doorWidth + (doorsToShow - 1) * spacing;
-        float startX = (screenWidth - totalWidth) / 2f;
+        float tileWidth = screenWidth / 5f;  // Each background tile width
+
+        float effectiveDoorWidth = doorWidth * 0.9f;
 
         for (int i = 0; i < doorEntries.size; i++) {
             DoorEntry entry = doorEntries.get(i);
 
             if (i >= scrollIndex && i < scrollIndex + doorsToShow) {
                 int visibleIndex = i - scrollIndex;
-                entry.targetX = startX + visibleIndex * (doorWidth + spacing);
+
+                // Center door in its corresponding tile
+                float centerX = (visibleIndex + 0.505f) * tileWidth;
+                entry.targetX = centerX - effectiveDoorWidth / 2f;
+
                 entry.image.setY(yPos);
                 entry.image.setVisible(true);
+                entry.image.setWidth(effectiveDoorWidth);
             } else {
                 entry.targetX = 0;
                 entry.image.setVisible(false);
             }
         }
-    }
+        float scrollOffset = (scrollIndex % bgTiles.size) * tileWidth;
 
+
+// Calculate the offset based on scrollIndex
+
+        //for (int i = 0; i < bgTiles.size; i++) {
+        //    BackgroundTile tile = bgTiles.get(i);
+        //    float targetX = i * tileWidth - scrollOffset;
+
+            // Wrap-around logic to keep tiles within screen bounds
+          //  if (targetX + tileWidth < 0) {
+            //    targetX += bgTiles.size * tileWidth;
+           // } else if (targetX > screenWidth) {
+             //   targetX -= bgTiles.size * tileWidth;
+           // }
+
+          //  tile.targetX = targetX;
+    //}
+    }
     private void updateDoorAnimation(float delta) {
         float lerpSpeed = 10f;
         for (int i = 0; i < doorEntries.size; i++) {
@@ -389,14 +469,26 @@ public class LevelSelectScene implements Screen {
 
             if (i < doorLabels.size) {
                 Label label = doorLabels.get(i);
+
+                // Calculate horizontal position to center label over the door
                 float labelX = newX + doorWidth / 2f - label.getPrefWidth() / 2f;
                 float labelY = entry.image.getY() + doorHeight / 2f - label.getPrefHeight() / 2f;
-                label.setPosition(newX, entry.image.getY());
+                label.setPosition(newX - doorWidth*0.05f, entry.image.getY() * 1.64f);
                 label.setSize(doorWidth, doorHeight);  // ensure it resizes with the door
                 label.setVisible(entry.image.isVisible());
             }
         }
+      //  float bgLerpSpeed = 10f;  // Controls animation speed (increase for faster scroll)
+
+       // for (BackgroundTile tile : bgTiles) {
+       //     float currentX = tile.image.getX();
+       //     float newX = currentX + (tile.targetX - currentX) * bgLerpSpeed * delta;
+       //     tile.image.setX(newX);
+      //  }
+
     }
+
+
 
     private Entry controllerButtons(){
         Entry entry;
@@ -405,7 +497,7 @@ public class LevelSelectScene implements Screen {
         }else if (currentIndex%MAX_BUTTONS==(MAX_BUTTONS-1)){
             entry = rightArrowEntry;
         }else{
-            entry = doorEntries.get(5*chapterNumber+currentIndex-1);
+            entry = doorEntries.get(6*chapterNumber+currentIndex-1);
         }
         return entry;
     }
@@ -473,9 +565,6 @@ public class LevelSelectScene implements Screen {
         stage.act(delta);
         updateDoorAnimation(delta);
         stage.draw();
-        if (inputController.isUsingController()) {
-            if(inputController.xbox.getB()){listener.exitScreen(LevelSelectScene.this, 0);}
-        }
 
     }
 
