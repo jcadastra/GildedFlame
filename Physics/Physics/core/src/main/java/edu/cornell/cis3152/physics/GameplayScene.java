@@ -1603,6 +1603,7 @@ public class GameplayScene implements Screen {
             }else{
                 isPaused = false;
                 pauseOverlay.setVisible(false);
+                soundEngine.resumeLoopingSoundEffects();
             }
         }
 //        if (isPaused){
@@ -1870,6 +1871,8 @@ public class GameplayScene implements Screen {
 //            }
 //        }
         updateCamera();
+        }else{
+            soundEngine.stopAllSoundEffects();
         }
     }
 
@@ -2977,6 +2980,7 @@ public class GameplayScene implements Screen {
                         //listener.exitScreen(GameplayScene.this, EXIT_QUIT);
                         //remove();
                     }
+                    soundEngine.resumeLoopingSoundEffects();
                     return true;
                 }
             });
