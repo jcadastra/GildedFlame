@@ -2,6 +2,7 @@ package edu.cornell.cis3152.physics;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -70,8 +71,10 @@ public class TransitionScreen implements Screen {
         }
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("ui/Unica_One/UnicaOne-Regular.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
+
         param.size = 55;
-        param.characters = FreeTypeFontGenerator.DEFAULT_CHARS;BitmapFont bitmapFont = generator.generateFont(param);
+        param.characters = FreeTypeFontGenerator.DEFAULT_CHARS;
+        BitmapFont bitmapFont = generator.generateFont(param);
         generator.dispose();
 
         Label.LabelStyle style = new Label.LabelStyle();
