@@ -24,13 +24,17 @@
  */
 package edu.cornell.cis3152.physics;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectSet;
@@ -98,89 +102,156 @@ import java.util.function.Supplier;
  */
 public class GameplayScene implements Screen {
     // SOME EXIT CODES FOR GDXROOT
-    /** Exit code for quitting the game */
+    /**
+     * Exit code for quitting the game
+     */
     public static final int EXIT_QUIT = 0;
-    /** Exit code for advancing to next level */
+    /**
+     * Exit code for advancing to next level
+     */
     public static final int EXIT_NEXT = 1;
-    /** Exit code for jumping back to previous level */
+    /**
+     * Exit code for jumping back to previous level
+     */
     public static final int EXIT_PREV = 2;
-    /** Exit code for going to the success screen */
+    /**
+     * Exit code for going to the success screen
+     */
     public static final int EXIT_SUCCESS = 3;
-    /** Exit code for replaying the current level */
+    /**
+     * Exit code for replaying the current level
+     */
     public static final int EXIT_REPLAY = 4;
-    /** Exit code for returning to the main menu */
+    /**
+     * Exit code for returning to the main menu
+     */
     public static final int EXIT_MAINMENU = 5;
-    /** Exit code for going to the failure screen, torch off */
+    /**
+     * Exit code for going to the failure screen, torch off
+     */
     public static final int EXIT_TORCHOFF = 6;
-    /** Exit code for going to the failure screen, falling death */
+    /**
+     * Exit code for going to the failure screen, falling death
+     */
     public static final int EXIT_FALLING = 7;
-    /** Exit code for going to the failure screen, moth attack */
+    /**
+     * Exit code for going to the failure screen, moth attack
+     */
     public static final int EXIT_MOTH = 8;
-    /** How many frames after winning/losing do we continue? */
+    /**
+     * How many frames after winning/losing do we continue?
+     */
     public static final int EXIT_COUNT = 180;
     private boolean queueFailure;
     private boolean queueFailureTorchOff;
 
-    /** The asset directory for retrieving textures, atlases */
+    /**
+     * The asset directory for retrieving textures, atlases
+     */
     protected AssetDirectory directory;
-    /** The drawing camera for this scene */
+    /**
+     * The drawing camera for this scene
+     */
     protected OrthographicCamera camera;
-    protected float cameraZoomLevel = (float) ((.6/Math.pow(1280, .894)) * Math.pow(Gdx.graphics.getWidth(), .894));;
-    /** Reference to the sprite batch */
+    protected float cameraZoomLevel = (float) ((.6 / Math.pow(1280, .894)) * Math.pow(Gdx.graphics.getWidth(), .894));
+    ;
+    /**
+     * Reference to the sprite batch
+     */
     protected SpriteBatch batch;
 
     protected float width;
     protected float height;
 
-    /** The physics constants */
+    /**
+     * The physics constants
+     */
     protected JsonValue constants;
 
-    /** The font for giving messages to the player */
+    /**
+     * The font for giving messages to the player
+     */
     protected BitmapFont displayFont;
-    /** A layout for drawing a victory message */
+    /**
+     * A layout for drawing a victory message
+     */
     private TextLayout goodMessage;
-    /** A layout for drawing a failure message */
+    /**
+     * A layout for drawing a failure message
+     */
     private TextLayout badMessage;
 
-    /** Number of velocity iterations for the constrain solvers */
+    /**
+     * Number of velocity iterations for the constrain solvers
+     */
     public static final int WORLD_VELOC = 6;
-    /** Number of position iterations for the constrain solvers */
+    /**
+     * Number of position iterations for the constrain solvers
+     */
     public static final int WORLD_POSIT = 2;
 
-    /** All the objects in the world. */
-    protected PooledList<ObstacleSprite> sprites  = new PooledList<ObstacleSprite>();
-    /** Queue for adding objects */
+    /**
+     * All the objects in the world.
+     */
+    protected PooledList<ObstacleSprite> sprites = new PooledList<ObstacleSprite>();
+    /**
+     * Queue for adding objects
+     */
     protected PooledList<ObstacleSprite> addQueue = new PooledList<ObstacleSprite>();
-    /** Listener that will update the player mode when we are done */
+    /**
+     * Listener that will update the player mode when we are done
+     */
     private ScreenListener listener;
 
-    /** The Box2D world */
+    /**
+     * The Box2D world
+     */
     protected World world;
-    /** The boundary of the world */
+    /**
+     * The boundary of the world
+     */
     protected Rectangle bounds;
-    /** The world scale */
+    /**
+     * The world scale
+     */
     protected Vector2 scale;
 
-    /** Whether this is an active controller */
+    /**
+     * Whether this is an active controller
+     */
     protected boolean active;
-    /** Whether we have completed this level */
+    /**
+     * Whether we have completed this level
+     */
     protected boolean complete;
-    /** Whether we have failed at this world (and need a reset) */
+    /**
+     * Whether we have failed at this world (and need a reset)
+     */
     protected boolean failed;
-    /** Whether debug mode is active */
+    /**
+     * Whether debug mode is active
+     */
     protected boolean debug;
-    /** Whether the game is paused */
+    /**
+     * Whether the game is paused
+     */
     protected boolean paused;
-    /** Countdown active for winning or losing */
+    /**
+     * Countdown active for winning or losing
+     */
     protected int countdown;
-    /** 0 for torch off, 1 for falling death, 2 for contact with moth*/
+    /**
+     * 0 for torch off, 1 for falling death, 2 for contact with moth
+     */
     protected int death_code = 0;
 
     private List<Enemy> enemies;
     protected Avatar avatar;
     protected Torch torch;
 
-    /** Reference to the goalDoor (for collision detection) */
+    /**
+     * Reference to the goalDoor (for collision detection)
+     */
     private GameObject goalDoor;
 
     //protected Totem totem;
@@ -220,7 +291,6 @@ public class GameplayScene implements Screen {
     private float introFadeTime = 0f;
     private final float introfadeDuration = 1f;
     private Texture blackTexture;
-
 
 
     private Stage pauseStage;
@@ -276,18 +346,18 @@ public class GameplayScene implements Screen {
 
     /**
      * Returns true if debug mode is active.
-     *
+     * <p>
      * If true, all objects will display their physics bodies.
      *
      * @return true if debug mode is active.
      */
-    public boolean isDebug( ) {
+    public boolean isDebug() {
         return debug;
     }
 
     /**
      * Sets whether debug mode is active.
-     *
+     * <p>
      * If true, all objects will display their physics bodies.
      *
      * @param value whether debug mode is active.
@@ -298,18 +368,18 @@ public class GameplayScene implements Screen {
 
     /**
      * Returns true if the level is completed.
-     *
+     * <p>
      * If true, the level will advance after a countdown
      *
      * @return true if the level is completed.
      */
-    public boolean isComplete( ) {
+    public boolean isComplete() {
         return complete;
     }
 
     /**
      * Sets whether the level is completed.
-     *
+     * <p>
      * If true, the level will advance after a countdown
      *
      * @param value whether the level is completed.
@@ -324,18 +394,18 @@ public class GameplayScene implements Screen {
 
     /**
      * Returns true if the level is failed.
-     *
+     * <p>
      * If true, the level will reset after a countdown
      *
      * @return true if the level is failed.
      */
-    public boolean isFailure( ) {
+    public boolean isFailure() {
         return failed;
     }
 
     /**
      * Sets whether the level is failed.
-     *
+     * <p>
      * If true, the level will reset after a countdown
      *
      * @param value whether the level is failed.
@@ -353,13 +423,13 @@ public class GameplayScene implements Screen {
      *
      * @return true if this is the active screen
      */
-    public boolean isActive( ) {
+    public boolean isActive() {
         return active;
     }
 
     /**
      * Sets the sprite batch associated with this scene
-     *
+     * <p>
      * The sprite batch is shared across all scenes.
      *
      * @param batch the sprite batch associated with this scene
@@ -367,6 +437,7 @@ public class GameplayScene implements Screen {
     public void setSpriteBatch(SpriteBatch batch) {
         this.batch = batch;
     }
+
     private float phyiscsUnits;
 
     /**
@@ -386,26 +457,34 @@ public class GameplayScene implements Screen {
     private static final float DEATH_DELAY = 2.0f;
 
 
+
+    private PauseOverlay pauseOverlay;
+    public boolean didReset = false;
+    public boolean exit = false;
+    public boolean isPaused = false;
+    public boolean prevPaused = false;
+
+
     /**
      * Creates a new game world from the given asset directory
-     *
+     * <p>
      * The game world is scaled so that the screen coordinates do not agree
      * with the Box2d coordinates. The bounds are in terms of the Box2d
      * world, not the screen.
-     *
+     * <p>
      * All assets for this current scene are assumed to be prefixed by the
      * given string.
      *
      * @param directory The asset directory defining this scene
      * @param prefix    The prefix for the asset keys
      */
-    protected GameplayScene(AssetDirectory directory, SoundEngine soundEngine, String  prefix) {
+    protected GameplayScene(AssetDirectory directory, SoundEngine soundEngine, String prefix) {
         this.directory = directory;
         introFading = true;
         fadeTime = 0f;
-        constants = directory.getEntry(prefix+"-constants",JsonValue.class);
+        constants = directory.getEntry(prefix + "-constants", JsonValue.class);
         JsonValue defaults = constants.get("world");
-        torchHoldState = directory.getEntry("torchHoldState",JsonValue.class);
+        torchHoldState = directory.getEntry("torchHoldState", JsonValue.class);
         fireController = new FireController(directory);
         contactListener = new CollisionController(directory, fireController);
         this.eventHandler = new EventHandler();
@@ -429,27 +508,27 @@ public class GameplayScene implements Screen {
         scale = new Vector2();
         //TODO: Value needs to be imported from level vvvv
 //        bounds = new Rectangle(0,0,defaults.get("bounds").getFloat( 0 ), defaults.get("bounds").getFloat( 1 ));
-        bounds = new Rectangle(0,0,32,50);
-        resize(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+        bounds = new Rectangle(0, 0, 32, 50);
+        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        displayFont = directory.getEntry( "shared-unica" ,BitmapFont.class);
+        displayFont = directory.getEntry("shared-unica", BitmapFont.class);
         goodMessage = new TextLayout();
-        goodMessage.setFont( displayFont );
-        goodMessage.setAlignment( TextAlign.middleCenter );
-        goodMessage.setColor( Color.YELLOW );
+        goodMessage.setFont(displayFont);
+        goodMessage.setAlignment(TextAlign.middleCenter);
+        goodMessage.setColor(Color.YELLOW);
         goodMessage.setText("VICTORY!");
         goodMessage.layout();
 
         badMessage = new TextLayout();
-        badMessage.setFont( displayFont );
-        badMessage.setAlignment( TextAlign.middleCenter );
-        badMessage.setColor( Color.RED );
+        badMessage.setFont(displayFont);
+        badMessage.setAlignment(TextAlign.middleCenter);
+        badMessage.setColor(Color.RED);
         badMessage.setText("FAILURE!");
         badMessage.layout();
 
         complete = false;
         failed = false;
-        debug  = false;
+        debug = false;
         active = false;
         countdown = -1;
         ParticleEngine.load();
@@ -457,7 +536,7 @@ public class GameplayScene implements Screen {
 
     /**
      * Returns the sprite batch associated with this scene
-     *
+     * <p>
      * The canvas is shared across all scenes.
      *
      * @return the sprite batch associated with this scene
@@ -471,7 +550,7 @@ public class GameplayScene implements Screen {
      */
     public void dispose() {
         if (world != null) {
-            for(ObstacleSprite sprite : sprites) {
+            for (ObstacleSprite sprite : sprites) {
                 Obstacle obj = sprite.getObstacle();
                 obj.deactivatePhysics(world);
             }
@@ -495,12 +574,11 @@ public class GameplayScene implements Screen {
     }
 
     /**
-     *
      * Adds a physics sprite in to the insertion queue.
-     *
+     * <p>
      * Objects on the queue are added just before collision processing. We do
      * this to control object creation.
-     *
+     * <p>
      * param sprite The sprite to add
      */
     public void addQueuedObject(ObstacleSprite sprite) {
@@ -510,7 +588,7 @@ public class GameplayScene implements Screen {
 
     /**
      * Immediately adds a physics sprite to the physics world
-     *
+     * <p>
      * param sprite The sprite to add
      */
     protected void addSprite(ObstacleSprite sprite) {
@@ -521,36 +599,35 @@ public class GameplayScene implements Screen {
 
     /**
      * Immediately adds a sprite group to the physics world
-     *
+     * <p>
      * param group  The sprite group to add
      */
     protected void addSpriteGroup(ObstacleGroup group) {
-        for(ObstacleSprite sprite : group.getSprites()) {
-            assert inBounds( sprite ) : "Sprite is not in bounds";
-            sprites.add( sprite );
+        for (ObstacleSprite sprite : group.getSprites()) {
+            assert inBounds(sprite) : "Sprite is not in bounds";
+            sprites.add(sprite);
         }
         group.activatePhysics(world);
     }
 
     /**
      * Returns true if the sprite is in bounds.
-     *
+     * <p>
      * This assertion is useful for debugging the physics.
      *
-     * @param sprite    The sprite to check.
-     *
+     * @param sprite The sprite to check.
      * @return true if the sprite is in bounds.
      */
     public boolean inBounds(ObstacleSprite sprite) {
         Obstacle obj = sprite.getObstacle();
-        boolean horiz = (bounds.x <= obj.getX() && obj.getX() <= bounds.x+bounds.width);
-        boolean vert  = (bounds.y <= obj.getY() && obj.getY() <= bounds.y+bounds.height);
+        boolean horiz = (bounds.x <= obj.getX() && obj.getX() <= bounds.x + bounds.width);
+        boolean vert = (bounds.y <= obj.getY() && obj.getY() <= bounds.y + bounds.height);
         return horiz && vert;
     }
 
     /**
      * Resets the status of the game so that we can play again.
-     *
+     * <p>
      * This method disposes of the world and creates a new one.
      */
     public void reset() {
@@ -572,13 +649,16 @@ public class GameplayScene implements Screen {
         if (queueFailure) {
             queueFailure = false;
         }
-        if(queueFailureTorchOff) {
+        if (queueFailureTorchOff) {
             queueFailureTorchOff = false;
         }
 
         weatherMachine.update(world);
         loadLevel("rope_test");
         soundEngine.rainingBackground(false);
+        didReset = false;
+        isPaused = false;
+        exit = false;
     }
 
     public void clearLevel() {
@@ -652,43 +732,11 @@ public class GameplayScene implements Screen {
         contactListener.reset();
     }
 
-    private void populateLevel() {}
+    private void populateLevel() {
+    }
+
     private Rope temp;
 
-    private void initPauseUI() {
-        float screenWidth = Gdx.graphics.getWidth();
-        float screenHeight = Gdx.graphics.getHeight();
-        pauseStage = new Stage(new ScreenViewport());
-        skin = new Skin();
-        Texture resumeText = directory.getEntry("contButt", Texture.class);
-        Texture resumeClickText = directory.getEntry("contButtClick", Texture.class);
-        TextureRegionDrawable resumeButtUp = new TextureRegionDrawable(new TextureRegion(resumeText));
-        TextureRegionDrawable resumeButtOver = new TextureRegionDrawable(new TextureRegion(resumeClickText));
-
-        ImageButton.ImageButtonStyle resumeButt = new ImageButton.ImageButtonStyle();
-        resumeButt.up = resumeButtUp;
-        resumeButt.over = resumeButtOver;
-
-        ImageButton resumeButton = new ImageButton(resumeButt);
-
-        resumeButton.setSize(screenWidth * 0.2f, screenHeight * 0.06f);
-        resumeButton.setPosition(
-            screenWidth * 0.40f,
-            screenHeight * 0.5f
-        );
-
-        resumeButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
-            @Override
-            public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
-                                     float x, float y, int pointer, int button) {
-                paused = false;
-                //Gdx.input.setInputProcessor(gameInput);
-                return true;
-            }
-        });
-
-        pauseStage.addActor(resumeButton);
-    }
 
     private List<float[]> extractSurfaces(int[] data, int cols, int rows) {
         List<float[]> surfaces = new ArrayList<>();
@@ -710,7 +758,9 @@ public class GameplayScene implements Screen {
         }
         return surfaces;
     }
-private int pcunt = 1;
+
+    private int pcunt = 1;
+
     public void loadLevel(String levelInfoName) {
         System.out.println("Count " + pcunt);
         pcunt += 1;
@@ -718,7 +768,7 @@ private int pcunt = 1;
         float units = 40 * Gdx.graphics.getWidth() / 1280f;
         phyiscsUnits = units;
 
-        JsonValue levelData = directory.getEntry(levelName,JsonValue.class);
+        JsonValue levelData = directory.getEntry(levelName, JsonValue.class);
         JsonValue levelInfo = directory.getEntry(levelInfoName, JsonValue.class);
 
         // Create ground pieces
@@ -734,7 +784,7 @@ private int pcunt = 1;
             if (layerType.equals("tilelayer")) {
                 int width = layer.getInt("width");
                 int height = layer.getInt("height");
-                this.bounds = new Rectangle(0,0,width, height);
+                this.bounds = new Rectangle(0, 0, width, height);
 //                System.out.println(width + "x" + height);
                 JsonValue data = layer.get("data");
 
@@ -745,7 +795,7 @@ private int pcunt = 1;
                 }
 
                 Texture tileSet = directory.getEntry("platform-tiles", Texture.class);
-                TextureRegion[][] tileSetSplit = TextureRegion.split(tileSet,300,300);
+                TextureRegion[][] tileSetSplit = TextureRegion.split(tileSet, 300, 300);
 
                 List<float[]> polygons = extractSurfaces(tileData, width, height);
 
@@ -761,11 +811,11 @@ private int pcunt = 1;
                     int index = y * width + x;
                     int tileId = tileData[index] - 1;
 
-                    GameObject tile = new GameObject(minX, minY,1, 1,units,true,tileId);
+                    GameObject tile = new GameObject(minX, minY, 1, 1, units, true, tileId);
                     tile.getObstacle().setBodyType(BodyType.StaticBody);
 
 //                    Texture textur = directory.getEntry("stoneTile"+(tileId), Texture.class);
-                    tile.setTextureRegion(tileSetSplit[tileId / (tileSetSplit[0].length)][( tileId % tileSetSplit[0].length)]);
+                    tile.setTextureRegion(tileSetSplit[tileId / (tileSetSplit[0].length)][(tileId % tileSetSplit[0].length)]);
 
                     addSprite(tile);
                 }
@@ -889,7 +939,7 @@ private int pcunt = 1;
                         avatar.setTexture(playerTexture);
                         float width = object.getFloat("width") / levelData.getInt("tilewidth");
                         float height = object.getFloat("height") / levelData.getInt("tileheight");
-                        x -= width/2;
+                        x -= width / 2;
                         y += height / 4;
                         avatar.getObstacle().setPosition(x, y);
                         //System.out.println("position" + pos[0] + " " + pos[1]);
@@ -1016,7 +1066,7 @@ private int pcunt = 1;
                                 -(width) / 2.2f, (height * .11f) / 2f
                             };
                         }
-                        GameObject qb = new GameObject(hitbox, x + width/2,y + height/2, width, height, units);
+                        GameObject qb = new GameObject(hitbox, x + width / 2, y + height / 2, width, height, units);
                         JsonValue properties = object.get("properties");
                         float rotation = 0;
                         if (properties != null) {
@@ -1045,8 +1095,8 @@ private int pcunt = 1;
                     } else if (objName.contains("burnable")) {
                         float width = object.getFloat("width") / levelData.getInt("tilewidth");
                         float height = object.getFloat("height") / levelData.getInt("tileheight");
-                        x = x + width/2;
-                        y = y + height/2;
+                        x = x + width / 2;
+                        y = y + height / 2;
                         String materialType = "wood";
                         try {
                             materialType = object.getString("material");
@@ -1057,31 +1107,31 @@ private int pcunt = 1;
                         GameObject box;
                         if (objName.contains("non")) {
                             box = new GameObject(new float[]{
-                                -width/2, -height/2.2f,
-                                -width/8,-height/2.1f,
-                                0,-height/2,
-                                width/8,-height/2.1f,
-                                width/2, -height/2.2f,
+                                -width / 2, -height / 2.2f,
+                                -width / 8, -height / 2.1f,
+                                0, -height / 2,
+                                width / 8, -height / 2.1f,
+                                width / 2, -height / 2.2f,
 
-                                (width)/3, (height)/2 * .8f,
-                                -(width)/3, (height)/2 * .8f
-                            }, x,y, width, height, units);
+                                (width) / 3, (height) / 2 * .8f,
+                                -(width) / 3, (height) / 2 * .8f
+                            }, x, y, width, height, units);
                             materialType = "stone";
                             box.setTexture(directory.getEntry("nonburnable", Texture.class));
                             box.getObstacle().setPhysicsUnits(units);
                             box.getObstacle().setDensity(1.0f);
                         } else if (objName.contains("inf")) {
                             box = new GameObject(new float[]{
-                                -width/4, -height/2.2f,
-                                -width/8,-height/2.1f,
-                                0,-height/2,
-                                width/8,-height/2.1f,
-                                width/4, -height/2.2f,
+                                -width / 4, -height / 2.2f,
+                                -width / 8, -height / 2.1f,
+                                0, -height / 2,
+                                width / 8, -height / 2.1f,
+                                width / 4, -height / 2.2f,
 
-                                width/2,height/3,
-                                0,height/2,
-                                -width/2,height/3
-                            }, x,y, width, height, units);
+                                width / 2, height / 3,
+                                0, height / 2,
+                                -width / 2, height / 3
+                            }, x, y, width, height, units);
                             materialType = "infinite";
                             JsonValue props = object.get("properties");
                             if (props != null) {
@@ -1094,26 +1144,26 @@ private int pcunt = 1;
                                     }
                                 }
                             }
-                            box.getObstacle().setDensity(1.8f );
+                            box.getObstacle().setDensity(1.8f);
                         } else {
                             box = new GameObject(new float[]{
-                                -width/2, -(height) * (3f/10),
-                                -(width) * (3f/10f), -(height)/2.1f,
+                                -width / 2, -(height) * (3f / 10),
+                                -(width) * (3f / 10f), -(height) / 2.1f,
 
-                                0,-(height)/2,
+                                0, -(height) / 2,
 
-                                (width) * (3f/10f), -(height)/2.1f,
+                                (width) * (3f / 10f), -(height) / 2.1f,
 
-                                width/2, -(height) * (3f/10),
-                                width/2, (height) * (3f/10),
+                                width / 2, -(height) * (3f / 10),
+                                width / 2, (height) * (3f / 10),
 
-                                (width) * (3f/10f), (height)/2 * .80f,
-                                -(width) * (3f/10f), (height)/2 * .80f,
+                                (width) * (3f / 10f), (height) / 2 * .80f,
+                                -(width) * (3f / 10f), (height) / 2 * .80f,
 
-                               -width/2, (height) * (3f/10)
-                            }, x,y, width, height, units);
+                                -width / 2, (height) * (3f / 10)
+                            }, x, y, width, height, units);
                             box.setTexture(directory.getEntry("burnable", Texture.class));
-                            box.getObstacle().setDensity(1.25f );
+                            box.getObstacle().setDensity(1.25f);
                         }
                         box.setMaterial(new ObstacleMaterial(materialType));
                         box.getObstacle().setBodyType(BodyType.DynamicBody);
@@ -1124,7 +1174,8 @@ private int pcunt = 1;
 
                         if (objName.contains("inf")) {
                             box.setTexture(directory.getEntry("brazier", Texture.class));
-                            if (startOnFire) fireController.lightAnew(box, new Vector2(box.getObstacle().getX(), box.getObstacle().getY()));
+                            if (startOnFire)
+                                fireController.lightAnew(box, new Vector2(box.getObstacle().getX(), box.getObstacle().getY()));
                         }
                     } else if (objName.contains("rain")) {
                         for (JsonValue prop : object.get("properties")) {
@@ -1143,7 +1194,7 @@ private int pcunt = 1;
                         background.getObstacle().setName(objName);
                         Texture backGroundTexture = directory.getEntry(objName, Texture.class);
                         TextureRegion region = new TextureRegion(backGroundTexture);
-                        region.setRegion(0, 0, backGroundTexture.getWidth() *  (int)(width / 2), backGroundTexture.getHeight() * (int)(height / 2));
+                        region.setRegion(0, 0, backGroundTexture.getWidth() * (int) (width / 2), backGroundTexture.getHeight() * (int) (height / 2));
                         background.setTextureRegion(region);
                         addSprite(background);
                     } else {
@@ -1156,7 +1207,7 @@ private int pcunt = 1;
                                 float width = object.getFloat("width") / levelData.getInt("tilewidth");
                                 float height = object.getFloat("height") / levelData.getInt("tileheight");
 
-                                GameObject decoration = new GameObject(x,y,width,height, units, true);
+                                GameObject decoration = new GameObject(x, y, width, height, units, true);
                                 decoration.getObstacle().setSensor(true);  // set as sensor
                                 decoration.getObstacle().setBodyType(BodyType.StaticBody);
                                 decoration.setTexture(temp);
@@ -1227,7 +1278,7 @@ private int pcunt = 1;
                     String objName = object.getString("name", "unnamed");
                     float x = object.getFloat("x") / levelData.getInt("tilewidth");
                     float y = (bounds.height * 300 - object.getFloat("y")) / levelData.getInt("tileheight");
-                     if (objName.contains("rune")) {
+                    if (objName.contains("rune")) {
                     } else if (objName.contains("button")) {
                         float rotationRad = 0f;
                         boolean latch = false;
@@ -1289,8 +1340,8 @@ private int pcunt = 1;
                         String finalTargetName = targetName;
                         ObstacleSprite target = sprites.stream().filter(sprite -> sprite.getName().equals(finalTargetName)).findFirst().orElse(null);
 
-                        Vector2 buttonPosition = new Vector2(x,y);
-                        Button button = new Button(buttonPosition,(float) Math.toRadians(rotationRad), doubleSided, latch, units);
+                        Vector2 buttonPosition = new Vector2(x, y);
+                        Button button = new Button(buttonPosition, (float) Math.toRadians(rotationRad), doubleSided, latch, units);
                         addSpriteGroup(button);
 
                         Function<Float, Float> movementFunc = Interpolation.smoother::apply;
@@ -1310,7 +1361,7 @@ private int pcunt = 1;
                             EventAction<Vector2> moveAction = new EventAction<>(target, "move",
                                 platformStartPos, platformEndPos, duration, movementFunc);
 
-                            Event<Integer, Vector2> moveEvent = new Event<>(button,button::getState,
+                            Event<Integer, Vector2> moveEvent = new Event<>(button, button::getState,
                                 state -> state == 1, moveAction);
                             eventHandler.registerEvent(moveEvent);
                         }
@@ -1334,7 +1385,7 @@ private int pcunt = 1;
                     }
                 }
 
-                int rcnt = ropeAnchors.size()/2;
+                int rcnt = ropeAnchors.size() / 2;
                 for (int i = 0; i < rcnt; i++) {
                     String startName = String.valueOf(2 * i + 1);
                     String endName = String.valueOf(2 * i + 2);
@@ -1386,9 +1437,9 @@ private int pcunt = 1;
                         }
 //                        System.out.println(pin1Material + " " + pin2Material + " " + middleMaterial);
                         Rope rope = new Rope(new Vector2(x1, y1), new Vector2(x2, y2), depth, thickness, piecelen, units, levelInfo.get("ropes").get(0));
-                        rope.customRopeDesignation(pin1Material.equals("iron") ? directory.getEntry( "chain-end", Texture.class ) : directory.getEntry( "rope-end", Texture.class ),
-                            middleMaterial.equals("iron") ? directory.getEntry( "chain-mid", Texture.class ) : directory.getEntry( "rope-mid", Texture.class ),
-                            pin2Material.equals("iron") ? directory.getEntry( "chain-end", Texture.class ) : directory.getEntry( "rope-end", Texture.class ),
+                        rope.customRopeDesignation(pin1Material.equals("iron") ? directory.getEntry("chain-end", Texture.class) : directory.getEntry("rope-end", Texture.class),
+                            middleMaterial.equals("iron") ? directory.getEntry("chain-mid", Texture.class) : directory.getEntry("rope-mid", Texture.class),
+                            pin2Material.equals("iron") ? directory.getEntry("chain-end", Texture.class) : directory.getEntry("rope-end", Texture.class),
                             pin1Material, middleMaterial, pin2Material);
                         addSpriteGroup(rope);
                         WeldJointDef pinJoint = new WeldJointDef();
@@ -1400,7 +1451,9 @@ private int pcunt = 1;
                             rope.deactivateAnchor(0);
                             String finalPin1 = pin1;
                             ObstacleSprite target = sprites.stream().filter(os -> os.getName().equals(finalPin1)).findFirst().orElse(null);
-                            if (target == null) {System.err.println("Target is null for pin 1, check target pin name"); }
+                            if (target == null) {
+                                System.err.println("Target is null for pin 1, check target pin name");
+                            }
                             pinJoint.initialize(rope.getAnchors().get(0).getObstacle().getBody(), target.getObstacle().getBody(), (rope.getAnchors().get(0).getObstacle().getBody()
                                 .getWorldCenter()));
                             world.createJoint(pinJoint);
@@ -1411,7 +1464,9 @@ private int pcunt = 1;
                             rope.deactivateAnchor(1);
                             String finalPin2 = pin2;
                             ObstacleSprite target = sprites.stream().filter(os -> os.getName().equals(finalPin2)).findFirst().orElse(null);
-                            if (target == null) {System.err.println("Target is null for pin 2, check target pin name"); }
+                            if (target == null) {
+                                System.err.println("Target is null for pin 2, check target pin name");
+                            }
                             pinJoint.initialize(rope.getAnchors().get(1).getObstacle().getBody(), target.getObstacle().getBody(), (rope.getAnchors().get(1).getObstacle().getBody()
                                 .getWorldCenter()));
                             world.createJoint(pinJoint);
@@ -1427,7 +1482,7 @@ private int pcunt = 1;
         }
         torchArc = new ArrayList<>();
         for (int i = 0; i < dotTorchArcCount / deltaTorchArc; i++) {
-            WheelObstacle temp = new WheelObstacle(-1,-1, 0.35f/32f * units);
+            WheelObstacle temp = new WheelObstacle(-1, -1, 0.35f / 32f * units);
             temp.setBodyType(BodyType.StaticBody);
             ObstacleSprite tracker = new ObstacleSprite(temp);
             tracker.getObstacle().setPhysicsUnits(phyiscsUnits);
@@ -1438,13 +1493,13 @@ private int pcunt = 1;
             torchArc.add(tracker);
         }
 //        fitViewport.setCamera(camera);
-        lightController = new LightController(torchFire.getObstacle().getPosition(),world,camera,bounds, units, cameraZoomLevel);
+        lightController = new LightController(torchFire.getObstacle().getPosition(), world, camera, bounds, units, cameraZoomLevel);
         lightController.attachTorchLight(torchFire);
         lightController.resetCamera(camera);
         lightController.attachPlayerLight(avatar);
         floatingLights = new ArrayList<FloatingLight>();
         Vector2 goalPos = goalDoor.getObstacle().getPosition();
-        FloatingLight goalLight = new FloatingLight(units,goalPos,1,goalPos);
+        FloatingLight goalLight = new FloatingLight(units, goalPos, 1, goalPos);
         floatingLights.add(goalLight);
 
         eye = directory.getEntry("eyes", Texture.class);
@@ -1461,7 +1516,7 @@ private int pcunt = 1;
                     String pinTarget = "";
                     if (objName.contains("light")) {
                         JsonValue props = object.get("properties");
-                        if (props!=null) {
+                        if (props != null) {
                             for (JsonValue prop : props) {
                                 String pname = prop.getString("name");
                                 String val = prop.getString("value");
@@ -1475,36 +1530,36 @@ private int pcunt = 1;
                                 }
                             }
                         }
-                        FloatingLight light = new FloatingLight(units,new Vector2(x,y),1,goalPos);
+                        FloatingLight light = new FloatingLight(units, new Vector2(x, y), 1, goalPos);
                         light.setWander(wander);
 //                        System.out.println("floating light: " + (int)x+","+ (int)y);
-                        light.getObstacle().setPosition(x,y);
+                        light.getObstacle().setPosition(x, y);
                         floatingLights.add(light);
                         addSprite(light);
                         if (!pinTarget.isEmpty()) {
                             String finalPinTarget = pinTarget;
                             ObstacleSprite target = sprites.stream().filter(os -> os.getName().equals(
                                 finalPinTarget)).findFirst().orElse(null);
-                            pinLightToObject(target,light);
+                            pinLightToObject(target, light);
                         }
                     }
                 }
             }
         }
         for (FloatingLight light : floatingLights) {
-            lightController.attachAmbientLight(light,true);
+            lightController.attachAmbientLight(light, true);
             //light.setWander(true);
         }
 //        debugPrintOut();
     }
+
     /**
      * Returns whether to process the update loop
-     *
+     * <p>
      * At the start of the update loop, we check if it is time to switch to a
      * new game mode. If not, the update proceeds normally.
      *
-     * @param dt    Number of seconds since last animation frame
-     *
+     * @param dt Number of seconds since last animation frame
      * @return whether to process the update loop
      */
     public boolean preUpdate(float dt) {
@@ -1519,17 +1574,37 @@ private int pcunt = 1;
             debug = !debug;
         }
 
-        // Handle resets
-        if (input.didReset() && !failed) {
-            reset();
-        }
 
         // Now it is time to maybe switch screens.
         if (input.didExit()) {
-            pause();
-            listener.exitScreen(this, EXIT_QUIT);
-            return false;
-        } else if (input.didAdvance()) {
+            if (!isPaused){
+                System.out.println("pause");
+                pause();
+                isPaused = true;
+                pauseOverlay.setSoundEngine(soundEngine);
+                pauseOverlay.setVisible(true);
+                return true;
+            }else{
+                isPaused = false;
+                pauseOverlay.setVisible(false);
+            }
+        }
+//        if (isPaused){
+//            // Handle resets
+//            if (didReset && !failed) {
+//                System.out.println("RESET");
+//                pauseOverlay.setVisible(false);
+//                reset();
+//                return true;
+//            }
+//            if (exit){
+//                System.out.println("EXITING");
+//                listener.exitScreen(this,EXIT_QUIT);
+//                pauseOverlay.setVisible(false);
+//                return false;
+//            }
+//        }
+        if (input.didAdvance()) {
             pause();
             listener.exitScreen(this, EXIT_NEXT);
             return false;
@@ -1560,14 +1635,14 @@ private int pcunt = 1;
             death_code = 1;
             return false;
         }
-        if (!isFailure() && (activeFireJoint == null || (torch.getObstacle().getY() < -1 && avatar.getObstacle().getY() >= -1)|| queueFailureTorchOff)) {
-            System.out.println((activeFireJoint == null) +", "+ (torch.getObstacle().getY() < 0)+ ", " +queueFailureTorchOff);
+        if (!isFailure() && (activeFireJoint == null || (torch.getObstacle().getY() < -1 && avatar.getObstacle().getY() >= -1) || queueFailureTorchOff)) {
+            System.out.println((activeFireJoint == null) + ", " + (torch.getObstacle().getY() < 0) + ", " + queueFailureTorchOff);
             System.out.println(torch.getObstacle().getPosition());
             setFailure(true);
             death_code = 0;
             return false;
         }
-        if(queueFailure) {
+        if (queueFailure) {
             setFailure(true);
             death_code = 2;
             return false;
@@ -1577,18 +1652,19 @@ private int pcunt = 1;
 
     /**
      * Advances the core gameplay loop of this world.
-     *
+     * <p>
      * This method contains the specific update code for this mini-game. It
      * does not handle collisions, as those are managed by the parent class
      * PhysicsScene. This method is called after input is synced to the current
      * frame, but before collisions are resolved. The very last thing that it
      * should do is apply forces to the appropriate objects.
      *
-     * @param dt    Number of seconds since last animation frame
+     * @param dt Number of seconds since last animation frame
      */
     public void update(float dt) {
 
         soundEngine.tendToMusicLoop();
+        if (!isPaused){
         torch.onRight = avatar.isFacingRight();
 //        System.out.println(Gdx.graphics.getFramesPerSecond());
 //        SavedDataHandler temp = new SavedDataHandler();
@@ -1623,7 +1699,7 @@ private int pcunt = 1;
         eventHandler.update();
         contactListener.sustainedContact();
         //TODO:Attach light joints
-        lightController.update(fireController,true);
+        lightController.update(fireController, true);
 
         InputController input = InputController.getInstance();
 
@@ -1634,7 +1710,7 @@ private int pcunt = 1;
         avatar.setShooting(input.didSecondary());
 
         if (!(avatar.getBodyTouchedClimbables().isEmpty()) && !avatar.getHasTorch() && !avatar.getGroundedState().equals(GroundState.CLIMBING)
-             && input.didVertical() && avatar.jumpDeadTimerAvaliable()) {
+            && input.didVertical() && avatar.jumpDeadTimerAvaliable()) {
             avatar.setGroundedState(GroundState.CLIMBING);
             avatar.applyClimbingPhysics();
             avatar.getObstacle().getBody().setLinearVelocity(Vector2.Zero);
@@ -1705,7 +1781,7 @@ private int pcunt = 1;
                     mothSmother = true;
                 } else if (previous == Enemy.EnemyState.SMOTHER && current != Enemy.EnemyState.SMOTHER) {
                     soundEngine.stopSoundEffect("mothSmother");
-                }  else if (previous == Enemy.EnemyState.CD && current != Enemy.EnemyState.CD) {
+                } else if (previous == Enemy.EnemyState.CD && current != Enemy.EnemyState.CD) {
                     soundEngine.stopSoundEffect("mothCharging");
                 }
                 mothPreviousStates.put(moth, current);
@@ -1744,7 +1820,7 @@ private int pcunt = 1;
             } else if (animation.equals("JumpUp")) {
                 desiredFrame = Math.min(desiredFrame, 4);
             }
-            JsonValue animationFrames = torchHoldState.get(animation).get(desiredFrame +"");
+            JsonValue animationFrames = torchHoldState.get(animation).get(desiredFrame + "");
             if (animationFrames != null) {
                 Vector2 location = avatar.getObstacle().getPosition().cpy()
                     .add(avatar.getVelocity().scl(1 / phyiscsUnits));
@@ -1762,6 +1838,7 @@ private int pcunt = 1;
 //            }
 //        }
         updateCamera();
+        }
     }
 
 
@@ -1783,12 +1860,12 @@ private int pcunt = 1;
             return;
         }
 
-        float dt = 1/60f;
+        float dt = 1 / 60f;
         Vector2 start = new Vector2(torch.getObstacle().getPosition());
         // magic numbers but idk why they work
-        Vector2 vel = new Vector2(torch.getIntialThrowVelocity()).scl((avatar.isFacingRight() ? 1 : -1),2.13f);
+        Vector2 vel = new Vector2(torch.getIntialThrowVelocity()).scl((avatar.isFacingRight() ? 1 : -1), 2.13f);
         float gravity = world.getGravity().y;
-        final Fixture[] hit = { null };
+        final Fixture[] hit = {null};
         final Vector2[] hitpoint = {new Vector2()};
         RayCastCallback raycastCallback = (fixture, point, normal, fraction) -> {
             hit[0] = fixture;
@@ -1798,13 +1875,13 @@ private int pcunt = 1;
         Vector2 lastTP = new Vector2(start);
 
         ArrayList<Vector2> arcPoints = new ArrayList<Vector2>();
-        float r=dt * dtTorchArcOffset;
+        float r = dt * dtTorchArcOffset;
         int generatedCount = 0;
         while (generatedCount < dotTorchArcCount) {
             float t = (dt) * (generatedCount + dtTorchArcOffset);
             float x = start.x + vel.x * t + weatherMachine.getWind().x;
             float y = start.y + t * vel.y + 0.5f * (t * t + t) * gravity + weatherMachine.getWind().y;
-            Vector2 trajectoryPosition = new Vector2(x,y);
+            Vector2 trajectoryPosition = new Vector2(x, y);
             if (generatedCount > 0) {
                 world.rayCast(raycastCallback, lastTP, trajectoryPosition);
                 if (hit[0] != null && !hit[0].isSensor()) {
@@ -1827,14 +1904,14 @@ private int pcunt = 1;
         }
 
         for (int i = 0; i < dotTorchArcCount / deltaTorchArc; i++) {
-            if (i < generatedCount/ deltaTorchArc) {
+            if (i < generatedCount / deltaTorchArc) {
                 torchArc.get(i).getObstacle().setPosition(arcPoints.get(i));
             } else {
-                torchArc.get(i).getObstacle().setPosition(-1,-1);
+                torchArc.get(i).getObstacle().setPosition(-1, -1);
             }
         }
         // this part right here is just to display final hit section
-        torchArc.get(torchArc.size() - 1).getObstacle().setPosition(arcPoints.get(arcPoints.size()-1));
+        torchArc.get(torchArc.size() - 1).getObstacle().setPosition(arcPoints.get(arcPoints.size() - 1));
         dtTorchArcOffset += animationOffsetTorchArc;
     }
 
@@ -1843,7 +1920,7 @@ private int pcunt = 1;
 //            return;
 //        }
         for (ObstacleSprite i : torchArc) {
-            i.getObstacle().setPosition(-1,-1);
+            i.getObstacle().setPosition(-1, -1);
         }
     }
 
@@ -1857,8 +1934,8 @@ private int pcunt = 1;
 
         Vector2 playerPos = avatar.getObstacle().getPosition();
 
-        float visibleW =  camera.viewportWidth/2*camera.zoom; //half of world visible, zoomed
-        float visibleH = camera.viewportHeight/2*camera.zoom;
+        float visibleW = camera.viewportWidth / 2 * camera.zoom; //half of world visible, zoomed
+        float visibleH = camera.viewportHeight / 2 * camera.zoom;
 
         float idealX = playerPos.x * phyiscsUnits;
         float idealY = playerPos.y * phyiscsUnits;
@@ -1872,8 +1949,8 @@ private int pcunt = 1;
 //        System.out.println(((visibleH)/2) +",hhh " +( (bounds.height)));
 //        System.out.println(((visibleH)/2) +",hhh " +( (bounds.height * phyiscsUnits)));
 //        System.out.println(scale +",awef " +phyiscsUnits);
-        camera.position.x = MathUtils.clamp(idealX, (visibleW), (bounds.width * phyiscsUnits)-(visibleW));
-        camera.position.y = MathUtils.clamp(idealY, (visibleH), (bounds.height * phyiscsUnits)-(visibleH));
+        camera.position.x = MathUtils.clamp(idealX, (visibleW), (bounds.width * phyiscsUnits) - (visibleW));
+        camera.position.y = MathUtils.clamp(idealY, (visibleH), (bounds.height * phyiscsUnits) - (visibleH));
         camera.update();
 
         //debug code
@@ -1885,9 +1962,9 @@ private int pcunt = 1;
 //        shapeRenderer.end();
 
 
-        float dx = camera.position.x-prevX;
-        float dy = camera.position.y-prevY;
-        lightController.updateCamera(dx,dy);
+        float dx = camera.position.x - prevX;
+        float dy = camera.position.y - prevY;
+        lightController.updateCamera(dx, dy);
         lightController.updateCamera(camera);
     }
 
@@ -1929,14 +2006,14 @@ private int pcunt = 1;
                         case "move":
                             Vector2 endPointZeroed = rune.returnInLight() ? (fin.cpy()).sub(initial) : (initial.cpy()).sub(fin);
                             Vector2 delta = endPointZeroed.cpy().scl(factor).sub(endPointZeroed.cpy().scl(prevFactor));
-                            delta.scl(1/dt) ;
+                            delta.scl(1 / dt);
                             ObstacleSprite target = eventAction.getTarget();
                             target.getObstacle().setLinearVelocity(delta.scl(rune.returnInLight() ? 1 : -1));
                             boolean isMoving = delta.len2() > 0.01f;
                             soundEngine.platformMoving(isMoving);
-                            if (2*factor - prevFactor >= 1 || 2*factor - prevFactor <= 0) {
+                            if (2 * factor - prevFactor >= 1 || 2 * factor - prevFactor <= 0) {
                                 target.getObstacle().setLinearVelocity(Vector2.Zero);
-                                if (2*factor - prevFactor >= 1) {
+                                if (2 * factor - prevFactor >= 1) {
                                     target.getObstacle().setPosition(eventAction.getFinalValue().cpy().add(((GameObject) target).startPosition).scl(new Vector2((float) 1, (float) Math.cos(target.getObstacle().getAngle()))));
                                 } else {
                                     target.getObstacle().setPosition(eventAction.getInitialValue().cpy().add(((GameObject) target).startPosition));
@@ -1971,7 +2048,7 @@ private int pcunt = 1;
      */
     private void supplementaryCollisionActions() {
         Stack<CollisionFlag> todos = contactListener.getCollisionFlags();
-        while ( !todos.isEmpty() ) {
+        while (!todos.isEmpty()) {
             CollisionFlag todo_action = todos.pop();
             switch (todo_action.getName()) {
                 case "addTorch":
@@ -2046,7 +2123,7 @@ private int pcunt = 1;
      */
     private void supplementaryFireActions() {
         Stack<FireFlag> todos = fireController.getFireFlags();
-       lightController.fireLights(fireController);
+        lightController.fireLights(fireController);
         int idx = 0;
         while (!todos.isEmpty()) {
             FireFlag fireFlag = todos.pop();
@@ -2056,7 +2133,7 @@ private int pcunt = 1;
                     Fire fire = fireFlag.getFire();
                     fire.setBurntObstacle(fireFlag.getSubject());
                     addSprite(fire);
-                    Lighting light = new Lighting(phyiscsUnits, 2.2f,fire.getObstacle().getPosition());
+                    Lighting light = new Lighting(phyiscsUnits, 2.2f, fire.getObstacle().getPosition());
                     addSprite(light);
                     attachFireLightJoints(fire, light);
                     if ((fireFlag.getSubject()).getObstacle().getBody() == null) {
@@ -2145,17 +2222,17 @@ private int pcunt = 1;
      *
      * @param dt delta time
      */
-    private <T,U> void supplementaryEventActions(float dt) {
-        Stack<Event<?,?>> todos = eventHandler.getEventFlags();
+    private <T, U> void supplementaryEventActions(float dt) {
+        Stack<Event<?, ?>> todos = eventHandler.getEventFlags();
         Set<Button> toggleButtons = new HashSet<>();
         while (!todos.isEmpty()) {
-            Event<T,U> event = (Event<T, U>) todos.pop();
+            Event<T, U> event = (Event<T, U>) todos.pop();
             EventAction<U> action = event.action;
 
             // if the caller of the event needs any upkeep, in the case of a button the inverse of the
             // event will be added to be called after the button's state changes again, to act like a
             // true button
-            if (event.source instanceof Button){
+            if (event.source instanceof Button) {
                 EventAction<U> undo_action = action.cloneTweenEvent();
                 U temp = undo_action.getInitialValue();
                 undo_action.setInitialValue(undo_action.getFinalValue());
@@ -2204,7 +2281,7 @@ private int pcunt = 1;
                             stepCounter += dt;
                             // no new vector creation cause that takes memory
                             travellingPoint.set((end.x - start.x) * action.interpolator.apply(stepCounter / action.getTime()) + start.x,
-                                                (end.y - start.y) * action.interpolator.apply(stepCounter / action.getTime()) + start.y);
+                                (end.y - start.y) * action.interpolator.apply(stepCounter / action.getTime()) + start.y);
                         }
                         timeTill = action.getTime() - stepCounter;
                         tweenedMovmentObjectsVec2.remove(oldEvent.get());
@@ -2249,7 +2326,7 @@ private int pcunt = 1;
                     Consumer<Float> consumerFloat = (value) -> action.getTarget().getObstacle().setAngle(value);
 
                     TweenElement<Float> tweenElementFloat = new TweenElement<Float>(action.getTarget(), action.getName(),
-                        initialStateFloat, (Float) action.getFinalValue(), timeTill,action.getInterpolator(), supplierFloat, consumerFloat);
+                        initialStateFloat, (Float) action.getFinalValue(), timeTill, action.getInterpolator(), supplierFloat, consumerFloat);
                     tweenedMovmentObjectsFloat.add(tweenElementFloat);
                     break;
             }
@@ -2260,13 +2337,13 @@ private int pcunt = 1;
         }
     }
 
-    private void supplementaryRainActions () {
+    private void supplementaryRainActions() {
         Stack<RainFlag> todos = weatherMachine.getRainflags();
         while (!todos.isEmpty()) {
             RainFlag todo = todos.pop();
             switch (todo.getName()) {
                 case "addRain":
-                    todo.getSubject().setTexture(directory.getEntry("rainParticle"+todo.rainNum, Texture.class));
+                    todo.getSubject().setTexture(directory.getEntry("rainParticle" + todo.rainNum, Texture.class));
                     addSprite(todo.getSubject());
                     break;
             }
@@ -2276,7 +2353,7 @@ private int pcunt = 1;
     /**
      * Dedicated method to update Vec2 tweens, should be applicable for any vector change in attribute
      * not just movements
-     *
+     * <p>
      * The reason behind splitting Vec2 and Flaot instead of abstracting itno one, is because, most likely,
      * we aren't going to be tweening anything more than that and the generalization/casting was becoming
      * tedious and unsafe
@@ -2297,9 +2374,9 @@ private int pcunt = 1;
             // get the interpolater value from time elapsed (x) / total time (y) as factor, then
             // apply the value to the getter for the funcction
             float factor = interpolator.apply(timer.x / timer.y);
-            float oldFactor = interpolator.apply(Math.max(timer.x - dt, 0)/ timer.y);
-            Vector2 delta = ( (endPointZeroed.cpy()).scl(factor) ).sub( ((endPointZeroed.cpy()).scl(oldFactor)) );
-            delta.scl(1/dt);
+            float oldFactor = interpolator.apply(Math.max(timer.x - dt, 0) / timer.y);
+            Vector2 delta = ((endPointZeroed.cpy()).scl(factor)).sub(((endPointZeroed.cpy()).scl(oldFactor)));
+            delta.scl(1 / dt);
             setter.accept(delta);
 
             timer.x += dt;
@@ -2319,6 +2396,7 @@ private int pcunt = 1;
 
     /**
      * see mirror documentation for updateTweenedMovementObjectsVec2
+     *
      * @param dt deltatime
      */
     private void updateTweenedMovementObjectsFloat(float dt) {
@@ -2343,7 +2421,7 @@ private int pcunt = 1;
     }
 
 
-    private void joinFireToObject (ObstacleSprite o, Fire f) {
+    private void joinFireToObject(ObstacleSprite o, Fire f) {
         WeldJointDef jointDef = new WeldJointDef();
         jointDef.initialize(o.getObstacle().getBody(), f.getObstacle().getBody(), Vector2.Zero);
         jointDef.collideConnected = false;
@@ -2353,13 +2431,13 @@ private int pcunt = 1;
 
     /**
      * Processes the physics for this frame
-     *
+     * <p>
      * Once the update phase is over, but before we draw, we are ready to
      * process physics. The primary method is the step() method in world. This
      * implementation works for all applications and should not need to be
      * overwritten.
      *
-     * @param dt    Number of seconds since last animation frame
+     * @param dt Number of seconds since last animation frame
      */
     public void postUpdate(float dt) {
         // Add any objects created by actions
@@ -2370,7 +2448,7 @@ private int pcunt = 1;
         // Turn the physics engine crank.
         // NORMALLY we would use a fixed step, not dt
         // But that is harder and a topic of the advanced class
-        world.step(1/60f,WORLD_VELOC,WORLD_POSIT);
+        world.step(1 / 60f, WORLD_VELOC, WORLD_POSIT);
 
         // Garbage collect the deleted objects.
         // Note how we use the linked list nodes to delete O(1) in place.
@@ -2392,103 +2470,105 @@ private int pcunt = 1;
 
     /**
      * Draws the physics objects to the screen
-     *
+     * <p>
      * For simple worlds, this method is enough by itself. It will need to be
      * overriden if the world needs fancy backgrounds or the like.
-     *
+     * <p>
      * The method draws all objects in the order that they were added.
      *
-     * @param dt    Number of seconds since last animation frame
+     * @param dt Number of seconds since last animation frame
      */
     public void draw(float dt) {
         // Clear the screen (color is homage to the XNA years)
 //        ScreenUtils.clear(0.17f, 0.28f, 0.35f, 1.0f);
-        ScreenUtils.clear(0,0,0,1);
+        ScreenUtils.clear(0, 0, 0, 1);
 
         // This shows off how powerful our new SpriteBatch is
         fitViewport.apply();
-        batch.begin(camera);
+            batch.begin(camera);
 
 
-        // Draw the meshes (images)
-        for(ObstacleSprite obj : sprites) {
-            batch.setProjectionMatrix(camera.combined);
-            obj.draw(batch);
-        }
-
-        if (!fireController.getLitFires().isEmpty()){
-//            System.out.println("not FIRE!");
-            for (Fire fire:fireController.getLitFires()){
-                particleEngine.draw(batch,fire);
-            }
-        }
-        if (!torchFire.getObstacle().isRemoved()) {
-            particleEngine.draw(batch,torchFire);
-        }
-        //particleEngine.drawSplash(batch);
-
-
-
-        if (debug) {
-            // Draw the outlines
+            // Draw the meshes (images)
             for (ObstacleSprite obj : sprites) {
-                obj.drawDebug( batch );
+                batch.setProjectionMatrix(camera.combined);
+                obj.draw(batch);
             }
-        }
 
-        batch.end();
-        for (FloatingLight light : floatingLights){
-            if (light.isOff()){
-                lightController.turnOffAmbientLight(light,true);
-            }else{
-                //System.out.println("light id"+light.ID);
-                lightController.attachAmbientLight(light,true);
-            }
-        }
-        lightController.update(contactListener.beginSmother(),fireController);
-        lightController.render();
-
-        fitViewport.apply();
-        batch.setProjectionMatrix(camera.combined);
-        batch.begin();
-        //Draw enemy eyes in the dark
-        for( Enemy enemy: enemies){
-            if (enemy.getClass()== Moth.class){
-                if(enemy.getState()== Enemy.EnemyState.OUT_OF_LIGHT){
-                    Vector2 pos = enemy.getObstacle().getPosition();
-                    batch.draw(eye,(pos.x) * phyiscsUnits - (phyiscsUnits/2) / (phyiscsUnits/40),(pos.y) * phyiscsUnits - (phyiscsUnits/2)/ (phyiscsUnits/40),0.1f*eye.getWidth(),0.1f*eye.getHeight());
-                    //batch.draw(eye,enemy.getX(),enemy.getY());
+            if (!fireController.getLitFires().isEmpty()) {
+//            System.out.println("not FIRE!");
+                for (Fire fire : fireController.getLitFires()) {
+                    particleEngine.draw(batch, fire);
                 }
             }
-        }
-        // Draw a final message
-        if (!isFadingOut) {
-            if (complete && !failed) {
-                isFadingOut = true;
-                fadeExitCode = EXIT_SUCCESS;
-            } else if (failed) {
-                isFadingOut = true;
-                if (death_code == 0) fadeExitCode = EXIT_TORCHOFF;
-                else if (death_code == 1) fadeExitCode = EXIT_FALLING;
-                else if (death_code == 2) fadeExitCode = EXIT_MOTH;
+            if (!torchFire.getObstacle().isRemoved()) {
+                particleEngine.draw(batch, torchFire);
             }
-        }
+            //particleEngine.drawSplash(batch);
 
-        batch.end();
 
-        if (isFadingOut) {
-            batch.begin();
-            float alpha = Math.min(fadeTime / fadeDuration, 1f);
-            batch.setColor(0, 0, 0, alpha);
-            batch.draw(blackTexture, 0, 0, bounds.width*phyiscsUnits, bounds.height*phyiscsUnits);
-            batch.setColor(Color.WHITE);
+            if (debug) {
+                // Draw the outlines
+                for (ObstacleSprite obj : sprites) {
+                    obj.drawDebug(batch);
+                }
+            }
+
             batch.end();
+            for (FloatingLight light : floatingLights) {
+                if (light.isOff()) {
+                    lightController.turnOffAmbientLight(light, true);
+                } else {
+                    //System.out.println("light id"+light.ID);
+                    lightController.attachAmbientLight(light, true);
+                }
+            }
+            lightController.update(contactListener.beginSmother(), fireController);
+            lightController.render();
+
+            fitViewport.apply();
+            batch.setProjectionMatrix(camera.combined);
+            batch.begin();
+            //Draw enemy eyes in the dark
+            for (Enemy enemy : enemies) {
+                if (enemy.getClass() == Moth.class) {
+                    if (enemy.getState() == Enemy.EnemyState.OUT_OF_LIGHT) {
+                        Vector2 pos = enemy.getObstacle().getPosition();
+                        batch.draw(eye, (pos.x) * phyiscsUnits - (phyiscsUnits / 2) / (phyiscsUnits / 40), (pos.y) * phyiscsUnits - (phyiscsUnits / 2) / (phyiscsUnits / 40), 0.1f * eye.getWidth(), 0.1f * eye.getHeight());
+                        //batch.draw(eye,enemy.getX(),enemy.getY());
+                    }
+                }
+            }
+            // Draw a final message
+            if (!isFadingOut) {
+                if (complete && !failed) {
+                    isFadingOut = true;
+                    fadeExitCode = EXIT_SUCCESS;
+                } else if (failed) {
+                    isFadingOut = true;
+                    if (death_code == 0) fadeExitCode = EXIT_TORCHOFF;
+                    else if (death_code == 1) fadeExitCode = EXIT_FALLING;
+                    else if (death_code == 2) fadeExitCode = EXIT_MOTH;
+                }
+            }
+
+            batch.end();
+
+            if (isFadingOut) {
+                batch.begin();
+                float alpha = Math.min(fadeTime / fadeDuration, 1f);
+                batch.setColor(0, 0, 0, alpha);
+                batch.draw(blackTexture, 0, 0, bounds.width * phyiscsUnits, bounds.height * phyiscsUnits);
+                batch.setColor(Color.WHITE);
+                batch.end();
+            }
+        if (isPaused) {
+            pauseOverlay.draw(dt);
         }
     }
 
     /**
      * Called when the Screen is resized.
-     *
+     * <p>
      * This can happen at any point during a non-paused state but will never
      * happen before a call to show().
      *
@@ -2499,25 +2579,25 @@ private int pcunt = 1;
 //        height = 720;
 //        width = 1280;
         this.phyiscsUnits = 40 * Gdx.graphics.getWidth() / 1280f;
-        JsonValue layers = directory.getEntry(levelName,JsonValue.class).get("layers");
+        JsonValue layers = directory.getEntry(levelName, JsonValue.class).get("layers");
         for (JsonValue layer : layers) {
             System.out.println(layer.toString() + "HERE");
             if (layer.getString("type").equals("tilelayer")) {
                 this.bounds = new Rectangle(0, 0, layer.getInt("width"), layer.getInt("height"));
             }
         }
-        this.width  = width;
+        this.width = width;
         this.height = height;
 //        cameraZoomLevel = (.6/Math,po)
 //        cameraZoomLevel = 1.34375f;
 //        cameraZoomLevel = cameraZoomLevel * (40 * Gdx.graphics.getWidth() / 1280f)/40;
         if (camera == null) {
             camera = new OrthographicCamera();
-            camera.zoom = (float) ((.6/Math.pow(1280, 1.579)) * Math.pow(Gdx.graphics.getWidth(), 1.579));
+            camera.zoom = (float) ((.6 / Math.pow(1280, 1.579)) * Math.pow(Gdx.graphics.getWidth(), 1.579));
         }
-        camera.setToOrtho( false, width, height );
-        scale.x = width/bounds.width;
-        scale.y = height/bounds.height;
+        camera.setToOrtho(false, width, height);
+        scale.x = width / bounds.width;
+        scale.y = height / bounds.height;
 //        scale.x = scale.y;
         // this works???? ^^^, no it doesnt
 
@@ -2528,7 +2608,7 @@ private int pcunt = 1;
 
     /**
      * Called when the Screen should render itself.
-     *
+     * <p>
      * We defer to the other methods update() and draw().  However, it is VERY
      * important that we only quit AFTER a draw.
      *
@@ -2557,7 +2637,7 @@ private int pcunt = 1;
 
     /**
      * Called when the Screen is paused.
-     *
+     * <p>
      * This is usually when it's not active or visible on screen. An Application
      * is also paused before it is destroyed.
      */
@@ -2571,7 +2651,7 @@ private int pcunt = 1;
 
     /**
      * Called when the Screen is resumed from a paused state.
-     *
+     * <p>
      * This is usually when it regains focus.
      */
     public void resume() {
@@ -2602,14 +2682,16 @@ private int pcunt = 1;
 
     /**
      * Sets the ScreenListener for this mode
-     *
+     * <p>
      * The ScreenListener will respond to requests to quit.
      */
     public void setScreenListener(ScreenListener listener) {
         this.listener = listener;
+        pauseOverlay = new PauseOverlay(directory,listener,this);
     }
 
     int counter = 0;
+
     public void debugPrintOut() {
         try {
             FileWriter myWriter = new FileWriter("debugOut" + counter + ".txt");
@@ -2656,13 +2738,15 @@ private int pcunt = 1;
 
             counter++;
             myWriter.close();
-        } catch (Exception e) {System.out.println("failed pritnout " + counter +", " + e.getMessage());}
+        } catch (Exception e) {
+            System.out.println("failed pritnout " + counter + ", " + e.getMessage());
+        }
     }
 
     //attaches light to fire
-    private void attachFireLightJoints(Fire fire,Lighting light) {
+    private void attachFireLightJoints(Fire fire, Lighting light) {
         WeldJointDef jointDef = new WeldJointDef();
-        jointDef.initialize(fire.getBurntObstacle().getObstacle().getBody(),light.getObstacle().getBody(),fire.getObstacle().getPosition());
+        jointDef.initialize(fire.getBurntObstacle().getObstacle().getBody(), light.getObstacle().getBody(), fire.getObstacle().getPosition());
         jointDef.collideConnected = false;  // they won't collide with each other
         Joint fireLightJoint = world.createJoint(jointDef);
         fire.setLightJoint(fireLightJoint);
@@ -2673,48 +2757,48 @@ private int pcunt = 1;
 
     private void pinLightToObject(ObstacleSprite os, FloatingLight light) {
         WeldJointDef jointDef = new WeldJointDef();
-        jointDef.initialize(os.getObstacle().getBody(),light.getObstacle().getBody(),light.getObstacle().getPosition());
+        jointDef.initialize(os.getObstacle().getBody(), light.getObstacle().getBody(), light.getObstacle().getPosition());
         jointDef.collideConnected = false;  // they won't collide with each other
         world.createJoint(jointDef);
     }
 
-    private void updateFireLights(){
+    private void updateFireLights() {
         Set<Fire> litFires = fireController.getLitFires();
-        for (Fire fire:fireController.getAllFires()){
-            if (!litFires.contains(fire)){
+        for (Fire fire : fireController.getAllFires()) {
+            if (!litFires.contains(fire)) {
                 detachFireLightJoints(fire);
             }
         }
     }
 
-    private void updateTorchLight(){
-        if (!fireController.getLitFires().contains(torchFire)){//torch fire going out
-            if(torchFire.getLighting()!=null){
+    private void updateTorchLight() {
+        if (!fireController.getLitFires().contains(torchFire)) {//torch fire going out
+            if (torchFire.getLighting() != null) {
                 torchFire.getLighting().getObstacle().markRemoved(true);
-                activeFireJoint=null;
-                activeLightJoints=null;
+                activeFireJoint = null;
+                activeLightJoints = null;
             }
         }
     }
 
     private void detachFireLightJoints(Fire fire) {
-        if (fire.getLightJoint()!=null){
+        if (fire.getLightJoint() != null) {
 //            if (fire.fireID==0){
             //System.out.println("remove the joint!");}
-                if (!world.isLocked()) {
-                    Lighting lighting = fire.getLighting();
-                    //System.out.println("has light"+sprites.contains(lighting));
-                    lighting.getObstacle().markRemoved(true);
-                    //world.destroyBody(lighting.getObstacle().getBody());
-                    world.destroyJoint(fire.getLightJoint());
-                }
-                fire.setLightJoint(null);
-                fire.setLighting(null);
+            if (!world.isLocked()) {
+                Lighting lighting = fire.getLighting();
+                //System.out.println("has light"+sprites.contains(lighting));
+                lighting.getObstacle().markRemoved(true);
+                //world.destroyBody(lighting.getObstacle().getBody());
+                world.destroyJoint(fire.getLightJoint());
+            }
+            fire.setLightJoint(null);
+            fire.setLighting(null);
         }
     }
 
     public void forceNWorldStep(int n) {
-        world.step(1/60f * n,WORLD_VELOC,WORLD_POSIT);
+        world.step(1 / 60f * n, WORLD_VELOC, WORLD_POSIT);
         updateCamera();
     }
 
@@ -2724,7 +2808,7 @@ private int pcunt = 1;
 
         // Black overlay
         batch.begin();
-        batch.setColor(1f,1f,1f, alpha);
+        batch.setColor(1f, 1f, 1f, alpha);
         batch.draw(blackTexture,
             0, 0,
             bounds.width * phyiscsUnits,
@@ -2740,4 +2824,178 @@ private int pcunt = 1;
         return false;
     }
 
+
+    protected class PauseOverlay {
+        public Stage stage;
+        private Skin skin;
+        private ScreenListener listener;
+        private SoundEngine soundEngine;
+        private AssetDirectory directory;
+        private Array<Entry> entries = new Array<>();
+        private boolean startClicked = false;
+        private GameplayScene gamePlayScene;
+        private boolean visible = false;
+
+        private class Entry {
+            private ImageButton button;
+            private TextureRegionDrawable defaultDrawable;
+            private TextureRegionDrawable selectedDrawable;
+
+            public Entry(ImageButton button, TextureRegionDrawable defaultDrawable, TextureRegionDrawable selectedDrawable) {
+                this.button = button;
+                this.defaultDrawable = defaultDrawable;
+                this.selectedDrawable = selectedDrawable;
+            }
+        }
+
+        public PauseOverlay(AssetDirectory directory, ScreenListener listener, GameplayScene gamePlayScene) {
+            this.gamePlayScene = gamePlayScene;
+            this.stage = new Stage();
+            this.listener = listener;
+            this.directory = directory;
+            createPauseUI();
+            stage.getRoot().setTouchable(Touchable.enabled);
+        }
+        public void setSoundEngine(SoundEngine soundEngine) {this.soundEngine = soundEngine;}
+
+        public void createPauseUI() {
+            float screenWidth = Gdx.graphics.getWidth();
+            float screenHeight = Gdx.graphics.getHeight();
+            Texture contText = directory.getEntry("contButt", Texture.class);
+            Texture contClickText = directory.getEntry("contButtClick", Texture.class);
+            TextureRegionDrawable contButtUp = new TextureRegionDrawable(new TextureRegion(contText));
+            TextureRegionDrawable contButtOver = new TextureRegionDrawable(new TextureRegion(contClickText));
+
+            ImageButton.ImageButtonStyle contButt = new ImageButton.ImageButtonStyle();
+            contButt.up = contButtUp;
+            contButt.over = contButtOver;
+
+            Texture replayText = directory.getEntry("replayButt", Texture.class);
+            Texture replayClickText = directory.getEntry("replayButtClick", Texture.class);
+            TextureRegionDrawable replayButtUp = new TextureRegionDrawable(new TextureRegion(replayText));
+            TextureRegionDrawable replayButtOver = new TextureRegionDrawable(new TextureRegion(replayClickText));
+
+            ImageButton.ImageButtonStyle replayButt = new ImageButton.ImageButtonStyle();
+            replayButt.up = replayButtUp;
+            replayButt.over = replayButtOver;
+
+            Texture chambersText = directory.getEntry("chambersButt", Texture.class);
+            Texture chambersClickText = directory.getEntry("chambersButtClick", Texture.class);
+            TextureRegionDrawable chambersButtUp = new TextureRegionDrawable(new TextureRegion(chambersText));
+            TextureRegionDrawable chambersButtOver = new TextureRegionDrawable(new TextureRegion(chambersClickText));
+
+            ImageButton.ImageButtonStyle chambersButt = new ImageButton.ImageButtonStyle();
+            chambersButt.up = chambersButtUp;
+            chambersButt.over = chambersButtOver;
+
+
+            ImageButton replayButton = new ImageButton(replayButt);
+            ;
+            Entry repl = new Entry(replayButton, replayButtUp, replayButtOver);
+            entries.add(repl);
+            ImageButton contButton = new ImageButton(contButt);
+            Entry cont = new Entry(contButton, contButtUp, contButtOver);
+            entries.add(cont);
+            ImageButton chambersButton = new ImageButton(chambersButt);
+            Entry chamb = new Entry(chambersButton, chambersButtUp, chambersButtOver);
+            entries.add(chamb);
+
+            contButton.setSize(screenWidth * 0.2f, screenHeight * 0.06f);
+            contButton.setPosition(
+                screenWidth * 0.45f,
+                screenHeight * 0.5f
+            );
+
+            replayButton.setSize(screenWidth * 0.2f, screenHeight * 0.06f);
+            replayButton.setPosition(
+                screenWidth * 0.45f,
+                screenHeight * 0.4f
+            );
+
+            chambersButton.setSize(screenWidth * 0.2f, screenHeight * 0.06f);
+            chambersButton.setPosition(
+                screenWidth * 0.45f,
+                screenHeight * 0.3f
+            );
+
+            contButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+                @Override
+                public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
+                                         float x, float y, int pointer, int button) {
+//                System.out.println("ImageButton pressed");
+                    soundEngine.playSoundEffect("clickSound");
+                    startClicked = true;
+                    if (listener != null) {
+                        gamePlayScene.prevPaused = isPaused;
+                        gamePlayScene.isPaused = false;
+                        //listener.exitScreen(GameplayScene.this, EXIT_QUIT);
+                        //remove();
+                    }
+                    return true;
+                }
+            });
+
+            replayButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+                @Override
+                public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
+                                         float x, float y, int pointer, int button) {
+//                System.out.println("ImageButton pressed");
+                    soundEngine.playSoundEffect("clickSound");
+                    startClicked = true;
+                    if (listener != null) {
+                        gamePlayScene.reset();
+                        gamePlayScene.didReset = false;
+                        gamePlayScene.prevPaused = gamePlayScene.isPaused;
+                        gamePlayScene.isPaused = false;
+                    }
+                    return true;
+                }
+            });
+
+
+            chambersButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+                @Override
+                public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event,
+                                         float x, float y, int pointer, int button) {
+                    soundEngine.playSoundEffect("clickSound");
+                    System.out.println("chambers button clicked");
+                    prevPaused = false;
+                    isPaused = false;
+                    System.out.println("listener is null? " + (listener == null));
+                    if (listener != null) {
+                        listener.exitScreen(gamePlayScene, EXIT_QUIT);
+                        gamePlayScene.prevPaused = gamePlayScene.isPaused;
+                        gamePlayScene.isPaused = false;
+                        gamePlayScene.exit = true;
+                        //listener.exitScreen(GameplayScene.this, EXIT_QUIT);
+                    }
+                    return true;
+                }
+            });
+
+            contButton.setTouchable(Touchable.enabled);
+            replayButton.setTouchable(Touchable.enabled);
+            chambersButton.setTouchable(Touchable.enabled);
+            stage.addActor(contButton);
+            stage.addActor(replayButton);
+            stage.addActor(chambersButton);
+
+        }
+
+        public void setVisible(boolean visible) {this.visible = visible;}
+
+        public void draw(float delta) {
+            if (visible){
+                Gdx.input.setInputProcessor(stage);
+                stage.act(delta);
+                stage.draw();}
+//            stage.setDebugAll(true);
+        }
+
+
+        public void remove(){
+            stage.clear();
+            Gdx.input.setInputProcessor(null);
+        }
+    }
 }

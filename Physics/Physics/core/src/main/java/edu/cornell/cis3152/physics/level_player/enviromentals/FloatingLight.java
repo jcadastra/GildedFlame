@@ -111,7 +111,7 @@ public class FloatingLight extends ObstacleSprite {
         }
         private void wander(float deltaTime) {
             circleCounter = 1000;
-            offCounter = 1000;
+            offCounter = 500;
             Vector2 direction = destination.cpy().sub(position);
             float distance = direction.len();
             if (distance < travelThreshold) {
