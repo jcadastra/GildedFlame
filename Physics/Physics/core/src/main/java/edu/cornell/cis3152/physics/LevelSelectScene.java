@@ -473,7 +473,9 @@ public class LevelSelectScene implements Screen {
         stage.act(delta);
         updateDoorAnimation(delta);
         stage.draw();
-        if(inputController.xbox.getB()){listener.exitScreen(LevelSelectScene.this, 0);}
+        if (inputController.isUsingController()) {
+            if(inputController.xbox.getB()){listener.exitScreen(LevelSelectScene.this, 0);}
+        }
 
     }
 
