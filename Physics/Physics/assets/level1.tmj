@@ -350,6 +350,18 @@
                  "width":230,
                  "x":2291.05831818182,
                  "y":3055.84803030303
+                }, 
+                {
+                 "gid":105,
+                 "height":1000,
+                 "id":217,
+                 "name":"tutChest",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1000,
+                 "x":9582.12121212121,
+                 "y":3435.15151515152
                 }],
          "offsetx":-12.1212121212122,
          "offsety":-15.151515151515,
@@ -808,7 +820,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":217,
+ "nextobjectid":218,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
