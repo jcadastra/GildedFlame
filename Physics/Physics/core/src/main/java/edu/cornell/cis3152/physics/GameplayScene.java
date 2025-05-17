@@ -2479,7 +2479,8 @@ public class GameplayScene implements Screen {
         // Turn the physics engine crank.
         // NORMALLY we would use a fixed step, not dt
         // But that is harder and a topic of the advanced class
-        world.step(1/60f,WORLD_VELOC,WORLD_POSIT);
+        if (!isPaused){
+        world.step(1/60f,WORLD_VELOC,WORLD_POSIT);}
 
         // Garbage collect the deleted objects.
         // Note how we use the linked list nodes to delete O(1) in place.
