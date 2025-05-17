@@ -175,6 +175,9 @@ public class GameplayScene implements Screen {
     protected int countdown;
     /** 0 for torch off, 1 for falling death, 2 for contact with moth*/
     protected int death_code = 0;
+    protected float maxSoundRadius = 10f;
+    protected float minTotemDist = Float.MAX_VALUE;
+    protected float minMothDist = Float.MAX_VALUE;
 
     private List<Enemy> enemies;
     protected Avatar avatar;
@@ -1678,8 +1681,13 @@ private int pcunt = 1;
         boolean mothSmother = false;
         totemSoundCoolDown -= dt;
         mothAttackSoundCooldown -= dt;
+        float maxDistance = 10f;
+
+        float minTotemDist = Float.MAX_VALUE;
+        float minMothDist = Float.MAX_VALUE;
 
         for (Enemy enemy : enemies) {
+            float dist = enemy.getObstacle().getPosition().dst(avatar.getObstacle().getPosition());
             if (enemy instanceof Totem) {
                 Totem totem = (Totem) enemy;
 
@@ -1691,6 +1699,10 @@ private int pcunt = 1;
                     totemChanged = true;
                 }
                 totemPreviousStates.put(totem, current);
+
+                if (current == Enemy.EnemyState.OUT_OF_LIGHT && dist < minTotemDist) {
+                    minTotemDist = dist;
+                }
             } else if (enemy instanceof Moth) {
                 Moth moth = (Moth) enemy;
 
@@ -1709,8 +1721,15 @@ private int pcunt = 1;
                     soundEngine.stopSoundEffect("mothCharging");
                 }
                 mothPreviousStates.put(moth, current);
+
+                if (current == Enemy.EnemyState.OUT_OF_LIGHT && dist < minMothDist) {
+                    minMothDist = dist;
+                }
             }
         }
+
+        soundEngine.enemyWalking("totem_walking", minTotemDist, maxDistance);
+        soundEngine.enemyWalking("moth_walking", minMothDist, maxDistance);
 
         if (totemChanged && totemSoundCoolDown <= 0f) {
             //soundEngine.totemTurnAround();

@@ -230,6 +230,7 @@ public class GDXRoot extends Game implements ScreenListener {
         // Handle exit codes from any GameplayScene.
         if (screen instanceof GameplayScene) {
             soundEngine.rainingBackground(false);
+            soundEngine.stopAllSoundEffects();
             prevScreen = "GameplayScene";
             if (exitCode == GameplayScene.EXIT_NEXT) {
                 swapGamePlayScene(1);
