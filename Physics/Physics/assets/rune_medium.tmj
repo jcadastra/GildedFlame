@@ -281,6 +281,24 @@
                  "width":300,
                  "x":6262,
                  "y":846
+                }, 
+                {
+                 "gid":74,
+                 "height":158,
+                 "id":229,
+                 "name":"qb3",
+                 "properties":[
+                        {
+                         "name":"flipHorizontally",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":230,
+                 "x":3389,
+                 "y":3647
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1173,7 +1191,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":228,
+ "nextobjectid":230,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
