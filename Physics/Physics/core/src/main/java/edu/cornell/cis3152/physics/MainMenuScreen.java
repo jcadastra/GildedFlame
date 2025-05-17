@@ -220,7 +220,7 @@ public class MainMenuScreen implements Screen {
         stage.addActor(settingsButt1);
 
 
-        Texture topRightTexture = directory.getEntry("textButt", Texture.class);
+        Texture topRightTexture = directory.getEntry("title", Texture.class);
         Image topRightImage = new Image(topRightTexture);
 
         topRightImage.setSize(screenWidth * 0.3f, screenHeight * 0.2f);
