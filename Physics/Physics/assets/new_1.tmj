@@ -7,7 +7,19 @@
          "draworder":"topdown",
          "id":7,
          "name":"BackgroundTiles",
-         "objects":[],
+         "objects":[
+                {
+                 "gid":108,
+                 "height":600,
+                 "id":585,
+                 "name":"brickBackground",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":600,
+                 "x":1452,
+                 "y":1548
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -335,7 +347,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":585,
+ "nextobjectid":586,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
@@ -360,6 +372,10 @@
         {
          "firstgid":84,
          "source":"BackgroundAssets.tsx"
+        }, 
+        {
+         "firstgid":108,
+         "source":"..\/lwjgl3\/build\/resources\/main\/BackgroundAssets.tsx"
         }],
  "tilewidth":300,
  "type":"map",

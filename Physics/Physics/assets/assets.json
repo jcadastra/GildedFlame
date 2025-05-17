@@ -350,7 +350,7 @@
     "advanced_movement" : "advanced_movement.tmj",
     "box_intro": "box_intro.tmj",
     "totem_intro" : "totem_intro.tmj",
-    "moth_intro" : "moth_intro.tmj",
+    "beware" : "moth_intro.tmj",
     "moth_medium" : "moth_medium.tmj",
     "moth_medium_2" : "moth_medium_2.tmj",
     "psshhh": "rain_intro.tmj",
@@ -359,9 +359,9 @@
     "rune_hard" :  "rune_hard.tmj",
     "example_level" : "example_level.tmj",
     "harvey_test" : "harvey_test.tmj",
-    "harvey_test2" : "harvey_test2.tmj",
-    "new_1" : "new_1.tmj",
-    "new_2" : "new_2.tmj",
+    "chase!" : "harvey_test2.tmj",
+    "up up and away" : "new_1.tmj",
+    "look up!" : "new_2.tmj",
     "first steps" : "level1.tmj",
     "don't look down" : "level2.tmj",
     "catch!" : "level3.tmj",
@@ -371,7 +371,7 @@
     "freeze!" : "level7.tmj",
     "delivery!": "rune_medium.tmj",
     "ur not passing this one" : "rune_advanced.tmj",
-    "1" : "1.tmj"
+    "on my way!" : "1.tmj"
 
   },
   "music": {
