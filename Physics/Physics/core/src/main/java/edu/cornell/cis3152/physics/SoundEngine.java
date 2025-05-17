@@ -188,9 +188,10 @@ public class SoundEngine {
     }
 
     public void playSoundEffect(String key) {
+
         SoundEffect sound = registeredSoundEffects.get(key);
         if (sound != null) {
-//            System.out.println("Playing sound: " + key);
+            System.out.println("Playing sound: " + key);
             sound.play();
         } else {
             System.out.println("Sound not found: " + key);
