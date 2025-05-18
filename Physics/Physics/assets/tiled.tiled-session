@@ -391,8 +391,8 @@
             "scale": 0.1541111111111111,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 4804.974765681327,
-                "y": 3604.542177361212
+                "x": 3228.190338860851,
+                "y": 1729.2718096611393
             }
         },
         "new_2.tmj": {
@@ -687,8 +687,8 @@
     "project": "tiled.tiled-project",
     "property.type": "string",
     "recentFiles": [
-        "moth_intro.tmj",
         "new_1.tmj",
+        "moth_intro.tmj",
         "rune_intro.tmj",
         "BackgroundAssets.tsx",
         "interMove.tmj",
